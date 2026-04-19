@@ -9,6 +9,8 @@ const kCustomEntryId = 'custom';
 /// Convenience alias for an integer range entry.
 typedef SelectorIntEntry<E> = SelectorRangeEntry<int, E>;
 
+typedef SelectorDoubleEntry<E> = SelectorRangeEntry<double, E>;
+
 // typedef SelectorDoubleOption<E> = SelectorRangeEntry<double, E>;
 
 // typedef SelectorDateTimeOption<E> = SelectorRangeEntry<DateTime, E>;
