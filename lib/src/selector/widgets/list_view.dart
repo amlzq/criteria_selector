@@ -80,6 +80,15 @@ class SelectorListViewState<T extends SelectorEntry>
   }
 
   @override
+  void didUpdateWidget(covariant SelectorListView<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _minController?.text =
+        (firstCustomItem ?? lastCustomItem)!.min?.toString() ?? '';
+    _maxController?.text =
+        (firstCustomItem ?? lastCustomItem)!.max?.toString() ?? '';
+  }
+
+  @override
   void dispose() {
     _minController?.removeListener(_inputListener);
     _maxController?.removeListener(_inputListener);
@@ -108,15 +117,13 @@ class SelectorListViewState<T extends SelectorEntry>
 
   /// Listens to input fields; once the user types, clears selected items
   void _inputListener() {
-    if (inputNotEmpty) {
-      if (widget.selectedItems?.isNotEmpty ?? false) {
-        setState(() {
-          widget.selectedItems?.clear();
-        });
-      }
-      widget.inputListener
-          ?.call(widget.categoryId, _minController!.text, _maxController!.text);
+    if (widget.selectedItems?.isNotEmpty ?? false) {
+      setState(() {
+        widget.selectedItems?.clear();
+      });
     }
+    widget.inputListener
+        ?.call(widget.categoryId, _minController!.text, _maxController!.text);
   }
 
   bool get inputNotEmpty =>

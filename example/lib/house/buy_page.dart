@@ -119,7 +119,7 @@ class _BuyPageState extends State<BuyPage> {
         // 总价
         criteria.totalPrice = <Map<String, dynamic>>[];
         for (var e in category.children ?? {}) {
-          e as SelectorIntEntry;
+          e as SelectorRangeEntry;
           criteria.totalPrice!.add({"id": e.id, "min": e.min, "max": e.max});
         }
       } else if (category.id == 'unit') {
@@ -273,8 +273,8 @@ class _BuyPageState extends State<BuyPage> {
               GridSelector(
                 dataFetcher: _criteriaRepo.fetchBuyPriceData,
                 selectedDataFetcher: _criteriaRepo.fetchBuyPriceSelectedData,
-                resetDataFetcher: _criteriaRepo.fetchBuyPriceResetData,
-                selectionMode: SelectionMode.single,
+                // resetDataFetcher: _criteriaRepo.fetchBuyPriceResetData,
+                selectionMode: SelectionMode.multiple,
                 tileVariant: SelectorGridTileVariant.outlined,
                 crossAxisCount: 4,
                 childAspectRatio: 2.5,

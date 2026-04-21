@@ -33,17 +33,17 @@ class SelectorFieldTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final style = xxxx.of(context);
+    // final theme = SelectorFieldTileTheme.of(context);
     return Padding(
       padding: padding ?? EdgeInsets.zero,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          if (item.name?.isNotEmpty ?? false)
+          if (item.inputLabel?.isNotEmpty ?? false)
             Padding(
               padding: const EdgeInsets.only(right: 10.0),
               child: Text(
-                item.name ?? '',
+                item.inputLabel ?? '',
                 style: const TextStyle(fontSize: 14),
               ),
             ),
@@ -113,6 +113,9 @@ class _TextField extends StatelessWidget {
       // onSubmitted: ,
       // onEditingComplete: ,
       // onTap: ,
+      onTapOutside: (event) {
+        FocusScope.of(context).unfocus();
+      },
       textAlignVertical: TextAlignVertical.center,
       decoration: InputDecoration(
         hintText: hintText,

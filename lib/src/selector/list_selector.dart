@@ -72,9 +72,8 @@ class ListSelectorViewState extends State<ListSelectorView> {
   SelectionMode? get categorySelectionMode => controller?.selectionMode;
 
   void _onItemTap(int index, SelectorChildEntry item) {
-    // Handle "Any" logic
     if (item.isAny) {
-      // "Any" node
+      // "Any" entry
       if (SelectionMode.single == categorySelectionMode) {
         // Single-select mode
         if (_selectedItems.contains(item)) {
@@ -97,9 +96,9 @@ class ListSelectorViewState extends State<ListSelectorView> {
         }
       }
     } else {
-      // Normal node
+      // Normal entry
 
-      // If there is an "Any" node, remove it
+      // If there is an "Any" entry, remove it
       _selectedItems.removeWhere((e) => e is SelectorChildEntry && e.isAny);
 
       if (SelectionMode.single == categorySelectionMode) {

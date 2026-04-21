@@ -22,17 +22,17 @@ class DropselectResult {
   /// Convenience access to [DropselectTabData.tag].
   get tabTag => tabData.tag;
 
-  /// Finds children at the given tree [level] under [option].
-  SelectorEntries findChildrenAtLevel(SelectorEntry option, int level) =>
-      SelectorUtils.findChildrenAtLevel(option, level);
+  /// Finds children at the given tree [level] under [entry].
+  SelectorEntries findChildrenAtLevel(SelectorEntry entry, int level) =>
+      SelectorUtils.findChildrenAtLevel(entry, level);
 
-  /// Finds selected ids at the given tree [level] under [option].
-  Set<String> findIdsAtLevel(SelectorEntry option, int level) =>
-      SelectorUtils.findIdsAtLevel(option, level);
+  /// Finds selected ids at the given tree [level] under [entry].
+  Set<String> findIdsAtLevel(SelectorEntry entry, int level) =>
+      SelectorUtils.findIdsAtLevel(entry, level);
 
-  /// Finds extra payload values at the given tree [level] under [option].
-  List<E> findExtrasAtLevel<E>(SelectorEntry option, int level) =>
-      SelectorUtils.findExtrasAtLevel<E>(option, level);
+  /// Finds extra payload values at the given tree [level] under [entry].
+  List<E> findExtrasAtLevel<E>(SelectorEntry entry, int level) =>
+      SelectorUtils.findExtrasAtLevel<E>(entry, level);
 
   @override
   String toString() =>

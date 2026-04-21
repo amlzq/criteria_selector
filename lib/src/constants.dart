@@ -23,6 +23,10 @@ typedef SelectorVisibilityCallback = void Function(DropselectTabData tabData);
 /// Builds a custom label for a tab based on the current [DropselectResult].
 typedef DropselectTabLabelGetter = String Function(DropselectResult result);
 
+/// Callback invoked when a custom range entry is tapped.
+typedef CustomRangeListener = void Function(
+    String categoryId, String minValue, String maxValue);
+
 /// Badge rendering style.
 enum BadgeStyle {
   number,
@@ -56,23 +60,32 @@ typedef ToggleWidgetBuilder = Widget Function(
 typedef SkeletonBuilder = Widget Function(BuildContext context);
 
 /// Returns true if the entry is a multi-selection category.
-bool testMultipleItem(e) =>
+bool testMultipleElement(e) =>
     e is SelectorCategoryEntry && e.selectionMode == SelectionMode.multiple;
 
 /// Returns true if the entry is an "Any" child entry.
-bool testAnyItem(e) => e is SelectorChildEntry && e.isAny;
+bool testAnyElement(e) => e is SelectorChildEntry && e.isAny;
 
 /// Returns true if the entry is a custom range entry.
-bool testCustomItem(e) => e is SelectorRangeEntry && e.isCustom;
+bool testCustomElement(e) => e is SelectorRangeEntry && e.isCustom;
 
 /// Returns true if the entry is not a custom range entry.
 bool testNotCustomItem(e) => e is! SelectorRangeEntry || (!e.isCustom);
 
+/// Returns true if the entry has the same parent as the given [parentId].
+bool testSameParentElement(e, parentId) =>
+    (e as SelectorChildEntry).parentId == parentId;
+
+/// Returns true if the entry has the same parent as the given [parentId] and is an "Any" or a custom range entry.
+bool testSameParentAnyOrCustomElement(e, parentId) =>
+    (e as SelectorChildEntry).parentId == parentId &&
+    (e.isAny || (e is SelectorRangeEntry && e.isCustom));
+
 extension SelectorEntriesExtension on SelectorEntries {
-  /// Inserts [option] at the given [index] while preserving set iteration order.
-  void insert(int index, SelectorEntry option) {
+  /// Inserts [entry] at the given [index] while preserving set iteration order.
+  void insert(int index, SelectorEntry entry) {
     final temp = toList();
-    temp.insert(index, option);
+    temp.insert(index, entry);
     clear();
     addAll(temp);
   }
@@ -82,14 +95,14 @@ extension SelectorEntriesExtension on SelectorEntries {
     if (isEmpty) return null;
 
     List<SelectorEntries> result = [];
-    void traverse(SelectorEntries options, int level) {
+    void traverse(SelectorEntries entries, int level) {
       if (result.length <= level) {
         result.add({});
       }
-      for (var option in options) {
-        result[level].add(option);
-        if (option.children != null && option.children!.isNotEmpty) {
-          traverse(option.children!, level + 1);
+      for (var entry in entries) {
+        result[level].add(entry);
+        if (entry.children != null && entry.children!.isNotEmpty) {
+          traverse(entry.children!, level + 1);
         }
       }
     }
@@ -101,14 +114,14 @@ extension SelectorEntriesExtension on SelectorEntries {
 
 extension IterableExtension<SelectorEntry> on Iterable<SelectorEntry> {
   /// Whether this iterable contains an "Any" child entry.
-  bool get hasAnyItem => any(testAnyItem);
+  bool get hasAnyItem => any(testAnyElement);
 
   /// Whether this iterable contains a custom range entry.
-  bool get hasCustomItem => any(testCustomItem);
+  bool get hasCustomItem => any(testCustomElement);
 
   /// Returns the first element if it is a custom range entry.
   SelectorRangeEntry? get firstCustomOrNull {
-    final element = first;
+    final element = firstOrNull;
     if (element != null && element is SelectorRangeEntry && element.isCustom) {
       return element;
     }
@@ -117,7 +130,7 @@ extension IterableExtension<SelectorEntry> on Iterable<SelectorEntry> {
 
   /// Returns the last element if it is a custom range entry.
   SelectorRangeEntry? get lastCustomOrNull {
-    final element = last;
+    final element = lastOrNull;
     if (element != null && element is SelectorRangeEntry && element.isCustom) {
       return element;
     }

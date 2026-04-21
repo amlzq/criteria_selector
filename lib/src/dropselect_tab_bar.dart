@@ -287,6 +287,7 @@ class _DropselectTabBarState extends State<DropselectTabBar> {
                 onApplyTap: _controller!.handleApply,
                 onResetTap: _controller!.handleReset,
                 onOverlayTap: () {
+                  // FocusScope.of(context).unfocus();
                   _controller!.hideSelector();
                 },
                 availableHeight: _overlayAvailableHeight,
@@ -311,7 +312,8 @@ class _DropselectTabBarState extends State<DropselectTabBar> {
                         indicator: widget.indicator,
                         unselectedIndicator: widget.unselectedIndicator,
                         child: _DropselectTabStyle(
-                          isSelected: _controller!.currentIndex == i ||
+                          isSelected: (_controller?.isSelectorShowing == true &&
+                                  _controller!.currentIndex == i) ||
                               _controller?.tabDataMap[i]?.isResulted == true,
                           labelColor: widget.labelColor,
                           unselectedLabelColor: widget.unselectedLabelColor,

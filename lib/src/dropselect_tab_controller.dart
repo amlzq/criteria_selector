@@ -4,7 +4,7 @@ import 'constants.dart';
 import 'dropselect_result.dart';
 import 'dropselect_tab_data.dart';
 import 'selector.dart';
-import 'selector_entry.dart';
+import 'selector_utils.dart';
 
 /// Controller for [DropselectTabBar] and its selector overlay.
 ///
@@ -50,7 +50,7 @@ class DropselectTabController extends ChangeNotifier {
     return controller!;
   }
 
-  final OverlayPortalController portalCtrl = OverlayPortalController();
+  final portalCtrl = OverlayPortalController();
   final layerLink = LayerLink();
 
   // OverlayEntry? _entry;
@@ -134,7 +134,7 @@ class DropselectTabController extends ChangeNotifier {
     onApplied?.call(result);
     final customLabel = result.tabData.labelGetter?.call(result);
     result.tabData.resultLabel =
-        customLabel ?? getResultLabel(result.selected.flatten());
+        customLabel ?? SelectorUtils.getResultLabel(result.selected);
     notifyListeners();
   }
 
@@ -143,33 +143,6 @@ class DropselectTabController extends ChangeNotifier {
     if (_isDisposed) return;
     // hideSelector();
     onReset?.call();
-  }
-
-  /// Computes a default label for a selection.
-  String? getResultLabel(List<SelectorEntries>? flattenData) {
-    String? resultLabel;
-    if (flattenData == null) {
-      return resultLabel;
-    }
-    for (var data in flattenData) {
-      if (data.length > 1) {
-        resultLabel = '多选';
-        break;
-      }
-    }
-    if (resultLabel == null) {
-      for (var i = flattenData.length - 1; i >= 0; i--) {
-        var item = flattenData[i].first;
-        if ((item is SelectorChildEntry && item.isAny) ||
-            item is SelectorCategoryEntry) {
-          continue;
-        } else {
-          resultLabel = item.name;
-          break;
-        }
-      }
-    }
-    return resultLabel;
   }
 }
 

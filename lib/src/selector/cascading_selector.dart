@@ -298,14 +298,14 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
     if (SelectionMode.multiple == categorySelectionMode) {
       return SelectionMode.multiple;
     }
-    if (widget.entries.firstWhereOrNull(testMultipleItem) != null) {
+    if (widget.entries.firstWhereOrNull(testMultipleElement) != null) {
       return SelectionMode.multiple;
     }
     return SelectionMode.single;
   }
 
   void _ensureAnySelected(SelectorCategoryEntry category) {
-    final anyItem = category.children?.singleWhereOrNull(testAnyItem);
+    final anyItem = category.children?.singleWhereOrNull(testAnyElement);
     if (anyItem == null) {
       return;
     }
@@ -425,7 +425,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
   /// Tap handler for a terminal node
   /// Only selecting a terminal node is an actual selection; otherwise it just expands children
   void _onTerminalItemTap(int cascadeIndex, SelectorChildEntry item) {
-    // Jump-level selection for an "Any" node (e.g., selecting the category's "Any" node)
+    // Jump-level selection for an "Any" entry (e.g., selecting the category's "Any" entry)
     final level = cascadeIndex + 1;
     if (level < _currentLevel && item.isAny) {
       // Remove all levels after the current level
@@ -457,7 +457,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
     final selectedItems =
         _selectedItemsPerLevel[level]; // Selected items for the current level
     if (item.isAny) {
-      // "Any" node
+      // "Any" entry
       if (SelectionMode.single == childrenSelectionMode) {
         // Single-select mode
         if (selectedItems.contains(item)) {
@@ -479,9 +479,9 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
         }
       }
     } else {
-      // Normal node
+      // Normal entry
 
-      // If there is an "Any" node, remove it
+      // If there is an "Any" entry, remove it
       _selectedItemsPerLevel
           .elementAtOrNull(1)
           ?.removeWhere((e) => e is SelectorChildEntry && e.isAny);
@@ -523,11 +523,11 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
           _selectedItemsPerLevel[i].remove(parent);
         }
       }
-      // If the category has no selected children and it has an "Any" child, select that "Any" node
+      // If the category has no selected children and it has an "Any" child, select that "Any" entry
       if (_selectedItemsPerLevel.elementAtOrNull(1)?.isEmpty == true) {
         _selectedItemsPerLevel.elementAtOrNull(0)?.add(tempSelectedCategory);
         final anyItem =
-            tempSelectedCategory.children?.singleWhereOrNull(testAnyItem);
+            tempSelectedCategory.children?.singleWhereOrNull(testAnyElement);
         if (anyItem != null) {
           _selectedItemsPerLevel.elementAtOrNull(1)?.add(anyItem);
         }
@@ -543,7 +543,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
   }
 
   void _setStateOrImmediateApply(SelectorChildEntry item) {
-    if (item.immediate) {
+    if (SelectionMode.single == selectorSelectionMode || item.immediate) {
       // No need to tap "Apply"; return result immediately
       _onApplyTap();
     } else {
@@ -591,7 +591,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
     _setStateOrImmediateApply(item);
   }
 
-  /// Removes unselected nodes from the tree (clipping)
+  /// Removes unselected entries from the tree (clipping)
   void _clippingTree(
     Set<SelectorEntry>? items,
     Set<SelectorEntry>? selectedItems,

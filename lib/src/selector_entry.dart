@@ -1,6 +1,6 @@
 import 'constants.dart';
 
-/// Special entry id representing the "Any" option.
+/// Special entry id representing the "Any" entry.
 const kAnyEntryId = 'any';
 
 /// Special entry id representing a user-provided/custom value.
@@ -8,8 +8,6 @@ const kCustomEntryId = 'custom';
 
 /// Convenience alias for an integer range entry.
 typedef SelectorIntEntry<E> = SelectorRangeEntry<int, E>;
-
-typedef SelectorDoubleEntry<E> = SelectorRangeEntry<double, E>;
 
 // typedef SelectorDoubleOption<E> = SelectorRangeEntry<double, E>;
 
@@ -19,12 +17,6 @@ typedef SelectorDoubleEntry<E> = SelectorRangeEntry<double, E>;
 ///
 /// This is commonly used for numeric ranges such as price or area.
 class SelectorRangeEntry<N, E> extends SelectorChildEntry<E> {
-  N? min;
-  N? max;
-  final String? inputLabel;
-  final String? minHintText;
-  final String? maxHintText;
-
   SelectorRangeEntry({
     this.min,
     this.max,
@@ -39,6 +31,12 @@ class SelectorRangeEntry<N, E> extends SelectorChildEntry<E> {
     super.immediate,
     super.extra,
   });
+
+  N? min;
+  N? max;
+  final String? inputLabel;
+  final String? minHintText;
+  final String? maxHintText;
 
   /// Custom range entry
   /// This entry is usually rendered as an input field or a slider/progress bar in the UI.
@@ -68,6 +66,41 @@ class SelectorRangeEntry<N, E> extends SelectorChildEntry<E> {
     super.enabled,
     super.immediate,
   }) : super.any();
+
+  @override
+  SelectorRangeEntry<N, E> copyWith({
+    String? parentId,
+    String? id,
+    String? name,
+    Set<SelectorEntry<E>>? children,
+    bool? enabled,
+    bool? immediate,
+    E? extra,
+    N? min,
+    N? max,
+    String? inputLabel,
+    String? minHintText,
+    String? maxHintText,
+  }) {
+    return SelectorRangeEntry<N, E>(
+      parentId: parentId ?? this.parentId,
+      id: id ?? this.id,
+      name: name ?? this.name,
+      children: children ?? this.children,
+      enabled: enabled ?? this.enabled,
+      immediate: immediate ?? this.immediate,
+      extra: extra ?? this.extra,
+      min: min ?? this.min,
+      max: max ?? this.max,
+      inputLabel: inputLabel ?? this.inputLabel,
+      minHintText: minHintText ?? this.minHintText,
+      maxHintText: maxHintText ?? this.maxHintText,
+    );
+  }
+
+  @override
+  String toString() =>
+      'SelectorRangeEntry(id: $id, parentId: $parentId, name: $name, min: $min, max: $max)';
 }
 
 extension SelectorRangeEntryExt on SelectorRangeEntry {
@@ -78,6 +111,8 @@ extension SelectorRangeEntryExt on SelectorRangeEntry {
   bool get hasCustomValue =>
       (min != null && min.toString().isNotEmpty) ||
       (max != null && max.toString().isNotEmpty);
+
+  String get name => this.name ?? '$min-$max';
 }
 
 /// A plain text entry.
@@ -108,12 +143,14 @@ class SelectorTextEntry<E> extends SelectorChildEntry<E> {
     super.enabled,
     super.immediate,
   }) : super.any();
+
+  @override
+  String toString() =>
+      'SelectorTextEntry(id: $id, parentId: $parentId, name: $name)';
 }
 
 /// A child entry (i.e. a non-root node).
 class SelectorChildEntry<E> extends SelectorEntry<E> {
-  final String parentId;
-
   SelectorChildEntry({
     required this.parentId,
     required super.id,
@@ -123,6 +160,8 @@ class SelectorChildEntry<E> extends SelectorEntry<E> {
     super.immediate,
     super.extra,
   });
+
+  final String parentId;
 
   /// "Any" entry
   SelectorChildEntry.any({
@@ -144,6 +183,43 @@ class SelectorChildEntry<E> extends SelectorEntry<E> {
           immediate: false,
           extra: null,
         );
+
+  SelectorChildEntry<E> copyWith({
+    String? parentId,
+    String? id,
+    String? name,
+    Set<SelectorEntry<E>>? children,
+    bool? enabled,
+    bool? immediate,
+    E? extra,
+  }) {
+    return SelectorChildEntry<E>(
+      parentId: parentId ?? this.parentId,
+      id: id ?? this.id,
+      name: name ?? this.name,
+      children: children ?? this.children,
+      enabled: enabled ?? this.enabled,
+      immediate: immediate ?? this.immediate,
+      extra: extra ?? this.extra,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is SelectorChildEntry<E> &&
+            runtimeType == other.runtimeType &&
+            other.id == id &&
+            other.parentId == parentId &&
+            other.name == name;
+  }
+
+  @override
+  int get hashCode => Object.hash(id, parentId, name);
+
+  @override
+  String toString() =>
+      'SelectorChildEntry(id: $id, parentId: $parentId, name: $name)';
 }
 
 extension SelectorChildEntryExt on SelectorChildEntry {
@@ -159,15 +235,6 @@ extension SelectorChildEntryExt on SelectorChildEntry {
 
 /// A category entry (i.e. a root node).
 class SelectorCategoryEntry<E> extends SelectorEntry<E> {
-  /// Selection mode for child nodes
-  final SelectionMode selectionMode;
-
-  SelectorEntry<E>? header;
-  final SelectionMode headerSelectionMode;
-
-  SelectorEntry<E>? footer;
-  final SelectionMode footerSelectionMode;
-
   SelectorCategoryEntry({
     this.selectionMode = SelectionMode.single,
     this.header,
@@ -180,12 +247,67 @@ class SelectorCategoryEntry<E> extends SelectorEntry<E> {
     super.enabled,
     super.immediate,
   });
+
+  /// Selection mode for child entry
+  final SelectionMode selectionMode;
+
+  SelectorEntry<E>? header;
+  final SelectionMode headerSelectionMode;
+
+  SelectorEntry<E>? footer;
+  final SelectionMode footerSelectionMode;
+
+  SelectorCategoryEntry<E> copyWith({
+    String? id,
+    String? name,
+    Set<SelectorEntry<E>>? children,
+    bool? enabled,
+    bool? immediate,
+    SelectionMode? selectionMode,
+    SelectorEntry<E>? header,
+    SelectionMode? headerSelectionMode,
+    SelectorEntry<E>? footer,
+    SelectionMode? footerSelectionMode,
+  }) {
+    return SelectorCategoryEntry<E>(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      children: children ?? this.children,
+      enabled: enabled ?? this.enabled,
+      immediate: immediate ?? this.immediate,
+      selectionMode: selectionMode ?? this.selectionMode,
+      header: header ?? this.header,
+      headerSelectionMode: headerSelectionMode ?? this.headerSelectionMode,
+      footer: footer ?? this.footer,
+      footerSelectionMode: footerSelectionMode ?? this.footerSelectionMode,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is SelectorCategoryEntry<E> &&
+            runtimeType == other.runtimeType &&
+            other.id == id &&
+            other.name == name &&
+            other.selectionMode == selectionMode;
+  }
+
+  @override
+  int get hashCode => Object.hash(id, name, selectionMode);
+
+  @override
+  String toString() =>
+      'SelectorCategoryEntry(id: $id, name: $name, selectionMode: $selectionMode)';
 }
 
 extension SelectorCategoryEntryExtension on SelectorCategoryEntry {
+  bool get hasCustomOrNull =>
+      firstCustomOrNull != null || lastCustomOrNull != null;
+
   /// Returns the first child if it is a custom range entry.
   SelectorRangeEntry? get firstCustomOrNull {
-    final element = firstChild;
+    final element = children?.firstOrNull;
     if (element != null && element is SelectorRangeEntry && element.isCustom) {
       return element;
     }
@@ -194,7 +316,7 @@ extension SelectorCategoryEntryExtension on SelectorCategoryEntry {
 
   /// Returns the last child if it is a custom range entry.
   SelectorRangeEntry? get lastCustomOrNull {
-    final element = lastChild;
+    final element = children?.lastOrNull;
     if (element != null && element is SelectorRangeEntry && element.isCustom) {
       return element;
     }
@@ -207,6 +329,15 @@ extension SelectorCategoryEntryExtension on SelectorCategoryEntry {
 /// Entries form a tree: [SelectorCategoryEntry] is typically the root and
 /// [SelectorChildEntry] represents non-root nodes.
 abstract class SelectorEntry<E> {
+  const SelectorEntry({
+    required this.id,
+    this.name,
+    this.children,
+    this.enabled = true,
+    this.immediate = false,
+    this.extra,
+  });
+
   final String id;
   final String? name;
 
@@ -221,41 +352,16 @@ abstract class SelectorEntry<E> {
 
   final E? extra;
 
-  SelectorEntry({
-    required this.id,
-    this.name,
-    this.children,
-    this.enabled = true,
-    this.immediate = false,
-    this.extra,
-  });
-
-  // SelectorEntry copyWith({
-  //   String? id,
-  //   String? name,
-  //   List<SelectorEntry>? data,
-  // }) {
-  //   return SelectorEntry(
-  //     id: id ?? this.id,
-  //     name: name ?? this.name,
-  //     data: data ?? this.data,
-  //   );
-  // }
-
   @override
   String toString() => 'SelectorEntry(id: $id, name: $name)';
 }
 
-// mixin SelectorEntryMixin {
-//   bool selected = false;
-// }
-
 extension SelectorEntryExt on SelectorEntry {
   /// Returns the first child entry if present.
-  SelectorEntry? get firstChild => children?.first;
+  SelectorEntry? get firstChild => children?.firstOrNull;
 
   /// Returns the last child entry if present.
-  SelectorEntry? get lastChild => children?.last;
+  SelectorEntry? get lastChild => children?.lastOrNull;
 
   /// Whether this entry has any children.
   bool get hasChildren => children?.isNotEmpty ?? false;

@@ -7,57 +7,57 @@ import 'selector_entry.dart';
 
 /// Utility methods for working with [SelectorEntry] trees and selections.
 class SelectorUtils {
-  /// Returns the entries at the given tree [level] starting from [option].
+  /// Returns the entries at the given tree [level] starting from [entry].
   ///
-  /// - If [level] is 0, returns a set containing [option].
-  /// - If [level] is greater than the depth under [option], returns an empty set.
-  static SelectorEntries findChildrenAtLevel(SelectorEntry option, int level) {
-    // If level == 0, the current node is the target.
-    if (level == 0) return {option};
+  /// - If [level] is 0, returns a set containing [entry].
+  /// - If [level] is greater than the depth under [entry], returns an empty set.
+  static SelectorEntries findChildrenAtLevel(SelectorEntry entry, int level) {
+    // If level == 0, the current entry is the target.
+    if (level == 0) return {entry};
 
     // If there are no children, any level > 0 cannot be found.
-    if (option.children == null || option.children!.isEmpty) return {};
+    if (entry.children == null || entry.children!.isEmpty) return {};
 
     // Recurse into the next level
     SelectorEntries result = {};
-    for (var child in option.children ?? {}) {
+    for (var child in entry.children ?? {}) {
       result.addAll(findChildrenAtLevel(child, level - 1));
     }
     return result;
   }
 
-  /// Returns the entry ids at the given tree [level] starting from [option].
-  static Set<String> findIdsAtLevel(SelectorEntry option, int level) {
-    // If level == 0, the current node is the target.
-    if (level == 0) return {option.id};
+  /// Returns the entry ids at the given tree [level] starting from [entry].
+  static Set<String> findIdsAtLevel(SelectorEntry entry, int level) {
+    // If level == 0, the current entry is the target.
+    if (level == 0) return {entry.id};
 
     // If there are no children, any level > 0 cannot be found.
-    if (option.children == null || option.children!.isEmpty) return {};
+    if (entry.children == null || entry.children!.isEmpty) return {};
 
     // Recurse into the next level
     Set<String> result = {};
-    for (var child in option.children ?? {}) {
+    for (var child in entry.children ?? {}) {
       result.addAll(findIdsAtLevel(child, level - 1));
     }
     return result;
   }
 
   /// Returns the `extra` payload values at the given tree [level] starting from
-  /// [option].
+  /// [entry].
   ///
   /// The result contains values in traversal order, and each value is cast to
   /// [E]. If a node's `extra` is not assignable to [E], a runtime error may be
   /// thrown.
-  static List<E> findExtrasAtLevel<E>(SelectorEntry option, int level) {
+  static List<E> findExtrasAtLevel<E>(SelectorEntry entry, int level) {
     // If level == 0, the current node is the target.
-    if (level == 0) return [option.extra as E];
+    if (level == 0) return [entry.extra as E];
 
     // If there are no children, any level > 0 cannot be found.
-    if (option.children == null || option.children!.isEmpty) return [];
+    if (entry.children == null || entry.children!.isEmpty) return [];
 
     // Recurse into the next level
     List<E> result = [];
-    for (var child in option.children ?? {}) {
+    for (var child in entry.children ?? {}) {
       result.addAll(findExtrasAtLevel(child, level - 1));
     }
     return result;
@@ -81,12 +81,12 @@ class SelectorUtils {
 
       // Loop levelSize times to process only nodes in this level
       for (int i = 0; i < levelSize; i++) {
-        final SelectorEntry option = queue.removeFirst();
-        currentLevelSet.add(option);
+        final SelectorEntry entry = queue.removeFirst();
+        currentLevelSet.add(entry);
 
         // Add all children to the queue; they will be processed as the next level
-        if (!option.hasChildren) continue;
-        for (final child in option.children!) {
+        if (!entry.hasChildren) continue;
+        for (final child in entry.children!) {
           queue.add(child);
         }
       }
@@ -101,6 +101,122 @@ class SelectorUtils {
   int treeDepth(SelectorEntry? root) {
     if (root?.children == null || root?.children?.isEmpty == true) return 1;
     return 1 + root!.children!.map(treeDepth).fold(0, (a, b) => a > b ? a : b);
+  }
+
+  static SelectorEntries removeAnyEntries(Iterable<SelectorEntry> entries) {
+    final SelectorEntries result =
+        entries is Set<SelectorEntry> ? entries : entries.toSet();
+
+    void removeAnyInChildren(SelectorEntry entry) {
+      final children = entry.children;
+      if (children == null || children.isEmpty) return;
+
+      children
+          .removeWhere((child) => child is SelectorChildEntry && child.isAny);
+
+      for (final child in children) {
+        removeAnyInChildren(child);
+      }
+    }
+
+    result.removeWhere((entry) => entry is SelectorChildEntry && entry.isAny);
+    for (final entry in result) {
+      removeAnyInChildren(entry);
+    }
+
+    return result;
+  }
+
+  /// Creates a deep copy of selector entries.
+  ///
+  /// The returned set and all nested nodes are new instances, so in-place
+  /// operations (e.g. [clippingTree]) won't mutate the original tree.
+  ///
+  /// If [skipAny] is true, nodes marked as "Any" are excluded from the cloned
+  /// result.
+  static SelectorEntries deepCloneEntries(
+    Iterable<SelectorEntry> entries, {
+    bool skipAny = false,
+  }) {
+    return entries
+        .where((entry) =>
+            !skipAny || !(entry is SelectorChildEntry && entry.isAny))
+        .map((entry) => _cloneEntry(entry, skipAny: skipAny))
+        .toSet();
+  }
+
+  static SelectorEntry _cloneEntry(
+    SelectorEntry entry, {
+    bool skipAny = false,
+  }) {
+    final clonedChildren = entry.children
+        ?.where((child) =>
+            !skipAny || !(child is SelectorChildEntry && child.isAny))
+        .map((child) => _cloneEntry(child, skipAny: skipAny))
+        .toSet();
+
+    if (entry is SelectorCategoryEntry) {
+      return SelectorCategoryEntry(
+        selectionMode: entry.selectionMode,
+        header: entry.header == null
+            ? null
+            : _cloneEntry(entry.header!, skipAny: skipAny),
+        headerSelectionMode: entry.headerSelectionMode,
+        footer: entry.footer == null
+            ? null
+            : _cloneEntry(entry.footer!, skipAny: skipAny),
+        footerSelectionMode: entry.footerSelectionMode,
+        id: entry.id,
+        name: entry.name ?? '',
+        children: clonedChildren,
+        enabled: entry.enabled,
+        immediate: entry.immediate,
+      );
+    }
+
+    if (entry is SelectorRangeEntry) {
+      return SelectorRangeEntry(
+        min: entry.min,
+        max: entry.max,
+        inputLabel: entry.inputLabel,
+        minHintText: entry.minHintText,
+        maxHintText: entry.maxHintText,
+        parentId: entry.parentId,
+        id: entry.id,
+        name: entry.name,
+        children: clonedChildren,
+        enabled: entry.enabled,
+        immediate: entry.immediate,
+        extra: entry.extra,
+      );
+    }
+
+    if (entry is SelectorTextEntry) {
+      return SelectorTextEntry(
+        parentId: entry.parentId,
+        id: entry.id,
+        name: entry.name,
+        children: clonedChildren,
+        enabled: entry.enabled,
+        immediate: entry.immediate,
+      );
+    }
+
+    if (entry is SelectorChildEntry) {
+      return SelectorChildEntry(
+        parentId: entry.parentId,
+        id: entry.id,
+        name: entry.name,
+        children: clonedChildren,
+        enabled: entry.enabled,
+        immediate: entry.immediate,
+        extra: entry.extra,
+      );
+    }
+
+    throw UnsupportedError(
+      'Unsupported SelectorEntry type: ${entry.runtimeType}',
+    );
   }
 
   /// Removes unselected nodes from [items] by clipping the tree in-place.
@@ -126,6 +242,52 @@ class SelectorUtils {
     for (var item in items) {
       clippingTree(item.children, selectedItemsPerLevel, level + 1);
     }
+  }
+
+  // 根据选中内容，计算出有效标签，最终返回一个结果标签。
+  static String? getResultLabel(SelectorEntries? resultEntries) {
+    if (resultEntries == null) return null;
+
+    // 找到第一个有效标签后继续遍历；一旦找到第二个，立即返回“多选”。
+    // 有效标签规则：
+    // 从根节点到端节点，算作一条选择路径
+    // 端节点的名称添加到 candidateLabels 中
+    // 如果端节点 isAny=true，则取端节点的父节点的名称，如果父节点是根节点(类别节点)，则舍弃
+    String? firstLabel;
+
+    bool collectCandidateLabels(
+      SelectorEntry entry, {
+      SelectorEntry? parent,
+    }) {
+      final children = entry.children;
+      final isLeaf = children == null || children.isEmpty;
+      if (isLeaf) {
+        String? label;
+        if (entry is SelectorChildEntry && entry.isAny) {
+          if (parent == null || parent is SelectorCategoryEntry) return false;
+          label = parent.name;
+        } else {
+          label = entry.name;
+        }
+
+        if (label == null || label.isEmpty) return false;
+        if (firstLabel == null) {
+          firstLabel = label;
+          return false;
+        }
+        return true;
+      }
+
+      for (final child in children) {
+        if (collectCandidateLabels(child, parent: entry)) return true;
+      }
+      return false;
+    }
+
+    for (final entry in resultEntries) {
+      if (collectCandidateLabels(entry)) return '多选';
+    }
+    return firstLabel;
   }
 
   /// Restores a previous selection by matching ids within [items].
@@ -156,7 +318,7 @@ class SelectorUtils {
       if (item != null) {
         result[level].add(item);
         if (item is SelectorRangeEntry && item.isCustom) {
-          // If it's a custom option, restore the previous input values.
+          // If it's a custom entry, restore the previous input values.
           selectedItem as SelectorRangeEntry;
           item.min = selectedItem.min;
           item.max = selectedItem.max;

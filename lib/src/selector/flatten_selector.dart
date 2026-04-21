@@ -75,7 +75,7 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
       _selectedItemsPerLevel.addAll(SelectorUtils.restorePreviousSelected(
           widget.entries, widget.previousSelected));
     } else {
-      // Check whether there is an "Any" option; if so, select it by default
+      // Check whether there is an "Any" entry; if so, select it by default
       // _checkHasAnyItem();
     }
 
@@ -119,7 +119,7 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
     if (SelectionMode.multiple == categorySelectionMode) {
       return SelectionMode.multiple;
     }
-    if (widget.entries.firstWhereOrNull(testMultipleItem) != null) {
+    if (widget.entries.firstWhereOrNull(testMultipleElement) != null) {
       return SelectionMode.multiple;
     }
     return SelectionMode.single;
@@ -131,9 +131,9 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
   /// Checks whether the selected category has an "Any" item
   void _checkHasAnyItem() {
     for (var category in widget.entries) {
-      final anyItem = category.children?.singleWhereOrNull(testAnyItem);
+      final anyItem = category.children?.singleWhereOrNull(testAnyElement);
       if (anyItem != null) {
-        // If there is an "Any" option, select it
+        // If there is an "Any" entry, select it
         _selectedItemsPerLevel.clear();
         while (_selectedItemsPerLevel.length < level) {
           _selectedItemsPerLevel.add({});
@@ -282,9 +282,8 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
 
     final selectedItems = _selectedItemsPerLevel[1];
 
-    // Handle "Any" logic
     if (item.isAny) {
-      // "Any" node
+      // "Any" entry
       if (SelectionMode.single == childrenSelectionMode) {
         // Single-select mode
         if (selectedItems.contains(item)) {
@@ -307,9 +306,9 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
         }
       }
     } else {
-      // Normal node
+      // Normal entry
 
-      // If there is an "Any" node, remove it
+      // If there is an "Any" entry, remove it
       selectedItems.removeWhere((e) =>
           (e as SelectorChildEntry).parentId == item.parentId && e.isAny);
 
@@ -339,8 +338,8 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
     } else if (selectedItems.isEmpty) {
       // If it was a deselect action and no children are selected, deselect the parent as well
       _selectedItemsPerLevel[0].remove(category);
-      // If there is an "Any" child node, select it
-      final anyItem = category.children?.singleWhereOrNull(testAnyItem);
+      // If there is an "Any" child entry, select it
+      final anyItem = category.children?.singleWhereOrNull(testAnyElement);
       if (anyItem != null) {
         selectedItems.add(anyItem);
       }
@@ -350,7 +349,7 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
   }
 
   void _setStateOrImmediateApply(SelectorChildEntry item) {
-    if (item.immediate) {
+    if (SelectionMode.single == selectorSelectionMode || item.immediate) {
       // No need to tap "Apply"; return result immediately
       _onApplyTap();
     } else {
@@ -408,7 +407,7 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
         // Update the custom item
         final category = widget.entries.singleWhereOrNull((e) => e.id == id);
         final customItem =
-            category?.children?.singleWhereOrNull(testCustomItem);
+            category?.children?.singleWhereOrNull(testCustomElement);
         if (customItem != null && customItem is SelectorRangeEntry) {
           customItem.min = minValue;
           customItem.max = maxValue;

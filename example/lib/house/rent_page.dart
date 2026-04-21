@@ -112,7 +112,7 @@ class _RentPageState extends State<RentPage> {
       }
     } else if (result.tabIndex == 1) {
       // 价格筛选
-      _criteriaRepo.buyPriceResult = result;
+      _criteriaRepo.rentResult = result;
       final category = result.selected.firstOrNull;
       if (category == null) return null;
       if (category.id == 'rent') {
@@ -267,7 +267,6 @@ class _RentPageState extends State<RentPage> {
                 dataFetcher: _criteriaRepo.fetchRentData,
                 selectedDataFetcher: _criteriaRepo.fetchRentSelectedData,
                 resetDataFetcher: _criteriaRepo.fetchRentResetData,
-                selectionMode: SelectionMode.single,
                 tileVariant: SelectorGridTileVariant.outlined,
                 crossAxisCount: 4,
                 childAspectRatio: 2.5,

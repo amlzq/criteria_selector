@@ -257,7 +257,6 @@ class _MapPageState extends State<MapPage> {
               GridSelector(
                 dataFetcher: _criteriaRepo.fetchBuyPriceData,
                 selectedDataFetcher: _criteriaRepo.fetchBuyPriceSelectedData,
-                resetDataFetcher: _criteriaRepo.fetchBuyPriceResetData,
                 selectionMode: SelectionMode.single,
                 tileVariant: SelectorGridTileVariant.outlined,
                 crossAxisCount: 4,

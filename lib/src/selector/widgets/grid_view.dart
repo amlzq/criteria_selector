@@ -24,6 +24,7 @@ class SelectorGridView<T extends SelectorEntry> extends StatefulWidget {
     this.selectedItems,
     required this.onItemTap,
     this.inputListener,
+    this.focusListener,
     this.padding,
     this.tileVariant,
   });
@@ -35,8 +36,9 @@ class SelectorGridView<T extends SelectorEntry> extends StatefulWidget {
 
   final ItemTapCallback onItemTap;
 
-  final Function(String categoryId, String minValue, String maxValue)?
-      inputListener;
+  final CustomRangeListener? inputListener;
+
+  final CustomRangeListener? focusListener;
 
   final EdgeInsetsGeometry? padding;
 
@@ -53,10 +55,10 @@ class SelectorGridView<T extends SelectorEntry> extends StatefulWidget {
 
 class SelectorGridViewState<T extends SelectorEntry>
     extends State<SelectorGridView<T>> with AutomaticKeepAliveClientMixin {
-  SelectorRangeEntry? firstCustomItem;
-  SelectorRangeEntry? lastCustomItem;
+  SelectorRangeEntry? _firstCustomItem;
+  SelectorRangeEntry? _lastCustomItem;
 
-  late List<T> itemsWithoutCustom;
+  late List<T> _itemsWithoutCustom;
 
   TextEditingController? _minController;
   TextEditingController? _maxController;
@@ -64,21 +66,68 @@ class SelectorGridViewState<T extends SelectorEntry>
   FocusNode? _minFocusNode;
   FocusNode? _maxFocusNode;
 
+  late SelectorEntries _selectedItems;
+
+  late String _categoryId;
+
   @override
   void initState() {
     super.initState();
 
-    firstCustomItem = widget.items.firstCustomOrNull;
-    lastCustomItem = widget.items.lastCustomOrNull;
+    _selectedItems = widget.selectedItems ?? {};
 
-    itemsWithoutCustom = widget.items;
-    if (firstCustomItem != null || lastCustomItem != null) {
-      itemsWithoutCustom = widget.items.where(testNotCustomItem).toList();
-      _initializeInput();
-      _minController?.text =
-          (firstCustomItem ?? lastCustomItem)!.min?.toString() ?? '';
-      _maxController?.text =
-          (firstCustomItem ?? lastCustomItem)!.max?.toString() ?? '';
+    _firstCustomItem = widget.items.firstCustomOrNull;
+    _lastCustomItem = widget.items.lastCustomOrNull;
+    _itemsWithoutCustom = widget.items;
+    if (_firstCustomItem != null || _lastCustomItem != null) {
+      _itemsWithoutCustom = widget.items.where(testNotCustomItem).toList();
+      _minController ??= TextEditingController();
+      _maxController ??= TextEditingController();
+      _minFocusNode ??= FocusNode();
+      _maxFocusNode ??= FocusNode();
+    }
+
+    // 恢复自定义项的选中状态
+    for (var selectedItem in _selectedItems) {
+      if (selectedItem is SelectorRangeEntry && selectedItem.isCustom) {
+        _minController?.text = selectedItem.min?.toString() ?? '';
+        _maxController?.text = selectedItem.max?.toString() ?? '';
+      }
+    }
+
+    _categoryId = widget.category?.id ??
+        (widget.items.first as SelectorChildEntry).parentId;
+
+    _minController?.addListener(_inputListener);
+    _maxController?.addListener(_inputListener);
+    _minFocusNode?.addListener(_focusListener);
+    _maxFocusNode?.addListener(_focusListener);
+  }
+
+  @override
+  void didUpdateWidget(covariant SelectorGridView<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    _selectedItems = widget.selectedItems ?? {};
+    debugPrint('didUpdateWidget _selectedItems=${_selectedItems.length}');
+
+    _firstCustomItem = widget.items.firstCustomOrNull;
+    _lastCustomItem = widget.items.lastCustomOrNull;
+    _itemsWithoutCustom = widget.items;
+    if (_firstCustomItem != null || _lastCustomItem != null) {
+      _itemsWithoutCustom = widget.items.where(testNotCustomItem).toList();
+    }
+
+    // 恢复自定义项的选中状态
+    for (var selectedItem in _selectedItems) {
+      if (selectedItem is SelectorRangeEntry && selectedItem.isCustom) {
+        _minController?.text = selectedItem.min?.toString() ?? '';
+        _maxController?.text = selectedItem.max?.toString() ?? '';
+      }
+    }
+
+    if (!inputNotEmpty) {
+      _unfocusAllInput();
     }
   }
 
@@ -86,42 +135,40 @@ class SelectorGridViewState<T extends SelectorEntry>
   void dispose() {
     _minController?.removeListener(_inputListener);
     _maxController?.removeListener(_inputListener);
+    _minFocusNode?.removeListener(_focusListener);
+    _maxFocusNode?.removeListener(_focusListener);
 
     _minController?.dispose();
     _maxController?.dispose();
-
     _minFocusNode?.dispose();
     _maxFocusNode?.dispose();
 
     super.dispose();
   }
 
-  void _initializeInput() {
-    if (_minController == null) {
-      _minController = TextEditingController();
-      _minController?.addListener(_inputListener);
-    }
-    if (_maxController == null) {
-      _maxController = TextEditingController();
-      _maxController?.addListener(_inputListener);
-    }
-    _minFocusNode ??= FocusNode();
-    _maxFocusNode ??= FocusNode();
-  }
-
   /// Listens to input fields; once the user types, clears selected items
   void _inputListener() {
-    if (inputNotEmpty) {
-      if (widget.selectedItems?.isNotEmpty ?? false) {
-        setState(() {
-          widget.selectedItems?.clear();
-        });
-      }
-      final categoryId = widget.category?.id ??
-          (widget.items.first as SelectorChildEntry).parentId;
-      widget.inputListener
-          ?.call(categoryId, _minController!.text, _maxController!.text);
+    // debugPrint('_inputListener $_minController $_maxController');
+    // if (_selectedItems.isNotEmpty) {
+    //   setState(() {
+    //     _selectedItems.clear();
+    //   });
+    // }
+    // widget.inputListener
+    //     ?.call(_categoryId, _minController!.text, _maxController!.text);
+  }
+
+  void _focusListener() {
+    debugPrint('_focusListener $_minFocusNode $_maxFocusNode');
+    if (!(_minFocusNode?.hasFocus == true) &&
+        !(_maxFocusNode?.hasFocus == true)) {
+      widget.focusListener
+          ?.call(_categoryId, _minController!.text, _maxController!.text);
     }
+    // if (!(_maxFocusNode?.hasFocus == true)) {
+    //   widget.focusListener
+    //       ?.call(_categoryId, _minController!.text, _maxController!.text);
+    // }
   }
 
   bool get inputNotEmpty =>
@@ -149,12 +196,14 @@ class SelectorGridViewState<T extends SelectorEntry>
     // Clear custom input
     _clearAllInput();
     _unfocusAllInput();
+    _inputListener();
     widget.onItemTap(index, item);
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    debugPrint('_selectedItems=${_selectedItems.length}');
     return SingleChildScrollView(
       physics: const ClampingScrollPhysics(),
       padding: widget.padding,
@@ -175,10 +224,10 @@ class SelectorGridViewState<T extends SelectorEntry>
                 ),
               ),
             ),
-          if (firstCustomItem != null)
+          if (_firstCustomItem != null)
             SelectorFieldTile(
-              firstCustomItem!,
-              padding: const EdgeInsets.only(top: 10.0),
+              _firstCustomItem!,
+              padding: const EdgeInsets.only(bottom: 10.0),
               minController: _minController,
               maxController: _maxController,
               minFocusNode: _minFocusNode,
@@ -195,10 +244,11 @@ class SelectorGridViewState<T extends SelectorEntry>
               mainAxisSpacing: widget.mainAxisSpacing,
               crossAxisSpacing: widget.crossAxisSpacing,
             ),
-            itemCount: itemsWithoutCustom.length,
+            itemCount: _itemsWithoutCustom.length,
             itemBuilder: (context, index) {
-              final item = itemsWithoutCustom[index];
-              final selected = widget.selectedItems?.contains(item) ?? false;
+              final item = _itemsWithoutCustom[index];
+              final selected = _selectedItems.contains(item);
+              debugPrint('$item $selected');
               return SelectorGridTile(
                 onTap: () => _onItemTap.call(index, item),
                 enabled: item.enabled,
@@ -208,9 +258,9 @@ class SelectorGridViewState<T extends SelectorEntry>
               );
             },
           ),
-          if (lastCustomItem != null)
+          if (_lastCustomItem != null)
             SelectorFieldTile(
-              lastCustomItem!,
+              _lastCustomItem!,
               padding: const EdgeInsets.only(top: 10.0),
               minController: _minController,
               maxController: _maxController,

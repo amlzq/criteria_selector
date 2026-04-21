@@ -12,7 +12,7 @@ const kSelectorChipBarHeight = 44.0;
 /// A horizontal chip bar for selecting among sibling entries.
 ///
 /// This widget is commonly used as a "quick filter" row (e.g. showing children
-/// of a selected node). Selection state is provided by [selectedItems] and user
+/// of a selected entry). Selection state is provided by [selectedItems] and user
 /// interactions are reported via [onItemTap].
 class SelectorChipBar<T extends SelectorEntry> extends StatelessWidget {
   const SelectorChipBar({

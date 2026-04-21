@@ -43,7 +43,7 @@ class HouseCriteriaRepository {
 
     final region = [community, metro, nearby];
     debugPrint('region length: ${region.length}');
-    SelectorEntries options = region
+    SelectorEntries entries = region
         .map(
           (category) => SelectorCategoryEntry(
             id: category.id!,
@@ -74,14 +74,14 @@ class HouseCriteriaRepository {
 
     // 将“距地铁”作为地铁类别的 header
     final metroEntry =
-        options.firstWhere((e) => e.id == 'metro') as SelectorCategoryEntry;
+        entries.firstWhere((e) => e.id == 'metro') as SelectorCategoryEntry;
     final metroRadiusEntry =
         metroEntry.children?.firstWhere((e) => e.id == 'metro_radius');
     metroEntry.children?.remove(metroRadiusEntry);
     metroEntry.header = metroRadiusEntry;
 
     // 插入"不限"选项
-    for (SelectorEntry category in options) {
+    for (SelectorEntry category in entries) {
       category.children?.insert(
           0,
           SelectorTextEntry.any(
@@ -92,8 +92,8 @@ class HouseCriteriaRepository {
       }
     }
 
-    debugPrint('region length: ${options.length}');
-    return Future.value(options);
+    debugPrint('region length: ${entries.length}');
+    return Future.value(entries);
   }
 
   DropselectResult? buyPriceResult;
@@ -102,13 +102,18 @@ class HouseCriteriaRepository {
   final buyPriceIniteialSelected = {
     SelectorCategoryEntry(
       id: 'total',
-      name: '总价',
-      children: {SelectorIntEntry.any(parentId: 'total', name: '不限')},
-    )
+      name: '',
+      children: {SelectorIntEntry(parentId: 'total', id: '203', name: '')},
+    ),
+    SelectorCategoryEntry(
+      id: 'unit',
+      name: '',
+      children: {SelectorIntEntry(parentId: 'unit', id: '104', name: '')},
+    ),
   };
 
   SelectorEntries? fetchBuyPriceSelectedData() =>
-      buyPriceResult?.selected ?? buyPriceIniteialSelected;
+      buyPriceResult?.selected; // ?? buyPriceIniteialSelected;
 
   SelectorEntries? fetchBuyPriceResetData() => buyPriceIniteialSelected;
 
@@ -125,7 +130,7 @@ class HouseCriteriaRepository {
     debugPrint('unitPrice length: ${unitPrice.data?.length}');
 
     final prices = [totalPrice, unitPrice];
-    SelectorEntries options = prices
+    SelectorEntries entries = prices
         .map(
           (category) => SelectorCategoryEntry(
             id: category.id!,
@@ -145,7 +150,7 @@ class HouseCriteriaRepository {
         .toSet();
 
     // 插入一些特殊选项
-    for (SelectorEntry category in options) {
+    for (SelectorEntry category in entries) {
       // 插入"不限"选项
       category.children?.insert(
           0,
@@ -161,8 +166,8 @@ class HouseCriteriaRepository {
               maxHintText: '最大值'));
     }
 
-    debugPrint('prices length: ${options.length}');
-    return Future.value(options);
+    debugPrint('prices length: ${entries.length}');
+    return Future.value(entries);
   }
 
   DropselectResult? sellPriceResult;
@@ -171,7 +176,7 @@ class HouseCriteriaRepository {
   final sellPriceIniteialSelected = {
     SelectorCategoryEntry(
       id: 'total',
-      name: '总价',
+      name: '',
       children: {SelectorIntEntry.any(parentId: 'total', name: '不限')},
     )
   };
@@ -194,7 +199,7 @@ class HouseCriteriaRepository {
     debugPrint('downpay length: ${downpay.data?.length}');
 
     final prices = [totalPrice, downpay];
-    SelectorEntries options = prices
+    SelectorEntries entries = prices
         .map(
           (category) => SelectorCategoryEntry(
             id: category.id!,
@@ -216,7 +221,7 @@ class HouseCriteriaRepository {
         .toSet();
 
     // 插入一些特殊选项
-    for (SelectorEntry category in options) {
+    for (SelectorEntry category in entries) {
       // 插入"不限"选项
       category.children?.insert(
           0,
@@ -232,8 +237,8 @@ class HouseCriteriaRepository {
               maxHintText: '最大值'));
     }
 
-    debugPrint('prices length: ${options.length}');
-    return Future.value(options);
+    debugPrint('prices length: ${entries.length}');
+    return Future.value(entries);
   }
 
   DropselectResult? rentResult;
@@ -241,8 +246,8 @@ class HouseCriteriaRepository {
   /// 租金的 初始选中项
   final rentIniteialSelected = {
     SelectorCategoryEntry(
-      id: 'total',
-      name: '租金',
+      id: 'rent',
+      name: '',
       children: {SelectorIntEntry.any(parentId: 'total', name: '不限')},
     )
   };
@@ -261,7 +266,7 @@ class HouseCriteriaRepository {
     debugPrint('rent length: ${rent.data?.length}');
 
     final prices = [rent];
-    SelectorEntries options = prices
+    SelectorEntries entries = prices
         .map(
           (category) => SelectorCategoryEntry(
             id: category.id!,
@@ -281,7 +286,7 @@ class HouseCriteriaRepository {
         .toSet();
 
     // 插入一些特殊选项
-    for (SelectorEntry category in options) {
+    for (SelectorEntry category in entries) {
       // 插入"不限"选项
       category.children?.insert(
           0,
@@ -297,8 +302,8 @@ class HouseCriteriaRepository {
               maxHintText: '最大值'));
     }
 
-    debugPrint('prices length: ${options.length}');
-    return Future.value(options);
+    debugPrint('prices length: ${entries.length}');
+    return Future.value(entries);
   }
 
   DropselectResult? floorPlanResult;
@@ -316,7 +321,7 @@ class HouseCriteriaRepository {
     await Future.delayed(const Duration(milliseconds: 250));
     final floorPlan = floorPlanFromJson(await loadJsonData('floor_plan.json'));
     debugPrint('floorPlan length: ${floorPlan.length}');
-    SelectorEntries options = floorPlan
+    SelectorEntries entries = floorPlan
         .map(
           (category) => SelectorCategoryEntry(
             id: category.id!,
@@ -342,7 +347,7 @@ class HouseCriteriaRepository {
         .toSet();
 
     // 插入"价格自定义"选项
-    for (SelectorEntry category in options) {
+    for (SelectorEntry category in entries) {
       if (category.id == 'area') {
         category.children?.add(SelectorIntEntry.custom(
             parentId: category.id,
@@ -353,8 +358,8 @@ class HouseCriteriaRepository {
       }
     }
 
-    debugPrint('floorPlan length: ${options.length}');
-    return Future.value(options);
+    debugPrint('floorPlan length: ${entries.length}');
+    return Future.value(entries);
   }
 
   DropselectResult? sortResult;
@@ -374,7 +379,7 @@ class HouseCriteriaRepository {
     await Future.delayed(const Duration(milliseconds: 250));
     final sort = sortFromJson(await loadJsonData('sort.json'));
     debugPrint('sort length: ${sort.length}');
-    SelectorEntries options = sort
+    SelectorEntries entries = sort
         .map((e) => SelectorTextEntry.name(
               id: e.id!,
               name: e.name!,
@@ -382,8 +387,8 @@ class HouseCriteriaRepository {
             ))
         .toSet();
 
-    debugPrint('sort length: ${options.length}');
-    return Future.value(options);
+    debugPrint('sort length: ${entries.length}');
+    return Future.value(entries);
   }
 }
 

@@ -76,14 +76,14 @@ class _SelectorPanelState extends State<SelectorPanel> {
                 // return controller.selector.buildSkeleton(context);
 
                 // Request succeeded: show data
-                final options = snapshot.data?.toList() ?? <SelectorEntry>[];
+                final entries = snapshot.data?.toList() ?? <SelectorEntry>[];
                 // final controller = SelectorController(
                 //   selector: widget.selector,
                 //   changeCallback: widget.onChangeTap,
                 //   applyCallback: widget.onApplyTap,
                 //   resetCallback: widget.onResetTap,
                 // );
-                debugPrint('options length: ${options.length}');
+                debugPrint('entries length: ${entries.length}');
                 return GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () {
@@ -102,7 +102,7 @@ class _SelectorPanelState extends State<SelectorPanel> {
                       data: widget.selectorTheme ??
                           SelectorThemeData.fallback(Theme.of(context)),
                       child: controller.selector.buildBody(
-                          context, options, controller.previousSelected),
+                          context, entries, controller.previousSelected),
                     ),
                     // controller.selector.builder != null
                     //     ? controller.selector.builder!.call(
@@ -112,16 +112,16 @@ class _SelectorPanelState extends State<SelectorPanel> {
                     //       )
                     //     : switch (controller.selector.layoutMode) {
                     //         SelectorLayoutMode.cascading => CascadingSelectorView(
-                    //             options: options,
+                    //             entries: entries,
                     //             previousSelected: controller.previousSelected),
                     //         SelectorLayoutMode.grid => GridSelectorView(
-                    //             options: options,
+                    //             entries: entries,
                     //             previousSelected: controller.previousSelected),
                     //         SelectorLayoutMode.flatten => FlattenSelectorView(
-                    //             options: options,
+                    //             entries: entries,
                     //             previousSelected: controller.previousSelected),
                     //         SelectorLayoutMode.list => ListSelectorView(
-                    //             options: options,
+                    //             entries: entries,
                     //             previousSelected: controller.previousSelected),
                     //         // _ => const Placeholder(),
                     //       },
