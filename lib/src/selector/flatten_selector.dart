@@ -49,14 +49,12 @@ class FlattenSelectorView extends StatefulWidget {
 }
 
 class FlattenSelectorViewState extends State<FlattenSelectorView> {
-  /// Selected category entry
+  /// Focused category entry
   // SelectorCategoryEntry? _selectedCategory;
-  int _selectedCategoryIndex = 0;
+  int _tempSelectedCategoryIndex = 0;
 
   /// Selected entries per level, fixed to two levels
   final List<SelectorEntries> _selectedItemsPerLevel = [];
-
-  final Map<String, (String, String)> lastInput = {};
 
   var _isScrollingProgrammatically = false;
   final GlobalKey _scrollViewKey = GlobalKey();
@@ -76,10 +74,10 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
           widget.entries, widget.previousSelected));
     } else {
       // Check whether there is an "Any" entry; if so, select it by default
-      // _checkHasAnyItem();
+      _selectAnyItemIfHas();
     }
 
-    _selectedCategoryIndex = 0;
+    _tempSelectedCategoryIndex = 0;
 
     // _selectedCategory =
     //     _selectedItemsPerLevel[0].first as SelectorCategoryEntry;
@@ -129,15 +127,15 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
   SelectionMode? get categorySelectionMode => selector?.selectionMode;
 
   /// Checks whether the selected category has an "Any" item
-  void _checkHasAnyItem() {
+  void _selectAnyItemIfHas() {
+    _selectedItemsPerLevel.clear();
+    while (_selectedItemsPerLevel.length < level) {
+      _selectedItemsPerLevel.add({});
+    }
     for (var category in widget.entries) {
       final anyItem = category.children?.singleWhereOrNull(testAnyElement);
       if (anyItem != null) {
-        // If there is an "Any" entry, select it
-        _selectedItemsPerLevel.clear();
-        while (_selectedItemsPerLevel.length < level) {
-          _selectedItemsPerLevel.add({});
-        }
+        // If there is an "Any" entry, select it.
         _selectedItemsPerLevel[0].add(category);
         _selectedItemsPerLevel[1].add(anyItem);
       }
@@ -145,7 +143,7 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
   }
 
   SelectorCategoryEntry? get selectedCategory =>
-      widget.entries.elementAtOrNull(_selectedCategoryIndex)
+      widget.entries.elementAtOrNull(_tempSelectedCategoryIndex)
           as SelectorCategoryEntry;
 
   bool _onScrollNotification(ScrollNotification notification) {
@@ -201,9 +199,9 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
     }
 
     if (firstVisibleIndex != null &&
-        firstVisibleIndex != _selectedCategoryIndex) {
+        firstVisibleIndex != _tempSelectedCategoryIndex) {
       setState(() {
-        _selectedCategoryIndex = firstVisibleIndex!;
+        _tempSelectedCategoryIndex = firstVisibleIndex!;
       });
     }
   }
@@ -228,10 +226,10 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
   }
 
   void _onCategoryItemTap(int index) {
-    if (_selectedCategoryIndex == index) return;
+    if (_tempSelectedCategoryIndex == index) return;
 
     setState(() {
-      _selectedCategoryIndex = index;
+      _tempSelectedCategoryIndex = index;
     });
 
     final childKey = ValueKey('category_$index');
@@ -264,12 +262,37 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
     });
   }
 
-  void _inputListener(String categoryId, String minValue, String maxValue) {
-    debugPrint('$categoryId: $minValue,$maxValue');
-    lastInput[categoryId] = (minValue, maxValue);
+  void _focusListener(String categoryId, String minValue, String maxValue) {
+    debugPrint('_focusListener $categoryId: $minValue,$maxValue');
+    _customItemSelection(categoryId, minValue, maxValue);
   }
 
-  void _onChildrenItemTap(int index, SelectorChildEntry item) {
+  void _customItemSelection(
+      String categoryId, String minValue, String maxValue) {
+    var minInt = int.tryParse(minValue) ?? 0;
+    var maxInt = int.tryParse(maxValue) ?? 0;
+    if (minInt != 0 || maxInt != 0) {
+      // Valid custom input provided
+      if (minInt > maxInt) {
+        final temp = minInt;
+        minInt = maxInt;
+        maxInt = temp;
+      }
+      // Update the custom item
+      final category =
+          widget.entries.singleWhereOrNull((e) => e.id == categoryId);
+      final customItem =
+          category?.children?.singleWhereOrNull(testCustomElement);
+      if (customItem != null && customItem is SelectorRangeEntry) {
+        customItem.min = minInt;
+        customItem.max = maxInt;
+        customItem.name = '$minInt-$maxInt';
+        _onTerminalItemTap(customItem);
+      }
+    }
+  }
+
+  void _onTerminalItemTap(SelectorChildEntry item) {
     while (_selectedItemsPerLevel.length < level) {
       _selectedItemsPerLevel.add({});
     }
@@ -284,27 +307,16 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
 
     if (item.isAny) {
       // "Any" entry
-      if (SelectionMode.single == childrenSelectionMode) {
-        // Single-select mode
-        if (selectedItems.contains(item)) {
-          return;
-        } else {
-          // Clear selected list
-          selectedItems
-            ..clear()
-            ..add(item);
-        }
-      } else {
-        // Multi-select mode
-        if (selectedItems.contains(item)) {
-          selectedItems.remove(item);
-        } else {
-          // Remove items that share the same parent from the selected list
-          selectedItems.removeWhere(
-              (e) => (e as SelectorChildEntry).parentId == item.parentId);
-          selectedItems.add(item);
-        }
-      }
+
+      // Remove items that share the same parent from the selected list
+      selectedItems.removeWhere((e) => testSameParentElement(e, item.parentId));
+      selectedItems.add(item);
+    } else if (item is SelectorRangeEntry && item.isCustom) {
+      // Custom range entry
+
+      // Remove other entry in the same category
+      selectedItems.removeWhere((e) => testSameParentElement(e, item.parentId));
+      selectedItems.add(item);
     } else {
       // Normal entry
 
@@ -356,11 +368,12 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
       // Update UI state
       setState(() {});
 
-      _customRangeSelection();
-
-      final entries = widget.entries.toSet();
-      SelectorUtils.clippingTree(entries, _selectedItemsPerLevel, 0);
-      controller?.change(entries);
+      final newEntries = SelectorUtils.cloneTree(
+        widget.entries,
+        _selectedItemsPerLevel,
+        deepCloneSelectedSubtree: false,
+      );
+      controller?.change(newEntries);
     }
   }
 
@@ -369,7 +382,7 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
     _selectedItemsPerLevel.addAll(SelectorUtils.restorePreviousSelected(
         widget.entries, controller?.resetSelected));
 
-    _selectedCategoryIndex = 0;
+    _tempSelectedCategoryIndex = 0;
 
     // _selectedCategory =
     //     _selectedItemsPerLevel[0].first as SelectorCategoryEntry;
@@ -384,42 +397,9 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
       return;
     }
 
-    // _customRangeSelection();
-
     final entries = widget.entries.toSet();
     SelectorUtils.clippingTree(entries, _selectedItemsPerLevel, 0);
     controller?.apply(entries);
-  }
-
-  void _customRangeSelection() {
-    for (var entry in lastInput.entries) {
-      final id = entry.key;
-      final value = entry.value;
-      var minValue = int.tryParse(value.$1) ?? 0;
-      var maxValue = int.tryParse(value.$2) ?? 0;
-      if (minValue != 0 || maxValue != 0) {
-        // Valid custom input provided
-        if (minValue > maxValue) {
-          final temp = minValue;
-          minValue = maxValue;
-          maxValue = temp;
-        }
-        // Update the custom item
-        final category = widget.entries.singleWhereOrNull((e) => e.id == id);
-        final customItem =
-            category?.children?.singleWhereOrNull(testCustomElement);
-        if (customItem != null && customItem is SelectorRangeEntry) {
-          customItem.min = minValue;
-          customItem.max = maxValue;
-        }
-        // Select the custom item and its parent category
-        while (_selectedItemsPerLevel.length < level) {
-          _selectedItemsPerLevel.add({});
-        }
-        _selectedItemsPerLevel[1].add(customItem!);
-        _selectedItemsPerLevel[0].add(category!);
-      }
-    }
   }
 
   @override
@@ -453,7 +433,7 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
                   itemBuilder: (context, index) {
                     final item = widget.entries[index];
                     final selected = selectedCategories.contains(item);
-                    final focused = _selectedCategoryIndex == index;
+                    final focused = _tempSelectedCategoryIndex == index;
                     return SelectorListTile(
                       label: item.name ?? '',
                       selected: focused,
@@ -507,9 +487,9 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
                           category: category,
                           items: items,
                           selectedItems: selectedItems,
-                          onItemTap: (index, item) => _onChildrenItemTap(
-                              index, item as SelectorChildEntry),
-                          inputListener: _inputListener,
+                          onItemTap: (index, item) =>
+                              _onTerminalItemTap(item as SelectorChildEntry),
+                          focusListener: _focusListener,
                           padding:
                               EdgeInsets.only(top: 18, bottom: isLast ? 18 : 0),
                         );

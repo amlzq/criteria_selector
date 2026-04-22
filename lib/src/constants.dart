@@ -101,6 +101,23 @@ extension SelectorEntriesExtension on SelectorEntries {
       }
       for (var entry in entries) {
         result[level].add(entry);
+        if (entry is SelectorCategoryEntry) {
+          final header = entry.header;
+          final headerChildren = header?.children;
+          if (header != null &&
+              headerChildren != null &&
+              headerChildren.isNotEmpty) {
+            traverse({header}, level + 1);
+          }
+
+          final footer = entry.footer;
+          final footerChildren = footer?.children;
+          if (footer != null &&
+              footerChildren != null &&
+              footerChildren.isNotEmpty) {
+            traverse({footer}, level + 1);
+          }
+        }
         if (entry.children != null && entry.children!.isNotEmpty) {
           traverse(entry.children!, level + 1);
         }

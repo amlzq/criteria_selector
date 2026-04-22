@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 import '../selector.dart';
 import '../selector_entry.dart';
+import '../selector_utils.dart';
 import 'selector_controller.dart';
 import 'widgets/widgets.dart';
 
@@ -71,7 +72,7 @@ class ListSelectorViewState extends State<ListSelectorView> {
 
   SelectionMode? get categorySelectionMode => controller?.selectionMode;
 
-  void _onItemTap(int index, SelectorChildEntry item) {
+  void _onTerminalItemTap(int index, SelectorChildEntry item) {
     if (item.isAny) {
       // "Any" entry
       if (SelectionMode.single == categorySelectionMode) {
@@ -131,9 +132,12 @@ class ListSelectorViewState extends State<ListSelectorView> {
       // Update UI state
       setState(() {});
 
-      final entries = widget.entries.toSet();
-      entries.removeWhere((e) => !_selectedItems.contains(e));
-      controller?.change(entries);
+      final newEntries = SelectorUtils.cloneTree(
+        widget.entries,
+        [_selectedItems],
+        deepCloneSelectedSubtree: false,
+      );
+      controller?.change(newEntries);
     }
   }
 
@@ -167,7 +171,6 @@ class ListSelectorViewState extends State<ListSelectorView> {
   @override
   Widget build(BuildContext context) {
     final selectionMode = controller?.selectionMode;
-
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -176,7 +179,7 @@ class ListSelectorViewState extends State<ListSelectorView> {
             items: widget.entries,
             selectedItems: _selectedItems,
             onItemTap: (index, item) =>
-                _onItemTap(index, item as SelectorChildEntry),
+                _onTerminalItemTap(index, item as SelectorChildEntry),
             radioBuilder: selector?.radioBuilder,
             checkboxBuilder: selector?.checkboxBuilder,
           ),

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 import '../selector.dart';
 import '../selector_entry.dart';
+import '../selector_utils.dart';
 import 'selector_controller.dart';
 import 'selector_theme.dart';
 import 'widgets/widgets.dart';
@@ -550,12 +551,14 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
       // Update UI state
       setState(() {});
 
-      final entries = widget.entries.toSet();
-      if (_selectedItemsPerLevel.isNotEmpty) {
-        _clippingTree(entries, _selectedItemsPerLevel[0], 0);
-      }
-      _applyHeaderFooterSelections(entries);
-      controller?.change(entries);
+      final newEntries = SelectorUtils.cloneTree(
+        widget.entries,
+        _selectedItemsPerLevel,
+        deepCloneSelectedSubtree: false,
+        headerSelectedByCategory: _headerSelectedByCategory,
+        footerSelectedByCategory: _footerSelectedByCategory,
+      );
+      controller?.change(newEntries);
     }
   }
 
@@ -591,65 +594,16 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
     _setStateOrImmediateApply(item);
   }
 
-  /// Removes unselected entries from the tree (clipping)
-  void _clippingTree(
-    Set<SelectorEntry>? items,
-    Set<SelectorEntry>? selectedItems,
-    int level,
-  ) {
-    if (items == null ||
-        items.isEmpty ||
-        selectedItems == null ||
-        selectedItems.isEmpty) {
-      return;
-    }
-    items.removeWhere((e) => !selectedItems.contains(e));
-    if (level + 1 >= _selectedItemsPerLevel.length) return;
-    for (var item in items) {
-      _clippingTree(
-        item.children,
-        _selectedItemsPerLevel[level + 1],
-        level + 1,
-      );
-    }
-  }
-
   void _onApplyTap() {
     final entries = widget.entries.toSet();
-    if (_selectedItemsPerLevel.isNotEmpty) {
-      _clippingTree(entries, _selectedItemsPerLevel[0], 0);
-    }
-    _applyHeaderFooterSelections(entries);
+    SelectorUtils.clippingTree(
+      entries,
+      _selectedItemsPerLevel,
+      0,
+      _headerSelectedByCategory,
+      _footerSelectedByCategory,
+    );
     controller?.apply(entries);
-  }
-
-  void _applyHeaderFooterSelections(Set<SelectorEntry> entries) {
-    for (final entry in entries) {
-      if (entry is! SelectorCategoryEntry) continue;
-      final category = entry;
-
-      final headerSelected = _headerSelectedByCategory[category.id] ?? {};
-      final headerChildren = category.header?.children;
-      if (headerChildren != null) {
-        if (headerSelected.isEmpty) {
-          headerChildren.clear();
-        } else {
-          headerChildren
-              .removeWhere((e) => !headerSelected.any((s) => s.id == e.id));
-        }
-      }
-
-      final footerSelected = _footerSelectedByCategory[category.id] ?? {};
-      final footerChildren = category.footer?.children;
-      if (footerChildren != null) {
-        if (footerSelected.isEmpty) {
-          footerChildren.clear();
-        } else {
-          footerChildren
-              .removeWhere((e) => !footerSelected.any((s) => s.id == e.id));
-        }
-      }
-    }
   }
 
   void _onResetTap() {

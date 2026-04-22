@@ -298,7 +298,7 @@ class SelectorCategoryEntry<E> extends SelectorEntry<E> {
 
   @override
   String toString() =>
-      'SelectorCategoryEntry(id: $id, name: $name, selectionMode: $selectionMode)';
+      'SelectorCategoryEntry(id: $id, name: $name, selectionMode: $selectionMode, header: $header, footer: $footer)';
 }
 
 extension SelectorCategoryEntryExtension on SelectorCategoryEntry {
@@ -329,7 +329,7 @@ extension SelectorCategoryEntryExtension on SelectorCategoryEntry {
 /// Entries form a tree: [SelectorCategoryEntry] is typically the root and
 /// [SelectorChildEntry] represents non-root nodes.
 abstract class SelectorEntry<E> {
-  const SelectorEntry({
+  SelectorEntry({
     required this.id,
     this.name,
     this.children,
@@ -339,7 +339,7 @@ abstract class SelectorEntry<E> {
   });
 
   final String id;
-  final String? name;
+  String? name;
 
   final Set<SelectorEntry<E>>? children;
 
@@ -353,7 +353,8 @@ abstract class SelectorEntry<E> {
   final E? extra;
 
   @override
-  String toString() => 'SelectorEntry(id: $id, name: $name)';
+  String toString() =>
+      'SelectorEntry(id: $id, name: $name, children: $children)';
 }
 
 extension SelectorEntryExt on SelectorEntry {

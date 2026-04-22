@@ -37,13 +37,11 @@ class GridSelectorView extends StatefulWidget {
 }
 
 class GridSelectorViewState extends State<GridSelectorView> {
-  /// Selected category entry
+  /// Focused category entry
   late SelectorCategoryEntry _tempSelectedCategory;
 
   /// Selected entries per level (actual selections), fixed to two levels
   final List<SelectorEntries> _selectedItemsPerLevel = [];
-
-  final Map<String, (String, String)> lastInput = {};
 
   SelectorController? controller;
 
@@ -163,8 +161,6 @@ class GridSelectorViewState extends State<GridSelectorView> {
     if (item == _tempSelectedCategory) return;
     _tempSelectedCategory = item;
 
-    // _customRangeSelection();
-
     if (SelectionMode.single == categorySelectionMode) {
       // Single-select mode: reset previous selection when switching category.
 
@@ -207,8 +203,7 @@ class GridSelectorViewState extends State<GridSelectorView> {
     setState(() {});
   }
 
-  void _onChildrenItemTap(SelectorChildEntry item) {
-    debugPrint('onChildrenItemTap: $item');
+  void _onTerminalItemTap(SelectorChildEntry item) {
     while (_selectedItemsPerLevel.length < level) {
       _selectedItemsPerLevel.add({});
     }
@@ -261,7 +256,10 @@ class GridSelectorViewState extends State<GridSelectorView> {
       _selectAnyItemIfHas();
     }
 
-    // Call change or apply callback
+    _setStateOrImmediateApply(item);
+  }
+
+  void _setStateOrImmediateApply(SelectorChildEntry item) {
     if (SelectionMode.single == selectorSelectionMode || item.immediate) {
       // No need to tap "Apply"; return result immediately
       _onApplyTap();
@@ -272,9 +270,12 @@ class GridSelectorViewState extends State<GridSelectorView> {
       setState(() {});
       // }
 
-      final entries = SelectorUtils.deepCloneEntries(widget.entries.toSet());
-      SelectorUtils.clippingTree(entries, _selectedItemsPerLevel, 0);
-      controller?.change(entries);
+      final newEntries = SelectorUtils.cloneTree(
+        widget.entries,
+        _selectedItemsPerLevel,
+        deepCloneSelectedSubtree: false,
+      );
+      controller?.change(newEntries);
     }
   }
 
@@ -310,11 +311,6 @@ class GridSelectorViewState extends State<GridSelectorView> {
     controller?.reset();
   }
 
-  // void _inputListener(String categoryId, String minValue, String maxValue) {
-  //   debugPrint('$categoryId: $minValue,$maxValue');
-  //   lastInput[categoryId] = (minValue, maxValue);
-  // }
-
   void _focusListener(String categoryId, String minValue, String maxValue) {
     debugPrint('_focusListener $categoryId: $minValue,$maxValue');
     _customItemSelection(categoryId, minValue, maxValue);
@@ -340,14 +336,13 @@ class GridSelectorViewState extends State<GridSelectorView> {
       if (customItem != null && customItem is SelectorRangeEntry) {
         customItem.min = minInt;
         customItem.max = maxInt;
-        // customItem.name = '$minInt-$maxInt';
-        _onChildrenItemTap(customItem);
+        customItem.name = '$minInt-$maxInt';
+        _onTerminalItemTap(customItem);
       }
     }
   }
 
   void _onApplyTap() {
-    // _customRangeSelection();
     final entries = widget.entries.toSet();
     SelectorUtils.clippingTree(entries, _selectedItemsPerLevel, 0);
     controller?.apply(entries);
@@ -373,7 +368,7 @@ class GridSelectorViewState extends State<GridSelectorView> {
         // inputListener: _inputListener,
         focusListener: _focusListener,
         onItemTap: (index, item) =>
-            _onChildrenItemTap(item as SelectorChildEntry),
+            _onTerminalItemTap(item as SelectorChildEntry),
       );
     });
 

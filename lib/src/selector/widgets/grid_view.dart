@@ -23,7 +23,6 @@ class SelectorGridView<T extends SelectorEntry> extends StatefulWidget {
     required this.items,
     this.selectedItems,
     required this.onItemTap,
-    this.inputListener,
     this.focusListener,
     this.padding,
     this.tileVariant,
@@ -35,8 +34,6 @@ class SelectorGridView<T extends SelectorEntry> extends StatefulWidget {
   final SelectorEntries? selectedItems;
 
   final ItemTapCallback onItemTap;
-
-  final CustomRangeListener? inputListener;
 
   final CustomRangeListener? focusListener;
 
@@ -98,8 +95,6 @@ class SelectorGridViewState<T extends SelectorEntry>
     _categoryId = widget.category?.id ??
         (widget.items.first as SelectorChildEntry).parentId;
 
-    _minController?.addListener(_inputListener);
-    _maxController?.addListener(_inputListener);
     _minFocusNode?.addListener(_focusListener);
     _maxFocusNode?.addListener(_focusListener);
   }
@@ -109,7 +104,6 @@ class SelectorGridViewState<T extends SelectorEntry>
     super.didUpdateWidget(oldWidget);
 
     _selectedItems = widget.selectedItems ?? {};
-    debugPrint('didUpdateWidget _selectedItems=${_selectedItems.length}');
 
     _firstCustomItem = widget.items.firstCustomOrNull;
     _lastCustomItem = widget.items.lastCustomOrNull;
@@ -126,6 +120,9 @@ class SelectorGridViewState<T extends SelectorEntry>
       }
     }
 
+    _categoryId = widget.category?.id ??
+        (widget.items.first as SelectorChildEntry).parentId;
+
     if (!inputNotEmpty) {
       _unfocusAllInput();
     }
@@ -133,8 +130,6 @@ class SelectorGridViewState<T extends SelectorEntry>
 
   @override
   void dispose() {
-    _minController?.removeListener(_inputListener);
-    _maxController?.removeListener(_inputListener);
     _minFocusNode?.removeListener(_focusListener);
     _maxFocusNode?.removeListener(_focusListener);
 
@@ -146,29 +141,12 @@ class SelectorGridViewState<T extends SelectorEntry>
     super.dispose();
   }
 
-  /// Listens to input fields; once the user types, clears selected items
-  void _inputListener() {
-    // debugPrint('_inputListener $_minController $_maxController');
-    // if (_selectedItems.isNotEmpty) {
-    //   setState(() {
-    //     _selectedItems.clear();
-    //   });
-    // }
-    // widget.inputListener
-    //     ?.call(_categoryId, _minController!.text, _maxController!.text);
-  }
-
   void _focusListener() {
-    debugPrint('_focusListener $_minFocusNode $_maxFocusNode');
     if (!(_minFocusNode?.hasFocus == true) &&
         !(_maxFocusNode?.hasFocus == true)) {
       widget.focusListener
           ?.call(_categoryId, _minController!.text, _maxController!.text);
     }
-    // if (!(_maxFocusNode?.hasFocus == true)) {
-    //   widget.focusListener
-    //       ?.call(_categoryId, _minController!.text, _maxController!.text);
-    // }
   }
 
   bool get inputNotEmpty =>
@@ -196,14 +174,12 @@ class SelectorGridViewState<T extends SelectorEntry>
     // Clear custom input
     _clearAllInput();
     _unfocusAllInput();
-    _inputListener();
     widget.onItemTap(index, item);
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    debugPrint('_selectedItems=${_selectedItems.length}');
     return SingleChildScrollView(
       physics: const ClampingScrollPhysics(),
       padding: widget.padding,
@@ -248,7 +224,6 @@ class SelectorGridViewState<T extends SelectorEntry>
             itemBuilder: (context, index) {
               final item = _itemsWithoutCustom[index];
               final selected = _selectedItems.contains(item);
-              debugPrint('$item $selected');
               return SelectorGridTile(
                 onTap: () => _onItemTap.call(index, item),
                 enabled: item.enabled,

@@ -219,17 +219,115 @@ class SelectorUtils {
     );
   }
 
-  /// Removes unselected nodes from [items] by clipping the tree in-place.
+  static SelectorEntry _cloneEntryWithChildren(
+    SelectorEntry entry,
+    Set<SelectorEntry>? children, {
+    SelectorEntry? header,
+    SelectorEntry? footer,
+  }) {
+    if (entry is SelectorCategoryEntry) {
+      return SelectorCategoryEntry(
+        selectionMode: entry.selectionMode,
+        header: header,
+        headerSelectionMode: entry.headerSelectionMode,
+        footer: footer,
+        footerSelectionMode: entry.footerSelectionMode,
+        id: entry.id,
+        name: entry.name ?? '',
+        children: children,
+        enabled: entry.enabled,
+        immediate: entry.immediate,
+      );
+    }
+
+    if (entry is SelectorRangeEntry) {
+      return SelectorRangeEntry(
+        min: entry.min,
+        max: entry.max,
+        inputLabel: entry.inputLabel,
+        minHintText: entry.minHintText,
+        maxHintText: entry.maxHintText,
+        parentId: entry.parentId,
+        id: entry.id,
+        name: entry.name,
+        children: children,
+        enabled: entry.enabled,
+        immediate: entry.immediate,
+        extra: entry.extra,
+      );
+    }
+
+    if (entry is SelectorTextEntry) {
+      return SelectorTextEntry(
+        parentId: entry.parentId,
+        id: entry.id,
+        name: entry.name,
+        children: children,
+        enabled: entry.enabled,
+        immediate: entry.immediate,
+      );
+    }
+
+    if (entry is SelectorChildEntry) {
+      return SelectorChildEntry(
+        parentId: entry.parentId,
+        id: entry.id,
+        name: entry.name,
+        children: children,
+        enabled: entry.enabled,
+        immediate: entry.immediate,
+        extra: entry.extra,
+      );
+    }
+
+    throw UnsupportedError(
+      'Unsupported SelectorEntry type: ${entry.runtimeType}',
+    );
+  }
+
+  static SelectorEntry _cloneEntryWithoutChildren(SelectorEntry entry) {
+    return _cloneEntryWithChildren(entry, null);
+  }
+
+  static SelectorEntry _cloneHeaderFooterEntry(
+    SelectorEntry entry,
+    SelectorEntries? selectedChildren, {
+    required bool deepCloneSelectedSubtree,
+  }) {
+    final originalChildren =
+        entry.children?.toList() ?? const <SelectorEntry>[];
+    final selectedIds =
+        selectedChildren?.map((e) => e.id).toSet() ?? const <String>{};
+
+    Set<SelectorEntry>? clonedChildren;
+    if (entry.children != null) {
+      if (selectedIds.isEmpty) {
+        clonedChildren = <SelectorEntry>{};
+      } else {
+        final selectedOrdered =
+            originalChildren.where((child) => selectedIds.contains(child.id));
+        clonedChildren = deepCloneSelectedSubtree
+            ? deepCloneEntries(selectedOrdered)
+            : selectedOrdered.map(_cloneEntryWithoutChildren).toSet();
+      }
+    }
+
+    return _cloneEntryWithChildren(entry, clonedChildren);
+  }
+
+  /// Removes unselected nodes from [entries] by clipping the tree in-place.
   ///
   /// [selectedItemsPerLevel] represents selected entries per depth level. Nodes
   /// not present at the current [level] are removed, and the process continues
   /// recursively for remaining nodes.
   static void clippingTree(
-    SelectorEntries? items,
+    SelectorEntries? entries,
     List<SelectorEntries> selectedItemsPerLevel,
-    int level,
-  ) {
-    if (items == null || items.isEmpty || selectedItemsPerLevel.isEmpty) {
+    int level, [
+    Map<String, SelectorEntries>? headerSelectedByCategory,
+    Map<String, SelectorEntries>? footerSelectedByCategory,
+  ]) {
+    if (entries == null || entries.isEmpty || selectedItemsPerLevel.isEmpty) {
       return;
     }
     SelectorEntries? selectedItems =
@@ -237,11 +335,127 @@ class SelectorUtils {
     if (selectedItems == null || selectedItems.isEmpty) {
       return;
     }
-    items.removeWhere((e) => !selectedItems.contains(e));
-    if (level + 1 >= selectedItemsPerLevel.length) return;
-    for (var item in items) {
-      clippingTree(item.children, selectedItemsPerLevel, level + 1);
+    entries.removeWhere((e) => !selectedItems.contains(e));
+
+    if (headerSelectedByCategory != null || footerSelectedByCategory != null) {
+      for (final entry in entries) {
+        if (entry is! SelectorCategoryEntry) continue;
+        final category = entry;
+
+        if (headerSelectedByCategory != null) {
+          final headerSelected = headerSelectedByCategory[category.id] ?? {};
+          final headerChildren = category.header?.children;
+          if (headerChildren != null) {
+            if (headerSelected.isEmpty) {
+              headerChildren.clear();
+            } else {
+              headerChildren
+                  .removeWhere((e) => !headerSelected.any((s) => s.id == e.id));
+            }
+          }
+        }
+
+        if (footerSelectedByCategory != null) {
+          final footerSelected = footerSelectedByCategory[category.id] ?? {};
+          final footerChildren = category.footer?.children;
+          if (footerChildren != null) {
+            if (footerSelected.isEmpty) {
+              footerChildren.clear();
+            } else {
+              footerChildren
+                  .removeWhere((e) => !footerSelected.any((s) => s.id == e.id));
+            }
+          }
+        }
+      }
     }
+
+    if (level + 1 >= selectedItemsPerLevel.length) return;
+    for (var item in entries) {
+      clippingTree(
+        item.children,
+        selectedItemsPerLevel,
+        level + 1,
+        headerSelectedByCategory,
+        footerSelectedByCategory,
+      );
+    }
+  }
+
+  static SelectorEntries cloneTree(
+    Iterable<SelectorEntry> entries,
+    List<SelectorEntries> selectedItemsPerLevel, {
+    bool deepCloneSelectedSubtree = true,
+    Map<String, SelectorEntries>? headerSelectedByCategory,
+    Map<String, SelectorEntries>? footerSelectedByCategory,
+  }) {
+    SelectorEntry cloneEntryAtLevel(SelectorEntry entry, int level) {
+      Set<SelectorEntry>? clonedChildren;
+      final children = entry.children;
+
+      if (children != null && children.isNotEmpty) {
+        final nextLevel = level + 1;
+        final hasNextLevelSelection = nextLevel < selectedItemsPerLevel.length;
+
+        if (!hasNextLevelSelection) {
+          clonedChildren =
+              deepCloneSelectedSubtree ? deepCloneEntries(children) : null;
+        } else {
+          final selectedNext = selectedItemsPerLevel[nextLevel];
+          if (selectedNext.isEmpty) {
+            clonedChildren =
+                deepCloneSelectedSubtree ? deepCloneEntries(children) : null;
+          } else {
+            final ordered = children.toList();
+            final selectedOrdered =
+                ordered.where((child) => selectedNext.contains(child));
+            final copied = selectedOrdered
+                .map((child) => cloneEntryAtLevel(child, nextLevel))
+                .toSet();
+            clonedChildren = copied.isEmpty ? null : copied;
+          }
+        }
+      }
+
+      if (entry is SelectorCategoryEntry) {
+        final clonedHeader = entry.header == null
+            ? null
+            : headerSelectedByCategory == null
+                ? deepCloneEntries({entry.header!}).firstOrNull
+                : _cloneHeaderFooterEntry(
+                    entry.header!,
+                    headerSelectedByCategory[entry.id],
+                    deepCloneSelectedSubtree: deepCloneSelectedSubtree,
+                  );
+        final clonedFooter = entry.footer == null
+            ? null
+            : footerSelectedByCategory == null
+                ? deepCloneEntries({entry.footer!}).firstOrNull
+                : _cloneHeaderFooterEntry(
+                    entry.footer!,
+                    footerSelectedByCategory[entry.id],
+                    deepCloneSelectedSubtree: deepCloneSelectedSubtree,
+                  );
+        return _cloneEntryWithChildren(
+          entry,
+          clonedChildren,
+          header: clonedHeader,
+          footer: clonedFooter,
+        );
+      }
+
+      return _cloneEntryWithChildren(entry, clonedChildren);
+    }
+
+    final selectedRoot = selectedItemsPerLevel.elementAtOrNull(0) ?? {};
+    if (selectedRoot.isEmpty) return {};
+
+    final result = <SelectorEntry>{};
+    for (final entry in entries) {
+      if (!selectedRoot.contains(entry)) continue;
+      result.add(cloneEntryAtLevel(entry, 0));
+    }
+    return result;
   }
 
   // 根据选中内容，计算出有效标签，最终返回一个结果标签。
