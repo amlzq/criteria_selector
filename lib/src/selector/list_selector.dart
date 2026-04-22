@@ -27,7 +27,7 @@ class ListSelectorView extends StatefulWidget {
 }
 
 class ListSelectorViewState extends State<ListSelectorView> {
-  final SelectorEntries _selectedItems = {};
+  final SelectorEntries _selectedEntries = {};
 
   SelectorController? controller;
 
@@ -41,7 +41,7 @@ class ListSelectorViewState extends State<ListSelectorView> {
         final item =
             widget.entries.singleWhereOrNull((e) => e.id == selectedItem.id);
         if (item != null) {
-          _selectedItems.add(item);
+          _selectedEntries.add(item);
         }
       }
     }
@@ -77,46 +77,46 @@ class ListSelectorViewState extends State<ListSelectorView> {
       // "Any" entry
       if (SelectionMode.single == categorySelectionMode) {
         // Single-select mode
-        if (_selectedItems.contains(item)) {
+        if (_selectedEntries.contains(item)) {
           return;
         } else {
           // Clear selected list
-          _selectedItems
+          _selectedEntries
             ..clear()
             ..add(item);
         }
       } else {
         // Multi-select mode
-        if (_selectedItems.contains(item)) {
-          _selectedItems.remove(item);
+        if (_selectedEntries.contains(item)) {
+          _selectedEntries.remove(item);
         } else {
           // Remove items that share the same parent from the selected list
-          _selectedItems.removeWhere(
+          _selectedEntries.removeWhere(
               (e) => (e as SelectorChildEntry).parentId == item.parentId);
-          _selectedItems.add(item);
+          _selectedEntries.add(item);
         }
       }
     } else {
       // Normal entry
 
       // If there is an "Any" entry, remove it
-      _selectedItems.removeWhere((e) => e is SelectorChildEntry && e.isAny);
+      _selectedEntries.removeWhere((e) => e is SelectorChildEntry && e.isAny);
 
       if (SelectionMode.single == categorySelectionMode) {
         // Single-select mode
-        if (_selectedItems.contains(item)) {
+        if (_selectedEntries.contains(item)) {
           return;
         } else {
-          _selectedItems
+          _selectedEntries
             ..clear()
             ..add(item);
         }
       } else {
         // Multi-select mode
-        if (_selectedItems.contains(item)) {
-          _selectedItems.remove(item);
+        if (_selectedEntries.contains(item)) {
+          _selectedEntries.remove(item);
         } else {
-          _selectedItems.add(item);
+          _selectedEntries.add(item);
         }
       }
     }
@@ -134,7 +134,7 @@ class ListSelectorViewState extends State<ListSelectorView> {
 
       final newEntries = SelectorUtils.cloneTree(
         widget.entries,
-        [_selectedItems],
+        [_selectedEntries],
         deepCloneSelectedSubtree: false,
       );
       controller?.change(newEntries);
@@ -142,7 +142,7 @@ class ListSelectorViewState extends State<ListSelectorView> {
   }
 
   void _onResetTap() {
-    _selectedItems.clear();
+    _selectedEntries.clear();
 
     final selectedItems = controller?.resetSelected;
     if (selectedItems != null && selectedItems.isNotEmpty) {
@@ -150,13 +150,13 @@ class ListSelectorViewState extends State<ListSelectorView> {
         final item =
             widget.entries.singleWhereOrNull((e) => e.id == selectedItem.id);
         if (item != null) {
-          _selectedItems.add(item);
+          _selectedEntries.add(item);
         }
       }
     }
 
     // _selectedCategory =
-    //     _selectedItemsPerLevel[0].first as SelectorCategoryEntry;
+    //     _selectedEntriesPerLevel[0].first as SelectorCategoryEntry;
 
     setState(() {});
     controller?.reset();
@@ -164,7 +164,7 @@ class ListSelectorViewState extends State<ListSelectorView> {
 
   void _onApplyTap() {
     final entries = widget.entries.toSet();
-    entries.removeWhere((e) => !_selectedItems.contains(e));
+    entries.removeWhere((e) => !_selectedEntries.contains(e));
     controller?.apply(entries);
   }
 
@@ -177,7 +177,7 @@ class ListSelectorViewState extends State<ListSelectorView> {
         Flexible(
           child: SelectorListView(
             items: widget.entries,
-            selectedItems: _selectedItems,
+            selectedItems: _selectedEntries,
             onItemTap: (index, item) =>
                 _onTerminalItemTap(index, item as SelectorChildEntry),
             radioBuilder: selector?.radioBuilder,

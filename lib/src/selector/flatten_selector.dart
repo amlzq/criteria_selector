@@ -54,7 +54,7 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
   int _tempSelectedCategoryIndex = 0;
 
   /// Selected entries per level, fixed to two levels
-  final List<SelectorEntries> _selectedItemsPerLevel = [];
+  final List<SelectorEntries> _selectedEntriesPerLevel = [];
 
   var _isScrollingProgrammatically = false;
   final GlobalKey _scrollViewKey = GlobalKey();
@@ -70,7 +70,7 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
     if (widget.previousSelected != null &&
         (widget.previousSelected?.isNotEmpty ?? false)) {
       // Restore previous selection
-      _selectedItemsPerLevel.addAll(SelectorUtils.restorePreviousSelected(
+      _selectedEntriesPerLevel.addAll(SelectorUtils.restorePreviousSelected(
           widget.entries, widget.previousSelected));
     } else {
       // Check whether there is an "Any" entry; if so, select it by default
@@ -80,7 +80,7 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
     _tempSelectedCategoryIndex = 0;
 
     // _selectedCategory =
-    //     _selectedItemsPerLevel[0].first as SelectorCategoryEntry;
+    //     _selectedEntriesPerLevel[0].first as SelectorCategoryEntry;
   }
 
   @override
@@ -128,16 +128,16 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
 
   /// Checks whether the selected category has an "Any" item
   void _selectAnyItemIfHas() {
-    _selectedItemsPerLevel.clear();
-    while (_selectedItemsPerLevel.length < level) {
-      _selectedItemsPerLevel.add({});
+    _selectedEntriesPerLevel.clear();
+    while (_selectedEntriesPerLevel.length < level) {
+      _selectedEntriesPerLevel.add({});
     }
     for (var category in widget.entries) {
       final anyItem = category.children?.singleWhereOrNull(testAnyElement);
       if (anyItem != null) {
         // If there is an "Any" entry, select it.
-        _selectedItemsPerLevel[0].add(category);
-        _selectedItemsPerLevel[1].add(anyItem);
+        _selectedEntriesPerLevel[0].add(category);
+        _selectedEntriesPerLevel[1].add(anyItem);
       }
     }
   }
@@ -293,8 +293,8 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
   }
 
   void _onTerminalItemTap(SelectorChildEntry item) {
-    while (_selectedItemsPerLevel.length < level) {
-      _selectedItemsPerLevel.add({});
+    while (_selectedEntriesPerLevel.length < level) {
+      _selectedEntriesPerLevel.add({});
     }
 
     final category =
@@ -303,7 +303,7 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
 
     final childrenSelectionMode = category.selectionMode;
 
-    final selectedItems = _selectedItemsPerLevel[1];
+    final selectedItems = _selectedEntriesPerLevel[1];
 
     if (item.isAny) {
       // "Any" entry
@@ -346,10 +346,10 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
     // Keep parent selection state consistent
     if (selectedItems.contains(item)) {
       // If it was a select action, select the parent as well
-      _selectedItemsPerLevel[0].add(category);
+      _selectedEntriesPerLevel[0].add(category);
     } else if (selectedItems.isEmpty) {
       // If it was a deselect action and no children are selected, deselect the parent as well
-      _selectedItemsPerLevel[0].remove(category);
+      _selectedEntriesPerLevel[0].remove(category);
       // If there is an "Any" child entry, select it
       final anyItem = category.children?.singleWhereOrNull(testAnyElement);
       if (anyItem != null) {
@@ -370,7 +370,7 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
 
       final newEntries = SelectorUtils.cloneTree(
         widget.entries,
-        _selectedItemsPerLevel,
+        _selectedEntriesPerLevel,
         deepCloneSelectedSubtree: false,
       );
       controller?.change(newEntries);
@@ -378,27 +378,27 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
   }
 
   void _onResetTap() {
-    _selectedItemsPerLevel.clear();
-    _selectedItemsPerLevel.addAll(SelectorUtils.restorePreviousSelected(
+    _selectedEntriesPerLevel.clear();
+    _selectedEntriesPerLevel.addAll(SelectorUtils.restorePreviousSelected(
         widget.entries, controller?.resetSelected));
 
     _tempSelectedCategoryIndex = 0;
 
     // _selectedCategory =
-    //     _selectedItemsPerLevel[0].first as SelectorCategoryEntry;
+    //     _selectedEntriesPerLevel[0].first as SelectorCategoryEntry;
 
     setState(() {});
     controller?.reset();
   }
 
   void _onApplyTap() {
-    if (_selectedItemsPerLevel.isEmpty) {
+    if (_selectedEntriesPerLevel.isEmpty) {
       controller?.apply({});
       return;
     }
 
     final entries = widget.entries.toSet();
-    SelectorUtils.clippingTree(entries, _selectedItemsPerLevel, 0);
+    SelectorUtils.clippingTree(entries, _selectedEntriesPerLevel, 0);
     controller?.apply(entries);
   }
 
@@ -407,7 +407,8 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
     final theme = SelectorTheme.of(context);
     // final defaults = _PlattenSelectorDefaults(context);
 
-    final selectedCategories = _selectedItemsPerLevel.elementAtOrNull(0) ?? {};
+    final selectedCategories =
+        _selectedEntriesPerLevel.elementAtOrNull(0) ?? {};
 
     final categoryBackgroundColor = theme.backgroundColor;
     final terminalBackgroundColor = theme.backgroundColorHigh;
@@ -476,7 +477,7 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
                             widget.entries[index] as SelectorCategoryEntry;
                         final items = category.children?.toList() ?? [];
                         final selectedItems =
-                            _selectedItemsPerLevel.elementAtOrNull(1) ?? {};
+                            _selectedEntriesPerLevel.elementAtOrNull(1) ?? {};
                         final isLast = item == widget.entries.last;
                         return SelectorGridView(
                           key: ValueKey('category_$index'),

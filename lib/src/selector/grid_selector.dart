@@ -41,7 +41,7 @@ class GridSelectorViewState extends State<GridSelectorView> {
   late SelectorCategoryEntry _tempSelectedCategory;
 
   /// Selected entries per level (actual selections), fixed to two levels
-  final List<SelectorEntries> _selectedItemsPerLevel = [];
+  final List<SelectorEntries> _selectedEntriesPerLevel = [];
 
   SelectorController? controller;
 
@@ -57,7 +57,7 @@ class GridSelectorViewState extends State<GridSelectorView> {
       _initializeSelectedItemsPerLevel(
           widget.entries, widget.previousSelected, 0);
       _tempSelectedCategory =
-          (_selectedItemsPerLevel.elementAtOrNull(0)?.firstOrNull ??
+          (_selectedEntriesPerLevel.elementAtOrNull(0)?.firstOrNull ??
               widget.entries.first) as SelectorCategoryEntry;
     } else {
       // Default selection
@@ -103,11 +103,11 @@ class GridSelectorViewState extends State<GridSelectorView> {
         selectedItems.isEmpty) {
       return;
     }
-    _selectedItemsPerLevel.add({});
+    _selectedEntriesPerLevel.add({});
     for (var selectedItem in selectedItems) {
       final item = items.singleWhereOrNull((e) => e.id == selectedItem.id);
       if (item != null) {
-        _selectedItemsPerLevel[level].add(item);
+        _selectedEntriesPerLevel[level].add(item);
         if (item is SelectorRangeEntry && item.isCustom) {
           // If it's a custom entry, restore the previous input values.
           selectedItem as SelectorRangeEntry;
@@ -124,16 +124,16 @@ class GridSelectorViewState extends State<GridSelectorView> {
 
   /// Checks whether the selected category has an "Any" item
   void _selectAnyItemIfHas() {
-    _selectedItemsPerLevel.clear();
-    while (_selectedItemsPerLevel.length < level) {
-      _selectedItemsPerLevel.add({});
+    _selectedEntriesPerLevel.clear();
+    while (_selectedEntriesPerLevel.length < level) {
+      _selectedEntriesPerLevel.add({});
     }
     for (var category in widget.entries) {
       final anyItem = category.children?.singleWhereOrNull(testAnyElement);
       if (anyItem != null) {
         // If there is an "Any" entry, select it.
-        _selectedItemsPerLevel[0].add(category);
-        _selectedItemsPerLevel[1].add(anyItem);
+        _selectedEntriesPerLevel[0].add(category);
+        _selectedEntriesPerLevel[1].add(anyItem);
       }
     }
   }
@@ -164,9 +164,9 @@ class GridSelectorViewState extends State<GridSelectorView> {
     if (SelectionMode.single == categorySelectionMode) {
       // Single-select mode: reset previous selection when switching category.
 
-      _selectedItemsPerLevel.clear();
-      while (_selectedItemsPerLevel.length < level) {
-        _selectedItemsPerLevel.add({});
+      _selectedEntriesPerLevel.clear();
+      while (_selectedEntriesPerLevel.length < level) {
+        _selectedEntriesPerLevel.add({});
       }
 
       _selectAnyItemIfHas();
@@ -176,11 +176,11 @@ class GridSelectorViewState extends State<GridSelectorView> {
       // // Sync custom input state for the newly focused category.
       // final customItem = _checkCustomItem();
 
-      // while (_selectedItemsPerLevel.length < level) {
-      //   _selectedItemsPerLevel.add({});
+      // while (_selectedEntriesPerLevel.length < level) {
+      //   _selectedEntriesPerLevel.add({});
       // }
 
-      // final selectedChildren = _selectedItemsPerLevel[1];
+      // final selectedChildren = _selectedEntriesPerLevel[1];
       // final hasChildOfCategory = selectedChildren.any(
       //   (e) => e is SelectorChildEntry && e.parentId == item.id,
       // );
@@ -194,20 +194,20 @@ class GridSelectorViewState extends State<GridSelectorView> {
       //       (e) => e is SelectorChildEntry && e.parentId == item.id,
       //     );
       //     selectedChildren.add(anyItem);
-      //     _selectedItemsPerLevel[0].add(item);
+      //     _selectedEntriesPerLevel[0].add(item);
       //   }
       // } else if (hasChildOfCategory) {
-      //   _selectedItemsPerLevel[0].add(item);
+      //   _selectedEntriesPerLevel[0].add(item);
       // }
     }
     setState(() {});
   }
 
   void _onTerminalItemTap(SelectorChildEntry item) {
-    while (_selectedItemsPerLevel.length < level) {
-      _selectedItemsPerLevel.add({});
+    while (_selectedEntriesPerLevel.length < level) {
+      _selectedEntriesPerLevel.add({});
     }
-    final selectedItems = _selectedItemsPerLevel[1];
+    final selectedItems = _selectedEntriesPerLevel[1];
 
     if (item.isAny) {
       // "Any" entry
@@ -248,10 +248,10 @@ class GridSelectorViewState extends State<GridSelectorView> {
     // Keep parent selection state consistent
     if (selectedItems.contains(item)) {
       // If it was a select action, select the parent as well
-      _selectedItemsPerLevel[0].add(_tempSelectedCategory);
+      _selectedEntriesPerLevel[0].add(_tempSelectedCategory);
     } else if (selectedItems.isEmpty) {
       // If it was a deselect action and no children are selected, deselect the parent as well
-      _selectedItemsPerLevel[0].remove(_tempSelectedCategory);
+      _selectedEntriesPerLevel[0].remove(_tempSelectedCategory);
       // If there is an "Any" child entry, select it
       _selectAnyItemIfHas();
     }
@@ -272,7 +272,7 @@ class GridSelectorViewState extends State<GridSelectorView> {
 
       final newEntries = SelectorUtils.cloneTree(
         widget.entries,
-        _selectedItemsPerLevel,
+        _selectedEntriesPerLevel,
         deepCloneSelectedSubtree: false,
       );
       controller?.change(newEntries);
@@ -280,7 +280,7 @@ class GridSelectorViewState extends State<GridSelectorView> {
   }
 
   void _onResetTap() {
-    _selectedItemsPerLevel.elementAtOrNull(1)?.removeWhere(
+    _selectedEntriesPerLevel.elementAtOrNull(1)?.removeWhere(
         (e) => testSameParentElement(e, _tempSelectedCategory.id));
 
     final index = widget.entries.indexOf(_tempSelectedCategory);
@@ -303,7 +303,7 @@ class GridSelectorViewState extends State<GridSelectorView> {
       final anyItem =
           _tempSelectedCategory.children?.singleWhereOrNull(testAnyElement);
       if (anyItem != null) {
-        _selectedItemsPerLevel[1].add(anyItem);
+        _selectedEntriesPerLevel[1].add(anyItem);
       }
     }
 
@@ -344,7 +344,7 @@ class GridSelectorViewState extends State<GridSelectorView> {
 
   void _onApplyTap() {
     final entries = widget.entries.toSet();
-    SelectorUtils.clippingTree(entries, _selectedItemsPerLevel, 0);
+    SelectorUtils.clippingTree(entries, _selectedEntriesPerLevel, 0);
     controller?.apply(entries);
   }
 
@@ -353,7 +353,7 @@ class GridSelectorViewState extends State<GridSelectorView> {
     final gridviews = List.generate(widget.entries.length, (int index) {
       final category = widget.entries[index];
       final items = category.children?.toList() ?? [];
-      final selectedItems = _selectedItemsPerLevel[1]
+      final selectedItems = _selectedEntriesPerLevel[1]
           .where((e) => e is SelectorChildEntry && e.parentId == category.id)
           .toSet();
       return SelectorGridView(

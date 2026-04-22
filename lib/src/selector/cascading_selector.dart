@@ -42,18 +42,18 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
   /// Selected category entry
   // late SelectorCategoryEntry _selectedCategory;
 
-  /// Selected items per level (actual selections)
-  final List<SelectorEntries> _selectedItemsPerLevel = [];
+  /// Selected entries per level (actual selections)
+  final List<SelectorEntries> _selectedEntriesPerLevel = [];
 
-  final Map<String, SelectorEntries> _headerSelectedByCategory = {};
-  final Map<String, SelectorEntries> _footerSelectedByCategory = {};
+  final Map<String, SelectorEntries> _selectedHeaderEntries = {};
+  final Map<String, SelectorEntries> _selectedFooterEntries = {};
 
   /// Temporarily selected (focused) item per level (usually a parent node)
   /// Terminal nodes do not need to be included in the temporary selection list
-  final List<SelectorEntry> _tempSelectedItemPerLevel = [];
+  final List<SelectorEntry> _tempSelectedEntryPerLevel = [];
 
   /// Cascading lists: index0 is first-level children, index1 is second-level children, and so on
-  final List<List<SelectorEntry>> _cascadeList = [];
+  final List<List<SelectorEntry>> _cascadingList = [];
 
   /// Current focused level
   /// 0 means only category nodes are shown; 1 means category + first-level children are shown; and so on
@@ -118,13 +118,13 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
   CascadingSelector? get selector => controller?.selector as CascadingSelector;
 
   void _initializeSelected(Set<SelectorEntry>? selected) {
-    _selectedItemsPerLevel.clear();
-    _tempSelectedItemPerLevel.clear();
+    _selectedEntriesPerLevel.clear();
+    _tempSelectedEntryPerLevel.clear();
     _currentLevel = 0;
-    _cascadeList.clear();
+    _cascadingList.clear();
     _disposeScrollControllers();
-    _headerSelectedByCategory.clear();
-    _footerSelectedByCategory.clear();
+    _selectedHeaderEntries.clear();
+    _selectedFooterEntries.clear();
 
     // Restore selections from selected data
     if (selected?.isNotEmpty == true) {
@@ -141,12 +141,10 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
   }
 
   SelectorEntries _headerSelectedFor(String categoryId) =>
-      _headerSelectedByCategory.putIfAbsent(
-          categoryId, () => <SelectorEntry>{});
+      _selectedHeaderEntries.putIfAbsent(categoryId, () => <SelectorEntry>{});
 
   SelectorEntries _footerSelectedFor(String categoryId) =>
-      _footerSelectedByCategory.putIfAbsent(
-          categoryId, () => <SelectorEntry>{});
+      _selectedFooterEntries.putIfAbsent(categoryId, () => <SelectorEntry>{});
 
   void _restoreHeaderFooterSelected(
     List<SelectorEntry> entries,
@@ -198,11 +196,11 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
         selectedItems.isEmpty) {
       return;
     }
-    _selectedItemsPerLevel.add({});
+    _selectedEntriesPerLevel.add({});
     for (var selectedItem in selectedItems) {
       final item = items.singleWhereOrNull((e) => e.id == selectedItem.id);
       if (item != null) {
-        _selectedItemsPerLevel[level].add(item);
+        _selectedEntriesPerLevel[level].add(item);
       }
       if (selectedItem.children?.isNotEmpty == true) {
         _initializeSelectedItemsPerLevel(
@@ -211,19 +209,19 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
     }
   }
 
-  /// Builds _tempSelectedItemPerLevel from _selectedItemsPerLevel
+  /// Builds _tempSelectedEntryPerLevel from _selectedEntriesPerLevel
   void _initializeTempSelectedItemPerLevel(int level) {
-    if (level >= _selectedItemsPerLevel.length) {
+    if (level >= _selectedEntriesPerLevel.length) {
       return;
     }
-    final selectedItems = _selectedItemsPerLevel[level];
+    final selectedItems = _selectedEntriesPerLevel[level];
     if (selectedItems.isEmpty) {
       return;
     }
     final selectedItem = selectedItems.first;
-    _tempSelectedItemPerLevel.add(selectedItem);
+    _tempSelectedEntryPerLevel.add(selectedItem);
     if (selectedItem.hasChildren) {
-      _cascadeList.add(selectedItem.children?.toList() ?? []);
+      _cascadingList.add(selectedItem.children?.toList() ?? []);
       _currentLevel = level;
       _scrollControllers.add(ScrollController());
     }
@@ -232,11 +230,11 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
 
   void _scrollToSelectedItems() {
     for (int level = 0; level < _scrollControllers.length; level++) {
-      if (_selectedItemsPerLevel[level].isEmpty) continue;
-      if (level >= _cascadeList.length) continue;
+      if (_selectedEntriesPerLevel[level].isEmpty) continue;
+      if (level >= _cascadingList.length) continue;
 
-      final items = _cascadeList[level];
-      final firstSelected = _selectedItemsPerLevel[level].first;
+      final items = _cascadingList[level];
+      final firstSelected = _selectedEntriesPerLevel[level].first;
       final selectedIndex = items.toList().indexOf(firstSelected);
 
       if (selectedIndex != -1 && _scrollControllers[level].hasClients) {
@@ -285,7 +283,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
 
   /// Focused Category Item
   SelectorCategoryEntry get tempSelectedCategory =>
-      _tempSelectedItemPerLevel.first as SelectorCategoryEntry;
+      _tempSelectedEntryPerLevel.first as SelectorCategoryEntry;
 
   /// Selection Mode for category entries
   SelectionMode? get categorySelectionMode => selector?.selectionMode;
@@ -311,18 +309,18 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
       return;
     }
 
-    while (_selectedItemsPerLevel.isEmpty) {
-      _selectedItemsPerLevel.add({});
+    while (_selectedEntriesPerLevel.isEmpty) {
+      _selectedEntriesPerLevel.add({});
     }
 
-    final rootSelected = _selectedItemsPerLevel[0];
+    final rootSelected = _selectedEntriesPerLevel[0];
     rootSelected.add(category);
 
-    while (_selectedItemsPerLevel.length < 2) {
-      _selectedItemsPerLevel.add({});
+    while (_selectedEntriesPerLevel.length < 2) {
+      _selectedEntriesPerLevel.add({});
     }
 
-    final firstLevel = _selectedItemsPerLevel[1];
+    final firstLevel = _selectedEntriesPerLevel[1];
     final hasChildOfCategory = firstLevel.any(
       (e) => e is SelectorChildEntry && e.parentId == category.id,
     );
@@ -339,41 +337,41 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
     final selectionMode = controller?.selectionMode;
     if (SelectionMode.single == selectionMode) {
       // Single-select mode: reset previous selection when switching categories
-      _selectedItemsPerLevel.clear();
-      _tempSelectedItemPerLevel.clear();
-      _cascadeList.clear();
+      _selectedEntriesPerLevel.clear();
+      _tempSelectedEntryPerLevel.clear();
+      _cascadingList.clear();
       _disposeScrollControllers();
-      _headerSelectedByCategory.clear();
-      _footerSelectedByCategory.clear();
+      _selectedHeaderEntries.clear();
+      _selectedFooterEntries.clear();
 
       // Select the new category
-      _tempSelectedItemPerLevel.add(newCategory);
-      _cascadeList.add(tempSelectedCategory.children?.toList() ?? []);
+      _tempSelectedEntryPerLevel.add(newCategory);
+      _cascadingList.add(tempSelectedCategory.children?.toList() ?? []);
       _currentLevel = 1;
       _scrollControllers.add(ScrollController());
 
       _ensureAnySelected(newCategory);
     } else {
       // Multi-select mode: keep previous selection and only switch the focused category
-      if (_tempSelectedItemPerLevel.isEmpty ||
-          _tempSelectedItemPerLevel.firstOrNull is! SelectorCategoryEntry) {
-        _tempSelectedItemPerLevel
+      if (_tempSelectedEntryPerLevel.isEmpty ||
+          _tempSelectedEntryPerLevel.firstOrNull is! SelectorCategoryEntry) {
+        _tempSelectedEntryPerLevel
           ..clear()
           ..add(newCategory);
       } else {
-        _tempSelectedItemPerLevel[0] = newCategory;
+        _tempSelectedEntryPerLevel[0] = newCategory;
       }
 
-      while (_selectedItemsPerLevel.isEmpty) {
-        _selectedItemsPerLevel.add({});
+      while (_selectedEntriesPerLevel.isEmpty) {
+        _selectedEntriesPerLevel.add({});
       }
 
-      final rootSelected = _selectedItemsPerLevel[0];
+      final rootSelected = _selectedEntriesPerLevel[0];
       if (!rootSelected.contains(newCategory)) {
         rootSelected.add(newCategory);
       }
 
-      _cascadeList
+      _cascadingList
         ..clear()
         ..add(newCategory.children?.toList() ?? []);
       _currentLevel = 1;
@@ -387,7 +385,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
   /// Tap handler for a middle node
   /// Only selecting a terminal node is an actual selection; otherwise it just expands children
   void _onMiddleItemTap(int cascadeIndex, SelectorEntry item) {
-    if (item == _tempSelectedItemPerLevel.lastOrNull) {
+    if (item == _tempSelectedEntryPerLevel.lastOrNull) {
       // Re-tapping the same node: no-op
       return;
     }
@@ -396,21 +394,21 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
 
     // items.firstWhere((e) => e.isAny).selected = false;
 
-    while (_tempSelectedItemPerLevel.length > level) {
-      _tempSelectedItemPerLevel.removeLast();
+    while (_tempSelectedEntryPerLevel.length > level) {
+      _tempSelectedEntryPerLevel.removeLast();
     }
-    _tempSelectedItemPerLevel.add(item);
+    _tempSelectedEntryPerLevel.add(item);
 
     // Remove all levels after the current level
-    while (_cascadeList.length > level) {
-      _cascadeList.removeLast();
+    while (_cascadingList.length > level) {
+      _cascadingList.removeLast();
       if (_scrollControllers.length > level) {
         _scrollControllers.removeLast().dispose();
       }
     }
 
     // Expand child nodes
-    _cascadeList.add(item.children?.toList() ?? []);
+    _cascadingList.add(item.children?.toList() ?? []);
     _currentLevel = level + 1;
     _scrollControllers.add(ScrollController());
 
@@ -430,18 +428,18 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
     final level = cascadeIndex + 1;
     if (level < _currentLevel && item.isAny) {
       // Remove all levels after the current level
-      while (_selectedItemsPerLevel.length > level) {
-        _selectedItemsPerLevel.removeLast();
+      while (_selectedEntriesPerLevel.length > level) {
+        _selectedEntriesPerLevel.removeLast();
       }
-      while (_cascadeList.length > level) {
-        _cascadeList.removeLast();
+      while (_cascadingList.length > level) {
+        _cascadingList.removeLast();
       }
-      while (_tempSelectedItemPerLevel.length > level) {
-        _tempSelectedItemPerLevel.removeLast();
+      while (_tempSelectedEntryPerLevel.length > level) {
+        _tempSelectedEntryPerLevel.removeLast();
       }
-      _selectedItemsPerLevel.add({});
-      _selectedItemsPerLevel[level].add(item);
-      _tempSelectedItemPerLevel.add(item);
+      _selectedEntriesPerLevel.add({});
+      _selectedEntriesPerLevel[level].add(item);
+      _tempSelectedEntryPerLevel.add(item);
       // _deselectedAllChildren(_selectedCategory.children);
       // item.selected = true;
 
@@ -451,12 +449,12 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
     }
 
     // Ensure the selected-items set for the current level exists
-    while ((level) - _selectedItemsPerLevel.length >= 0) {
-      _selectedItemsPerLevel.add({});
+    while ((level) - _selectedEntriesPerLevel.length >= 0) {
+      _selectedEntriesPerLevel.add({});
     }
 
-    final selectedItems =
-        _selectedItemsPerLevel[level]; // Selected items for the current level
+    final selectedItems = _selectedEntriesPerLevel[
+        level]; // Selected entries for the current level
     if (item.isAny) {
       // "Any" entry
       if (SelectionMode.single == childrenSelectionMode) {
@@ -483,7 +481,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
       // Normal entry
 
       // If there is an "Any" entry, remove it
-      _selectedItemsPerLevel
+      _selectedEntriesPerLevel
           .elementAtOrNull(1)
           ?.removeWhere((e) => e is SelectorChildEntry && e.isAny);
 
@@ -512,31 +510,31 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
     if (selectedItems.contains(item)) {
       // If it was a select action, select the parent chain as well
       for (var i = cascadeIndex; i >= 0; i--) {
-        _selectedItemsPerLevel[i].add(_tempSelectedItemPerLevel[i]);
+        _selectedEntriesPerLevel[i].add(_tempSelectedEntryPerLevel[i]);
       }
     } else {
       // If it was a deselect action and no children are selected, deselect parents as needed
       for (var i = cascadeIndex; i >= 0; i--) {
-        final parent = _tempSelectedItemPerLevel[i];
-        final sameParentSelected = _selectedItemsPerLevel[i + 1]
+        final parent = _tempSelectedEntryPerLevel[i];
+        final sameParentSelected = _selectedEntriesPerLevel[i + 1]
             .where((e) => (e as SelectorTextEntry).parentId == parent.id);
         if (sameParentSelected.isEmpty) {
-          _selectedItemsPerLevel[i].remove(parent);
+          _selectedEntriesPerLevel[i].remove(parent);
         }
       }
       // If the category has no selected children and it has an "Any" child, select that "Any" entry
-      if (_selectedItemsPerLevel.elementAtOrNull(1)?.isEmpty == true) {
-        _selectedItemsPerLevel.elementAtOrNull(0)?.add(tempSelectedCategory);
+      if (_selectedEntriesPerLevel.elementAtOrNull(1)?.isEmpty == true) {
+        _selectedEntriesPerLevel.elementAtOrNull(0)?.add(tempSelectedCategory);
         final anyItem =
             tempSelectedCategory.children?.singleWhereOrNull(testAnyElement);
         if (anyItem != null) {
-          _selectedItemsPerLevel.elementAtOrNull(1)?.add(anyItem);
+          _selectedEntriesPerLevel.elementAtOrNull(1)?.add(anyItem);
         }
       }
       // Remove empty levels from the selected-items list
-      while (_selectedItemsPerLevel.lastOrNull != null &&
-          _selectedItemsPerLevel.lastOrNull!.isEmpty) {
-        _selectedItemsPerLevel.removeLast();
+      while (_selectedEntriesPerLevel.lastOrNull != null &&
+          _selectedEntriesPerLevel.lastOrNull!.isEmpty) {
+        _selectedEntriesPerLevel.removeLast();
       }
     }
 
@@ -553,10 +551,10 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
 
       final newEntries = SelectorUtils.cloneTree(
         widget.entries,
-        _selectedItemsPerLevel,
+        _selectedEntriesPerLevel,
         deepCloneSelectedSubtree: false,
-        headerSelectedByCategory: _headerSelectedByCategory,
-        footerSelectedByCategory: _footerSelectedByCategory,
+        selectedHeaderEntries: _selectedHeaderEntries,
+        selectedFooterEntries: _selectedFooterEntries,
       );
       controller?.change(newEntries);
     }
@@ -598,10 +596,10 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
     final entries = widget.entries.toSet();
     SelectorUtils.clippingTree(
       entries,
-      _selectedItemsPerLevel,
+      _selectedEntriesPerLevel,
       0,
-      _headerSelectedByCategory,
-      _footerSelectedByCategory,
+      _selectedHeaderEntries,
+      _selectedFooterEntries,
     );
     controller?.apply(entries);
   }
@@ -683,17 +681,17 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
                     Expanded(
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children:
-                            List.generate(_cascadeList.length, (cascadeIndex) {
-                          final items = _cascadeList[cascadeIndex];
+                        children: List.generate(_cascadingList.length,
+                            (cascadeIndex) {
+                          final items = _cascadingList[cascadeIndex];
                           final level = cascadeIndex + 1;
                           final selectedItems =
-                              _selectedItemsPerLevel.elementAtOrNull(level) ??
+                              _selectedEntriesPerLevel.elementAtOrNull(level) ??
                                   {};
                           final isMiddleLevel = level < _currentLevel;
                           // Focused item at the current level
                           final focusedItem =
-                              _tempSelectedItemPerLevel.elementAtOrNull(level);
+                              _tempSelectedEntryPerLevel.elementAtOrNull(level);
                           // Get background color for this level
                           final bgColor = level < _backgroundColors.length
                               ? _backgroundColors[level]
@@ -741,15 +739,16 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
                                       );
                                     }
                                   } else {
-                                    final selected = _tempSelectedItemPerLevel
+                                    final selected = _tempSelectedEntryPerLevel
                                         .contains(item);
-                                    final selectedCount = _selectedItemsPerLevel
-                                            .elementAtOrNull(level + 1)
-                                            ?.where((e) =>
-                                                e is SelectorChildEntry &&
-                                                e.parentId == item.id)
-                                            .length ??
-                                        0;
+                                    final selectedCount =
+                                        _selectedEntriesPerLevel
+                                                .elementAtOrNull(level + 1)
+                                                ?.where((e) =>
+                                                    e is SelectorChildEntry &&
+                                                    e.parentId == item.id)
+                                                .length ??
+                                            0;
                                     return SelectorListTile(
                                       label: item.name ?? '',
                                       selected: selected,

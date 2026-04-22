@@ -324,8 +324,8 @@ class SelectorUtils {
     SelectorEntries? entries,
     List<SelectorEntries> selectedItemsPerLevel,
     int level, [
-    Map<String, SelectorEntries>? headerSelectedByCategory,
-    Map<String, SelectorEntries>? footerSelectedByCategory,
+    Map<String, SelectorEntries>? selectedHeaderEntries,
+    Map<String, SelectorEntries>? selectedFooterEntries,
   ]) {
     if (entries == null || entries.isEmpty || selectedItemsPerLevel.isEmpty) {
       return;
@@ -337,13 +337,13 @@ class SelectorUtils {
     }
     entries.removeWhere((e) => !selectedItems.contains(e));
 
-    if (headerSelectedByCategory != null || footerSelectedByCategory != null) {
+    if (selectedHeaderEntries != null || selectedFooterEntries != null) {
       for (final entry in entries) {
         if (entry is! SelectorCategoryEntry) continue;
         final category = entry;
 
-        if (headerSelectedByCategory != null) {
-          final headerSelected = headerSelectedByCategory[category.id] ?? {};
+        if (selectedHeaderEntries != null) {
+          final headerSelected = selectedHeaderEntries[category.id] ?? {};
           final headerChildren = category.header?.children;
           if (headerChildren != null) {
             if (headerSelected.isEmpty) {
@@ -355,8 +355,8 @@ class SelectorUtils {
           }
         }
 
-        if (footerSelectedByCategory != null) {
-          final footerSelected = footerSelectedByCategory[category.id] ?? {};
+        if (selectedFooterEntries != null) {
+          final footerSelected = selectedFooterEntries[category.id] ?? {};
           final footerChildren = category.footer?.children;
           if (footerChildren != null) {
             if (footerSelected.isEmpty) {
@@ -376,8 +376,8 @@ class SelectorUtils {
         item.children,
         selectedItemsPerLevel,
         level + 1,
-        headerSelectedByCategory,
-        footerSelectedByCategory,
+        selectedHeaderEntries,
+        selectedFooterEntries,
       );
     }
   }
@@ -386,8 +386,8 @@ class SelectorUtils {
     Iterable<SelectorEntry> entries,
     List<SelectorEntries> selectedItemsPerLevel, {
     bool deepCloneSelectedSubtree = true,
-    Map<String, SelectorEntries>? headerSelectedByCategory,
-    Map<String, SelectorEntries>? footerSelectedByCategory,
+    Map<String, SelectorEntries>? selectedHeaderEntries,
+    Map<String, SelectorEntries>? selectedFooterEntries,
   }) {
     SelectorEntry cloneEntryAtLevel(SelectorEntry entry, int level) {
       Set<SelectorEntry>? clonedChildren;
@@ -420,20 +420,20 @@ class SelectorUtils {
       if (entry is SelectorCategoryEntry) {
         final clonedHeader = entry.header == null
             ? null
-            : headerSelectedByCategory == null
+            : selectedHeaderEntries == null
                 ? deepCloneEntries({entry.header!}).firstOrNull
                 : _cloneHeaderFooterEntry(
                     entry.header!,
-                    headerSelectedByCategory[entry.id],
+                    selectedHeaderEntries[entry.id],
                     deepCloneSelectedSubtree: deepCloneSelectedSubtree,
                   );
         final clonedFooter = entry.footer == null
             ? null
-            : footerSelectedByCategory == null
+            : selectedFooterEntries == null
                 ? deepCloneEntries({entry.footer!}).firstOrNull
                 : _cloneHeaderFooterEntry(
                     entry.footer!,
-                    footerSelectedByCategory[entry.id],
+                    selectedFooterEntries[entry.id],
                     deepCloneSelectedSubtree: deepCloneSelectedSubtree,
                   );
         return _cloneEntryWithChildren(
