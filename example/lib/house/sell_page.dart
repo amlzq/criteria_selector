@@ -92,7 +92,7 @@ class _SellPageState extends State<SellPage> {
       }
     } else if (result.tabIndex == 2) {
       // 户型筛选
-      _criteriaRepo.floorPlanResult = result;
+      _criteriaRepo.floorPlanSellResult = result;
       final category = result.selected.firstOrNull;
       if (category == null) return;
       if (category.id == 'living_room') {
@@ -213,9 +213,10 @@ class _SellPageState extends State<SellPage> {
                   crossAxisSpacing: 10,
                 ),
                 FlattenSelector(
-                  dataFetcher: _criteriaRepo.fetchFloorPlanData,
-                  selectedDataFetcher: _criteriaRepo.fetchFloorPlanSelectedData,
-                  resetDataFetcher: _criteriaRepo.fetchFloorPlanResetData,
+                  dataFetcher: _criteriaRepo.fetchFloorPlanSellData,
+                  selectedDataFetcher:
+                      _criteriaRepo.fetchFloorPlanSellSelectedData,
+                  resetDataFetcher: _criteriaRepo.fetchFloorPlanSellResetData,
                   selectionMode: SelectionMode.multiple,
                   crossAxisCount: 3,
                   childAspectRatio: 2.5,

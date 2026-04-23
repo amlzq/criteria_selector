@@ -7,9 +7,9 @@ import 'package:flutter/foundation.dart';
 import 'utils.dart';
 
 class HouseCriteriaRepository {
+  /// 区域的 初始选中项
   DropselectResult? regionResult;
 
-  /// 区域的 初始选中项
   final regionIniteialSelected = {
     SelectorCategoryEntry(
       id: 'community',
@@ -96,9 +96,9 @@ class HouseCriteriaRepository {
     return Future.value(entries);
   }
 
+  /// 排序 初始选中项
   DropselectResult? buyPriceResult;
 
-  /// 价格的 初始选中项
   final buyPriceIniteialSelected = {
     SelectorCategoryEntry(
       id: 'total',
@@ -170,9 +170,9 @@ class HouseCriteriaRepository {
     return Future.value(entries);
   }
 
+  /// 价格的 初始选中项
   DropselectResult? sellPriceResult;
 
-  /// 价格的 初始选中项
   final sellPriceIniteialSelected = {
     SelectorCategoryEntry(
       id: 'total',
@@ -241,9 +241,9 @@ class HouseCriteriaRepository {
     return Future.value(entries);
   }
 
+  /// 租金的 初始选中项
   DropselectResult? rentResult;
 
-  /// 租金的 初始选中项
   final rentIniteialSelected = {
     SelectorCategoryEntry(
       id: 'rent',
@@ -306,20 +306,21 @@ class HouseCriteriaRepository {
     return Future.value(entries);
   }
 
-  DropselectResult? floorPlanResult;
-
   /// 户型的 初始选中项
-  final floorPlanIniteialSelected = <SelectorCategoryEntry>{};
+  DropselectResult? floorPlanBuyResult;
 
-  SelectorEntries? fetchFloorPlanSelectedData() =>
-      floorPlanResult?.selected ?? floorPlanIniteialSelected;
+  final floorPlanBuyIniteialSelected = <SelectorCategoryEntry>{};
 
-  SelectorEntries? fetchFloorPlanResetData() => floorPlanIniteialSelected;
+  SelectorEntries? fetchFloorPlanBuySelectedData() =>
+      floorPlanBuyResult?.selected ?? floorPlanBuyIniteialSelected;
 
-  Future<SelectorEntries> fetchFloorPlanData() async {
+  SelectorEntries? fetchFloorPlanBuyResetData() => floorPlanBuyIniteialSelected;
+
+  Future<SelectorEntries> fetchFloorPlanBuyData() async {
     // simulate network delay
     await Future.delayed(const Duration(milliseconds: 250));
-    final floorPlan = floorPlanFromJson(await loadJsonData('floor_plan.json'));
+    final floorPlan =
+        floorPlanFromJson(await loadJsonData('floor_plan_buy.json'));
     debugPrint('floorPlan length: ${floorPlan.length}');
     SelectorEntries entries = floorPlan
         .map(
@@ -362,9 +363,113 @@ class HouseCriteriaRepository {
     return Future.value(entries);
   }
 
-  DropselectResult? sortBuyResult;
+  /// 户型的 初始选中项
+  DropselectResult? floorPlanSellResult;
+
+  final floorPlanSellIniteialSelected = <SelectorCategoryEntry>{};
+
+  SelectorEntries? fetchFloorPlanSellSelectedData() =>
+      floorPlanSellResult?.selected ?? floorPlanSellIniteialSelected;
+
+  SelectorEntries? fetchFloorPlanSellResetData() =>
+      floorPlanSellIniteialSelected;
+
+  Future<SelectorEntries> fetchFloorPlanSellData() async {
+    // simulate network delay
+    await Future.delayed(const Duration(milliseconds: 250));
+    final floorPlan =
+        floorPlanFromJson(await loadJsonData('floor_plan_sell.json'));
+    debugPrint('floorPlan length: ${floorPlan.length}');
+    SelectorEntries entries = floorPlan
+        .map(
+          (category) => SelectorCategoryEntry(
+            id: category.id!,
+            name: category.name!,
+            children: category.data
+                ?.map((l1) => l1.id == 'area'
+                    ? SelectorRangeEntry(
+                        parentId: category.id!,
+                        id: l1.id!,
+                        name: l1.name,
+                        min: l1.min,
+                        max: l1.max,
+                      )
+                    : SelectorTextEntry(
+                        parentId: category.id!,
+                        id: l1.id!,
+                        name: l1.name,
+                      ))
+                .toSet(),
+            selectionMode: SelectionMode.multiple,
+          ),
+        )
+        .toSet();
+
+    // 插入"价格自定义"选项
+    for (SelectorEntry category in entries) {
+      if (category.id == 'area') {
+        category.children?.add(SelectorIntEntry.custom(
+            parentId: category.id,
+            name: '自定义面积',
+            minHintText: '最小值',
+            maxHintText: '最大值'));
+        break;
+      }
+    }
+
+    debugPrint('floorPlan length: ${entries.length}');
+    return Future.value(entries);
+  }
+
+  /// 户型的 初始选中项
+  DropselectResult? floorPlanRentResult;
+
+  final floorPlanRentIniteialSelected = <SelectorCategoryEntry>{};
+
+  SelectorEntries? fetchFloorPlanRentSelectedData() =>
+      floorPlanRentResult?.selected ?? floorPlanRentIniteialSelected;
+
+  SelectorEntries? fetchFloorPlanRentResetData() =>
+      floorPlanRentIniteialSelected;
+
+  Future<SelectorEntries> fetchFloorPlanRentData() async {
+    // simulate network delay
+    await Future.delayed(const Duration(milliseconds: 250));
+    final floorPlan =
+        floorPlanFromJson(await loadJsonData('floor_plan_rent.json'));
+    debugPrint('floorPlan length: ${floorPlan.length}');
+    SelectorEntries entries = floorPlan
+        .map(
+          (category) => SelectorCategoryEntry(
+            id: category.id!,
+            name: category.name!,
+            children: category.data
+                ?.map((l1) => l1.id == 'area'
+                    ? SelectorRangeEntry(
+                        parentId: category.id!,
+                        id: l1.id!,
+                        name: l1.name,
+                        min: l1.min,
+                        max: l1.max,
+                      )
+                    : SelectorTextEntry(
+                        parentId: category.id!,
+                        id: l1.id!,
+                        name: l1.name,
+                      ))
+                .toSet(),
+            selectionMode: SelectionMode.multiple,
+          ),
+        )
+        .toSet();
+
+    debugPrint('floorPlan length: ${entries.length}');
+    return Future.value(entries);
+  }
 
   /// 排序 初始选中项
+  DropselectResult? sortBuyResult;
+
   final sortBuyIniteialSelected = <SelectorTextEntry>{
     SelectorTextEntry.id(id: 'default_sort')
   };
@@ -391,9 +496,9 @@ class HouseCriteriaRepository {
     return Future.value(entries);
   }
 
+  /// 排序 初始选中项
   DropselectResult? sortSellResult;
 
-  /// 排序 初始选中项
   final sortSellIniteialSelected = <SelectorTextEntry>{
     SelectorTextEntry.id(id: 'comprehensive_sort')
   };
@@ -420,9 +525,9 @@ class HouseCriteriaRepository {
     return Future.value(entries);
   }
 
+  /// 排序 初始选中项
   DropselectResult? sortRentResult;
 
-  /// 排序 初始选中项
   final sortRentIniteialSelected = <SelectorTextEntry>{
     SelectorTextEntry.id(id: 'comprehensive_sort')
   };

@@ -125,7 +125,7 @@ class _RentPageState extends State<RentPage> {
       }
     } else if (result.tabIndex == 2) {
       // 户型筛选
-      _criteriaRepo.floorPlanResult = result;
+      _criteriaRepo.floorPlanRentResult = result;
       final category = result.selected.firstOrNull;
       if (category == null) return null;
       if (category.id == 'living_room') {
@@ -278,9 +278,10 @@ class _RentPageState extends State<RentPage> {
                 ),
               ),
               FlattenSelector(
-                dataFetcher: _criteriaRepo.fetchFloorPlanData,
-                selectedDataFetcher: _criteriaRepo.fetchFloorPlanSelectedData,
-                resetDataFetcher: _criteriaRepo.fetchFloorPlanResetData,
+                dataFetcher: _criteriaRepo.fetchFloorPlanRentData,
+                selectedDataFetcher:
+                    _criteriaRepo.fetchFloorPlanRentSelectedData,
+                resetDataFetcher: _criteriaRepo.fetchFloorPlanRentResetData,
                 selectionMode: SelectionMode.multiple,
                 crossAxisCount: 3,
                 childAspectRatio: 2.5,
