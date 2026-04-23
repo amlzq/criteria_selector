@@ -126,7 +126,7 @@ class _SellPageState extends State<SellPage> {
       }
     } else if (result.tabIndex == 3) {
       // 排序筛选
-      _criteriaRepo.sortResult = result;
+      _criteriaRepo.sortSellResult = result;
       final entry = result.selected.firstOrNull;
       if (entry == null) return;
       _criteria?.sort = entry.id;
@@ -223,9 +223,9 @@ class _SellPageState extends State<SellPage> {
                   mainAxisSpacing: 8,
                 ),
                 ListSelector(
-                  dataFetcher: _criteriaRepo.fetchSortData,
-                  selectedDataFetcher: _criteriaRepo.fetchSortSelectedData,
-                  resetDataFetcher: _criteriaRepo.fetchSortResetData,
+                  dataFetcher: _criteriaRepo.fetchSortSellData,
+                  selectedDataFetcher: _criteriaRepo.fetchSortSellSelectedData,
+                  resetDataFetcher: _criteriaRepo.fetchSortSellResetData,
                   selectionMode: SelectionMode.single,
                   radioBuilder: (context, selected) {
                     return MyRadio(value: selected);

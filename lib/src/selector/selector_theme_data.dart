@@ -8,12 +8,11 @@ import 'widgets/field_tile_theme.dart';
 import 'widgets/grid_tile_theme.dart';
 import 'widgets/list_tile_theme.dart';
 
-@immutable
-
 /// Theme configuration for selector widgets.
 ///
 /// This object is usually derived from a Material [ThemeData] plus optional
 /// overrides, and is consumed by selector widgets to keep styling consistent.
+@immutable
 class SelectorThemeData with Diagnosticable {
   /// Creates a [SelectorThemeData] by reading defaults from [theme] and applying
   /// optional overrides.

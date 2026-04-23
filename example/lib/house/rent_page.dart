@@ -159,7 +159,7 @@ class _RentPageState extends State<RentPage> {
       }
     } else if (result.tabIndex == 3) {
       // 排序筛选
-      _criteriaRepo.sortResult = result;
+      _criteriaRepo.sortRentResult = result;
       final entry = result.selected.firstOrNull;
       if (entry == null) return null;
       criteria.sort = entry.id;
@@ -303,9 +303,9 @@ class _RentPageState extends State<RentPage> {
                 },
               ),
               ListSelector(
-                dataFetcher: _criteriaRepo.fetchSortData,
-                selectedDataFetcher: _criteriaRepo.fetchSortSelectedData,
-                resetDataFetcher: _criteriaRepo.fetchSortResetData,
+                dataFetcher: _criteriaRepo.fetchSortRentData,
+                selectedDataFetcher: _criteriaRepo.fetchSortRentSelectedData,
+                resetDataFetcher: _criteriaRepo.fetchSortRentResetData,
                 selectionMode: SelectionMode.single,
                 radioBuilder: (context, selected) {
                   return MyRadio(value: selected);

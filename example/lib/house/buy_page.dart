@@ -119,7 +119,7 @@ class _BuyPageState extends State<BuyPage> {
         // 总价
         criteria.totalPrice = <Map<String, dynamic>>[];
         for (var e in category.children ?? {}) {
-          e as SelectorRangeEntry;
+          e as SelectorIntEntry;
           criteria.totalPrice!.add({"id": e.id, "min": e.min, "max": e.max});
         }
       } else if (category.id == 'unit') {
@@ -166,7 +166,7 @@ class _BuyPageState extends State<BuyPage> {
       }
     } else if (result.tabIndex == 3) {
       // 排序筛选
-      _criteriaRepo.sortResult = result;
+      _criteriaRepo.sortBuyResult = result;
       final entry = result.selected.firstOrNull;
       if (entry == null) return null;
       criteria.sort = entry.id;
@@ -311,9 +311,9 @@ class _BuyPageState extends State<BuyPage> {
                 },
               ),
               ListSelector(
-                dataFetcher: _criteriaRepo.fetchSortData,
-                selectedDataFetcher: _criteriaRepo.fetchSortSelectedData,
-                resetDataFetcher: _criteriaRepo.fetchSortResetData,
+                dataFetcher: _criteriaRepo.fetchSortBuyData,
+                selectedDataFetcher: _criteriaRepo.fetchSortBuySelectedData,
+                resetDataFetcher: _criteriaRepo.fetchSortBuyResetData,
                 selectionMode: SelectionMode.single,
                 radioBuilder: (context, selected) {
                   return MyRadio(value: selected);

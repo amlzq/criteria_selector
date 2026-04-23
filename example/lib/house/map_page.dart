@@ -164,7 +164,7 @@ class _MapPageState extends State<MapPage> {
       }
     } else if (result.tabIndex == 3) {
       // 排序筛选
-      _criteriaRepo.sortResult = result;
+      _criteriaRepo.sortBuyResult = result;
       final entry = result.selected.firstOrNull;
       if (entry == null) return null;
       criteria.sort = entry.id;
@@ -279,9 +279,9 @@ class _MapPageState extends State<MapPage> {
                 mainAxisSpacing: 8,
               ),
               ListSelector(
-                dataFetcher: _criteriaRepo.fetchSortData,
-                selectedDataFetcher: _criteriaRepo.fetchSortSelectedData,
-                resetDataFetcher: _criteriaRepo.fetchSortResetData,
+                dataFetcher: _criteriaRepo.fetchSortBuyData,
+                selectedDataFetcher: _criteriaRepo.fetchSortBuySelectedData,
+                resetDataFetcher: _criteriaRepo.fetchSortBuyResetData,
                 selectionMode: SelectionMode.single,
               ),
             ],

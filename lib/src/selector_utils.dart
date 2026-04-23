@@ -155,6 +155,63 @@ class SelectorUtils {
         .map((child) => _cloneEntry(child, skipAny: skipAny))
         .toSet();
 
+    if (entry is SelectorTextEntry) {
+      return SelectorTextEntry(
+        parentId: entry.parentId,
+        id: entry.id,
+        name: entry.name,
+        children: clonedChildren,
+        enabled: entry.enabled,
+        immediate: entry.immediate,
+      );
+    }
+
+    if (entry is SelectorIntEntry) {
+      return SelectorRangeEntry<int, dynamic>(
+        min: entry.min,
+        max: entry.max,
+        inputLabel: entry.inputLabel,
+        minHintText: entry.minHintText,
+        maxHintText: entry.maxHintText,
+        parentId: entry.parentId,
+        id: entry.id,
+        name: entry.name,
+        children: clonedChildren,
+        enabled: entry.enabled,
+        immediate: entry.immediate,
+        extra: entry.extra,
+      );
+    }
+
+    if (entry is SelectorRangeEntry) {
+      return SelectorRangeEntry(
+        min: entry.min,
+        max: entry.max,
+        inputLabel: entry.inputLabel,
+        minHintText: entry.minHintText,
+        maxHintText: entry.maxHintText,
+        parentId: entry.parentId,
+        id: entry.id,
+        name: entry.name,
+        children: clonedChildren,
+        enabled: entry.enabled,
+        immediate: entry.immediate,
+        extra: entry.extra,
+      );
+    }
+
+    if (entry is SelectorChildEntry) {
+      return SelectorChildEntry(
+        parentId: entry.parentId,
+        id: entry.id,
+        name: entry.name,
+        children: clonedChildren,
+        enabled: entry.enabled,
+        immediate: entry.immediate,
+        extra: entry.extra,
+      );
+    }
+
     if (entry is SelectorCategoryEntry) {
       return SelectorCategoryEntry(
         selectionMode: entry.selectionMode,
@@ -174,46 +231,6 @@ class SelectorUtils {
       );
     }
 
-    if (entry is SelectorRangeEntry) {
-      return SelectorRangeEntry(
-        min: entry.min,
-        max: entry.max,
-        inputLabel: entry.inputLabel,
-        minHintText: entry.minHintText,
-        maxHintText: entry.maxHintText,
-        parentId: entry.parentId,
-        id: entry.id,
-        name: entry.name,
-        children: clonedChildren,
-        enabled: entry.enabled,
-        immediate: entry.immediate,
-        extra: entry.extra,
-      );
-    }
-
-    if (entry is SelectorTextEntry) {
-      return SelectorTextEntry(
-        parentId: entry.parentId,
-        id: entry.id,
-        name: entry.name,
-        children: clonedChildren,
-        enabled: entry.enabled,
-        immediate: entry.immediate,
-      );
-    }
-
-    if (entry is SelectorChildEntry) {
-      return SelectorChildEntry(
-        parentId: entry.parentId,
-        id: entry.id,
-        name: entry.name,
-        children: clonedChildren,
-        enabled: entry.enabled,
-        immediate: entry.immediate,
-        extra: entry.extra,
-      );
-    }
-
     throw UnsupportedError(
       'Unsupported SelectorEntry type: ${entry.runtimeType}',
     );
@@ -225,6 +242,63 @@ class SelectorUtils {
     SelectorEntry? header,
     SelectorEntry? footer,
   }) {
+    if (entry is SelectorTextEntry) {
+      return SelectorTextEntry(
+        parentId: entry.parentId,
+        id: entry.id,
+        name: entry.name,
+        children: children,
+        enabled: entry.enabled,
+        immediate: entry.immediate,
+      );
+    }
+
+    if (entry is SelectorIntEntry) {
+      return SelectorRangeEntry<int, dynamic>(
+        min: entry.min,
+        max: entry.max,
+        inputLabel: entry.inputLabel,
+        minHintText: entry.minHintText,
+        maxHintText: entry.maxHintText,
+        parentId: entry.parentId,
+        id: entry.id,
+        name: entry.name,
+        children: children,
+        enabled: entry.enabled,
+        immediate: entry.immediate,
+        extra: entry.extra,
+      );
+    }
+
+    if (entry is SelectorRangeEntry) {
+      return SelectorRangeEntry(
+        min: entry.min,
+        max: entry.max,
+        inputLabel: entry.inputLabel,
+        minHintText: entry.minHintText,
+        maxHintText: entry.maxHintText,
+        parentId: entry.parentId,
+        id: entry.id,
+        name: entry.name,
+        children: children,
+        enabled: entry.enabled,
+        immediate: entry.immediate,
+        extra: entry.extra,
+      );
+    }
+
+    if (entry is SelectorChildEntry) {
+      return SelectorChildEntry(
+        parentId: entry.parentId,
+        id: entry.id,
+        name: entry.name,
+        children: children,
+        enabled: entry.enabled,
+        immediate: entry.immediate,
+        extra: entry.extra,
+      );
+    }
+
     if (entry is SelectorCategoryEntry) {
       return SelectorCategoryEntry(
         selectionMode: entry.selectionMode,
@@ -237,46 +311,6 @@ class SelectorUtils {
         children: children,
         enabled: entry.enabled,
         immediate: entry.immediate,
-      );
-    }
-
-    if (entry is SelectorRangeEntry) {
-      return SelectorRangeEntry(
-        min: entry.min,
-        max: entry.max,
-        inputLabel: entry.inputLabel,
-        minHintText: entry.minHintText,
-        maxHintText: entry.maxHintText,
-        parentId: entry.parentId,
-        id: entry.id,
-        name: entry.name,
-        children: children,
-        enabled: entry.enabled,
-        immediate: entry.immediate,
-        extra: entry.extra,
-      );
-    }
-
-    if (entry is SelectorTextEntry) {
-      return SelectorTextEntry(
-        parentId: entry.parentId,
-        id: entry.id,
-        name: entry.name,
-        children: children,
-        enabled: entry.enabled,
-        immediate: entry.immediate,
-      );
-    }
-
-    if (entry is SelectorChildEntry) {
-      return SelectorChildEntry(
-        parentId: entry.parentId,
-        id: entry.id,
-        name: entry.name,
-        children: children,
-        enabled: entry.enabled,
-        immediate: entry.immediate,
-        extra: entry.extra,
       );
     }
 

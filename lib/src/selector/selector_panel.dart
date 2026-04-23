@@ -70,6 +70,7 @@ class _SelectorPanelState extends State<SelectorPanel> {
             debugPrint('selector data state ${snapshot.connectionState}');
             if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.hasError) {
+                debugPrint('Error: ${snapshot.error}\n${snapshot.stackTrace}');
                 // Request failed: show error
                 return Text("Error: ${snapshot.error}");
               } else {

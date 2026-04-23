@@ -362,22 +362,80 @@ class HouseCriteriaRepository {
     return Future.value(entries);
   }
 
-  DropselectResult? sortResult;
+  DropselectResult? sortBuyResult;
 
   /// 排序 初始选中项
-  final sortIniteialSelected = <SelectorTextEntry>{
+  final sortBuyIniteialSelected = <SelectorTextEntry>{
     SelectorTextEntry.id(id: 'default_sort')
   };
 
-  SelectorEntries? fetchSortSelectedData() =>
-      sortResult?.selected ?? sortIniteialSelected;
+  SelectorEntries? fetchSortBuySelectedData() =>
+      sortBuyResult?.selected ?? sortBuyIniteialSelected;
 
-  SelectorEntries? fetchSortResetData() => sortIniteialSelected;
+  SelectorEntries? fetchSortBuyResetData() => sortBuyIniteialSelected;
 
-  Future<SelectorEntries> fetchSortData() async {
+  Future<SelectorEntries> fetchSortBuyData() async {
     // simulate network delay
     await Future.delayed(const Duration(milliseconds: 250));
-    final sort = sortFromJson(await loadJsonData('sort.json'));
+    final sort = sortFromJson(await loadJsonData('sort_buy.json'));
+    debugPrint('sort length: ${sort.length}');
+    SelectorEntries entries = sort
+        .map((e) => SelectorTextEntry.name(
+              id: e.id!,
+              name: e.name!,
+              immediate: true,
+            ))
+        .toSet();
+
+    debugPrint('sort length: ${entries.length}');
+    return Future.value(entries);
+  }
+
+  DropselectResult? sortSellResult;
+
+  /// 排序 初始选中项
+  final sortSellIniteialSelected = <SelectorTextEntry>{
+    SelectorTextEntry.id(id: 'comprehensive_sort')
+  };
+
+  SelectorEntries? fetchSortSellSelectedData() =>
+      sortSellResult?.selected ?? sortSellIniteialSelected;
+
+  SelectorEntries? fetchSortSellResetData() => sortSellIniteialSelected;
+
+  Future<SelectorEntries> fetchSortSellData() async {
+    // simulate network delay
+    await Future.delayed(const Duration(milliseconds: 250));
+    final sort = sortFromJson(await loadJsonData('sort_sell.json'));
+    debugPrint('sort length: ${sort.length}');
+    SelectorEntries entries = sort
+        .map((e) => SelectorTextEntry.name(
+              id: e.id!,
+              name: e.name!,
+              immediate: true,
+            ))
+        .toSet();
+
+    debugPrint('sort length: ${entries.length}');
+    return Future.value(entries);
+  }
+
+  DropselectResult? sortRentResult;
+
+  /// 排序 初始选中项
+  final sortRentIniteialSelected = <SelectorTextEntry>{
+    SelectorTextEntry.id(id: 'comprehensive_sort')
+  };
+
+  SelectorEntries? fetchSortRentSelectedData() =>
+      sortRentResult?.selected ?? sortRentIniteialSelected;
+
+  SelectorEntries? fetchSortRentResetData() => sortRentIniteialSelected;
+
+  Future<SelectorEntries> fetchSortRentData() async {
+    // simulate network delay
+    await Future.delayed(const Duration(milliseconds: 250));
+    final sort = sortFromJson(await loadJsonData('sort_rent.json'));
     debugPrint('sort length: ${sort.length}');
     SelectorEntries entries = sort
         .map((e) => SelectorTextEntry.name(
