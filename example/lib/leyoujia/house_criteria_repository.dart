@@ -242,9 +242,9 @@ class HouseCriteriaRepository {
   }
 
   /// 租金的 初始选中项
-  DropselectResult? rentResult;
+  DropselectResult? rentalResult;
 
-  final rentIniteialSelected = {
+  final rentalIniteialSelected = {
     SelectorCategoryEntry(
       id: 'rent',
       name: '',
@@ -252,17 +252,17 @@ class HouseCriteriaRepository {
     )
   };
 
-  SelectorEntries? fetchRentSelectedData() =>
-      rentResult?.selected ?? rentIniteialSelected;
+  SelectorEntries? fetchRentalSelectedData() =>
+      rentalResult?.selected ?? rentalIniteialSelected;
 
-  SelectorEntries? fetchRentResetData() => rentIniteialSelected;
+  SelectorEntries? fetchRentalResetData() => rentalIniteialSelected;
 
-  Future<SelectorEntries> fetchRentData() async {
+  Future<SelectorEntries> fetchRentalData() async {
     // simulate network delay
     await Future.delayed(const Duration(milliseconds: 250));
 
     final rent =
-        PriceData.fromJson(json.decode(await loadJsonData('rent.json')));
+        PriceData.fromJson(json.decode(await loadJsonData('rental.json')));
     debugPrint('rent length: ${rent.data?.length}');
 
     final prices = [rent];

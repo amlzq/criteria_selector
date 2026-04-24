@@ -2,10 +2,10 @@ import 'package:criteria_selector/criteria_selector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'house/buy_page.dart';
-import 'house/map_page.dart';
-import 'house/rent_page.dart';
-import 'house/sell_page.dart';
+import 'leyoujia/buy_page.dart';
+import 'leyoujia/map_page.dart';
+import 'leyoujia/rent_page.dart';
+import 'leyoujia/sell_page.dart';
 import 'zillow/house_page.dart';
 
 void main() {
@@ -79,6 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            const Text('Real Estate'),
             TextButton(
               onPressed: () {
                 Navigator.push(

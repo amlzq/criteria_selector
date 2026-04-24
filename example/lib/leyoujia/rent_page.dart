@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:criteria_selector/criteria_selector.dart';
-import 'package:example/house/house_criteria_repository.dart';
+import 'package:example/leyoujia/house_criteria_repository.dart';
 import 'package:flutter/material.dart';
 
 import '../log.dart';
@@ -112,7 +112,7 @@ class _RentPageState extends State<RentPage> {
       }
     } else if (result.tabIndex == 1) {
       // 价格筛选
-      _criteriaRepo.rentResult = result;
+      _criteriaRepo.rentalResult = result;
       final category = result.selected.firstOrNull;
       if (category == null) return null;
       if (category.id == 'rent') {
@@ -211,7 +211,7 @@ class _RentPageState extends State<RentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('租屋房源'),
+        title: const Text('租房'),
       ),
       body: Column(
         children: [
@@ -264,9 +264,9 @@ class _RentPageState extends State<RentPage> {
                 },
               ),
               GridSelector(
-                dataFetcher: _criteriaRepo.fetchRentData,
-                selectedDataFetcher: _criteriaRepo.fetchRentSelectedData,
-                resetDataFetcher: _criteriaRepo.fetchRentResetData,
+                dataFetcher: _criteriaRepo.fetchRentalData,
+                selectedDataFetcher: _criteriaRepo.fetchRentalSelectedData,
+                resetDataFetcher: _criteriaRepo.fetchRentalResetData,
                 tileVariant: SelectorGridTileVariant.outlined,
                 crossAxisCount: 4,
                 childAspectRatio: 2.5,

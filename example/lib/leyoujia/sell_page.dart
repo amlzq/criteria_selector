@@ -1,7 +1,7 @@
 import 'package:criteria_selector/criteria_selector.dart';
-import 'package:example/house/house_criteria_repository.dart';
-import 'package:example/house/house_repository.dart';
-import 'package:example/house/utils.dart';
+import 'package:example/leyoujia/house_criteria_repository.dart';
+import 'package:example/leyoujia/house_repository.dart';
+import 'package:example/leyoujia/utils.dart';
 import 'package:flutter/material.dart';
 
 import 'my_widgets.dart';
@@ -140,7 +140,7 @@ class _SellPageState extends State<SellPage> {
         DropselectTabBarTheme.maybeOf(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('售屋房源'),
+        title: const Text('二手房'),
       ),
       body: Column(
         children: [

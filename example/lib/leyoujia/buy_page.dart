@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:criteria_selector/criteria_selector.dart';
-import 'package:example/house/house_criteria_repository.dart';
-import 'package:example/house/house_repository.dart';
-import 'package:example/house/utils.dart';
+import 'package:example/leyoujia/house_criteria_repository.dart';
+import 'package:example/leyoujia/house_repository.dart';
+import 'package:example/leyoujia/utils.dart';
 import 'package:example/log.dart';
 import 'package:flutter/material.dart';
 
@@ -218,7 +218,7 @@ class _BuyPageState extends State<BuyPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('新房房源'),
+        title: const Text('新房'),
       ),
       body: Column(
         children: [
