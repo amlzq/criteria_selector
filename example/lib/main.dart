@@ -6,6 +6,7 @@ import 'house/buy_page.dart';
 import 'house/map_page.dart';
 import 'house/rent_page.dart';
 import 'house/sell_page.dart';
+import 'zillow/house_page.dart';
 
 void main() {
   if (kReleaseMode) {
@@ -113,6 +114,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               },
               child: const Text('On Map'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HomePage()),
+                );
+              },
+              child: const Text('Zillow'),
             ),
           ],
         ),
