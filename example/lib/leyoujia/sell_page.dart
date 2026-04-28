@@ -3,6 +3,7 @@ import 'package:example/leyoujia/house_criteria_repository.dart';
 import 'package:example/leyoujia/house_repository.dart';
 import 'package:example/leyoujia/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'my_widgets.dart';
 
@@ -140,7 +141,7 @@ class _SellPageState extends State<SellPage> {
         DropselectTabBarTheme.maybeOf(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('二手房'),
+        title: Text(AppLocalizations.of(context)?.sell ?? ''),
       ),
       body: Column(
         children: [

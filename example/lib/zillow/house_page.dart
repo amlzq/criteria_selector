@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:criteria_selector/criteria_selector.dart';
 import 'package:example/log.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'house_filters_repository.dart';
 import 'house_repository.dart';
@@ -210,7 +211,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('For sale')),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context)?.sell ?? ''),
+      ),
       body: Column(
         children: [
           Row(

@@ -1,11 +1,10 @@
 import 'package:criteria_selector/criteria_selector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'leyoujia/buy_page.dart';
-import 'leyoujia/map_page.dart';
-import 'leyoujia/rent_page.dart';
-import 'leyoujia/sell_page.dart';
+import 'leyoujia/leyoujia_page.dart';
 import 'zillow/house_page.dart';
 
 void main() {
@@ -53,8 +52,29 @@ class MyApp extends StatelessWidget {
       ],
     );
     return MaterialApp(
-      title: 'Criteria Selector Example',
+      title: AppLocalizations.of(context)?.appName ?? '',
       theme: theme,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en'),
+        Locale.fromSubtags(languageCode: 'zh'),
+        Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans'),
+        Locale.fromSubtags(
+          languageCode: 'zh',
+          scriptCode: 'Hant',
+          countryCode: 'TW',
+        ),
+        Locale.fromSubtags(
+          languageCode: 'zh',
+          scriptCode: 'Hant',
+          countryCode: 'HK',
+        ),
+      ],
       home: const MyHomePage(),
     );
   }
@@ -84,46 +104,19 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const BuyPage()),
-                );
-              },
-              child: const Text('Buy'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SellPage()),
-                );
-              },
-              child: const Text('Sell'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const RentPage()),
-                );
-              },
-              child: const Text('Rent'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const MapPage()),
-                );
-              },
-              child: const Text('On Map'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
                   MaterialPageRoute(builder: (context) => const HomePage()),
                 );
               },
               child: const Text('Zillow'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LeyoujiaPage()),
+                );
+              },
+              child: const Text('Leyoujia'),
             ),
           ],
         ),

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:criteria_selector/criteria_selector.dart';
 import 'package:example/leyoujia/house_criteria_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../log.dart';
 import 'house_repository.dart';
@@ -211,7 +212,7 @@ class _RentPageState extends State<RentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('租房'),
+        title: Text(AppLocalizations.of(context)?.rent ?? ''),
       ),
       body: Column(
         children: [
