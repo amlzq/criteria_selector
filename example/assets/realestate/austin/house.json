@@ -1,7 +1,7 @@
 [
   {
     "id": "house000",
-    "picture": "assets/pic_house0.jpg",
+    "picture": "assets/realestate/pic_house0.jpg",
     "tag": "Single car garage",
     "title": "$364,900",
     "second": "3 bds | 2 ba | 1,116 sqft | Active",
@@ -20,7 +20,7 @@
   },
   {
     "id": "house001",
-    "picture": "assets/pic_house1.jpg",
+    "picture": "assets/realestate/pic_house1.jpg",
     "tag": "Showcase",
     "title": "$369,990+",
     "second": "4 bds | 3 ba | 1,822 sqft | New construction",
@@ -39,7 +39,7 @@
   },
   {
     "id": "house002",
-    "picture": "assets/pic_house2.jpg",
+    "picture": "assets/realestate/pic_house2.jpg",
     "tag": "3D Tour",
     "title": "$845,000",
     "second": "4 bds | 2 ba | 2,144 sqft | Active",
@@ -58,7 +58,7 @@
   },
   {
     "id": "house003",
-    "picture": "assets/pic_house3.jpg",
+    "picture": "assets/realestate/pic_house3.jpg",
     "tag": "Sleek modern appliances",
     "title": "$499,000",
     "second": "3 bds | 2 ba | 1,532 sqft | Active",
@@ -77,7 +77,7 @@
   },
   {
     "id": "house004",
-    "picture": "assets/pic_house4.jpg",
+    "picture": "assets/realestate/pic_house4.jpg",
     "tag": "Extra visibility",
     "title": "$289,900",
     "second": "2 bds | 1 ba | 918 sqft | Active",
@@ -96,7 +96,7 @@
   },
   {
     "id": "house005",
-    "picture": "assets/pic_house5.jpg",
+    "picture": "assets/realestate/pic_house5.jpg",
     "tag": "Classic brick residence",
     "title": "$615,000",
     "second": "3 bds | 3 ba | 1,890 sqft | Active",
@@ -115,7 +115,7 @@
   },
   {
     "id": "house006",
-    "picture": "assets/pic_house6.jpg",
+    "picture": "assets/realestate/pic_house6.jpg",
     "tag": "16 hours ago",
     "title": "$725,000",
     "second": "4 bds | 3 ba | 2,365 sqft | Active",
@@ -134,7 +134,7 @@
   },
   {
     "id": "house007",
-    "picture": "assets/pic_house7.jpg",
+    "picture": "assets/realestate/pic_house7.jpg",
     "tag": "Open: Sat 2-4pm (4/25)",
     "title": "$339,000",
     "second": "3 bds | 2 ba | 1,204 sqft | Pending",
@@ -153,7 +153,7 @@
   },
   {
     "id": "house008",
-    "picture": "assets/pic_house8.jpg",
+    "picture": "assets/realestate/pic_house8.jpg",
     "tag": "42 days on Zillow",
     "title": "$1,095,000",
     "second": "5 bds | 4 ba | 3,410 sqft | Active",
@@ -172,7 +172,7 @@
   },
   {
     "id": "house009",
-    "picture": "assets/pic_house9.jpg",
+    "picture": "assets/realestate/pic_house9.jpg",
     "tag": "Showcase",
     "title": "$259,000",
     "second": "1 bd | 1 ba | 672 sqft | Active",

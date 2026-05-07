@@ -1,7 +1,7 @@
 [
   {
     "id": "house000",
-    "picture": "assets/pic_house0.jpg",
+    "picture": "assets/realestate/pic_house0.jpg",
     "title": "6米挑高双层阁楼，中层南北通透，采光充足",
     "second": "4室2厅2卫 | 180平米 | 南北 | 精装 | 低层(共18层) | 2015年建",
     "price": "850万",
@@ -29,7 +29,7 @@
   },
   {
     "id": "house001",
-    "picture": "assets/pic_house1.jpg",
+    "picture": "assets/realestate/pic_house1.jpg",
     "title": "南北通透三房，双阳台设计，采光充足，视野开阔",
     "second": "3室2厅2卫 | 120平米 | 南北 | 精装 | 中层(共20层) | 2018年建",
     "price": "620万",
@@ -57,7 +57,7 @@
   },
   {
     "id": "house002",
-    "picture": "assets/pic_house2.jpg",
+    "picture": "assets/realestate/pic_house2.jpg",
     "title": "豪华装修四房，宽敞客厅，独立书房，适合家庭居住",
     "second": "4室2厅3卫 | 200平米 | 东西 | 豪装 | 高层(共25层) | 2020年建",
     "price": "1200万",
@@ -85,7 +85,7 @@
   },
   {
     "id": "house003",
-    "picture": "assets/pic_house3.jpg",
+    "picture": "assets/realestate/pic_house3.jpg",
     "title": "现代简约风格三房，采光极佳，交通便利",
     "second": "3室2厅1卫 | 100平米 | 南 | 简装 | 高层(共30层) | 2012年建",
     "price": "500万",
@@ -113,7 +113,7 @@
   },
   {
     "id": "house004",
-    "picture": "assets/pic_house4.jpg",
+    "picture": "assets/realestate/pic_house4.jpg",
     "title": "豪华复式五房，带私人花园，适合高端家庭",
     "second": "5室3厅4卫 | 300平米 | 南北 | 豪装 | 低层(共10层) | 2021年建",
     "price": "3000万",
@@ -141,7 +141,7 @@
   },
   {
     "id": "house005",
-    "picture": "assets/pic_house5.jpg",
+    "picture": "assets/realestate/pic_house5.jpg",
     "title": "经济实惠两房，适合刚需家庭，周边配套齐全",
     "second": "2室1厅1卫 | 80平米 | 东 | 简装 | 中层(共15层) | 2010年建",
     "price": "300万",
@@ -169,7 +169,7 @@
   },
   {
     "id": "house006",
-    "picture": "assets/pic_house6.jpg",
+    "picture": "assets/realestate/pic_house6.jpg",
     "title": "高层景观房，三房两厅，视野开阔",
     "second": "3室2厅2卫 | 150平米 | 西 | 精装 | 高层(共28层) | 2019年建",
     "price": "950万",
@@ -197,7 +197,7 @@
   },
   {
     "id": "house007",
-    "picture": "assets/pic_house7.jpg",
+    "picture": "assets/realestate/pic_house7.jpg",
     "title": "地铁口精装两房，户型方正，拎包入住",
     "second": "2室2厅1卫 | 90平米 | 南 | 精装 | 中层(共22层) | 2016年建",
     "price": "420万",
@@ -225,7 +225,7 @@
   },
   {
     "id": "house008",
-    "picture": "assets/pic_house8.jpg",
+    "picture": "assets/realestate/pic_house8.jpg",
     "title": "学位房四房，南北通透，三开间朝南",
     "second": "4室2厅2卫 | 160平米 | 南北 | 精装 | 中高层(共33层) | 2017年建",
     "price": "980万",
@@ -253,7 +253,7 @@
   },
   {
     "id": "house009",
-    "picture": "assets/pic_house9.jpg",
+    "picture": "assets/realestate/pic_house9.jpg",
     "title": "近公园三房，户型通透，安静宜居",
     "second": "3室1厅2卫 | 110平米 | 东南 | 简装 | 低层(共18层) | 2013年建",
     "price": "560万",

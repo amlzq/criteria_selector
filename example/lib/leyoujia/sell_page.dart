@@ -149,7 +149,8 @@ class _SellPageState extends State<SellPage> {
             width: double.infinity,
             height: 120,
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-            child: Image.asset('assets/banner1.jpg', fit: BoxFit.cover),
+            child:
+                Image.asset('assets/realestate/banner1.jpg', fit: BoxFit.cover),
           ),
           Theme(
             data: Theme.of(context).copyWith(

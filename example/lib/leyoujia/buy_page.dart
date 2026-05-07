@@ -247,7 +247,7 @@ class _BuyPageState extends State<BuyPage> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12),
               child: Image.asset(
-                'assets/banner0.jpg',
+                'assets/realestate/banner0.jpg',
                 width: double.infinity,
                 height: 180.0,
                 fit: BoxFit.cover,
