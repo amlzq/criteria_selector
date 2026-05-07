@@ -15,7 +15,7 @@ typedef DropselectResultCallback = void Function(DropselectResult result);
 typedef SelectorCallback = void Function(SelectorEntries selected);
 
 /// Callback invoked when an item in a list/grid is tapped.
-typedef ItemTapCallback<T extends SelectorEntry> = Function(int index, T item);
+typedef ItemTapCallback<T extends SelectorEntry> = Function(int index, T entry);
 
 /// Callback parameter indicates which selector is being shown or hidden.
 typedef SelectorVisibilityCallback = void Function(DropselectTabData tabData);
@@ -44,6 +44,8 @@ const EdgeInsets kSelectorLabelPadding = EdgeInsets.symmetric(horizontal: 16.0);
 
 /// Default width for the category tile column.
 const kSelectorCategoryTileWidth = 80.0;
+
+const kSelectorCategoryBarMaxWidthFactor = 0.7;
 
 /// Builds a selector widget from async data and its controller.
 typedef SelectorBuilder = Widget Function(

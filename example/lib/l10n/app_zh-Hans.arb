@@ -1,6 +1,9 @@
 {
     "appName": "条件选择器示例",
+    "realEstate": "房地产",
+    "leyoujia": "乐有家",
     "buy": "新房",
     "sell": "二手房",
-    "rent": "租房"
+    "rent": "租房",
+    "onMap": "地图看房"
 }

@@ -16,8 +16,8 @@ class SelectorListView<T extends SelectorEntry> extends StatefulWidget {
     super.key,
     this.categoryId,
     this.categoryName,
-    required this.items,
-    this.selectedItems,
+    required this.entries,
+    this.selectedEntries,
     required this.onItemTap,
     this.inputListener,
     this.padding = EdgeInsets.zero,
@@ -29,8 +29,8 @@ class SelectorListView<T extends SelectorEntry> extends StatefulWidget {
   final String? categoryId;
   final String? categoryName;
 
-  final List<T> items;
-  final SelectorEntries? selectedItems;
+  final List<T> entries;
+  final SelectorEntries? selectedEntries;
 
   final ItemTapCallback onItemTap;
 
@@ -50,10 +50,10 @@ class SelectorListView<T extends SelectorEntry> extends StatefulWidget {
 
 class SelectorListViewState<T extends SelectorEntry>
     extends State<SelectorListView<T>> with AutomaticKeepAliveClientMixin {
-  SelectorRangeEntry? firstCustomItem;
-  SelectorRangeEntry? lastCustomItem;
+  SelectorRangeEntry? firstCustomEntry;
+  SelectorRangeEntry? lastCustomEntry;
 
-  late List<T> itemsWithoutCustom;
+  late List<T> entriesWithoutCustom;
 
   TextEditingController? _minController;
   TextEditingController? _maxController;
@@ -65,17 +65,17 @@ class SelectorListViewState<T extends SelectorEntry>
   void initState() {
     super.initState();
 
-    firstCustomItem = widget.items.firstCustomOrNull;
-    lastCustomItem = widget.items.lastCustomOrNull;
+    firstCustomEntry = widget.entries.firstCustomOrNull;
+    lastCustomEntry = widget.entries.lastCustomOrNull;
 
-    itemsWithoutCustom = widget.items;
-    if (firstCustomItem != null || lastCustomItem != null) {
-      itemsWithoutCustom = widget.items.where(testNotCustomItem).toList();
+    entriesWithoutCustom = widget.entries;
+    if (firstCustomEntry != null || lastCustomEntry != null) {
+      entriesWithoutCustom = widget.entries.where(testNotCustomItem).toList();
       _initializeInput();
       _minController?.text =
-          (firstCustomItem ?? lastCustomItem)!.min?.toString() ?? '';
+          (firstCustomEntry ?? lastCustomEntry)!.min?.toString() ?? '';
       _maxController?.text =
-          (firstCustomItem ?? lastCustomItem)!.max?.toString() ?? '';
+          (firstCustomEntry ?? lastCustomEntry)!.max?.toString() ?? '';
     }
   }
 
@@ -83,9 +83,9 @@ class SelectorListViewState<T extends SelectorEntry>
   void didUpdateWidget(covariant SelectorListView<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
     _minController?.text =
-        (firstCustomItem ?? lastCustomItem)!.min?.toString() ?? '';
+        (firstCustomEntry ?? lastCustomEntry)!.min?.toString() ?? '';
     _maxController?.text =
-        (firstCustomItem ?? lastCustomItem)!.max?.toString() ?? '';
+        (firstCustomEntry ?? lastCustomEntry)!.max?.toString() ?? '';
   }
 
   @override
@@ -117,9 +117,9 @@ class SelectorListViewState<T extends SelectorEntry>
 
   /// Listens to input fields; once the user types, clears selected items
   void _inputListener() {
-    if (widget.selectedItems?.isNotEmpty ?? false) {
+    if (widget.selectedEntries?.isNotEmpty ?? false) {
       setState(() {
-        widget.selectedItems?.clear();
+        widget.selectedEntries?.clear();
       });
     }
     widget.inputListener
@@ -147,11 +147,11 @@ class SelectorListViewState<T extends SelectorEntry>
     }
   }
 
-  void _onItemTap(int index, T item) {
+  void _onItemTap(int index, T entry) {
     // Clear custom input
     _clearAllInput();
     _unfocusAllInput();
-    widget.onItemTap(index, item);
+    widget.onItemTap(index, entry);
   }
 
   @override
@@ -179,9 +179,9 @@ class SelectorListViewState<T extends SelectorEntry>
                 ),
               ),
             // An input item at header
-            if (firstCustomItem != null)
+            if (firstCustomEntry != null)
               SelectorFieldTile(
-                firstCustomItem!,
+                firstCustomEntry!,
                 padding: const EdgeInsets.only(top: 10.0),
                 minController: _minController,
                 maxController: _maxController,
@@ -193,21 +193,22 @@ class SelectorListViewState<T extends SelectorEntry>
               shrinkWrap: true,
               physics: const ClampingScrollPhysics(),
               padding: EdgeInsets.zero,
-              itemCount: itemsWithoutCustom.length,
+              itemCount: entriesWithoutCustom.length,
               itemBuilder: (context, index) {
-                final item = itemsWithoutCustom[index];
-                final selected = widget.selectedItems?.contains(item) ?? false;
+                final entry = entriesWithoutCustom[index];
+                final selected =
+                    widget.selectedEntries?.contains(entry) ?? false;
                 if (SelectionMode.single == widget.selectionMode) {
                   return SelectorRadioListTile(
-                    onTap: () => _onItemTap(index, item),
-                    label: item.name ?? '',
+                    onTap: () => _onItemTap(index, entry),
+                    label: entry.name ?? '',
                     selected: selected,
                     radioBuilder: widget.radioBuilder,
                   );
                 } else {
                   return SelectorCheckboxListTile(
-                    onTap: () => _onItemTap(index, item),
-                    label: item.name ?? '',
+                    onTap: () => _onItemTap(index, entry),
+                    label: entry.name ?? '',
                     checked: selected,
                     checkboxBuilder: widget.checkboxBuilder,
                   );
@@ -218,9 +219,9 @@ class SelectorListViewState<T extends SelectorEntry>
               },
             ),
             // An input item at footer
-            if (lastCustomItem != null)
+            if (lastCustomEntry != null)
               SelectorFieldTile(
-                lastCustomItem!,
+                lastCustomEntry!,
                 padding: const EdgeInsets.only(top: 10.0),
                 minController: _minController,
                 maxController: _maxController,

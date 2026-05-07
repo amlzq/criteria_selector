@@ -223,11 +223,36 @@ class _BuyPageState extends State<BuyPage> {
       ),
       body: Column(
         children: [
-          Container(
-            width: double.infinity,
-            height: 120,
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-            child: Image.asset('assets/banner0.jpg', fit: BoxFit.cover),
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  height: 40,
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surfaceContainer,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  alignment: Alignment.centerLeft,
+                  child: const Text(userCityName),
+                ),
+              ),
+              IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.asset(
+                'assets/banner0.jpg',
+                width: double.infinity,
+                height: 180.0,
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
           DropselectTabBar(
             controller: _controller,
@@ -296,6 +321,7 @@ class _BuyPageState extends State<BuyPage> {
                 childAspectRatio: 2.5,
                 crossAxisSpacing: 8,
                 mainAxisSpacing: 8,
+                categoryBarTheme: const SelectorCategoryBarTheme(size: 98),
                 actionBarTheme: const SelectorActionBarTheme(
                   resetText: '重置',
                   applyText: '应用',

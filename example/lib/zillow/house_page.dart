@@ -10,13 +10,13 @@ import 'house_repository.dart';
 import 'utils.dart';
 
 /// For sale
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HousePage extends StatefulWidget {
+  const HousePage({super.key});
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HousePage> createState() => _HousePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HousePageState extends State<HousePage> {
   final _controller = DropselectTabController();
   late final HouseRepository _repo;
   late final HouseFiltersRepository _filtersRepo;
@@ -302,6 +302,11 @@ class _HomePageState extends State<HomePage> {
                 childAspectRatio: 2.5,
                 crossAxisSpacing: 8,
                 mainAxisSpacing: 8,
+                categoryBarTheme: const SelectorCategoryBarTheme(size: 108),
+                actionBarTheme: const SelectorActionBarTheme(
+                  resetText: 'Clean',
+                  applyText: 'Done',
+                ),
               ),
               ListSelector(
                 dataFetcher: _filtersRepo.fetchSortData,

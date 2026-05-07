@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'buy_page.dart';
 import 'map_page.dart';
@@ -12,7 +13,7 @@ class LeyoujiaPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Leyoujia'),
+        title: Text(AppLocalizations.of(context)?.leyoujia ?? ''),
       ),
       body: Center(
         child: Column(
@@ -24,7 +25,7 @@ class LeyoujiaPage extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => const BuyPage()),
                 );
               },
-              child: const Text('Buy'),
+              child: Text(AppLocalizations.of(context)?.buy ?? ''),
             ),
             TextButton(
               onPressed: () {
@@ -33,7 +34,7 @@ class LeyoujiaPage extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => const SellPage()),
                 );
               },
-              child: const Text('Sell'),
+              child: Text(AppLocalizations.of(context)?.sell ?? ''),
             ),
             TextButton(
               onPressed: () {
@@ -42,7 +43,7 @@ class LeyoujiaPage extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => const RentPage()),
                 );
               },
-              child: const Text('Rent'),
+              child: Text(AppLocalizations.of(context)?.rent ?? ''),
             ),
             TextButton(
               onPressed: () {
@@ -51,7 +52,7 @@ class LeyoujiaPage extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => const MapPage()),
                 );
               },
-              child: const Text('On Map'),
+              child: Text(AppLocalizations.of(context)?.onMap ?? ''),
             ),
           ],
         ),

@@ -37,11 +37,11 @@ class ListSelectorViewState extends State<ListSelectorView> {
 
     if (widget.previousSelected != null &&
         (widget.previousSelected?.isNotEmpty ?? false)) {
-      for (var selectedItem in widget.previousSelected ?? {}) {
-        final item =
-            widget.entries.singleWhereOrNull((e) => e.id == selectedItem.id);
-        if (item != null) {
-          _selectedEntries.add(item);
+      for (var selectedEntry in widget.previousSelected ?? {}) {
+        final entry =
+            widget.entries.singleWhereOrNull((e) => e.id == selectedEntry.id);
+        if (entry != null) {
+          _selectedEntries.add(entry);
         }
       }
     }
@@ -72,28 +72,28 @@ class ListSelectorViewState extends State<ListSelectorView> {
 
   SelectionMode? get categorySelectionMode => controller?.selectionMode;
 
-  void _onTerminalItemTap(int index, SelectorChildEntry item) {
-    if (item.isAny) {
+  void _onTerminalItemTap(SelectorChildEntry entry) {
+    if (entry.isAny) {
       // "Any" entry
       if (SelectionMode.single == categorySelectionMode) {
         // Single-select mode
-        if (_selectedEntries.contains(item)) {
+        if (_selectedEntries.contains(entry)) {
           return;
         } else {
           // Clear selected list
           _selectedEntries
             ..clear()
-            ..add(item);
+            ..add(entry);
         }
       } else {
         // Multi-select mode
-        if (_selectedEntries.contains(item)) {
-          _selectedEntries.remove(item);
+        if (_selectedEntries.contains(entry)) {
+          _selectedEntries.remove(entry);
         } else {
           // Remove items that share the same parent from the selected list
           _selectedEntries.removeWhere(
-              (e) => (e as SelectorChildEntry).parentId == item.parentId);
-          _selectedEntries.add(item);
+              (e) => (e as SelectorChildEntry).parentId == entry.parentId);
+          _selectedEntries.add(entry);
         }
       }
     } else {
@@ -104,28 +104,28 @@ class ListSelectorViewState extends State<ListSelectorView> {
 
       if (SelectionMode.single == categorySelectionMode) {
         // Single-select mode
-        if (_selectedEntries.contains(item)) {
+        if (_selectedEntries.contains(entry)) {
           return;
         } else {
           _selectedEntries
             ..clear()
-            ..add(item);
+            ..add(entry);
         }
       } else {
         // Multi-select mode
-        if (_selectedEntries.contains(item)) {
-          _selectedEntries.remove(item);
+        if (_selectedEntries.contains(entry)) {
+          _selectedEntries.remove(entry);
         } else {
-          _selectedEntries.add(item);
+          _selectedEntries.add(entry);
         }
       }
     }
 
-    _setStateOrImmediateApply(item);
+    _setStateOrImmediateApply(entry);
   }
 
-  void _setStateOrImmediateApply(SelectorChildEntry item) {
-    if (SelectionMode.single == selector?.selectionMode || item.immediate) {
+  void _setStateOrImmediateApply(SelectorChildEntry entry) {
+    if (SelectionMode.single == selector?.selectionMode || entry.immediate) {
       // No need to tap "Apply"; return result immediately
       _onApplyTap();
     } else {
@@ -176,10 +176,10 @@ class ListSelectorViewState extends State<ListSelectorView> {
       children: [
         Flexible(
           child: SelectorListView(
-            items: widget.entries,
-            selectedItems: _selectedEntries,
-            onItemTap: (index, item) =>
-                _onTerminalItemTap(index, item as SelectorChildEntry),
+            entries: widget.entries,
+            selectedEntries: _selectedEntries,
+            onItemTap: (_, entry) =>
+                _onTerminalItemTap(entry as SelectorChildEntry),
             radioBuilder: selector?.radioBuilder,
             checkboxBuilder: selector?.checkboxBuilder,
           ),

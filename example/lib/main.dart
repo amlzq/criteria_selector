@@ -93,30 +93,42 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Criteria Selector Example'),
+        title: Text(AppLocalizations.of(context)?.appName ?? ''),
       ),
       body: Center(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text('Real Estate'),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomePage()),
-                );
-              },
-              child: const Text('Zillow'),
+            Text(
+              AppLocalizations.of(context)?.realEstate ?? '',
+              style: const TextStyle(fontSize: 16),
             ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LeyoujiaPage()),
-                );
-              },
-              child: const Text('Leyoujia'),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const HousePage()),
+                    );
+                  },
+                  child: const Text('Zillow'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LeyoujiaPage()),
+                    );
+                  },
+                  child: Text(AppLocalizations.of(context)?.leyoujia ?? ''),
+                ),
+              ],
             ),
           ],
         ),

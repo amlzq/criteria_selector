@@ -1,4 +1,9 @@
 {
-    "appName": "条件选择器示例",
-    "buy": "新建案"
+    "appName": "條件選擇器範例",
+    "realEstate": "房地产",
+    "leyoujia": "乐有家",
+    "buy": "新建案",
+    "sell": "中古屋",
+    "rent": "租屋",
+    "onMap": "地圖找屋"
 }

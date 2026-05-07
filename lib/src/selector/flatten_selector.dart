@@ -405,7 +405,6 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
   @override
   Widget build(BuildContext context) {
     final theme = SelectorTheme.of(context);
-    // final defaults = _PlattenSelectorDefaults(context);
 
     final selectedCategories =
         _selectedEntriesPerLevel.elementAtOrNull(0) ?? {};
@@ -424,39 +423,16 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Left category list
-              Container(
-                width: kSelectorCategoryTileWidth,
-                color: categoryBackgroundColor,
-                child: ListView.builder(
-                  // shrinkWrap: true,
-                  physics: const ClampingScrollPhysics(),
-                  itemCount: widget.entries.length,
-                  itemBuilder: (context, index) {
-                    final item = widget.entries[index];
-                    final selected = selectedCategories.contains(item);
-                    final focused = _tempSelectedCategoryIndex == index;
-                    return SelectorListTile(
-                      label: item.name ?? '',
-                      selected: focused,
-                      selectedTileColor: terminalBackgroundColor,
-                      leading: Container(
-                        width: 12,
-                        alignment: Alignment.centerLeft,
-                        child: Container(
-                          width: 6,
-                          height: 6,
-                          decoration: BoxDecoration(
-                            color: item.hasChildren && selected
-                                ? effectiveSelectedColor
-                                : Colors.transparent,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                      ),
-                      onTap: () => _onCategoryItemTap(index),
-                    );
-                  },
-                ),
+              SelectorCategoryBar(
+                scrollDirection: Axis.vertical,
+                size: selector?.categoryBarTheme?.size,
+                backgroundColor: categoryBackgroundColor,
+                selectedColor: effectiveSelectedColor,
+                selectedTileColor: terminalBackgroundColor,
+                entries: widget.entries,
+                selectedCategories: selectedCategories,
+                focusedIndex: _tempSelectedCategoryIndex,
+                onTap: (index, entry) => _onCategoryItemTap(index),
               ),
               // Right content area with NotificationListener
               Expanded(
@@ -475,8 +451,8 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
                       children: widget.entries.mapIndexed((index, item) {
                         final category =
                             widget.entries[index] as SelectorCategoryEntry;
-                        final items = category.children?.toList() ?? [];
-                        final selectedItems =
+                        final entries = category.children?.toList() ?? [];
+                        final selectedEntries =
                             _selectedEntriesPerLevel.elementAtOrNull(1) ?? {};
                         final isLast = item == widget.entries.last;
                         return SelectorGridView(
@@ -486,8 +462,8 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
                           mainAxisSpacing: widget.mainAxisSpacing,
                           crossAxisSpacing: widget.crossAxisSpacing,
                           category: category,
-                          items: items,
-                          selectedItems: selectedItems,
+                          entries: entries,
+                          selectedEntries: selectedEntries,
                           onItemTap: (index, item) =>
                               _onTerminalItemTap(item as SelectorChildEntry),
                           focusListener: _focusListener,
@@ -521,20 +497,6 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
   }
 }
 
-// class _PlattenSelectorDefaults extends SelectorThemeData {
-//   _PlattenSelectorDefaults(this.context) : super();
-
-//   final BuildContext context;
-//   late final ColorScheme _colors = Theme.of(context).colorScheme;
-//   late final TextTheme _textTheme = Theme.of(context).textTheme;
-
-//   @override
-//   Color get categoryBackgroundColor => _colors.surfaceContainer;
-
-//   @override
-//   Color get terminalBackgroundColor => _colors.surfaceContainerHighest;
-// }
-
 class PlattenSelectorSkeleton extends StatelessWidget {
   /// Loading skeleton for [FlattenSelectorView].
   const PlattenSelectorSkeleton({
@@ -556,10 +518,13 @@ class PlattenSelectorSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = SelectorTheme.of(context);
-    // final SelectorThemeData defaults = _PlattenSelectorDefaults(context);
-    final effectiveCategoryBackgroundColor = theme.backgroundColor;
+    final controller = SelectorController.of(context);
+    final selector = controller?.selector as FlattenSelector;
+
+    final categoryBackgroundColor = theme.backgroundColor;
+
     return ColoredBox(
-      color: effectiveCategoryBackgroundColor,
+      color: categoryBackgroundColor,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -567,28 +532,10 @@ class PlattenSelectorSkeleton extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  width: kSelectorCategoryTileWidth,
-                  child: SkeletonBox(
-                    child: ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 10,
-                      ),
-                      itemCount: 6,
-                      itemBuilder: (context, index) {
-                        return SkeletonTile(
-                          height: kSelectorListTileHeight,
-                          borderRadius: BorderRadius.circular(4),
-                        );
-                      },
-                      separatorBuilder: (BuildContext context, int index) {
-                        return const SizedBox(height: 6);
-                      },
-                    ),
-                  ),
+                SelectorCategoryBarSkeleton(
+                  scrollDirection: Axis.vertical,
+                  size: selector.categoryBarTheme?.size,
+                  backgroundColor: categoryBackgroundColor,
                 ),
                 Flexible(
                   child: SelectorGridSkeleton(

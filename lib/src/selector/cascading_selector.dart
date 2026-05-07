@@ -128,15 +128,15 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
 
     // Restore selections from selected data
     if (selected?.isNotEmpty == true) {
-      _initializeSelectedItemsPerLevel(widget.entries.toSet(), selected, 0);
+      _initializeSelectedEntriesPerLevel(widget.entries.toSet(), selected, 0);
       _restoreHeaderFooterSelected(widget.entries, selected!);
     }
 
-    _initializeTempSelectedItemPerLevel(0);
+    _initializeTempSelectedEntryPerLevel(0);
 
-    // Scroll to selected items after build
+    // Scroll to selected list item after build
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollToSelectedItems();
+      _scrollToSelectedItem();
     });
   }
 
@@ -188,54 +188,54 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
     _scrollControllers.clear();
   }
 
-  void _initializeSelectedItemsPerLevel(
-      Set<SelectorEntry>? items, Set<SelectorEntry>? selectedItems, int level) {
-    if (items == null ||
-        items.isEmpty ||
-        selectedItems == null ||
-        selectedItems.isEmpty) {
+  void _initializeSelectedEntriesPerLevel(Set<SelectorEntry>? entries,
+      Set<SelectorEntry>? selectedEntries, int level) {
+    if (entries == null ||
+        entries.isEmpty ||
+        selectedEntries == null ||
+        selectedEntries.isEmpty) {
       return;
     }
     _selectedEntriesPerLevel.add({});
-    for (var selectedItem in selectedItems) {
-      final item = items.singleWhereOrNull((e) => e.id == selectedItem.id);
+    for (var selectedEntry in selectedEntries) {
+      final item = entries.singleWhereOrNull((e) => e.id == selectedEntry.id);
       if (item != null) {
         _selectedEntriesPerLevel[level].add(item);
       }
-      if (selectedItem.children?.isNotEmpty == true) {
-        _initializeSelectedItemsPerLevel(
-            item?.children, selectedItem.children, level + 1);
+      if (selectedEntry.children?.isNotEmpty == true) {
+        _initializeSelectedEntriesPerLevel(
+            item?.children, selectedEntry.children, level + 1);
       }
     }
   }
 
   /// Builds _tempSelectedEntryPerLevel from _selectedEntriesPerLevel
-  void _initializeTempSelectedItemPerLevel(int level) {
+  void _initializeTempSelectedEntryPerLevel(int level) {
     if (level >= _selectedEntriesPerLevel.length) {
       return;
     }
-    final selectedItems = _selectedEntriesPerLevel[level];
-    if (selectedItems.isEmpty) {
+    final selectedEntries = _selectedEntriesPerLevel[level];
+    if (selectedEntries.isEmpty) {
       return;
     }
-    final selectedItem = selectedItems.first;
-    _tempSelectedEntryPerLevel.add(selectedItem);
-    if (selectedItem.hasChildren) {
-      _cascadingList.add(selectedItem.children?.toList() ?? []);
+    final selectedEntry = selectedEntries.first;
+    _tempSelectedEntryPerLevel.add(selectedEntry);
+    if (selectedEntry.hasChildren) {
+      _cascadingList.add(selectedEntry.children?.toList() ?? []);
       _currentLevel = level;
       _scrollControllers.add(ScrollController());
     }
-    _initializeTempSelectedItemPerLevel(level + 1);
+    _initializeTempSelectedEntryPerLevel(level + 1);
   }
 
-  void _scrollToSelectedItems() {
+  void _scrollToSelectedItem() {
     for (int level = 0; level < _scrollControllers.length; level++) {
       if (_selectedEntriesPerLevel[level].isEmpty) continue;
       if (level >= _cascadingList.length) continue;
 
-      final items = _cascadingList[level];
+      final entries = _cascadingList[level];
       final firstSelected = _selectedEntriesPerLevel[level].first;
-      final selectedIndex = items.toList().indexOf(firstSelected);
+      final selectedIndex = entries.toList().indexOf(firstSelected);
 
       if (selectedIndex != -1 && _scrollControllers[level].hasClients) {
         final itemHeight = kSelectorListTileHeight; // Approximate item height
@@ -268,11 +268,12 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
   }
 
   /// Calculate maximum depth of the tree structure
-  int _calculateMaxDepth(Set<SelectorEntry>? items, int currentDepth) {
+  int _calculateMaxDepth(Set<SelectorEntry>? entries, int currentDepth) {
     int maxDepth = currentDepth;
-    for (SelectorEntry item in items ?? []) {
-      if (item.hasChildren) {
-        final childDepth = _calculateMaxDepth(item.children!, currentDepth + 1);
+    for (SelectorEntry entry in entries ?? []) {
+      if (entry.hasChildren) {
+        final childDepth =
+            _calculateMaxDepth(entry.children!, currentDepth + 1);
         if (childDepth > maxDepth) {
           maxDepth = childDepth;
         }
@@ -333,7 +334,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
   }
 
   /// Tap handler for a category item
-  void _onCategoryItemTap(SelectorCategoryEntry newCategory) {
+  void _onCategoryItemTap(SelectorCategoryEntry newCategoryEntry) {
     final selectionMode = controller?.selectionMode;
     if (SelectionMode.single == selectionMode) {
       // Single-select mode: reset previous selection when switching categories
@@ -345,21 +346,21 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
       _selectedFooterEntries.clear();
 
       // Select the new category
-      _tempSelectedEntryPerLevel.add(newCategory);
+      _tempSelectedEntryPerLevel.add(newCategoryEntry);
       _cascadingList.add(tempSelectedCategory.children?.toList() ?? []);
       _currentLevel = 1;
       _scrollControllers.add(ScrollController());
 
-      _ensureAnySelected(newCategory);
+      _ensureAnySelected(newCategoryEntry);
     } else {
       // Multi-select mode: keep previous selection and only switch the focused category
       if (_tempSelectedEntryPerLevel.isEmpty ||
           _tempSelectedEntryPerLevel.firstOrNull is! SelectorCategoryEntry) {
         _tempSelectedEntryPerLevel
           ..clear()
-          ..add(newCategory);
+          ..add(newCategoryEntry);
       } else {
-        _tempSelectedEntryPerLevel[0] = newCategory;
+        _tempSelectedEntryPerLevel[0] = newCategoryEntry;
       }
 
       while (_selectedEntriesPerLevel.isEmpty) {
@@ -367,25 +368,25 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
       }
 
       final rootSelected = _selectedEntriesPerLevel[0];
-      if (!rootSelected.contains(newCategory)) {
-        rootSelected.add(newCategory);
+      if (!rootSelected.contains(newCategoryEntry)) {
+        rootSelected.add(newCategoryEntry);
       }
 
       _cascadingList
         ..clear()
-        ..add(newCategory.children?.toList() ?? []);
+        ..add(newCategoryEntry.children?.toList() ?? []);
       _currentLevel = 1;
       _disposeScrollControllers();
       _scrollControllers.add(ScrollController());
-      _ensureAnySelected(newCategory);
+      _ensureAnySelected(newCategoryEntry);
     }
     setState(() {});
   }
 
   /// Tap handler for a middle node
   /// Only selecting a terminal node is an actual selection; otherwise it just expands children
-  void _onMiddleItemTap(int cascadeIndex, SelectorEntry item) {
-    if (item == _tempSelectedEntryPerLevel.lastOrNull) {
+  void _onMiddleItemTap(int cascadeIndex, SelectorEntry entry) {
+    if (entry == _tempSelectedEntryPerLevel.lastOrNull) {
       // Re-tapping the same node: no-op
       return;
     }
@@ -397,7 +398,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
     while (_tempSelectedEntryPerLevel.length > level) {
       _tempSelectedEntryPerLevel.removeLast();
     }
-    _tempSelectedEntryPerLevel.add(item);
+    _tempSelectedEntryPerLevel.add(entry);
 
     // Remove all levels after the current level
     while (_cascadingList.length > level) {
@@ -408,7 +409,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
     }
 
     // Expand child nodes
-    _cascadingList.add(item.children?.toList() ?? []);
+    _cascadingList.add(entry.children?.toList() ?? []);
     _currentLevel = level + 1;
     _scrollControllers.add(ScrollController());
 
@@ -423,10 +424,10 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
 
   /// Tap handler for a terminal node
   /// Only selecting a terminal node is an actual selection; otherwise it just expands children
-  void _onTerminalItemTap(int cascadeIndex, SelectorChildEntry item) {
+  void _onTerminalItemTap(int cascadeIndex, SelectorChildEntry entry) {
     // Jump-level selection for an "Any" entry (e.g., selecting the category's "Any" entry)
     final level = cascadeIndex + 1;
-    if (level < _currentLevel && item.isAny) {
+    if (level < _currentLevel && entry.isAny) {
       // Remove all levels after the current level
       while (_selectedEntriesPerLevel.length > level) {
         _selectedEntriesPerLevel.removeLast();
@@ -438,13 +439,13 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
         _tempSelectedEntryPerLevel.removeLast();
       }
       _selectedEntriesPerLevel.add({});
-      _selectedEntriesPerLevel[level].add(item);
-      _tempSelectedEntryPerLevel.add(item);
+      _selectedEntriesPerLevel[level].add(entry);
+      _tempSelectedEntryPerLevel.add(entry);
       // _deselectedAllChildren(_selectedCategory.children);
       // item.selected = true;
 
       _currentLevel = level;
-      _setStateOrImmediateApply(item);
+      _setStateOrImmediateApply(entry);
       return;
     }
 
@@ -455,26 +456,26 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
 
     final selectedItems = _selectedEntriesPerLevel[
         level]; // Selected entries for the current level
-    if (item.isAny) {
+    if (entry.isAny) {
       // "Any" entry
       if (SelectionMode.single == childrenSelectionMode) {
         // Single-select mode
-        if (selectedItems.contains(item)) {
+        if (selectedItems.contains(entry)) {
         } else {
           // Clear selected list
           selectedItems
             ..clear()
-            ..add(item);
+            ..add(entry);
         }
       } else {
         // Multi-select mode
-        if (selectedItems.contains(item)) {
-          selectedItems.remove(item);
+        if (selectedItems.contains(entry)) {
+          selectedItems.remove(entry);
         } else {
           // Remove items that share the same parent from the selected list
           selectedItems.removeWhere(
-              (e) => (e as SelectorTextEntry).parentId == item.parentId);
-          selectedItems.add(item);
+              (e) => (e as SelectorTextEntry).parentId == entry.parentId);
+          selectedItems.add(entry);
         }
       }
     } else {
@@ -486,28 +487,28 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
           ?.removeWhere((e) => e is SelectorChildEntry && e.isAny);
 
       selectedItems.removeWhere((e) =>
-          e is SelectorChildEntry && e.parentId == item.parentId && e.isAny);
+          e is SelectorChildEntry && e.parentId == entry.parentId && e.isAny);
 
       if (SelectionMode.single == childrenSelectionMode) {
         // Single-select mode
-        if (selectedItems.contains(item)) {
+        if (selectedItems.contains(entry)) {
         } else {
           selectedItems
             ..clear()
-            ..add(item);
+            ..add(entry);
         }
       } else {
         // Multi-select mode
-        if (selectedItems.contains(item)) {
-          selectedItems.remove(item);
+        if (selectedItems.contains(entry)) {
+          selectedItems.remove(entry);
         } else {
-          selectedItems.add(item);
+          selectedItems.add(entry);
         }
       }
     }
 
     // Keep parent selection state consistent
-    if (selectedItems.contains(item)) {
+    if (selectedItems.contains(entry)) {
       // If it was a select action, select the parent chain as well
       for (var i = cascadeIndex; i >= 0; i--) {
         _selectedEntriesPerLevel[i].add(_tempSelectedEntryPerLevel[i]);
@@ -538,11 +539,11 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
       }
     }
 
-    _setStateOrImmediateApply(item);
+    _setStateOrImmediateApply(entry);
   }
 
-  void _setStateOrImmediateApply(SelectorChildEntry item) {
-    if (SelectionMode.single == selectorSelectionMode || item.immediate) {
+  void _setStateOrImmediateApply(SelectorChildEntry entry) {
+    if (SelectionMode.single == selectorSelectionMode || entry.immediate) {
       // No need to tap "Apply"; return result immediately
       _onApplyTap();
     } else {
@@ -563,7 +564,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
   void _onHeaderOrFooterItemTap(
     bool isHeader,
     int chipIndex,
-    SelectorChildEntry item,
+    SelectorChildEntry entry,
   ) {
     final selectionMode = isHeader
         ? tempSelectedCategory.headerSelectionMode
@@ -572,24 +573,24 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
         ? _headerSelectedFor(tempSelectedCategory.id)
         : _footerSelectedFor(tempSelectedCategory.id);
 
-    final contains = selectedItems.any((e) => e.id == item.id);
+    final contains = selectedItems.any((e) => e.id == entry.id);
     if (SelectionMode.single == selectionMode) {
       if (contains) {
-        selectedItems.removeWhere((e) => e.id == item.id);
+        selectedItems.removeWhere((e) => e.id == entry.id);
       } else {
         selectedItems
           ..clear()
-          ..add(item);
+          ..add(entry);
       }
     } else {
       if (contains) {
-        selectedItems.removeWhere((e) => e.id == item.id);
+        selectedItems.removeWhere((e) => e.id == entry.id);
       } else {
-        selectedItems.add(item);
+        selectedItems.add(entry);
       }
     }
 
-    _setStateOrImmediateApply(item);
+    _setStateOrImmediateApply(entry);
   }
 
   void _onApplyTap() {
@@ -619,6 +620,8 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
   Widget build(BuildContext context) {
     debugPrint('_currentLevel=$_currentLevel');
 
+    final theme = SelectorTheme.of(context);
+
     /// Maximum level for the current category
     final maxLevel = tempSelectedCategory.maxLevel;
     final isMultipleSelectionMode =
@@ -629,12 +632,20 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
     final headerSelected = _headerSelectedFor(tempSelectedCategory.id);
     final footerSelected = _footerSelectedFor(tempSelectedCategory.id);
 
-    final backgroundColor =
-        _backgroundColors.isNotEmpty ? _backgroundColors[0] : Colors.white;
+    final categoryBackgroundColor =
+        _backgroundColors.firstOrNull ?? Colors.white;
     // Get selected item color (background color of next level)
-    final selectedColor = 0 + 1 < _backgroundColors.length
+    final selectedTileColor = 0 + 1 < _backgroundColors.length
         ? _backgroundColors[0 + 1]
         : Colors.white;
+
+    final effectiveSelectedColor =
+        selector?.selectedColor ?? theme.selectedColor;
+
+    final tempSelectedCategoryIndex =
+        widget.entries.indexOf(tempSelectedCategory);
+
+    final selectedCategories = _selectedEntriesPerLevel.firstOrNull ?? {};
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -644,25 +655,17 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Category list (left)
-              Container(
-                width: kSelectorCategoryTileWidth,
-                color: backgroundColor,
-                child: ListView.builder(
-                  physics: const ClampingScrollPhysics(),
-                  padding: EdgeInsets.zero,
-                  itemCount: widget.entries.length,
-                  itemBuilder: (context, index) {
-                    final item = widget.entries[index] as SelectorCategoryEntry;
-                    final selected = item.id == tempSelectedCategory.id;
-                    return SelectorListTile(
-                      label: item.name ?? '',
-                      onTap: () => _onCategoryItemTap(item),
-                      selected: selected,
-                      selectedTileColor: selectedColor,
-                      enabled: item.enabled,
-                    );
-                  },
-                ),
+              SelectorCategoryBar(
+                scrollDirection: Axis.vertical,
+                size: selector?.categoryBarTheme?.size,
+                backgroundColor: categoryBackgroundColor,
+                selectedColor: effectiveSelectedColor,
+                selectedTileColor: selectedTileColor,
+                entries: widget.entries,
+                selectedCategories: selectedCategories,
+                focusedIndex: tempSelectedCategoryIndex,
+                onTap: (_, entry) =>
+                    _onCategoryItemTap(entry as SelectorCategoryEntry),
               ),
               // Children lists (right)
               Expanded(
@@ -673,17 +676,17 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
                         categoryHeader.children != null)
                       SelectorChipBar(
                         label: categoryHeader.name,
-                        items: categoryHeader.children!.toList(),
-                        selectedItems: headerSelected,
-                        onItemTap: (index, item) => _onHeaderOrFooterItemTap
-                            .call(true, index, item as SelectorChildEntry),
+                        entries: categoryHeader.children!.toList(),
+                        selectedEntries: headerSelected,
+                        onItemTap: (index, entry) => _onHeaderOrFooterItemTap
+                            .call(true, index, entry as SelectorChildEntry),
                       ),
                     Expanded(
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: List.generate(_cascadingList.length,
                             (cascadeIndex) {
-                          final items = _cascadingList[cascadeIndex];
+                          final entries = _cascadingList[cascadeIndex];
                           final level = cascadeIndex + 1;
                           final selectedItems =
                               _selectedEntriesPerLevel.elementAtOrNull(level) ??
@@ -707,59 +710,59 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
                               child: ListView.builder(
                                 physics: const ClampingScrollPhysics(),
                                 controller: _scrollControllers[cascadeIndex],
-                                itemCount: items.length,
+                                itemCount: entries.length,
                                 itemBuilder: (context, index) {
-                                  final item =
-                                      items[index] as SelectorTextEntry;
-                                  if (!item.hasChildren && item.enabled) {
+                                  final entry =
+                                      entries[index] as SelectorTextEntry;
+                                  if (!entry.hasChildren && entry.enabled) {
                                     // && level == maxLevel - 1
                                     final selected =
-                                        selectedItems.contains(item);
+                                        selectedItems.contains(entry);
                                     if (SelectionMode.single ==
                                         childrenSelectionMode) {
                                       return SelectorRadioListTile(
-                                        label: item.name ?? '',
+                                        label: entry.name ?? '',
                                         selected: selected,
                                         radioBuilder: selector?.radioBuilder,
-                                        enabled: item.enabled,
+                                        enabled: entry.enabled,
                                         onTap: () {
                                           _onTerminalItemTap.call(
-                                              cascadeIndex, item);
+                                              cascadeIndex, entry);
                                         },
                                       );
                                     } else {
                                       return SelectorCheckboxListTile(
-                                        label: item.name ?? '',
+                                        label: entry.name ?? '',
                                         checked: selected,
                                         checkboxBuilder:
                                             selector?.checkboxBuilder,
-                                        enabled: item.enabled,
+                                        enabled: entry.enabled,
                                         onTap: () => _onTerminalItemTap.call(
-                                            cascadeIndex, item),
+                                            cascadeIndex, entry),
                                       );
                                     }
                                   } else {
                                     final selected = _tempSelectedEntryPerLevel
-                                        .contains(item);
+                                        .contains(entry);
                                     final selectedCount =
                                         _selectedEntriesPerLevel
                                                 .elementAtOrNull(level + 1)
                                                 ?.where((e) =>
                                                     e is SelectorChildEntry &&
-                                                    e.parentId == item.id)
+                                                    e.parentId == entry.id)
                                                 .length ??
                                             0;
                                     return SelectorListTile(
-                                      label: item.name ?? '',
+                                      label: entry.name ?? '',
                                       selected: selected,
                                       // selectedColor: selectedColor,
                                       selectedTileColor: selectedColor,
                                       badge: selectedCount > 0
                                           ? selectedCount.toString()
                                           : null,
-                                      enabled: item.enabled,
+                                      enabled: entry.enabled,
                                       onTap: () => _onMiddleItemTap.call(
-                                          cascadeIndex, item),
+                                          cascadeIndex, entry),
                                     );
                                   }
                                 },
@@ -773,10 +776,10 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
                         categoryFooter.children != null)
                       SelectorChipBar(
                         label: categoryFooter.name,
-                        items: categoryFooter.children!.toList(),
-                        selectedItems: footerSelected,
-                        onItemTap: (index, item) => _onHeaderOrFooterItemTap
-                            .call(false, index, item as SelectorChildEntry),
+                        entries: categoryFooter.children!.toList(),
+                        selectedEntries: footerSelected,
+                        onItemTap: (index, entry) => _onHeaderOrFooterItemTap
+                            .call(false, index, entry as SelectorChildEntry),
                       ),
                   ],
                 ),

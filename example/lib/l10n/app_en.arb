@@ -1,6 +1,9 @@
 {
   "appName": "Criteria Selector Example",
+  "realEstate": "Real Estate",
+  "leyoujia": "Leyoujia",
   "buy": "Buy",
   "sell": "For sale",
-  "rent": "Rent"
+  "rent": "Rent",
+  "onMap": "On Map"
 }

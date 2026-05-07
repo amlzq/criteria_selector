@@ -20,8 +20,8 @@ class SelectorGridView<T extends SelectorEntry> extends StatefulWidget {
     this.crossAxisSpacing = 0.0,
     this.childAspectRatio = 1.0,
     this.category,
-    required this.items,
-    this.selectedItems,
+    required this.entries,
+    this.selectedEntries,
     required this.onItemTap,
     this.focusListener,
     this.padding,
@@ -30,8 +30,8 @@ class SelectorGridView<T extends SelectorEntry> extends StatefulWidget {
 
   // final int index;
   final SelectorCategoryEntry? category;
-  final List<T> items;
-  final SelectorEntries? selectedItems;
+  final List<T> entries;
+  final SelectorEntries? selectedEntries;
 
   final ItemTapCallback onItemTap;
 
@@ -52,10 +52,10 @@ class SelectorGridView<T extends SelectorEntry> extends StatefulWidget {
 
 class SelectorGridViewState<T extends SelectorEntry>
     extends State<SelectorGridView<T>> with AutomaticKeepAliveClientMixin {
-  SelectorRangeEntry? _firstCustomItem;
-  SelectorRangeEntry? _lastCustomItem;
+  SelectorRangeEntry? _firstCustomEntry;
+  SelectorRangeEntry? _lastCustomEntry;
 
-  late List<T> _itemsWithoutCustom;
+  late List<T> _entriesWithoutCustom;
 
   TextEditingController? _minController;
   TextEditingController? _maxController;
@@ -63,7 +63,7 @@ class SelectorGridViewState<T extends SelectorEntry>
   FocusNode? _minFocusNode;
   FocusNode? _maxFocusNode;
 
-  late SelectorEntries _selectedItems;
+  late SelectorEntries _selectedEntries;
 
   late String _categoryId;
 
@@ -71,13 +71,13 @@ class SelectorGridViewState<T extends SelectorEntry>
   void initState() {
     super.initState();
 
-    _selectedItems = widget.selectedItems ?? {};
+    _selectedEntries = widget.selectedEntries ?? {};
 
-    _firstCustomItem = widget.items.firstCustomOrNull;
-    _lastCustomItem = widget.items.lastCustomOrNull;
-    _itemsWithoutCustom = widget.items;
-    if (_firstCustomItem != null || _lastCustomItem != null) {
-      _itemsWithoutCustom = widget.items.where(testNotCustomItem).toList();
+    _firstCustomEntry = widget.entries.firstCustomOrNull;
+    _lastCustomEntry = widget.entries.lastCustomOrNull;
+    _entriesWithoutCustom = widget.entries;
+    if (_firstCustomEntry != null || _lastCustomEntry != null) {
+      _entriesWithoutCustom = widget.entries.where(testNotCustomItem).toList();
       _minController ??= TextEditingController();
       _maxController ??= TextEditingController();
       _minFocusNode ??= FocusNode();
@@ -85,15 +85,15 @@ class SelectorGridViewState<T extends SelectorEntry>
     }
 
     // 恢复自定义项的选中状态
-    for (var selectedItem in _selectedItems) {
-      if (selectedItem is SelectorRangeEntry && selectedItem.isCustom) {
-        _minController?.text = selectedItem.min?.toString() ?? '';
-        _maxController?.text = selectedItem.max?.toString() ?? '';
+    for (var selectedEntry in _selectedEntries) {
+      if (selectedEntry is SelectorRangeEntry && selectedEntry.isCustom) {
+        _minController?.text = selectedEntry.min?.toString() ?? '';
+        _maxController?.text = selectedEntry.max?.toString() ?? '';
       }
     }
 
     _categoryId = widget.category?.id ??
-        (widget.items.first as SelectorChildEntry).parentId;
+        (widget.entries.first as SelectorChildEntry).parentId;
 
     _minFocusNode?.addListener(_focusListener);
     _maxFocusNode?.addListener(_focusListener);
@@ -103,25 +103,25 @@ class SelectorGridViewState<T extends SelectorEntry>
   void didUpdateWidget(covariant SelectorGridView<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    _selectedItems = widget.selectedItems ?? {};
+    _selectedEntries = widget.selectedEntries ?? {};
 
-    _firstCustomItem = widget.items.firstCustomOrNull;
-    _lastCustomItem = widget.items.lastCustomOrNull;
-    _itemsWithoutCustom = widget.items;
-    if (_firstCustomItem != null || _lastCustomItem != null) {
-      _itemsWithoutCustom = widget.items.where(testNotCustomItem).toList();
+    _firstCustomEntry = widget.entries.firstCustomOrNull;
+    _lastCustomEntry = widget.entries.lastCustomOrNull;
+    _entriesWithoutCustom = widget.entries;
+    if (_firstCustomEntry != null || _lastCustomEntry != null) {
+      _entriesWithoutCustom = widget.entries.where(testNotCustomItem).toList();
     }
 
     // 恢复自定义项的选中状态
-    for (var selectedItem in _selectedItems) {
-      if (selectedItem is SelectorRangeEntry && selectedItem.isCustom) {
-        _minController?.text = selectedItem.min?.toString() ?? '';
-        _maxController?.text = selectedItem.max?.toString() ?? '';
+    for (var selectedEntry in _selectedEntries) {
+      if (selectedEntry is SelectorRangeEntry && selectedEntry.isCustom) {
+        _minController?.text = selectedEntry.min?.toString() ?? '';
+        _maxController?.text = selectedEntry.max?.toString() ?? '';
       }
     }
 
     _categoryId = widget.category?.id ??
-        (widget.items.first as SelectorChildEntry).parentId;
+        (widget.entries.first as SelectorChildEntry).parentId;
 
     if (!inputNotEmpty) {
       _unfocusAllInput();
@@ -200,9 +200,9 @@ class SelectorGridViewState<T extends SelectorEntry>
                 ),
               ),
             ),
-          if (_firstCustomItem != null)
+          if (_firstCustomEntry != null)
             SelectorFieldTile(
-              _firstCustomItem!,
+              _firstCustomEntry!,
               padding: const EdgeInsets.only(bottom: 10.0),
               minController: _minController,
               maxController: _maxController,
@@ -220,22 +220,22 @@ class SelectorGridViewState<T extends SelectorEntry>
               mainAxisSpacing: widget.mainAxisSpacing,
               crossAxisSpacing: widget.crossAxisSpacing,
             ),
-            itemCount: _itemsWithoutCustom.length,
+            itemCount: _entriesWithoutCustom.length,
             itemBuilder: (context, index) {
-              final item = _itemsWithoutCustom[index];
-              final selected = _selectedItems.contains(item);
+              final entry = _entriesWithoutCustom[index];
+              final selected = _selectedEntries.contains(entry);
               return SelectorGridTile(
-                onTap: () => _onItemTap.call(index, item),
-                enabled: item.enabled,
-                label: item.name ?? '',
+                onTap: () => _onItemTap.call(index, entry),
+                enabled: entry.enabled,
+                label: entry.name ?? '',
                 selected: selected,
                 variant: widget.tileVariant,
               );
             },
           ),
-          if (_lastCustomItem != null)
+          if (_lastCustomEntry != null)
             SelectorFieldTile(
-              _lastCustomItem!,
+              _lastCustomEntry!,
               padding: const EdgeInsets.only(top: 10.0),
               minController: _minController,
               maxController: _maxController,

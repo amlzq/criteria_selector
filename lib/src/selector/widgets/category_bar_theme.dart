@@ -17,10 +17,12 @@ enum SelectorCategoryBarIndicatorSize {
 class SelectorCategoryBarTheme with Diagnosticable {
   const SelectorCategoryBarTheme({
     this.backgroundColor,
+    this.size,
     this.padding,
     this.selectedColor,
     this.labelStyle,
-    this.unselectedLabelTextStyle,
+    this.selectedLabelStyle,
+    this.selectedTileColor,
     this.indicatorColor,
     this.indicatorHeight,
     this.indicatorPadding,
@@ -30,6 +32,10 @@ class SelectorCategoryBarTheme with Diagnosticable {
 
   /// Background color of the category bar.
   final Color? backgroundColor;
+
+  /// When `SelectorCategoryBar.scrollDirection` is `Axis.vertical`, this value represents the width;
+  /// when `SelectorCategoryBar.scrollDirection` is `Axis.horizontal`, this value represents the height.
+  final double? size;
 
   /// Outer padding of the bar.
   final EdgeInsetsGeometry? padding;
@@ -41,7 +47,10 @@ class SelectorCategoryBarTheme with Diagnosticable {
   final TextStyle? labelStyle;
 
   /// Text style used for unselected category labels.
-  final TextStyle? unselectedLabelTextStyle;
+  final TextStyle? selectedLabelStyle;
+
+  /// Color used to indicate the selected category tile.
+  final Color? selectedTileColor;
 
   /// Color of the selection indicator.
   final Color? indicatorColor;
@@ -61,10 +70,12 @@ class SelectorCategoryBarTheme with Diagnosticable {
   /// Returns a copy of this theme with the given fields replaced.
   SelectorCategoryBarTheme copyWith({
     Color? backgroundColor,
+    double? size,
     EdgeInsetsGeometry? padding,
     Color? selectedColor,
     TextStyle? labelStyle,
-    TextStyle? unselectedLabelTextStyle,
+    TextStyle? selectedLabelStyle,
+    Color? selectedTileColor,
     Color? indicatorColor,
     double? indicatorHeight,
     EdgeInsetsGeometry? indicatorPadding,
@@ -73,11 +84,12 @@ class SelectorCategoryBarTheme with Diagnosticable {
   }) {
     return SelectorCategoryBarTheme(
       backgroundColor: backgroundColor ?? this.backgroundColor,
+      size: size ?? this.size,
       padding: padding ?? this.padding,
       selectedColor: selectedColor ?? this.selectedColor,
       labelStyle: labelStyle ?? this.labelStyle,
-      unselectedLabelTextStyle:
-          unselectedLabelTextStyle ?? this.unselectedLabelTextStyle,
+      selectedLabelStyle: selectedLabelStyle ?? this.selectedLabelStyle,
+      selectedTileColor: selectedTileColor ?? this.selectedTileColor,
       indicatorColor: indicatorColor ?? this.indicatorColor,
       indicatorHeight: indicatorHeight ?? this.indicatorHeight,
       indicatorPadding: indicatorPadding ?? this.indicatorPadding,
@@ -99,12 +111,18 @@ class SelectorCategoryBarTheme with Diagnosticable {
     }
     return SelectorCategoryBarTheme(
       backgroundColor: Color.lerp(a?.backgroundColor, b?.backgroundColor, t),
+      size: lerpDouble(a?.size, b?.size, t),
       padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
       selectedColor: Color.lerp(a?.selectedColor, b?.selectedColor, t),
       labelStyle: TextStyle.lerp(a?.labelStyle, b?.labelStyle, t),
-      unselectedLabelTextStyle: TextStyle.lerp(
-        a?.unselectedLabelTextStyle,
-        b?.unselectedLabelTextStyle,
+      selectedLabelStyle: TextStyle.lerp(
+        a?.selectedLabelStyle,
+        b?.selectedLabelStyle,
+        t,
+      ),
+      selectedTileColor: Color.lerp(
+        a?.selectedTileColor,
+        b?.selectedTileColor,
         t,
       ),
       indicatorColor: Color.lerp(a?.indicatorColor, b?.indicatorColor, t),
@@ -121,10 +139,12 @@ class SelectorCategoryBarTheme with Diagnosticable {
   @override
   int get hashCode => Object.hash(
         backgroundColor,
+        size,
         padding,
         selectedColor,
         labelStyle,
-        unselectedLabelTextStyle,
+        selectedLabelStyle,
+        selectedTileColor,
         indicatorColor,
         indicatorHeight,
         indicatorPadding,
@@ -142,10 +162,12 @@ class SelectorCategoryBarTheme with Diagnosticable {
     }
     return other is SelectorCategoryBarTheme &&
         other.backgroundColor == backgroundColor &&
+        other.size == size &&
         other.padding == padding &&
         other.selectedColor == selectedColor &&
         other.labelStyle == labelStyle &&
-        other.unselectedLabelTextStyle == unselectedLabelTextStyle &&
+        other.selectedLabelStyle == selectedLabelStyle &&
+        other.selectedTileColor == selectedTileColor &&
         other.indicatorColor == indicatorColor &&
         other.indicatorHeight == indicatorHeight &&
         other.indicatorPadding == indicatorPadding &&

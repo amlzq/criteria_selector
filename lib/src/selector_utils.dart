@@ -545,11 +545,11 @@ class SelectorUtils {
   static List<SelectorEntries> restorePreviousSelected(
       List<SelectorEntry>? items, Set<SelectorEntry>? selectedItems) {
     final result = <SelectorEntries>[];
-    _initializeSelectedItemsPerLevel(items, selectedItems, 0, result);
+    _initializeSelectedEntriesPerLevel(items, selectedItems, 0, result);
     return result;
   }
 
-  static void _initializeSelectedItemsPerLevel(
+  static void _initializeSelectedEntriesPerLevel(
       List<SelectorEntry>? items,
       Set<SelectorEntry>? selectedItems,
       int level,
@@ -573,7 +573,7 @@ class SelectorUtils {
         }
       }
       if (selectedItem.children?.isNotEmpty == true) {
-        _initializeSelectedItemsPerLevel(
+        _initializeSelectedEntriesPerLevel(
             item?.children?.toList(), selectedItem.children, level + 1, result);
       }
     }

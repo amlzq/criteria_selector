@@ -18,8 +18,8 @@ class SelectorChipBar<T extends SelectorEntry> extends StatelessWidget {
   const SelectorChipBar({
     super.key,
     this.label,
-    required this.items,
-    this.selectedItems,
+    required this.entries,
+    this.selectedEntries,
     this.variant,
     this.color,
     this.labelStyle,
@@ -33,8 +33,8 @@ class SelectorChipBar<T extends SelectorEntry> extends StatelessWidget {
 
   final String? label;
 
-  final List<T> items;
-  final SelectorEntries? selectedItems;
+  final List<T> entries;
+  final SelectorEntries? selectedEntries;
 
   final SelectorChipVariant? variant;
   final Color? color;
@@ -100,10 +100,10 @@ class SelectorChipBar<T extends SelectorEntry> extends StatelessWidget {
               padding: EdgeInsets.zero,
               physics: const ClampingScrollPhysics(),
               scrollDirection: Axis.horizontal,
-              itemCount: items.length,
+              itemCount: entries.length,
               itemBuilder: (context, index) {
-                final item = items[index] as SelectorChildEntry;
-                final selected = (selectedItems?.contains(item) ?? false);
+                final item = entries[index] as SelectorChildEntry;
+                final selected = (selectedEntries?.contains(item) ?? false);
 
                 final textStyle = selected
                     ? effectiveSelectedLabelStyle

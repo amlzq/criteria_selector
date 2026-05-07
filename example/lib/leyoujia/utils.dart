@@ -11,6 +11,7 @@ const userLatLon = ('22.543553', '114.057935');
 
 /// 模拟用户的城市ID
 const userCityId = '66';
+const userCityName = '深圳';
 
 /// 计算两点之间的距离（单位：米）
 /// 输入参数都是以「度」为单位的经纬度
