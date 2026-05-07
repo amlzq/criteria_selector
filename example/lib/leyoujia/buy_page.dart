@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:criteria_selector/criteria_selector.dart';
-import 'package:example/leyoujia/house_criteria_repository.dart';
+import 'package:example/leyoujia/house_filters_repository.dart';
 import 'package:example/leyoujia/house_repository.dart';
 import 'package:example/leyoujia/utils.dart';
 import 'package:example/log.dart';
@@ -19,8 +19,8 @@ class BuyPage extends StatefulWidget {
 class _BuyPageState extends State<BuyPage> {
   final _controller = DropselectTabController();
   late final HouseRepository _repo;
-  late final HouseCriteriaRepository _criteriaRepo;
-  HouseCriteria? _criteria;
+  late final HouseFiltersRepository _filtersRepo;
+  HouseFilter? _filter;
 
   final ValueNotifier<String> _floorPlanApplyText = ValueNotifier<String>('应用');
   Timer? _floorPlanApplyTextDebounce;
@@ -30,7 +30,7 @@ class _BuyPageState extends State<BuyPage> {
   void initState() {
     super.initState();
     _repo = HouseRepository();
-    _criteriaRepo = HouseCriteriaRepository();
+    _filtersRepo = HouseFiltersRepository();
   }
 
   @override
@@ -73,18 +73,18 @@ class _BuyPageState extends State<BuyPage> {
     );
   }
 
-  HouseCriteria? _dropselectResultParser(DropselectResult result) {
-    final criteria = HouseCriteria(cityId: userCityId);
+  HouseFilter? _dropselectResultParser(DropselectResult result) {
+    final filter = HouseFilter(cityId: userCityId);
     if (result.tabIndex == 0) {
       // 区域
-      _criteriaRepo.regionResult = result;
+      _filtersRepo.regionResult = result;
       final category = result.selected.firstOrNull;
       if (category == null) return null;
       if (category.id == 'region') {
         // 行政区
-        criteria.district = <Map<String, dynamic>>[];
+        filter.district = <Map<String, dynamic>>[];
         for (var d in category.children ?? {}) {
-          criteria.district!.add({
+          filter.district!.add({
             "district_id": d.id,
             "subdistrict_id": d.children
                 ?.map((s) => s.id)
@@ -94,9 +94,9 @@ class _BuyPageState extends State<BuyPage> {
         }
       } else if (category.id == 'metro') {
         // 地铁
-        criteria.metro = <Map<String, dynamic>>[];
+        filter.metro = <Map<String, dynamic>>[];
         for (var l in category.children ?? {}) {
-          criteria.metro?.add({
+          filter.metro?.add({
             "line_id": l.id,
             "station_id": l.children
                 ?.map((s) => s.id)
@@ -108,76 +108,76 @@ class _BuyPageState extends State<BuyPage> {
         // 附近
         final nearbyRadiusMeters =
             result.findIdsAtLevel(category, 1).firstOrNull;
-        criteria.nearbyRadiusMeters = nearbyRadiusMeters;
-        criteria.userLatLon = userLatLon; // TODO: 增加选择拦截器，在选之前请求定位，否则不能选
+        filter.nearbyRadiusMeters = nearbyRadiusMeters;
+        filter.userLatLon = userLatLon; // TODO: 增加选择拦截器，在选之前请求定位，否则不能选
       }
     } else if (result.tabIndex == 1) {
       // 价格筛选
-      _criteriaRepo.buyPriceResult = result;
+      _filtersRepo.buyPriceResult = result;
       final category = result.selected.firstOrNull;
       if (category == null) return null;
       if (category.id == 'total') {
         // 总价
-        criteria.totalPrice = <Map<String, dynamic>>[];
+        filter.totalPrice = <Map<String, dynamic>>[];
         for (var e in category.children ?? {}) {
           e as SelectorIntEntry;
-          criteria.totalPrice!.add({"id": e.id, "min": e.min, "max": e.max});
+          filter.totalPrice!.add({"id": e.id, "min": e.min, "max": e.max});
         }
       } else if (category.id == 'unit') {
         // 单价
-        criteria.unitPrice = <Map<String, dynamic>>[];
+        filter.unitPrice = <Map<String, dynamic>>[];
         for (var e in category.children ?? {}) {
           e as SelectorIntEntry;
-          criteria.unitPrice!.add({"id": e.id, "min": e.min, "max": e.max});
+          filter.unitPrice!.add({"id": e.id, "min": e.min, "max": e.max});
         }
       }
     } else if (result.tabIndex == 2) {
       // 户型筛选
-      _criteriaRepo.floorPlanBuyResult = result;
+      _filtersRepo.floorPlanBuyResult = result;
       final category = result.selected.firstOrNull;
       if (category == null) return null;
       if (category.id == 'living_room') {
         // 居室
-        criteria.livingRoom = <String>[];
+        filter.livingRoom = <String>[];
         for (var e in category.children ?? {}) {
           e as SelectorTextEntry;
-          criteria.livingRoom!.add(e.id);
+          filter.livingRoom!.add(e.id);
         }
       } else if (category.id == 'bathroom') {
         // 卫生间
-        criteria.bathroom = <String>[];
+        filter.bathroom = <String>[];
         for (var e in category.children ?? {}) {
           e as SelectorTextEntry;
-          criteria.bathroom!.add(e.id);
+          filter.bathroom!.add(e.id);
         }
       } else if (category.id == 'balcony') {
         // 阳台
-        criteria.balcony = <String>[];
+        filter.balcony = <String>[];
         for (var e in category.children ?? {}) {
           e as SelectorTextEntry;
-          criteria.balcony!.add(e.id);
+          filter.balcony!.add(e.id);
         }
       } else if (category.id == 'area') {
         // 面积
-        criteria.area = <Map<String, dynamic>>[];
+        filter.area = <Map<String, dynamic>>[];
         for (var e in category.children ?? {}) {
           e as SelectorIntEntry;
-          criteria.area!.add({"id": e.id, "min": e.min, "max": e.max});
+          filter.area!.add({"id": e.id, "min": e.min, "max": e.max});
         }
       }
     } else if (result.tabIndex == 3) {
       // 排序筛选
-      _criteriaRepo.sortBuyResult = result;
+      _filtersRepo.sortBuyResult = result;
       final entry = result.selected.firstOrNull;
       if (entry == null) return null;
-      criteria.sort = entry.id;
+      filter.sort = entry.id;
     }
-    return criteria;
+    return filter;
   }
 
   void _handleSelectorChange(DropselectResult result) async {
-    _criteria = _dropselectResultParser(result);
-    if (_criteria == null) {
+    _filter = _dropselectResultParser(result);
+    if (_filter == null) {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('筛选条件解析失败')));
       return;
@@ -192,7 +192,7 @@ class _BuyPageState extends State<BuyPage> {
         const Duration(milliseconds: 250),
         () async {
           try {
-            final count = await _repo.previewCount(_criteria!);
+            final count = await _repo.previewCount(_filter!);
             if (!mounted || requestId != _floorPlanApplyTextRequestId) return;
             _floorPlanApplyText.value = count == 0 ? '暂无房源' : '查看 $count 套';
           } catch (_) {
@@ -205,14 +205,14 @@ class _BuyPageState extends State<BuyPage> {
   }
 
   void _handleSelectorApply(DropselectResult result) {
-    _criteria = _dropselectResultParser(result);
-    if (_criteria == null) {
+    _filter = _dropselectResultParser(result);
+    if (_filter == null) {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('筛选条件解析失败')));
       return;
     }
 
-    _repo.refreshData(_criteria!);
+    _repo.refreshData(_filter!);
   }
 
   @override
@@ -279,9 +279,9 @@ class _BuyPageState extends State<BuyPage> {
             ],
             selectors: [
               CascadingSelector(
-                dataFetcher: _criteriaRepo.fetchRegionData,
-                selectedDataFetcher: _criteriaRepo.fetchRegionSelectedData,
-                resetDataFetcher: _criteriaRepo.fetchRegionResetData,
+                dataFetcher: _filtersRepo.fetchRegionData,
+                selectedDataFetcher: _filtersRepo.fetchRegionSelectedData,
+                resetDataFetcher: _filtersRepo.fetchRegionResetData,
                 selectionMode: SelectionMode.single,
                 // skeletonBuilder: (_) => const Center(
                 //     child: CircularProgressIndicator(
@@ -297,9 +297,9 @@ class _BuyPageState extends State<BuyPage> {
                 },
               ),
               GridSelector(
-                dataFetcher: _criteriaRepo.fetchBuyPriceData,
-                selectedDataFetcher: _criteriaRepo.fetchBuyPriceSelectedData,
-                // resetDataFetcher: _criteriaRepo.fetchBuyPriceResetData,
+                dataFetcher: _filtersRepo.fetchBuyPriceData,
+                selectedDataFetcher: _filtersRepo.fetchBuyPriceSelectedData,
+                // resetDataFetcher: _filtersRepo.fetchBuyPriceResetData,
                 selectionMode: SelectionMode.multiple,
                 tileVariant: SelectorGridTileVariant.outlined,
                 crossAxisCount: 4,
@@ -312,10 +312,9 @@ class _BuyPageState extends State<BuyPage> {
                 ),
               ),
               FlattenSelector(
-                dataFetcher: _criteriaRepo.fetchFloorPlanBuyData,
-                selectedDataFetcher:
-                    _criteriaRepo.fetchFloorPlanBuySelectedData,
-                resetDataFetcher: _criteriaRepo.fetchFloorPlanBuyResetData,
+                dataFetcher: _filtersRepo.fetchFloorPlanBuyData,
+                selectedDataFetcher: _filtersRepo.fetchFloorPlanBuySelectedData,
+                resetDataFetcher: _filtersRepo.fetchFloorPlanBuyResetData,
                 selectionMode: SelectionMode.multiple,
                 crossAxisCount: 3,
                 childAspectRatio: 2.5,
@@ -339,9 +338,9 @@ class _BuyPageState extends State<BuyPage> {
                 },
               ),
               ListSelector(
-                dataFetcher: _criteriaRepo.fetchSortBuyData,
-                selectedDataFetcher: _criteriaRepo.fetchSortBuySelectedData,
-                resetDataFetcher: _criteriaRepo.fetchSortBuyResetData,
+                dataFetcher: _filtersRepo.fetchSortBuyData,
+                selectedDataFetcher: _filtersRepo.fetchSortBuySelectedData,
+                resetDataFetcher: _filtersRepo.fetchSortBuyResetData,
                 selectionMode: SelectionMode.single,
                 radioBuilder: (context, selected) {
                   return MyRadio(value: selected);

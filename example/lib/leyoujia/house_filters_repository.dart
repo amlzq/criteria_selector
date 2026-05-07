@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 
 import 'utils.dart';
 
-class HouseCriteriaRepository {
+class HouseFiltersRepository {
   /// 区域的 初始选中项
   DropselectResult? regionResult;
 

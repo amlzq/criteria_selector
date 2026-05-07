@@ -23,7 +23,7 @@ class HouseRepository {
     _controller.add(data);
   }
 
-  Future<int> previewCount(HouseCriteria filterParams) async {
+  Future<int> previewCount(HouseFilter filterParams) async {
     debugPrint('refreshData filterParams: ${filterParams.toJson()}');
 
     await Future.delayed(const Duration(milliseconds: 250));
@@ -43,7 +43,7 @@ class HouseRepository {
   }
 
   // 更新
-  void refreshData(HouseCriteria filterParams) async {
+  void refreshData(HouseFilter filterParams) async {
     debugPrint('refreshData filterParams: ${filterParams.toJson()}');
 
     await Future.delayed(const Duration(milliseconds: 250));
@@ -65,7 +65,7 @@ class HouseRepository {
   void dispose() => _controller.close();
 }
 
-class HouseCriteria {
+class HouseFilter {
   String? cityId;
   List<Map<String, dynamic>>? district;
   List<Map<String, dynamic>>? metro;
@@ -81,7 +81,7 @@ class HouseCriteria {
   List<Map<String, dynamic>>? area;
   String? sort;
 
-  HouseCriteria({
+  HouseFilter({
     required this.cityId,
     this.district,
     this.metro,

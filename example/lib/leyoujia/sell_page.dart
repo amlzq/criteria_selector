@@ -1,5 +1,5 @@
 import 'package:criteria_selector/criteria_selector.dart';
-import 'package:example/leyoujia/house_criteria_repository.dart';
+import 'package:example/leyoujia/house_filters_repository.dart';
 import 'package:example/leyoujia/house_repository.dart';
 import 'package:example/leyoujia/utils.dart';
 import 'package:flutter/material.dart';
@@ -16,14 +16,14 @@ class SellPage extends StatefulWidget {
 class _SellPageState extends State<SellPage> {
   final _controller = DropselectTabController();
   late final HouseRepository _repo;
-  late final HouseCriteriaRepository _criteriaRepo;
-  HouseCriteria? _criteria;
+  late final HouseFiltersRepository _filtersRepo;
+  HouseFilter? _filter;
 
   @override
   void initState() {
     super.initState();
     _repo = HouseRepository();
-    _criteriaRepo = HouseCriteriaRepository();
+    _filtersRepo = HouseFiltersRepository();
   }
 
   @override
@@ -34,17 +34,17 @@ class _SellPageState extends State<SellPage> {
   }
 
   void _handleSelectorApply(DropselectResult result) {
-    _criteria ??= HouseCriteria(cityId: userCityId);
+    _filter ??= HouseFilter(cityId: userCityId);
     if (result.tabIndex == 0) {
       // 区域筛选
-      _criteriaRepo.regionResult = result;
+      _filtersRepo.regionResult = result;
       final category = result.selected.firstOrNull;
       if (category == null) return;
       if (category.id == 'region') {
         // 行政区
-        _criteria?.district = <Map<String, dynamic>>[];
+        _filter?.district = <Map<String, dynamic>>[];
         for (var d in category.children ?? {}) {
-          _criteria?.district!.add({
+          _filter?.district!.add({
             "district_id": d.id,
             "subdistrict_id": d.children
                 ?.map((s) => s.id)
@@ -54,9 +54,9 @@ class _SellPageState extends State<SellPage> {
         }
       } else if (category.id == 'metro') {
         // 地铁
-        _criteria?.metro = <Map<String, dynamic>>[];
+        _filter?.metro = <Map<String, dynamic>>[];
         for (var l in category.children ?? {}) {
-          _criteria?.metro?.add({
+          _filter?.metro?.add({
             "line_id": l.id,
             "station_id": l.children
                 ?.map((s) => s.id)
@@ -68,71 +68,71 @@ class _SellPageState extends State<SellPage> {
         // 附近
         final nearbyRadiusMeters =
             result.findIdsAtLevel(category, 1).firstOrNull;
-        _criteria?.nearbyRadiusMeters = nearbyRadiusMeters;
-        _criteria?.userLatLon = userLatLon; // TODO: 增加选择拦截器，在选之前请求定位，否则不能选
+        _filter?.nearbyRadiusMeters = nearbyRadiusMeters;
+        _filter?.userLatLon = userLatLon; // TODO: 增加选择拦截器，在选之前请求定位，否则不能选
       }
     } else if (result.tabIndex == 1) {
       // 价格筛选
-      _criteriaRepo.sellPriceResult = result;
+      _filtersRepo.sellPriceResult = result;
       final category = result.selected.firstOrNull;
       if (category == null) return;
       if (category.id == 'total') {
         // 总价
-        _criteria?.totalPrice = <Map<String, dynamic>>[];
+        _filter?.totalPrice = <Map<String, dynamic>>[];
         for (var e in category.children ?? {}) {
           e as SelectorIntEntry;
-          _criteria?.totalPrice!.add({"id": e.id, "min": e.min, "max": e.max});
+          _filter?.totalPrice!.add({"id": e.id, "min": e.min, "max": e.max});
         }
       } else if (category.id == 'unit') {
         // 单价
-        _criteria?.unitPrice = <Map<String, dynamic>>[];
+        _filter?.unitPrice = <Map<String, dynamic>>[];
         for (var e in category.children ?? {}) {
           e as SelectorIntEntry;
-          _criteria?.unitPrice!.add({"id": e.id, "min": e.min, "max": e.max});
+          _filter?.unitPrice!.add({"id": e.id, "min": e.min, "max": e.max});
         }
       }
     } else if (result.tabIndex == 2) {
       // 户型筛选
-      _criteriaRepo.floorPlanSellResult = result;
+      _filtersRepo.floorPlanSellResult = result;
       final category = result.selected.firstOrNull;
       if (category == null) return;
       if (category.id == 'living_room') {
         // 居室
-        _criteria?.livingRoom = <String>[];
+        _filter?.livingRoom = <String>[];
         for (var e in category.children ?? {}) {
           e as SelectorTextEntry;
-          _criteria?.livingRoom!.add(e.id);
+          _filter?.livingRoom!.add(e.id);
         }
       } else if (category.id == 'bathroom') {
         // 卫生间
-        _criteria?.bathroom = <String>[];
+        _filter?.bathroom = <String>[];
         for (var e in category.children ?? {}) {
           e as SelectorTextEntry;
-          _criteria?.bathroom!.add(e.id);
+          _filter?.bathroom!.add(e.id);
         }
       } else if (category.id == 'balcony') {
         // 阳台
-        _criteria?.balcony = <String>[];
+        _filter?.balcony = <String>[];
         for (var e in category.children ?? {}) {
           e as SelectorTextEntry;
-          _criteria?.balcony!.add(e.id);
+          _filter?.balcony!.add(e.id);
         }
       } else if (category.id == 'area') {
         // 面积
-        _criteria?.area = <Map<String, dynamic>>[];
+        _filter?.area = <Map<String, dynamic>>[];
         for (var e in category.children ?? {}) {
           e as SelectorIntEntry;
-          _criteria?.area!.add({"id": e.id, "min": e.min, "max": e.max});
+          _filter?.area!.add({"id": e.id, "min": e.min, "max": e.max});
         }
       }
     } else if (result.tabIndex == 3) {
       // 排序筛选
-      _criteriaRepo.sortSellResult = result;
+      _filtersRepo.sortSellResult = result;
       final entry = result.selected.firstOrNull;
       if (entry == null) return;
-      _criteria?.sort = entry.id;
+      _filter?.sort = entry.id;
     }
-    _repo.refreshData(_criteria!);
+    _repo.refreshData(_filter!);
   }
 
   @override
@@ -188,9 +188,9 @@ class _SellPageState extends State<SellPage> {
               ],
               selectors: [
                 CascadingSelector(
-                  dataFetcher: _criteriaRepo.fetchRegionData,
-                  selectedDataFetcher: _criteriaRepo.fetchRegionSelectedData,
-                  resetDataFetcher: _criteriaRepo.fetchRegionResetData,
+                  dataFetcher: _filtersRepo.fetchRegionData,
+                  selectedDataFetcher: _filtersRepo.fetchRegionSelectedData,
+                  resetDataFetcher: _filtersRepo.fetchRegionResetData,
                   selectionMode: SelectionMode.single,
                   // skeletonBuilder: (_) => const Center(
                   //     child: CircularProgressIndicator(
@@ -203,9 +203,9 @@ class _SellPageState extends State<SellPage> {
                   },
                 ),
                 GridSelector(
-                  dataFetcher: _criteriaRepo.fetchSellPriceData,
-                  selectedDataFetcher: _criteriaRepo.fetchSellPriceSelectedData,
-                  resetDataFetcher: _criteriaRepo.fetchSellPriceResetData,
+                  dataFetcher: _filtersRepo.fetchSellPriceData,
+                  selectedDataFetcher: _filtersRepo.fetchSellPriceSelectedData,
+                  resetDataFetcher: _filtersRepo.fetchSellPriceResetData,
                   selectionMode: SelectionMode.single,
                   tileVariant: SelectorGridTileVariant.outlined,
                   crossAxisCount: 4,
@@ -214,10 +214,10 @@ class _SellPageState extends State<SellPage> {
                   crossAxisSpacing: 10,
                 ),
                 FlattenSelector(
-                  dataFetcher: _criteriaRepo.fetchFloorPlanSellData,
+                  dataFetcher: _filtersRepo.fetchFloorPlanSellData,
                   selectedDataFetcher:
-                      _criteriaRepo.fetchFloorPlanSellSelectedData,
-                  resetDataFetcher: _criteriaRepo.fetchFloorPlanSellResetData,
+                      _filtersRepo.fetchFloorPlanSellSelectedData,
+                  resetDataFetcher: _filtersRepo.fetchFloorPlanSellResetData,
                   selectionMode: SelectionMode.multiple,
                   crossAxisCount: 3,
                   childAspectRatio: 2.5,
@@ -225,9 +225,9 @@ class _SellPageState extends State<SellPage> {
                   mainAxisSpacing: 8,
                 ),
                 ListSelector(
-                  dataFetcher: _criteriaRepo.fetchSortSellData,
-                  selectedDataFetcher: _criteriaRepo.fetchSortSellSelectedData,
-                  resetDataFetcher: _criteriaRepo.fetchSortSellResetData,
+                  dataFetcher: _filtersRepo.fetchSortSellData,
+                  selectedDataFetcher: _filtersRepo.fetchSortSellSelectedData,
+                  resetDataFetcher: _filtersRepo.fetchSortSellResetData,
                   selectionMode: SelectionMode.single,
                   radioBuilder: (context, selected) {
                     return MyRadio(value: selected);
