@@ -263,10 +263,6 @@ class _MapPageState extends State<MapPage> {
                 childAspectRatio: 2.5,
                 mainAxisSpacing: 10,
                 crossAxisSpacing: 10,
-                actionBarTheme: const SelectorActionBarTheme(
-                  resetText: '重置',
-                  applyText: '应用',
-                ),
               ),
               FlattenSelector(
                 dataFetcher: _filtersRepo.fetchFloorPlanBuyData,

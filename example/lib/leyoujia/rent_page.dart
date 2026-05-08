@@ -274,10 +274,6 @@ class _RentPageState extends State<RentPage> {
                 childAspectRatio: 2.5,
                 mainAxisSpacing: 10,
                 crossAxisSpacing: 10,
-                actionBarTheme: const SelectorActionBarTheme(
-                  resetText: '重置',
-                  applyText: '应用',
-                ),
               ),
               FlattenSelector(
                 dataFetcher: _filtersRepo.fetchFloorPlanRentData,
@@ -289,10 +285,6 @@ class _RentPageState extends State<RentPage> {
                 childAspectRatio: 2.5,
                 crossAxisSpacing: 8,
                 mainAxisSpacing: 8,
-                actionBarTheme: const SelectorActionBarTheme(
-                  resetText: '重置',
-                  applyText: '应用',
-                ),
                 actionBarBuilder: (
                   context, {
                   required onResetTap,

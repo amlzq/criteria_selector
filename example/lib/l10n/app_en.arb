@@ -5,5 +5,7 @@
   "buy": "Buy",
   "sell": "For sale",
   "rent": "Rent",
-  "onMap": "On Map"
+  "onMap": "On Map",
+  "reset": "Reset",
+  "apply": "Apply"
 }

@@ -25,8 +25,8 @@ class MyApp extends StatelessWidget {
     );
     final theme = baseTheme.copyWith(
       extensions: <ThemeExtension<dynamic>>[
-        // 全局筛选条样式
-        // 通过 Theme.of(context).extension<DropselectTabBarTheme>()! 获取
+        // Global DropselectTabBar theme.
+        // Access via: Theme.of(context).extension<DropselectTabBarTheme>()!
         DropselectTabBarTheme(
           // labelColor: Colors.yellow,
           // overlayStyle: DropdownOverlayStyle(
@@ -36,10 +36,6 @@ class MyApp extends StatelessWidget {
           //  DropdownOverlayStyle(),
           selectorTheme: SelectorThemeData(
             baseTheme,
-            actionBarTheme: SelectorActionBarTheme(
-              resetText: '重置',
-              applyText: '确认',
-            ),
             // backgroundColor: Colors.amber[300],
             // radioTheme: RadioThemeData(
             //   fillColor: MaterialStateProperty.all(Colors.orange),

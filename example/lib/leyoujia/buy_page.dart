@@ -307,7 +307,6 @@ class _BuyPageState extends State<BuyPage> {
                 mainAxisSpacing: 10,
                 crossAxisSpacing: 10,
                 actionBarTheme: const SelectorActionBarTheme(
-                  resetText: '重置',
                   applyText: '应用',
                 ),
               ),
@@ -321,10 +320,6 @@ class _BuyPageState extends State<BuyPage> {
                 crossAxisSpacing: 8,
                 mainAxisSpacing: 8,
                 categoryBarTheme: const SelectorCategoryBarTheme(size: 98),
-                actionBarTheme: const SelectorActionBarTheme(
-                  resetText: '重置',
-                  applyText: '应用',
-                ),
                 actionBarBuilder: (
                   context, {
                   required onResetTap,
