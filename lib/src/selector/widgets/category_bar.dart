@@ -301,33 +301,36 @@ class _VerticalBar<T extends SelectorEntry> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: List.generate(entries.length, (int index) {
-        final entry = entries[index];
-        final selected = selectedCategories.contains(entry);
-        final focused = focusedIndex == index;
-        return SelectorListTile(
-          label: entry.name ?? '',
-          selected: focused,
-          selectedTileColor: selectedTileColor,
-          leading: Container(
-            width: 12,
-            alignment: Alignment.centerLeft,
-            child: Container(
-              width: 6,
-              height: 6,
-              decoration: BoxDecoration(
-                color: entry.hasChildren && selected
-                    ? selectedColor
-                    : Colors.transparent,
-                shape: BoxShape.circle,
+    return SingleChildScrollView(
+      physics: const ClampingScrollPhysics(),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: List.generate(entries.length, (int index) {
+          final entry = entries[index];
+          final selected = selectedCategories.contains(entry);
+          final focused = focusedIndex == index;
+          return SelectorListTile(
+            label: entry.name ?? '',
+            selected: focused,
+            selectedTileColor: selectedTileColor,
+            leading: Container(
+              width: 12,
+              alignment: Alignment.centerLeft,
+              child: Container(
+                width: 6,
+                height: 6,
+                decoration: BoxDecoration(
+                  color: entry.hasChildren && selected
+                      ? selectedColor
+                      : Colors.transparent,
+                  shape: BoxShape.circle,
+                ),
               ),
             ),
-          ),
-          onTap: () => onTap(index, entry),
-        );
-      }),
+            onTap: () => onTap(index, entry),
+          );
+        }),
+      ),
     );
   }
 }
