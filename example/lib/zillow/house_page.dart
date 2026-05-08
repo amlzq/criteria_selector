@@ -81,26 +81,16 @@ class _HousePageState extends State<HousePage> {
       final category = result.selected.firstOrNull;
       if (category == null) return null;
       if (category.id == 'list_price') {
-        filter.district = <Map<String, dynamic>>[];
-        for (var d in category.children ?? {}) {
-          filter.district!.add({
-            "district_id": d.id,
-            "subdistrict_id": d.children
-                ?.map((s) => s.id)
-                .toList(growable: false)
-                .cast<String>(),
-          });
+        filter.listPrice = <Map<String, dynamic>>[];
+        for (var e in category.children ?? {}) {
+          e as SelectorIntEntry;
+          filter.listPrice!.add({"id": e.id, "min": e.min, "max": e.max});
         }
       } else if (category.id == 'monthly_price') {
-        filter.metro = <Map<String, dynamic>>[];
-        for (var l in category.children ?? {}) {
-          filter.metro?.add({
-            "line_id": l.id,
-            "station_id": l.children
-                ?.map((s) => s.id)
-                .toList(growable: false)
-                .cast<String>(),
-          });
+        filter.monthlyPayment = <Map<String, dynamic>>[];
+        for (var e in category.children ?? {}) {
+          e as SelectorIntEntry;
+          filter.monthlyPayment!.add({"id": e.id, "min": e.min, "max": e.max});
         }
       }
     } else if (result.tabIndex == 1) {
@@ -109,16 +99,16 @@ class _HousePageState extends State<HousePage> {
       final category = result.selected.firstOrNull;
       if (category == null) return null;
       if (category.id == 'bedrooms') {
-        filter.totalPrice = <Map<String, dynamic>>[];
+        filter.bedrooms = <String>[];
         for (var e in category.children ?? {}) {
-          e as SelectorIntEntry;
-          filter.totalPrice!.add({"id": e.id, "min": e.min, "max": e.max});
+          e as SelectorTextEntry;
+          filter.bedrooms!.add(e.id);
         }
       } else if (category.id == 'bathrooms') {
-        filter.unitPrice = <Map<String, dynamic>>[];
+        filter.bathrooms = <String>[];
         for (var e in category.children ?? {}) {
-          e as SelectorIntEntry;
-          filter.unitPrice!.add({"id": e.id, "min": e.min, "max": e.max});
+          e as SelectorTextEntry;
+          filter.bathrooms!.add(e.id);
         }
       }
     } else if (result.tabIndex == 2) {
@@ -127,35 +117,47 @@ class _HousePageState extends State<HousePage> {
       final category = result.selected.firstOrNull;
       if (category == null) return null;
       if (category.id == 'home_type') {
-        filter.livingRoom = <String>[];
+        filter.homeType = <String>[];
         for (var e in category.children ?? {}) {
           e as SelectorTextEntry;
-          filter.livingRoom!.add(e.id);
+          filter.homeType!.add(e.id);
         }
       } else if (category.id == 'lists_details') {
-        filter.bathroom = <String>[];
+        filter.listsDetails = <String>[];
         for (var e in category.children ?? {}) {
           e as SelectorTextEntry;
-          filter.bathroom!.add(e.id);
+          filter.listsDetails!.add(e.id);
         }
-      } else if (category.id == 'home_details') {
-        filter.balcony = <String>[];
+      } else if (category.id == 'square_feet') {
+        filter.squareFeet = <String>[];
         for (var e in category.children ?? {}) {
           e as SelectorTextEntry;
-          filter.balcony!.add(e.id);
+          filter.squareFeet!.add(e.id);
         }
       } else if (category.id == 'lot_size') {
-        filter.area = <Map<String, dynamic>>[];
+        filter.lotSize = <String>[];
         for (var e in category.children ?? {}) {
-          e as SelectorIntEntry;
-          filter.area!.add({"id": e.id, "min": e.min, "max": e.max});
+          e as SelectorTextEntry;
+          filter.lotSize!.add(e.id);
         }
       } else if (category.id == 'home_features') {
-        // filter.homeFeatures = <String>[];
-        // for (var e in category.children ?? {}) {
-        //   e as SelectorTextEntry;
-        //   filter.homeFeatures!.add(e.id);
-        // }
+        filter.homeFeatures = <String>[];
+        for (var e in category.children ?? {}) {
+          e as SelectorTextEntry;
+          filter.homeFeatures!.add(e.id);
+        }
+      } else if (category.id == 'commute') {
+        filter.commute = <String>[];
+        for (var e in category.children ?? {}) {
+          e as SelectorTextEntry;
+          filter.commute!.add(e.id);
+        }
+      } else if (category.id == 'expanded_search') {
+        filter.expandedSearch = <String>[];
+        for (var e in category.children ?? {}) {
+          e as SelectorTextEntry;
+          filter.expandedSearch!.add(e.id);
+        }
       }
     } else if (result.tabIndex == 3) {
       // Sort filter

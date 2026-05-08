@@ -67,48 +67,49 @@ class HouseRepository {
 
 class HouseFilter {
   String? cityId;
-  List<Map<String, dynamic>>? district;
-  List<Map<String, dynamic>>? metro;
-  (String, String)? userLatLon;
-  String? nearbyRadiusMeters;
-  List<Map<String, dynamic>>? totalPrice;
-  List<Map<String, dynamic>>? unitPrice;
-  List<Map<String, dynamic>>? rent;
-  List<Map<String, dynamic>>? downPay;
-  List<String>? livingRoom;
-  List<String>? bathroom;
-  List<String>? balcony;
-  List<Map<String, dynamic>>? area;
+  List<Map<String, dynamic>>? listPrice;
+  List<Map<String, dynamic>>? monthlyPayment;
+  List<String>? bedrooms;
+  List<String>? bathrooms;
+  List<String>? homeType;
+  List<String>? listsDetails;
+  List<String>? squareFeet;
+  List<String>? lotSize;
+  List<String>? homeFeatures;
+  List<String>? commute;
+  List<String>? expandedSearch;
   String? sort;
 
   HouseFilter({
     required this.cityId,
-    this.district,
-    this.metro,
-    this.userLatLon,
-    this.nearbyRadiusMeters,
-    this.livingRoom,
-    this.bathroom,
-    this.balcony,
-    this.area,
+    this.listPrice,
+    this.monthlyPayment,
+    this.bedrooms,
+    this.bathrooms,
+    this.homeType,
+    this.listsDetails,
+    this.squareFeet,
+    this.lotSize,
+    this.homeFeatures,
+    this.commute,
+    this.expandedSearch,
     this.sort,
   });
 
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     data['city_id'] = cityId;
-    data['district'] = district;
-    data['metro'] = metro;
-    data['user_lat_lon'] = userLatLon;
-    data['nearby_radius_meters'] = nearbyRadiusMeters;
-    data['total_price'] = totalPrice;
-    data['unit_price'] = unitPrice;
-    data['rent_amount'] = rent;
-    data['down_pay'] = downPay;
-    data['living_room'] = livingRoom;
-    data['bathroom'] = bathroom;
-    data['balcony'] = balcony;
-    data['area'] = area;
+    data['list_price'] = listPrice;
+    data['monthly_payment'] = monthlyPayment;
+    data['bedrooms'] = bedrooms;
+    data['bathrooms'] = bathrooms;
+    data['home_type'] = homeType;
+    data['lists_details'] = listsDetails;
+    data['square_feet'] = squareFeet;
+    data['lot_size'] = lotSize;
+    data['home_features'] = homeFeatures;
+    data['commute'] = commute;
+    data['expanded_search'] = expandedSearch;
     data['sort'] = sort;
     return data;
   }

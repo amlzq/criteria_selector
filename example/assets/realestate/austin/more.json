@@ -64,64 +64,58 @@
         ]
     },
     {
-        "id": "home_details",
-        "name": "Home details",
+        "id": "square_feet",
+        "name": "Square feet",
         "data": [
             {
-                "id": "square_feet",
-                "name": "Square feet",
-                "data": [
-                    {
-                        "id": "sqft_500",
-                        "name": "500+ sqft"
-                    },
-                    {
-                        "id": "sqft_750",
-                        "name": "750+ sqft"
-                    },
-                    {
-                        "id": "sqft_1000",
-                        "name": "1,000+ sqft"
-                    },
-                    {
-                        "id": "sqft_1500",
-                        "name": "1,500+ sqft"
-                    },
-                    {
-                        "id": "sqft_2000",
-                        "name": "2,000+ sqft"
-                    },
-                    {
-                        "id": "sqft_3000",
-                        "name": "3,000+ sqft"
-                    }
-                ]
+                "id": "sqft_500",
+                "name": "500+ sqft"
             },
             {
-                "id": "lot_size",
-                "name": "Lot size",
-                "data": [
-                    {
-                        "id": "lot_0_25",
-                        "name": "0.25 acre+"
-                    },
-                    {
-                        "id": "lot_0_5",
-                        "name": "0.5 acre+"
-                    },
-                    {
-                        "id": "lot_1",
-                        "name": "1 acre+"
-                    },
-                    {
-                        "id": "lot_2",
-                        "name": "2 acres+"
-                    },
-                    {
-                        "id": "lot_5",
-                        "name": "5 acres+"
-                    }
-                ]
+                "id": "sqft_750",
+                "name": "750+ sqft"
+            },
+            {
+                "id": "sqft_1000",
+                "name": "1,000+ sqft"
+            },
+            {
+                "id": "sqft_1500",
+                "name": "1,500+ sqft"
+            },
+            {
+                "id": "sqft_2000",
+                "name": "2,000+ sqft"
+            },
+            {
+                "id": "sqft_3000",
+                "name": "3,000+ sqft"
+            }
+        ]
+    },
+    {
+        "id": "lot_size",
+        "name": "Lot size",
+        "data": [
+            {
+                "id": "lot_0_25",
+                "name": "0.25 acre+"
+            },
+            {
+                "id": "lot_0_5",
+                "name": "0.5 acre+"
+            },
+            {
+                "id": "lot_1",
+                "name": "1 acre+"
+            },
+            {
+                "id": "lot_2",
+                "name": "2 acres+"
+            },
+            {
+                "id": "lot_5",
+                "name": "5 acres+"
             }
         ]
     },
