@@ -1,47 +1,47 @@
-[简体中文](README_ZH_HANS.md)
+[English](README.md)
 
 # CriteriaSelector
-A multi-dimensional Condition Selector.
-A typical use case is a list filtering selector.
+一个多维度的条件选择器。
+典型使用场景是用于列表筛选的条件选择器。
 
-## Features
+## 功能特性
 
-- TabBar-like filter bar that shows a dropdown overlay panel for each tab.
-- Built-in selector layouts: CascadingSelector, GridSelector, FlattenSelector, and ListSelector (useful for sorting).
-- Supports single & multiple selection, an "Any" option, and immediate-apply items.
-- Supports custom range inputs (min/max) via `SelectorRangeEntry.custom`.
-- Async data loading with optional skeleton placeholders (`dataFetcher` + `skeletonBuilder`).
-- Customizable UI via `DropselectTabBarTheme` and `SelectorThemeData`, plus custom action bars and tile themes.
+- 类似 TabBar 的筛选条：每个 Tab 点击后展示对应的下拉浮层面板。
+- 内置多种选择器布局：CascadingSelector、GridSelector、FlattenSelector、ListSelector（适用于排序）。
+- 支持单选/多选、“不限（Any）”选项，以及即点即应用的条目。
+- 通过 `SelectorRangeEntry.custom` 支持自定义区间输入（min/max）。
+- 支持异步数据加载，并可选骨架屏占位（`dataFetcher` + `skeletonBuilder`）。
+- 通过 `DropselectTabBarTheme` 与 `SelectorThemeData` 定制 UI，同时支持自定义操作栏与 tile 主题。
 
-### Selector Types
+### 选择器类型
 
-| GridSelector | FlattenSelector | SortSelector |
-| --- | --- | --- |
-| ![GridSelector](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/price.gif) | ![FlattenSelector](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/more.gif) | ![SortSelector](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/sort.gif) |
+| CascadingSelector | GridSelector | FlattenSelector | SortSelector |
+| --- | --- | --- | --- |
+| ![CascadingSelector](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/sz/region.gif) | ![GridSelector](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/sz/price.gif) | ![FlattenSelector](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/sz/floor_plan.gif) | ![SortSelector](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/sz/sort.gif) |
 
-## Getting started
+## 快速开始
 
-### Install
+### 安装
 
-Add the dependency:
+添加依赖：
 
 ```bash
 flutter pub add criteria_selector
 ```
 
-Then fetch packages:
+然后拉取依赖：
 
 ```bash
 flutter pub get
 ```
 
-### Import
+### 引入
 
 ```dart
 import 'package:criteria_selector/criteria_selector.dart';
 ```
 
-## Usage
+## 使用示例
 
 ```dart
 import 'package:criteria_selector/criteria_selector.dart';
