@@ -492,15 +492,17 @@ class SelectorUtils {
     return result;
   }
 
-  // 根据选中内容，计算出有效标签，最终返回一个结果标签。
+  // Computes an effective label from the current selection and returns it.
   static String? getResultLabel(SelectorEntries? resultEntries) {
     if (resultEntries == null) return null;
 
-    // 找到第一个有效标签后继续遍历；一旦找到第二个，立即返回“多选”。
-    // 有效标签规则：
-    // 从根节点到端节点，算作一条选择路径
-    // 端节点的名称添加到 candidateLabels 中
-    // 如果端节点 isAny=true，则取端节点的父节点的名称，如果父节点是根节点(类别节点)，则舍弃
+    // Keep traversing after the first valid label is found; once a second one is
+    // found, return "multiple".
+    // Rules for a valid label:
+    // - A path from the root node to a leaf node counts as one selection path.
+    // - The leaf node name is used as a candidate label.
+    // - If the leaf node has isAny=true, use its parent's name instead. If the
+    //   parent is the root (category) node, ignore it.
     String? firstLabel;
 
     bool collectCandidateLabels(
@@ -533,7 +535,7 @@ class SelectorUtils {
     }
 
     for (final entry in resultEntries) {
-      if (collectCandidateLabels(entry)) return '多选';
+      if (collectCandidateLabels(entry)) return 'Multiple';
     }
     return firstLabel;
   }

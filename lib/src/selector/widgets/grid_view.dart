@@ -84,7 +84,7 @@ class SelectorGridViewState<T extends SelectorEntry>
       _maxFocusNode ??= FocusNode();
     }
 
-    // 恢复自定义项的选中状态
+    // Restore selection state for custom items.
     for (var selectedEntry in _selectedEntries) {
       if (selectedEntry is SelectorRangeEntry && selectedEntry.isCustom) {
         _minController?.text = selectedEntry.min?.toString() ?? '';
@@ -112,7 +112,7 @@ class SelectorGridViewState<T extends SelectorEntry>
       _entriesWithoutCustom = widget.entries.where(testNotCustomItem).toList();
     }
 
-    // 恢复自定义项的选中状态
+    // Restore selection state for custom items.
     for (var selectedEntry in _selectedEntries) {
       if (selectedEntry is SelectorRangeEntry && selectedEntry.isCustom) {
         _minController?.text = selectedEntry.min?.toString() ?? '';

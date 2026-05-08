@@ -447,7 +447,7 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       // shrinkWrap: true,
                       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior
-                          .onDrag, // 滑动时自动收起软键盘
+                          .onDrag, // Automatically dismiss the soft keyboard while dragging.
                       children: widget.entries.mapIndexed((index, item) {
                         final category =
                             widget.entries[index] as SelectorCategoryEntry;
