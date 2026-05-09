@@ -22,7 +22,7 @@ class _BuyPageState extends State<BuyPage> {
   late final HouseFiltersRepository _filtersRepo;
   HouseFilter? _filter;
 
-  final ValueNotifier<String> _floorPlanApplyText = ValueNotifier<String>('应用');
+  final ValueNotifier<String> _floorPlanApplyText = ValueNotifier<String>('');
   Timer? _floorPlanApplyTextDebounce;
   int _floorPlanApplyTextRequestId = 0;
 
@@ -31,6 +31,22 @@ class _BuyPageState extends State<BuyPage> {
     super.initState();
     _repo = HouseRepository();
     _filtersRepo = HouseFiltersRepository();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final l10n = AppLocalizations.of(context);
+    _filtersRepo.updateTexts(
+      anyOptionText: l10n?.any ?? '',
+      customInputLabel: l10n?.custom ?? '',
+      minHintText: l10n?.minHint ?? '',
+      maxHintText: l10n?.maxHint ?? '',
+      customAreaName: l10n?.customArea ?? '',
+    );
+    if (_floorPlanApplyText.value.isEmpty) {
+      _floorPlanApplyText.value = l10n?.apply ?? '';
+    }
   }
 
   @override
@@ -43,11 +59,13 @@ class _BuyPageState extends State<BuyPage> {
   }
 
   void _showSelectedResult(DropselectResult result) {
+    final l10n = AppLocalizations.of(context);
+    final conditions = '${result.selected.flatten()}';
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: const Text('筛选条件已更新'),
+        content: Text(l10n?.filterUpdated ?? ''),
         action: SnackBarAction(
-          label: '查看',
+          label: l10n?.view ?? '',
           onPressed: () {
             showModalBottomSheet<void>(
               context: context,
@@ -59,8 +77,9 @@ class _BuyPageState extends State<BuyPage> {
                     child: Padding(
                       padding: const EdgeInsets.all(16),
                       child: SingleChildScrollView(
-                        child:
-                            SelectableText('筛选条件：${result.selected.flatten()}'),
+                        child: SelectableText(
+                          l10n?.filterConditions(conditions) ?? conditions,
+                        ),
                       ),
                     ),
                   ),
@@ -176,17 +195,19 @@ class _BuyPageState extends State<BuyPage> {
   }
 
   void _handleSelectorChange(DropselectResult result) async {
+    final l10n = AppLocalizations.of(context);
     _filter = _dropselectResultParser(result);
     if (_filter == null) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('筛选条件解析失败')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n?.filterParseFailed ?? '')),
+      );
       return;
     }
     if (result.tabIndex == 2) {
       _floorPlanApplyTextDebounce?.cancel();
 
       final requestId = ++_floorPlanApplyTextRequestId;
-      _floorPlanApplyText.value = '查看中…';
+      _floorPlanApplyText.value = l10n?.viewing ?? '';
 
       _floorPlanApplyTextDebounce = Timer(
         const Duration(milliseconds: 250),
@@ -194,10 +215,14 @@ class _BuyPageState extends State<BuyPage> {
           try {
             final count = await _repo.previewCount(_filter!);
             if (!mounted || requestId != _floorPlanApplyTextRequestId) return;
-            _floorPlanApplyText.value = count == 0 ? '暂无房源' : '查看 $count 套';
+            final l10n = AppLocalizations.of(context);
+            _floorPlanApplyText.value = count == 0
+                ? (l10n?.nohomes ?? '')
+                : (l10n?.viewhomes(count) ?? '');
           } catch (_) {
             if (!mounted || requestId != _floorPlanApplyTextRequestId) return;
-            _floorPlanApplyText.value = '应用';
+            _floorPlanApplyText.value =
+                AppLocalizations.of(context)?.apply ?? '';
           }
         },
       );
@@ -205,10 +230,12 @@ class _BuyPageState extends State<BuyPage> {
   }
 
   void _handleSelectorApply(DropselectResult result) {
+    final l10n = AppLocalizations.of(context);
     _filter = _dropselectResultParser(result);
     if (_filter == null) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('筛选条件解析失败')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n?.filterParseFailed ?? '')),
+      );
       return;
     }
 
@@ -217,6 +244,7 @@ class _BuyPageState extends State<BuyPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)?.buy ?? ''),
@@ -236,7 +264,7 @@ class _BuyPageState extends State<BuyPage> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   alignment: Alignment.centerLeft,
-                  child: const Text(userCityName),
+                  child: Text(l10n?.userCityName ?? userCityName),
                 ),
               ),
               IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
@@ -263,16 +291,16 @@ class _BuyPageState extends State<BuyPage> {
             //   backgroundColor: Colors.orange.withOpacity(0.54),
             // ),
             tabs: [
-              const DropselectTab(
+              DropselectTab(
                 // tag: 'region',
-                label: '区域',
+                label: l10n?.region ?? '',
                 // labelGetter: (DropselectResult result) {
                 //   // 可选：用户根据结果自定义标签
                 //   return '自定义标签';
                 // },
               ),
-              const DropselectTab(label: '价格'),
-              const DropselectTab(label: '户型'),
+              DropselectTab(label: l10n?.price ?? ''),
+              DropselectTab(label: l10n?.floorPlan ?? ''),
               DropselectTab(
                 child: Image.asset('assets/sorting.png', width: 16, height: 16),
               ),
@@ -306,8 +334,8 @@ class _BuyPageState extends State<BuyPage> {
                 childAspectRatio: 2.5,
                 mainAxisSpacing: 10,
                 crossAxisSpacing: 10,
-                actionBarTheme: const SelectorActionBarTheme(
-                  applyText: '应用',
+                actionBarTheme: SelectorActionBarTheme(
+                  applyText: AppLocalizations.of(context)?.apply ?? '',
                 ),
               ),
               FlattenSelector(
@@ -359,7 +387,8 @@ class _BuyPageState extends State<BuyPage> {
               if (result.tabIndex == 2) {
                 _floorPlanApplyTextDebounce?.cancel();
                 _floorPlanApplyTextRequestId++;
-                _floorPlanApplyText.value = '应用';
+                _floorPlanApplyText.value =
+                    AppLocalizations.of(context)?.apply ?? '';
               }
               _showSelectedResult(result);
             },
@@ -368,7 +397,8 @@ class _BuyPageState extends State<BuyPage> {
               if (_controller.currentIndex == 2) {
                 _floorPlanApplyTextDebounce?.cancel();
                 _floorPlanApplyTextRequestId++;
-                _floorPlanApplyText.value = '应用';
+                _floorPlanApplyText.value =
+                    AppLocalizations.of(context)?.apply ?? '';
               }
             },
           ),
@@ -379,9 +409,14 @@ class _BuyPageState extends State<BuyPage> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
-                  return Center(child: Text('加载错误: ${snapshot.error}'));
+                  return Center(
+                    child: Text(
+                      l10n?.loadError('${snapshot.error}') ??
+                          '${snapshot.error}',
+                    ),
+                  );
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text('暂无房源'));
+                  return Center(child: Text(l10n?.nohomes ?? ''));
                 }
                 final houses = snapshot.data!;
                 return ListView.builder(

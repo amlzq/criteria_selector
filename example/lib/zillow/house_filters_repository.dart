@@ -7,6 +7,26 @@ import 'package:flutter/foundation.dart';
 import 'utils.dart';
 
 class HouseFiltersRepository {
+  HouseFiltersRepository({
+    this.anyOptionText = 'Any',
+    this.noMinHintText = 'No min',
+    this.noMaxHintText = 'No max',
+  });
+
+  String anyOptionText;
+  String noMinHintText;
+  String noMaxHintText;
+
+  void updateTexts({
+    String? anyOptionText,
+    String? noMinHintText,
+    String? noMaxHintText,
+  }) {
+    if (anyOptionText != null) this.anyOptionText = anyOptionText;
+    if (noMinHintText != null) this.noMinHintText = noMinHintText;
+    if (noMaxHintText != null) this.noMaxHintText = noMaxHintText;
+  }
+
   DropselectResult? priceResult;
 
   SelectorEntries? fetchPriceSelectedData() => priceResult?.selected;
@@ -42,14 +62,14 @@ class HouseFiltersRepository {
       category.children?.insert(
           0,
           SelectorIntEntry.any(
-              parentId: category.id, name: 'Any', immediate: false));
+              parentId: category.id, name: anyOptionText, immediate: false));
       // Insert the "Custom" option
       category.children?.insert(
           0,
           SelectorIntEntry.custom(
               parentId: category.id,
-              minHintText: 'No min',
-              maxHintText: 'No max'));
+              minHintText: noMinHintText,
+              maxHintText: noMaxHintText));
     }
 
     debugPrint('prices length: ${entries.length}');
@@ -105,7 +125,7 @@ class HouseFiltersRepository {
       category.children?.insert(
           0,
           SelectorIntEntry.any(
-              parentId: category.id, name: 'Any', immediate: false));
+              parentId: category.id, name: anyOptionText, immediate: false));
     }
 
     debugPrint('rooms length: ${entries.length}');
@@ -156,8 +176,8 @@ class HouseFiltersRepository {
       if (category.id == 'area') {
         category.children?.add(SelectorIntEntry.custom(
             parentId: category.id,
-            minHintText: 'No min',
-            maxHintText: 'No max'));
+            minHintText: noMinHintText,
+            maxHintText: noMaxHintText));
         break;
       }
     }

@@ -23,33 +23,9 @@ class MyApp extends StatelessWidget {
       colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       useMaterial3: true,
     );
-    final theme = baseTheme.copyWith(
-      extensions: <ThemeExtension<dynamic>>[
-        // Global DropselectTabBar theme.
-        // Access via: Theme.of(context).extension<DropselectTabBarTheme>()!
-        DropselectTabBarTheme(
-          // labelColor: Colors.yellow,
-          // overlayStyle: DropdownOverlayStyle(
-          // backgroundColor: Colors.yellow[100],
-          // maxHeightFactor: 0.7,
-          // ),
-          //  DropdownOverlayStyle(),
-          selectorTheme: SelectorThemeData(
-            baseTheme,
-            // backgroundColor: Colors.amber[300],
-            // radioTheme: RadioThemeData(
-            //   fillColor: MaterialStateProperty.all(Colors.orange),
-            // ),
-            // checkboxTheme: CheckboxThemeData(
-            //   fillColor: MaterialStateProperty.all(Colors.orange),
-            // ),
-          ),
-        ),
-      ],
-    );
     return MaterialApp(
-      title: AppLocalizations.of(context)?.appName ?? '',
-      theme: theme,
+      onGenerateTitle: (context) => AppLocalizations.of(context)?.appName ?? '',
+      theme: baseTheme,
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -71,6 +47,26 @@ class MyApp extends StatelessWidget {
           countryCode: 'HK',
         ),
       ],
+      builder: (context, child) {
+        final l10n = AppLocalizations.of(context);
+        final theme = baseTheme.copyWith(
+          extensions: <ThemeExtension<dynamic>>[
+            DropselectTabBarTheme(
+              selectorTheme: SelectorThemeData(
+                baseTheme,
+                actionBarTheme: SelectorActionBarTheme(
+                  resetText: l10n?.reset ?? '',
+                  applyText: l10n?.apply ?? '',
+                ),
+              ),
+            ),
+          ],
+        );
+        return Theme(
+          data: theme,
+          child: child ?? const SizedBox.shrink(),
+        );
+      },
       home: const MyHomePage(),
     );
   }
@@ -86,10 +82,11 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(AppLocalizations.of(context)?.appName ?? ''),
+        title: Text(l10n?.appName ?? ''),
       ),
       body: Center(
         child: Column(
@@ -97,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              AppLocalizations.of(context)?.realEstate ?? '',
+              l10n?.realEstate ?? '',
               style: const TextStyle(fontSize: 16),
             ),
             Row(
@@ -112,7 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           builder: (context) => const HousePage()),
                     );
                   },
-                  child: const Text('Zillow'),
+                  child: Text(l10n?.zillow ?? ''),
                 ),
                 TextButton(
                   onPressed: () {
@@ -122,7 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           builder: (context) => const LeyoujiaPage()),
                     );
                   },
-                  child: Text(AppLocalizations.of(context)?.leyoujia ?? ''),
+                  child: Text(l10n?.leyoujia ?? ''),
                 ),
               ],
             ),

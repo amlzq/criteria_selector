@@ -27,6 +27,19 @@ class _SellPageState extends State<SellPage> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final l10n = AppLocalizations.of(context);
+    _filtersRepo.updateTexts(
+      anyOptionText: l10n?.any ?? '',
+      customInputLabel: l10n?.custom ?? '',
+      minHintText: l10n?.minHint ?? '',
+      maxHintText: l10n?.maxHint ?? '',
+      customAreaName: l10n?.customArea ?? '',
+    );
+  }
+
+  @override
   void dispose() {
     _repo.dispose();
     _controller.dispose();
@@ -137,6 +150,7 @@ class _SellPageState extends State<SellPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final DropselectTabBarTheme dropdownTabBarTheme =
         DropselectTabBarTheme.maybeOf(context)!;
     return Scaffold(
@@ -160,6 +174,12 @@ class _SellPageState extends State<SellPage> {
                   overlayStyle: dropdownTabBarTheme.overlayStyle?.copyWith(
                     maxHeightFactor: 0.8,
                   ),
+                  selectorTheme: dropdownTabBarTheme.selectorTheme?.copyWith(
+                    actionBarTheme: SelectorActionBarTheme(
+                      resetText: AppLocalizations.of(context)?.clear ?? '',
+                      applyText: AppLocalizations.of(context)?.done ?? '',
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -172,16 +192,16 @@ class _SellPageState extends State<SellPage> {
               //   backgroundColor: Colors.orange[100],
               // ),
               tabs: [
-                const DropselectTab(
+                DropselectTab(
                   // tag: 'region',
-                  label: '区域',
+                  label: l10n?.region ?? '',
                   // labelGetter: (DropselectResult result) {
                   //   // 可选：用户根据结果自定义标签
                   //   return '自定义标签';
                   // },
                 ),
-                const DropselectTab(label: '价格'),
-                const DropselectTab(label: '户型'),
+                DropselectTab(label: l10n?.price ?? ''),
+                DropselectTab(label: l10n?.floorPlan ?? ''),
                 DropselectTab(
                   child:
                       Image.asset('assets/sorting.png', width: 16, height: 16),
@@ -243,14 +263,26 @@ class _SellPageState extends State<SellPage> {
               },
               onChanged: (DropselectResult result) {
                 debugPrint('onChanged: $result');
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text('筛选条件：${result.selected.flatten()}')));
+                final conditions = '${result.selected.flatten()}';
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      l10n?.filterConditions(conditions) ?? conditions,
+                    ),
+                  ),
+                );
               },
               onApplied: (DropselectResult result) {
                 debugPrint('onApplied: $result');
                 _handleSelectorApply(result);
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text('筛选条件：${result.selected.flatten()}')));
+                final conditions = '${result.selected.flatten()}';
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      l10n?.filterConditions(conditions) ?? conditions,
+                    ),
+                  ),
+                );
               },
               onReset: () {
                 debugPrint('onReset');
@@ -268,9 +300,14 @@ class _SellPageState extends State<SellPage> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
-                  return Center(child: Text('加载错误: ${snapshot.error}'));
+                  return Center(
+                    child: Text(
+                      l10n?.loadError('${snapshot.error}') ??
+                          '${snapshot.error}',
+                    ),
+                  );
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text('暂无房源'));
+                  return Center(child: Text(l10n?.nohomes ?? ''));
                 }
                 final houses = snapshot.data!;
                 return ListView.builder(

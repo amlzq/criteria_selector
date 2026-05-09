@@ -22,7 +22,7 @@ class _HousePageState extends State<HousePage> {
   late final HouseFiltersRepository _filtersRepo;
   HouseFilter? _filter;
 
-  final ValueNotifier<String> _moreApplyText = ValueNotifier<String>('Apply');
+  final ValueNotifier<String> _moreApplyText = ValueNotifier<String>('');
   Timer? _moreApplyTextDebounce;
   int _moreApplyTextRequestId = 0;
 
@@ -31,6 +31,20 @@ class _HousePageState extends State<HousePage> {
     super.initState();
     _repo = HouseRepository();
     _filtersRepo = HouseFiltersRepository();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final l10n = AppLocalizations.of(context);
+    _filtersRepo.updateTexts(
+      anyOptionText: l10n?.any ?? '',
+      noMinHintText: l10n?.noMin ?? '',
+      noMaxHintText: l10n?.noMax ?? '',
+    );
+    if (_moreApplyText.value.isEmpty) {
+      _moreApplyText.value = l10n?.apply ?? '';
+    }
   }
 
   @override
@@ -43,11 +57,13 @@ class _HousePageState extends State<HousePage> {
   }
 
   void _showSelectedResult(DropselectResult result) {
+    final l10n = AppLocalizations.of(context);
+    final conditions = '${result.selected.flatten()}';
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: const Text('Filter already updated'),
+        content: Text(l10n?.filterUpdated ?? ''),
         action: SnackBarAction(
-          label: 'View',
+          label: l10n?.view ?? '',
           onPressed: () {
             showModalBottomSheet<void>(
               context: context,
@@ -60,7 +76,8 @@ class _HousePageState extends State<HousePage> {
                       padding: const EdgeInsets.all(16),
                       child: SingleChildScrollView(
                         child: SelectableText(
-                            'Filters: ${result.selected.flatten()}'),
+                          l10n?.filterConditions(conditions) ?? conditions,
+                        ),
                       ),
                     ),
                   ),
@@ -170,17 +187,19 @@ class _HousePageState extends State<HousePage> {
   }
 
   void _handleSelectorChange(DropselectResult result) async {
+    final l10n = AppLocalizations.of(context);
     _filter = _dropselectResultParser(result);
     if (_filter == null) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Filter parse failed')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n?.filterParseFailed ?? '')),
+      );
       return;
     }
     if (result.tabIndex == 2) {
       _moreApplyTextDebounce?.cancel();
 
       final requestId = ++_moreApplyTextRequestId;
-      _moreApplyText.value = 'Loading...';
+      _moreApplyText.value = l10n?.viewing ?? '';
 
       _moreApplyTextDebounce = Timer(
         const Duration(milliseconds: 250),
@@ -188,11 +207,12 @@ class _HousePageState extends State<HousePage> {
           try {
             final count = await _repo.previewCount(_filter!);
             if (!mounted || requestId != _moreApplyTextRequestId) return;
+            final l10n = AppLocalizations.of(context);
             _moreApplyText.value =
-                count == 0 ? 'No houses found' : 'View $count houses';
+                count == 0 ? (l10n?.nohomes ?? '') : (l10n?.viewhomes(count) ?? '');
           } catch (_) {
             if (!mounted || requestId != _moreApplyTextRequestId) return;
-            _moreApplyText.value = 'Apply';
+            _moreApplyText.value = AppLocalizations.of(context)?.apply ?? '';
           }
         },
       );
@@ -200,10 +220,12 @@ class _HousePageState extends State<HousePage> {
   }
 
   void _handleSelectorApply(DropselectResult result) {
+    final l10n = AppLocalizations.of(context);
     _filter = _dropselectResultParser(result);
     if (_filter == null) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Filter parse failed')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n?.filterParseFailed ?? '')),
+      );
       return;
     }
 
@@ -212,6 +234,7 @@ class _HousePageState extends State<HousePage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)?.sell ?? ''),
@@ -258,16 +281,16 @@ class _HousePageState extends State<HousePage> {
             //   backgroundColor: Colors.orange.withOpacity(0.54),
             // ),
             tabs: [
-              const DropselectTab(
+              DropselectTab(
                 // tag: 'region',
-                label: 'Price',
+                label: l10n?.price ?? '',
                 // labelGetter: (DropselectResult result) {
                 //   // Optional: user-defined label based on the selection
                 //   return 'Custom label';
                 // },
               ),
-              const DropselectTab(label: 'Rooms'),
-              const DropselectTab(label: 'More'),
+              DropselectTab(label: l10n?.rooms ?? ''),
+              DropselectTab(label: l10n?.more ?? ''),
               DropselectTab(
                 child: Image.asset('assets/sorting.png', width: 16, height: 16),
               ),
@@ -305,9 +328,9 @@ class _HousePageState extends State<HousePage> {
                 crossAxisSpacing: 8,
                 mainAxisSpacing: 8,
                 categoryBarTheme: const SelectorCategoryBarTheme(size: 108),
-                actionBarTheme: const SelectorActionBarTheme(
-                  resetText: 'Clean',
-                  applyText: 'Done',
+                actionBarTheme: SelectorActionBarTheme(
+                  resetText: AppLocalizations.of(context)?.reset ?? '',
+                  applyText: AppLocalizations.of(context)?.apply ?? '',
                 ),
               ),
               ListSelector(
@@ -334,7 +357,7 @@ class _HousePageState extends State<HousePage> {
               if (result.tabIndex == 2) {
                 _moreApplyTextDebounce?.cancel();
                 _moreApplyTextRequestId++;
-                _moreApplyText.value = 'Apply';
+                _moreApplyText.value = l10n?.apply ?? '';
               }
               _showSelectedResult(result);
             },
@@ -343,7 +366,7 @@ class _HousePageState extends State<HousePage> {
               if (_controller.currentIndex == 2) {
                 _moreApplyTextDebounce?.cancel();
                 _moreApplyTextRequestId++;
-                _moreApplyText.value = 'Apply';
+                _moreApplyText.value = l10n?.apply ?? '';
               }
             },
           ),
@@ -354,9 +377,13 @@ class _HousePageState extends State<HousePage> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
+                  return Center(
+                    child: Text(
+                      l10n?.loadError('${snapshot.error}') ?? '${snapshot.error}',
+                    ),
+                  );
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text('No houses found'));
+                  return Center(child: Text(l10n?.nohomes ?? ''));
                 }
                 final houses = snapshot.data!;
                 return ListView.builder(

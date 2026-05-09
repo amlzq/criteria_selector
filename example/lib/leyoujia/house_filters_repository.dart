@@ -7,6 +7,34 @@ import 'package:flutter/foundation.dart';
 import 'utils.dart';
 
 class HouseFiltersRepository {
+  HouseFiltersRepository({
+    this.anyOptionText = '不限',
+    this.customInputLabel = '自定义',
+    this.minHintText = '最小值',
+    this.maxHintText = '最大值',
+    this.customAreaName = '自定义面积',
+  });
+
+  String anyOptionText;
+  String customInputLabel;
+  String minHintText;
+  String maxHintText;
+  String customAreaName;
+
+  void updateTexts({
+    String? anyOptionText,
+    String? customInputLabel,
+    String? minHintText,
+    String? maxHintText,
+    String? customAreaName,
+  }) {
+    if (anyOptionText != null) this.anyOptionText = anyOptionText;
+    if (customInputLabel != null) this.customInputLabel = customInputLabel;
+    if (minHintText != null) this.minHintText = minHintText;
+    if (maxHintText != null) this.maxHintText = maxHintText;
+    if (customAreaName != null) this.customAreaName = customAreaName;
+  }
+
   /// 区域的 初始选中项
   DropselectResult? regionResult;
 
@@ -85,10 +113,12 @@ class HouseFiltersRepository {
       category.children?.insert(
           0,
           SelectorTextEntry.any(
-              parentId: category.id, name: '不限', immediate: true));
+              parentId: category.id, name: anyOptionText, immediate: true));
       for (SelectorEntry l1 in category.children ?? []) {
-        l1.children
-            ?.insert(0, SelectorTextEntry.any(parentId: l1.id, name: '不限'));
+        l1.children?.insert(
+          0,
+          SelectorTextEntry.any(parentId: l1.id, name: anyOptionText),
+        );
       }
     }
 
@@ -155,15 +185,15 @@ class HouseFiltersRepository {
       category.children?.insert(
           0,
           SelectorIntEntry.any(
-              parentId: category.id, name: '不限', immediate: false));
+              parentId: category.id, name: anyOptionText, immediate: false));
       // 插入"自定义"选项
       category.children?.insert(
           0,
           SelectorIntEntry.custom(
               parentId: category.id,
-              inputLabel: '自定义',
-              minHintText: '最小值',
-              maxHintText: '最大值'));
+              inputLabel: customInputLabel,
+              minHintText: minHintText,
+              maxHintText: maxHintText));
     }
 
     debugPrint('prices length: ${entries.length}');
@@ -173,13 +203,15 @@ class HouseFiltersRepository {
   /// 价格的 初始选中项
   DropselectResult? sellPriceResult;
 
-  final sellPriceIniteialSelected = {
-    SelectorCategoryEntry(
-      id: 'total',
-      name: '',
-      children: {SelectorIntEntry.any(parentId: 'total', name: '不限')},
-    )
-  };
+  SelectorEntries get sellPriceIniteialSelected => {
+        SelectorCategoryEntry(
+          id: 'total',
+          name: '',
+          children: {
+            SelectorIntEntry.any(parentId: 'total', name: anyOptionText)
+          },
+        )
+      };
 
   SelectorEntries? fetchSellPriceSelectedData() =>
       sellPriceResult?.selected ?? sellPriceIniteialSelected;
@@ -226,15 +258,15 @@ class HouseFiltersRepository {
       category.children?.insert(
           0,
           SelectorIntEntry.any(
-              parentId: category.id, name: '不限', immediate: false));
+              parentId: category.id, name: anyOptionText, immediate: false));
       // 插入"自定义"选项
       category.children?.insert(
           0,
           SelectorIntEntry.custom(
               parentId: category.id,
-              inputLabel: '自定义',
-              minHintText: '最小值',
-              maxHintText: '最大值'));
+              inputLabel: customInputLabel,
+              minHintText: minHintText,
+              maxHintText: maxHintText));
     }
 
     debugPrint('prices length: ${entries.length}');
@@ -244,13 +276,15 @@ class HouseFiltersRepository {
   /// 租金的 初始选中项
   DropselectResult? rentalResult;
 
-  final rentalIniteialSelected = {
-    SelectorCategoryEntry(
-      id: 'rent',
-      name: '',
-      children: {SelectorIntEntry.any(parentId: 'total', name: '不限')},
-    )
-  };
+  SelectorEntries get rentalIniteialSelected => {
+        SelectorCategoryEntry(
+          id: 'rent',
+          name: '',
+          children: {
+            SelectorIntEntry.any(parentId: 'total', name: anyOptionText)
+          },
+        )
+      };
 
   SelectorEntries? fetchRentalSelectedData() =>
       rentalResult?.selected ?? rentalIniteialSelected;
@@ -291,15 +325,15 @@ class HouseFiltersRepository {
       category.children?.insert(
           0,
           SelectorIntEntry.any(
-              parentId: category.id, name: '不限', immediate: false));
+              parentId: category.id, name: anyOptionText, immediate: false));
       // 插入"自定义"选项
       category.children?.insert(
           0,
           SelectorIntEntry.custom(
               parentId: category.id,
-              inputLabel: '自定义',
-              minHintText: '最小值',
-              maxHintText: '最大值'));
+              inputLabel: customInputLabel,
+              minHintText: minHintText,
+              maxHintText: maxHintText));
     }
 
     debugPrint('prices length: ${entries.length}');
@@ -352,9 +386,9 @@ class HouseFiltersRepository {
       if (category.id == 'area') {
         category.children?.add(SelectorIntEntry.custom(
             parentId: category.id,
-            name: '自定义面积',
-            minHintText: '最小值',
-            maxHintText: '最大值'));
+            name: customAreaName,
+            minHintText: minHintText,
+            maxHintText: maxHintText));
         break;
       }
     }
@@ -410,9 +444,9 @@ class HouseFiltersRepository {
       if (category.id == 'area') {
         category.children?.add(SelectorIntEntry.custom(
             parentId: category.id,
-            name: '自定义面积',
-            minHintText: '最小值',
-            maxHintText: '最大值'));
+            name: customAreaName,
+            minHintText: minHintText,
+            maxHintText: maxHintText));
         break;
       }
     }
