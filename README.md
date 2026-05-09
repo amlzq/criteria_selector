@@ -1,4 +1,4 @@
-[简体中文](README_ZH_HANS.md)
+[简体中文](https://github.com/amlzq/criteria_selector/blob/main/README_ZH_HANS.md)
 
 # CriteriaSelector
 A multi-dimensional Condition Selector.
@@ -15,7 +15,7 @@ A typical use case is a list filtering selector.
 
 ### Selector Types
 
-| GridSelector | FlattenSelector | SortSelector |
+| GridSelector | FlattenSelector | ListSelector |
 | --- | --- | --- |
 | ![GridSelector](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/price.gif) | ![FlattenSelector](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/more.gif) | ![SortSelector](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/sort.gif) |
 

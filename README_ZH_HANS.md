@@ -1,4 +1,4 @@
-[English](README.md)
+[English](https://github.com/amlzq/criteria_selector/blob/main/README.md)
 
 # CriteriaSelector
 一个多维度的条件选择器。
@@ -15,7 +15,7 @@
 
 ### 选择器类型
 
-| CascadingSelector | GridSelector | FlattenSelector | SortSelector |
+| CascadingSelector | GridSelector | FlattenSelector | ListSelector |
 | --- | --- | --- | --- |
 | ![CascadingSelector](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/sz/region.gif) | ![GridSelector](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/sz/price.gif) | ![FlattenSelector](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/sz/floor_plan.gif) | ![SortSelector](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/sz/sort.gif) |
 
