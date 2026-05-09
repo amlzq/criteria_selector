@@ -364,12 +364,12 @@ class SelectorUtils {
     if (entries == null || entries.isEmpty || selectedItemsPerLevel.isEmpty) {
       return;
     }
-    SelectorEntries? selectedItems =
+    SelectorEntries? selectedEntries =
         selectedItemsPerLevel.elementAtOrNull(level);
-    if (selectedItems == null || selectedItems.isEmpty) {
+    if (selectedEntries == null || selectedEntries.isEmpty) {
       return;
     }
-    entries.removeWhere((e) => !selectedItems.contains(e));
+    entries.removeWhere((e) => !selectedEntries.contains(e));
 
     if (selectedHeaderEntries != null || selectedFooterEntries != null) {
       for (final entry in entries) {
@@ -545,25 +545,25 @@ class SelectorUtils {
   /// Returns selected entries per level. For custom range entries, previously
   /// entered values are restored into the matched entries.
   static List<SelectorEntries> restorePreviousSelected(
-      List<SelectorEntry>? items, Set<SelectorEntry>? selectedItems) {
+      List<SelectorEntry>? items, Set<SelectorEntry>? selectedEntries) {
     final result = <SelectorEntries>[];
-    _initializeSelectedEntriesPerLevel(items, selectedItems, 0, result);
+    _initializeSelectedEntriesPerLevel(items, selectedEntries, 0, result);
     return result;
   }
 
   static void _initializeSelectedEntriesPerLevel(
       List<SelectorEntry>? items,
-      Set<SelectorEntry>? selectedItems,
+      Set<SelectorEntry>? selectedEntries,
       int level,
       List<SelectorEntries> result) {
     if (items == null ||
         items.isEmpty ||
-        selectedItems == null ||
-        selectedItems.isEmpty) {
+        selectedEntries == null ||
+        selectedEntries.isEmpty) {
       return;
     }
     result.add({});
-    for (var selectedItem in selectedItems) {
+    for (var selectedItem in selectedEntries) {
       final item = items.singleWhereOrNull((e) => e.id == selectedItem.id);
       if (item != null) {
         result[level].add(item);

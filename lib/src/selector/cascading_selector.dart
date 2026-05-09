@@ -238,7 +238,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
       final selectedIndex = entries.toList().indexOf(firstSelected);
 
       if (selectedIndex != -1 && _scrollControllers[level].hasClients) {
-        final itemHeight = kSelectorListTileHeight; // Approximate item height
+        const itemHeight = kSelectorListTileHeight; // Approximate item height
         final targetOffset = selectedIndex * itemHeight;
         final maxScroll = _scrollControllers[level].position.maxScrollExtent;
         final scrollOffset =
@@ -454,28 +454,28 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
       _selectedEntriesPerLevel.add({});
     }
 
-    final selectedItems = _selectedEntriesPerLevel[
+    final selectedEntries = _selectedEntriesPerLevel[
         level]; // Selected entries for the current level
     if (entry.isAny) {
       // "Any" entry
       if (SelectionMode.single == childrenSelectionMode) {
         // Single-select mode
-        if (selectedItems.contains(entry)) {
+        if (selectedEntries.contains(entry)) {
         } else {
           // Clear selected list
-          selectedItems
+          selectedEntries
             ..clear()
             ..add(entry);
         }
       } else {
         // Multi-select mode
-        if (selectedItems.contains(entry)) {
-          selectedItems.remove(entry);
+        if (selectedEntries.contains(entry)) {
+          selectedEntries.remove(entry);
         } else {
           // Remove items that share the same parent from the selected list
-          selectedItems.removeWhere(
+          selectedEntries.removeWhere(
               (e) => (e as SelectorTextEntry).parentId == entry.parentId);
-          selectedItems.add(entry);
+          selectedEntries.add(entry);
         }
       }
     } else {
@@ -486,29 +486,29 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
           .elementAtOrNull(1)
           ?.removeWhere((e) => e is SelectorChildEntry && e.isAny);
 
-      selectedItems.removeWhere((e) =>
+      selectedEntries.removeWhere((e) =>
           e is SelectorChildEntry && e.parentId == entry.parentId && e.isAny);
 
       if (SelectionMode.single == childrenSelectionMode) {
         // Single-select mode
-        if (selectedItems.contains(entry)) {
+        if (selectedEntries.contains(entry)) {
         } else {
-          selectedItems
+          selectedEntries
             ..clear()
             ..add(entry);
         }
       } else {
         // Multi-select mode
-        if (selectedItems.contains(entry)) {
-          selectedItems.remove(entry);
+        if (selectedEntries.contains(entry)) {
+          selectedEntries.remove(entry);
         } else {
-          selectedItems.add(entry);
+          selectedEntries.add(entry);
         }
       }
     }
 
     // Keep parent selection state consistent
-    if (selectedItems.contains(entry)) {
+    if (selectedEntries.contains(entry)) {
       // If it was a select action, select the parent chain as well
       for (var i = cascadeIndex; i >= 0; i--) {
         _selectedEntriesPerLevel[i].add(_tempSelectedEntryPerLevel[i]);
@@ -569,24 +569,24 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
     final selectionMode = isHeader
         ? tempSelectedCategory.headerSelectionMode
         : tempSelectedCategory.footerSelectionMode;
-    final selectedItems = isHeader
+    final selectedEntries = isHeader
         ? _headerSelectedFor(tempSelectedCategory.id)
         : _footerSelectedFor(tempSelectedCategory.id);
 
-    final contains = selectedItems.any((e) => e.id == entry.id);
+    final contains = selectedEntries.any((e) => e.id == entry.id);
     if (SelectionMode.single == selectionMode) {
       if (contains) {
-        selectedItems.removeWhere((e) => e.id == entry.id);
+        selectedEntries.removeWhere((e) => e.id == entry.id);
       } else {
-        selectedItems
+        selectedEntries
           ..clear()
           ..add(entry);
       }
     } else {
       if (contains) {
-        selectedItems.removeWhere((e) => e.id == entry.id);
+        selectedEntries.removeWhere((e) => e.id == entry.id);
       } else {
-        selectedItems.add(entry);
+        selectedEntries.add(entry);
       }
     }
 
@@ -688,7 +688,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
                             (cascadeIndex) {
                           final entries = _cascadingList[cascadeIndex];
                           final level = cascadeIndex + 1;
-                          final selectedItems =
+                          final selectedEntries =
                               _selectedEntriesPerLevel.elementAtOrNull(level) ??
                                   {};
                           final isMiddleLevel = level < _currentLevel;
@@ -717,7 +717,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
                                   if (!entry.hasChildren && entry.enabled) {
                                     // && level == maxLevel - 1
                                     final selected =
-                                        selectedItems.contains(entry);
+                                        selectedEntries.contains(entry);
                                     if (SelectionMode.single ==
                                         childrenSelectionMode) {
                                       return SelectorRadioListTile(

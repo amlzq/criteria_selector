@@ -144,9 +144,9 @@ class ListSelectorViewState extends State<ListSelectorView> {
   void _onResetTap() {
     _selectedEntries.clear();
 
-    final selectedItems = controller?.resetSelected;
-    if (selectedItems != null && selectedItems.isNotEmpty) {
-      for (var selectedItem in selectedItems) {
+    final selectedEntries = controller?.resetSelected;
+    if (selectedEntries != null && selectedEntries.isNotEmpty) {
+      for (var selectedItem in selectedEntries) {
         final item =
             widget.entries.singleWhereOrNull((e) => e.id == selectedItem.id);
         if (item != null) {

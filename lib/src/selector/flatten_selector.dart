@@ -303,57 +303,59 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
 
     final childrenSelectionMode = category.selectionMode;
 
-    final selectedItems = _selectedEntriesPerLevel[1];
+    final selectedEntries = _selectedEntriesPerLevel[1];
 
     if (item.isAny) {
       // "Any" entry
 
       // Remove items that share the same parent from the selected list
-      selectedItems.removeWhere((e) => testSameParentElement(e, item.parentId));
-      selectedItems.add(item);
+      selectedEntries
+          .removeWhere((e) => testSameParentElement(e, item.parentId));
+      selectedEntries.add(item);
     } else if (item is SelectorRangeEntry && item.isCustom) {
       // Custom range entry
 
       // Remove other entry in the same category
-      selectedItems.removeWhere((e) => testSameParentElement(e, item.parentId));
-      selectedItems.add(item);
+      selectedEntries
+          .removeWhere((e) => testSameParentElement(e, item.parentId));
+      selectedEntries.add(item);
     } else {
       // Normal entry
 
       // If there is an "Any" entry, remove it
-      selectedItems.removeWhere((e) =>
+      selectedEntries.removeWhere((e) =>
           (e as SelectorChildEntry).parentId == item.parentId && e.isAny);
 
       if (SelectionMode.single == childrenSelectionMode) {
         // Single-select mode
-        if (selectedItems.contains(item)) {
+        if (selectedEntries.contains(item)) {
           return;
         } else {
-          selectedItems
+          selectedEntries
             ..clear()
             ..add(item);
         }
       } else {
         // Multi-select mode
-        if (selectedItems.contains(item)) {
-          selectedItems.remove(item);
+        if (selectedEntries.contains(item)) {
+          selectedEntries.remove(item);
         } else {
-          selectedItems.add(item);
+          selectedEntries.add(item);
         }
       }
     }
 
     // Keep parent selection state consistent
-    if (selectedItems.contains(item)) {
+    if (selectedEntries.contains(item)) {
       // If it was a select action, select the parent as well
       _selectedEntriesPerLevel[0].add(category);
-    } else if (selectedItems.isEmpty) {
+    } else if (selectedEntries.isEmpty) {
       // If it was a deselect action and no children are selected, deselect the parent as well
       _selectedEntriesPerLevel[0].remove(category);
       // If there is an "Any" child entry, select it
       final anyItem = category.children?.singleWhereOrNull(testAnyElement);
       if (anyItem != null) {
-        selectedItems.add(anyItem);
+        selectedEntries.add(anyItem);
       }
     }
 

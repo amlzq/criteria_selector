@@ -207,51 +207,51 @@ class GridSelectorViewState extends State<GridSelectorView> {
     while (_selectedEntriesPerLevel.length < level) {
       _selectedEntriesPerLevel.add({});
     }
-    final selectedItems = _selectedEntriesPerLevel[1];
+    final selectedEntries = _selectedEntriesPerLevel[1];
 
     if (entry.isAny) {
       // "Any" entry
       // Remove items that share the same parent from the selected list
-      selectedItems
+      selectedEntries
           .removeWhere((e) => testSameParentElement(e, entry.parentId));
-      selectedItems.add(entry);
+      selectedEntries.add(entry);
     } else if (entry is SelectorRangeEntry && entry.isCustom) {
       // Custom range entry
 
       // Remove other entry in the same category
-      selectedItems
+      selectedEntries
           .removeWhere((e) => testSameParentElement(e, entry.parentId));
-      selectedItems.add(entry);
+      selectedEntries.add(entry);
     } else {
       // Normal entry
 
       // If there is an "Any" entry or an custom range entry, remove it
-      selectedItems.removeWhere(
+      selectedEntries.removeWhere(
           (e) => testSameParentAnyOrCustomElement(e, entry.parentId));
 
       if (SelectionMode.single == childrenSelectionMode) {
         // Single-select mode
-        if (selectedItems.contains(entry)) {
+        if (selectedEntries.contains(entry)) {
         } else {
-          selectedItems
+          selectedEntries
               .removeWhere((e) => testSameParentElement(e, entry.parentId));
-          selectedItems.add(entry);
+          selectedEntries.add(entry);
         }
       } else {
         // Multi-select mode
-        if (selectedItems.contains(entry)) {
-          selectedItems.remove(entry);
+        if (selectedEntries.contains(entry)) {
+          selectedEntries.remove(entry);
         } else {
-          selectedItems.add(entry);
+          selectedEntries.add(entry);
         }
       }
     }
 
     // Keep parent selection state consistent
-    if (selectedItems.contains(entry)) {
+    if (selectedEntries.contains(entry)) {
       // If it was a select action, select the parent as well
       _selectedEntriesPerLevel[0].add(_tempSelectedCategory);
-    } else if (selectedItems.isEmpty) {
+    } else if (selectedEntries.isEmpty) {
       // If it was a deselect action and no children are selected, deselect the parent as well
       _selectedEntriesPerLevel[0].remove(_tempSelectedCategory);
       // If there is an "Any" child entry, select it
