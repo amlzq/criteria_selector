@@ -8,27 +8,27 @@ import 'utils.dart';
 
 class HouseFiltersRepository {
   HouseFiltersRepository({
-    this.anyOptionText = '不限',
+    this.anyEntryText = '不限',
     this.customInputLabel = '自定义',
     this.minHintText = '最小值',
     this.maxHintText = '最大值',
     this.customAreaName = '自定义面积',
   });
 
-  String anyOptionText;
+  String anyEntryText;
   String customInputLabel;
   String minHintText;
   String maxHintText;
   String customAreaName;
 
   void updateTexts({
-    String? anyOptionText,
+    String? anyEntryText,
     String? customInputLabel,
     String? minHintText,
     String? maxHintText,
     String? customAreaName,
   }) {
-    if (anyOptionText != null) this.anyOptionText = anyOptionText;
+    if (anyEntryText != null) this.anyEntryText = anyEntryText;
     if (customInputLabel != null) this.customInputLabel = customInputLabel;
     if (minHintText != null) this.minHintText = minHintText;
     if (maxHintText != null) this.maxHintText = maxHintText;
@@ -113,11 +113,11 @@ class HouseFiltersRepository {
       category.children?.insert(
           0,
           SelectorTextEntry.any(
-              parentId: category.id, name: anyOptionText, immediate: true));
+              parentId: category.id, name: anyEntryText, immediate: true));
       for (SelectorEntry l1 in category.children ?? []) {
         l1.children?.insert(
           0,
-          SelectorTextEntry.any(parentId: l1.id, name: anyOptionText),
+          SelectorTextEntry.any(parentId: l1.id, name: anyEntryText),
         );
       }
     }
@@ -185,7 +185,7 @@ class HouseFiltersRepository {
       category.children?.insert(
           0,
           SelectorIntEntry.any(
-              parentId: category.id, name: anyOptionText, immediate: false));
+              parentId: category.id, name: anyEntryText, immediate: false));
       // 插入"自定义"选项
       category.children?.insert(
           0,
@@ -208,7 +208,7 @@ class HouseFiltersRepository {
           id: 'total',
           name: '',
           children: {
-            SelectorIntEntry.any(parentId: 'total', name: anyOptionText)
+            SelectorIntEntry.any(parentId: 'total', name: anyEntryText)
           },
         )
       };
@@ -258,7 +258,7 @@ class HouseFiltersRepository {
       category.children?.insert(
           0,
           SelectorIntEntry.any(
-              parentId: category.id, name: anyOptionText, immediate: false));
+              parentId: category.id, name: anyEntryText, immediate: false));
       // 插入"自定义"选项
       category.children?.insert(
           0,
@@ -281,7 +281,7 @@ class HouseFiltersRepository {
           id: 'rent',
           name: '',
           children: {
-            SelectorIntEntry.any(parentId: 'total', name: anyOptionText)
+            SelectorIntEntry.any(parentId: 'total', name: anyEntryText)
           },
         )
       };
@@ -325,7 +325,7 @@ class HouseFiltersRepository {
       category.children?.insert(
           0,
           SelectorIntEntry.any(
-              parentId: category.id, name: anyOptionText, immediate: false));
+              parentId: category.id, name: anyEntryText, immediate: false));
       // 插入"自定义"选项
       category.children?.insert(
           0,

@@ -31,7 +31,7 @@ class _SellPageState extends State<SellPage> {
     super.didChangeDependencies();
     final l10n = AppLocalizations.of(context);
     _filtersRepo.updateTexts(
-      anyOptionText: l10n?.any ?? '',
+      anyEntryText: l10n?.any ?? '',
       customInputLabel: l10n?.custom ?? '',
       minHintText: l10n?.minHint ?? '',
       maxHintText: l10n?.maxHint ?? '',

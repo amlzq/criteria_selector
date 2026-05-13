@@ -8,21 +8,21 @@ import 'utils.dart';
 
 class HouseFiltersRepository {
   HouseFiltersRepository({
-    this.anyOptionText = 'Any',
+    this.anyEntryText = 'Any',
     this.noMinHintText = 'No min',
     this.noMaxHintText = 'No max',
   });
 
-  String anyOptionText;
+  String anyEntryText;
   String noMinHintText;
   String noMaxHintText;
 
   void updateTexts({
-    String? anyOptionText,
+    String? anyEntryText,
     String? noMinHintText,
     String? noMaxHintText,
   }) {
-    if (anyOptionText != null) this.anyOptionText = anyOptionText;
+    if (anyEntryText != null) this.anyEntryText = anyEntryText;
     if (noMinHintText != null) this.noMinHintText = noMinHintText;
     if (noMaxHintText != null) this.noMaxHintText = noMaxHintText;
   }
@@ -56,14 +56,14 @@ class HouseFiltersRepository {
         )
         .toSet();
 
-    // Insert some special options
+    // Insert some special entries
     for (SelectorEntry category in entries) {
-      // Insert the "Any" option
+      // Insert the "Any" entry
       category.children?.insert(
           0,
           SelectorIntEntry.any(
-              parentId: category.id, name: anyOptionText, immediate: false));
-      // Insert the "Custom" option
+              parentId: category.id, name: anyEntryText, immediate: false));
+      // Insert the "Custom" entry
       category.children?.insert(
           0,
           SelectorIntEntry.custom(
@@ -119,13 +119,13 @@ class HouseFiltersRepository {
         )
         .toSet();
 
-    // Insert some special options
+    // Insert some special entries
     for (SelectorEntry category in entries) {
-      // Insert the "Any" option
+      // Insert the "Any" entry
       category.children?.insert(
           0,
           SelectorIntEntry.any(
-              parentId: category.id, name: anyOptionText, immediate: false));
+              parentId: category.id, name: anyEntryText, immediate: false));
     }
 
     debugPrint('rooms length: ${entries.length}');
@@ -215,7 +215,7 @@ class HouseFiltersRepository {
         )
         .toSet();
 
-    // Insert the "Custom range" option
+    // Insert the "Custom range" entry
     for (SelectorEntry category in entries) {
       if (category.id == 'square_feet' || category.id == 'lot_size') {
         category.children?.add(SelectorIntEntry.custom(

@@ -38,7 +38,7 @@ class _HousePageState extends State<HousePage> {
     super.didChangeDependencies();
     final l10n = AppLocalizations.of(context);
     _filtersRepo.updateTexts(
-      anyOptionText: l10n?.any ?? '',
+      anyEntryText: l10n?.any ?? '',
       noMinHintText: l10n?.noMin ?? '',
       noMaxHintText: l10n?.noMax ?? '',
     );
