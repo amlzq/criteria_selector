@@ -209,11 +209,13 @@ class _RentPageState extends State<RentPage> {
             final count = await _repo.previewCount(_filter!);
             if (!mounted || requestId != _floorPlanApplyTextRequestId) return;
             final l10n = AppLocalizations.of(context);
-            _floorPlanApplyText.value =
-                count == 0 ? (l10n?.nohomes ?? '') : (l10n?.viewhomes(count) ?? '');
+            _floorPlanApplyText.value = count == 0
+                ? (l10n?.nohomes ?? '')
+                : (l10n?.viewhomes(count) ?? '');
           } catch (_) {
             if (!mounted || requestId != _floorPlanApplyTextRequestId) return;
-            _floorPlanApplyText.value = AppLocalizations.of(context)?.apply ?? '';
+            _floorPlanApplyText.value =
+                AppLocalizations.of(context)?.apply ?? '';
           }
         },
       );
@@ -372,7 +374,8 @@ class _RentPageState extends State<RentPage> {
                 } else if (snapshot.hasError) {
                   return Center(
                     child: Text(
-                      l10n?.loadError('${snapshot.error}') ?? '${snapshot.error}',
+                      l10n?.loadError('${snapshot.error}') ??
+                          '${snapshot.error}',
                     ),
                   );
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {

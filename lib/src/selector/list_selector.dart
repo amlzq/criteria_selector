@@ -6,6 +6,7 @@ import '../selector.dart';
 import '../selector_entry.dart';
 import '../selector_utils.dart';
 import 'selector_controller.dart';
+import 'widgets/expansion_tile.dart';
 import 'widgets/widgets.dart';
 
 /// Standard list view
@@ -27,9 +28,14 @@ class ListSelectorView extends StatefulWidget {
 }
 
 class ListSelectorViewState extends State<ListSelectorView> {
-  final SelectorEntries _selectedEntries = {};
+  /// Focused category entry
+  int _tempSelectedCategoryIndex = 0;
+
+  final List<SelectorEntries> _selectedEntriesPerLevel = [];
 
   SelectorController? controller;
+
+  final level = 2;
 
   @override
   void initState() {
@@ -37,14 +43,15 @@ class ListSelectorViewState extends State<ListSelectorView> {
 
     if (widget.previousSelected != null &&
         (widget.previousSelected?.isNotEmpty ?? false)) {
-      for (var selectedEntry in widget.previousSelected ?? {}) {
-        final entry =
-            widget.entries.singleWhereOrNull((e) => e.id == selectedEntry.id);
-        if (entry != null) {
-          _selectedEntries.add(entry);
-        }
-      }
+      // Restore previous selection
+      _selectedEntriesPerLevel.addAll(SelectorUtils.restorePreviousSelected(
+          widget.entries, widget.previousSelected));
+    } else {
+      // Check whether there is an "Any" entry; if so, select it by default
+      _selectAnyItemIfHas();
     }
+
+    _tempSelectedCategoryIndex = 0;
   }
 
   @override
@@ -70,62 +77,162 @@ class ListSelectorViewState extends State<ListSelectorView> {
 
   void _handleSelectorControllerTick() {}
 
+  SelectionMode? get selectorSelectionMode {
+    if (SelectionMode.multiple == categorySelectionMode) {
+      return SelectionMode.multiple;
+    }
+    if (widget.entries.firstWhereOrNull(testMultipleElement) != null) {
+      return SelectionMode.multiple;
+    }
+    return SelectionMode.single;
+  }
+
   SelectionMode? get categorySelectionMode => controller?.selectionMode;
 
-  void _onTerminalItemTap(SelectorChildEntry entry) {
-    if (entry.isAny) {
-      // "Any" entry
-      if (SelectionMode.single == categorySelectionMode) {
-        // Single-select mode
-        if (_selectedEntries.contains(entry)) {
-          return;
-        } else {
-          // Clear selected list
-          _selectedEntries
-            ..clear()
-            ..add(entry);
-        }
+  /// Checks whether the selected category has an "Any" item
+  void _selectAnyItemIfHas() {
+    _selectedEntriesPerLevel.clear();
+    while (_selectedEntriesPerLevel.length < level) {
+      _selectedEntriesPerLevel.add({});
+    }
+    for (var category in widget.entries) {
+      final anyItem = category.children?.singleWhereOrNull(testAnyElement);
+      if (anyItem != null) {
+        // If there is an "Any" entry, select it.
+        _selectedEntriesPerLevel[0].add(category);
+        _selectedEntriesPerLevel[1].add(anyItem);
+      }
+    }
+  }
+
+  SelectorCategoryEntry? get selectedCategory =>
+      widget.entries.elementAtOrNull(_tempSelectedCategoryIndex)
+          as SelectorCategoryEntry;
+
+  void _focusListener(String categoryId, String minValue, String maxValue) {
+    debugPrint('_focusListener $categoryId: $minValue,$maxValue');
+    _customItemSelection(categoryId, minValue, maxValue);
+  }
+
+  void _customItemSelection(
+      String categoryId, String minValue, String maxValue) {
+    var minInt = int.tryParse(minValue) ?? 0;
+    var maxInt = int.tryParse(maxValue) ?? 0;
+    if (minInt != 0 || maxInt != 0) {
+      // Valid custom input provided
+      if (minInt > maxInt) {
+        final temp = minInt;
+        minInt = maxInt;
+        maxInt = temp;
+      }
+      // Update the custom item
+      final category =
+          widget.entries.singleWhereOrNull((e) => e.id == categoryId);
+      final customItem =
+          category?.children?.singleWhereOrNull(testCustomElement);
+      if (customItem != null && customItem is SelectorRangeEntry) {
+        customItem.min = minInt;
+        customItem.max = maxInt;
+        customItem.name = '$minInt-$maxInt';
+        _onTerminalItemTap(customItem);
+      }
+    }
+  }
+
+  void _onTerminalItemTap(SelectorChildEntry item) {
+    final isCategoryTree = widget.entries.firstOrNull is SelectorCategoryEntry;
+    final requiredLevel = isCategoryTree ? 2 : 1;
+    while (_selectedEntriesPerLevel.length < requiredLevel) {
+      _selectedEntriesPerLevel.add({});
+    }
+
+    if (!isCategoryTree) {
+      final selectedEntries = _selectedEntriesPerLevel[0];
+      final selectionMode = controller?.selectionMode ?? SelectionMode.single;
+
+      if (item.isAny) {
+        selectedEntries
+          ..clear()
+          ..add(item);
       } else {
-        // Multi-select mode
-        if (_selectedEntries.contains(entry)) {
-          _selectedEntries.remove(entry);
+        selectedEntries.removeWhere((e) => e is SelectorChildEntry && e.isAny);
+        if (SelectionMode.single == selectionMode) {
+          if (selectedEntries.contains(item)) {
+            return;
+          }
+          selectedEntries
+            ..clear()
+            ..add(item);
         } else {
-          // Remove items that share the same parent from the selected list
-          _selectedEntries.removeWhere(
-              (e) => (e as SelectorChildEntry).parentId == entry.parentId);
-          _selectedEntries.add(entry);
+          if (selectedEntries.contains(item)) {
+            selectedEntries.remove(item);
+          } else {
+            selectedEntries.add(item);
+          }
         }
       }
+
+      _setStateOrImmediateApply(item);
+      return;
+    }
+
+    final categoryEntry =
+        widget.entries.singleWhereOrNull((e) => e.id == item.parentId);
+    if (categoryEntry is! SelectorCategoryEntry) {
+      return;
+    }
+    final category = categoryEntry;
+
+    final childrenSelectionMode = category.selectionMode;
+    final selectedEntries = _selectedEntriesPerLevel[1];
+
+    if (item.isAny) {
+      selectedEntries
+          .removeWhere((e) => testSameParentElement(e, item.parentId));
+      selectedEntries.add(item);
+    } else if (item is SelectorRangeEntry && item.isCustom) {
+      selectedEntries
+          .removeWhere((e) => testSameParentElement(e, item.parentId));
+      selectedEntries.add(item);
     } else {
-      // Normal entry
+      selectedEntries.removeWhere((e) =>
+          (e as SelectorChildEntry).parentId == item.parentId && e.isAny);
 
-      // If there is an "Any" entry, remove it
-      _selectedEntries.removeWhere((e) => e is SelectorChildEntry && e.isAny);
-
-      if (SelectionMode.single == categorySelectionMode) {
-        // Single-select mode
-        if (_selectedEntries.contains(entry)) {
+      if (SelectionMode.single == childrenSelectionMode) {
+        if (selectedEntries.contains(item)) {
           return;
-        } else {
-          _selectedEntries
-            ..clear()
-            ..add(entry);
         }
+        selectedEntries
+            .removeWhere((e) => testSameParentElement(e, item.parentId));
+        selectedEntries.add(item);
       } else {
-        // Multi-select mode
-        if (_selectedEntries.contains(entry)) {
-          _selectedEntries.remove(entry);
+        if (selectedEntries.contains(item)) {
+          selectedEntries.remove(item);
         } else {
-          _selectedEntries.add(entry);
+          selectedEntries.add(item);
         }
       }
     }
 
-    _setStateOrImmediateApply(entry);
+    final hasSelectionInCategory =
+        selectedEntries.any((e) => testSameParentElement(e, category.id));
+    if (hasSelectionInCategory) {
+      _selectedEntriesPerLevel[0].add(category);
+    } else {
+      final anyItem = category.children?.singleWhereOrNull(testAnyElement);
+      if (anyItem != null) {
+        selectedEntries.add(anyItem);
+        _selectedEntriesPerLevel[0].add(category);
+      } else {
+        _selectedEntriesPerLevel[0].remove(category);
+      }
+    }
+
+    _setStateOrImmediateApply(item);
   }
 
-  void _setStateOrImmediateApply(SelectorChildEntry entry) {
-    if (SelectionMode.single == selector?.selectionMode || entry.immediate) {
+  void _setStateOrImmediateApply(SelectorChildEntry item) {
+    if (SelectionMode.single == selectorSelectionMode || item.immediate) {
       // No need to tap "Apply"; return result immediately
       _onApplyTap();
     } else {
@@ -134,7 +241,7 @@ class ListSelectorViewState extends State<ListSelectorView> {
 
       final newEntries = SelectorUtils.cloneTree(
         widget.entries,
-        [_selectedEntries],
+        _selectedEntriesPerLevel,
         deepCloneSelectedSubtree: false,
       );
       controller?.change(newEntries);
@@ -142,18 +249,11 @@ class ListSelectorViewState extends State<ListSelectorView> {
   }
 
   void _onResetTap() {
-    _selectedEntries.clear();
+    _selectedEntriesPerLevel.clear();
+    _selectedEntriesPerLevel.addAll(SelectorUtils.restorePreviousSelected(
+        widget.entries, controller?.resetSelected));
 
-    final selectedEntries = controller?.resetSelected;
-    if (selectedEntries != null && selectedEntries.isNotEmpty) {
-      for (var selectedItem in selectedEntries) {
-        final item =
-            widget.entries.singleWhereOrNull((e) => e.id == selectedItem.id);
-        if (item != null) {
-          _selectedEntries.add(item);
-        }
-      }
-    }
+    _tempSelectedCategoryIndex = 0;
 
     // _selectedCategory =
     //     _selectedEntriesPerLevel[0].first as SelectorCategoryEntry;
@@ -163,26 +263,99 @@ class ListSelectorViewState extends State<ListSelectorView> {
   }
 
   void _onApplyTap() {
+    if (_selectedEntriesPerLevel.isEmpty) {
+      controller?.apply({});
+      return;
+    }
+
     final entries = widget.entries.toSet();
-    entries.removeWhere((e) => !_selectedEntries.contains(e));
+    SelectorUtils.clippingTree(entries, _selectedEntriesPerLevel, 0);
     controller?.apply(entries);
   }
 
   @override
   Widget build(BuildContext context) {
     final selectionMode = controller?.selectionMode;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Flexible(
-          child: SelectorListView(
-            entries: widget.entries,
-            selectedEntries: _selectedEntries,
-            onItemTap: (_, entry) =>
-                _onTerminalItemTap(entry as SelectorChildEntry),
-            radioBuilder: selector?.radioBuilder,
-            checkboxBuilder: selector?.checkboxBuilder,
-          ),
+          child: widget.entries.first is SelectorCategoryEntry
+              ? SingleChildScrollView(
+                  physics: const ClampingScrollPhysics(),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: List.generate(widget.entries.length, (index) {
+                      final category =
+                          widget.entries[index] as SelectorCategoryEntry;
+                      final selectedEntries =
+                          _selectedEntriesPerLevel.elementAtOrNull(1) ?? {};
+                      final entries = category.children?.toList() ?? [];
+                      final listConfig = category.listConfig;
+                      final gridConfig = category.gridConfig;
+                      final chipConfig = category.chipConfig;
+                      return SelectorExpansionTile(
+                        title: Text(category.name ?? ''),
+                        titlePadding: const EdgeInsets.symmetric(vertical: 10),
+                        initiallyExpanded: true,
+                        child: listConfig != null
+                            ? SelectorListView(
+                                key: ValueKey('category_$index'),
+                                // category: category,
+                                // showTitle: false,
+                                entries: entries,
+                                selectedEntries: selectedEntries,
+                                onItemTap: (index, item) => _onTerminalItemTap(
+                                    item as SelectorChildEntry),
+                                // focusListener: _focusListener,
+                              )
+                            : gridConfig != null
+                                ? SelectorGridView(
+                                    key: ValueKey('category_$index'),
+                                    crossAxisCount: gridConfig.crossAxisCount,
+                                    mainAxisSpacing: gridConfig.mainAxisSpacing,
+                                    crossAxisSpacing:
+                                        gridConfig.crossAxisSpacing,
+                                    childAspectRatio:
+                                        gridConfig.childAspectRatio,
+                                    category: category,
+                                    showTitle: false,
+                                    entries: entries,
+                                    selectedEntries: selectedEntries,
+                                    onItemTap: (index, item) =>
+                                        _onTerminalItemTap(
+                                            item as SelectorChildEntry),
+                                    focusListener: _focusListener,
+                                  )
+                                : chipConfig != null
+                                    ? SelectorChipBar(
+                                        key: ValueKey('category_$index'),
+                                        // category: category,
+                                        // showTitle: false,
+                                        entries: entries,
+                                        selectedEntries: selectedEntries,
+                                        onItemTap: (index, item) =>
+                                            _onTerminalItemTap(
+                                                item as SelectorChildEntry),
+                                        // focusListener: _focusListener,
+                                      )
+                                    : const SizedBox.shrink(),
+                      );
+                    }),
+                  ),
+                )
+              : SelectorListView(
+                  entries: widget.entries,
+                  selectedEntries:
+                      _selectedEntriesPerLevel.elementAtOrNull(0) ?? {},
+                  onItemTap: (_, entry) =>
+                      _onTerminalItemTap(entry as SelectorChildEntry),
+                  radioBuilder: selector?.radioBuilder,
+                  checkboxBuilder: selector?.checkboxBuilder,
+                ),
         ),
         if (SelectionMode.multiple == selectionMode)
           selector?.actionBarBuilder?.call(

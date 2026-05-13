@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'widgets/action_bar_theme.dart';
 import 'widgets/category_bar_theme.dart';
 import 'widgets/chip_bar_theme.dart';
+import 'widgets/expansion_tile_theme.dart';
 import 'widgets/field_tile_theme.dart';
 import 'widgets/grid_tile_theme.dart';
 import 'widgets/list_tile_theme.dart';
@@ -30,6 +31,7 @@ class SelectorThemeData with Diagnosticable {
     SelectorGridTileTheme? gridTileTheme,
     SelectorListTileTheme? listTileTheme,
     SelectorFieldTileTheme? fieldTileTheme,
+    SelectorExpansionTileTheme? expansionTileTheme,
     RadioThemeData? radioTheme,
     CheckboxThemeData? checkboxTheme,
     SelectorChipBarTheme? chipBarThemeData,
@@ -50,6 +52,8 @@ class SelectorThemeData with Diagnosticable {
       gridTileTheme: gridTileTheme ?? const SelectorGridTileTheme(),
       listTileTheme: listTileTheme ?? const SelectorListTileTheme(),
       fieldTileTheme: fieldTileTheme ?? const SelectorFieldTileTheme(),
+      expansionTileTheme:
+          expansionTileTheme ?? const SelectorExpansionTileTheme(),
       radioTheme: radioTheme ?? const RadioThemeData(),
       checkboxTheme: checkboxTheme ?? const CheckboxThemeData(),
       chipBarThemeData: chipBarThemeData ?? const SelectorChipBarTheme(),
@@ -70,6 +74,7 @@ class SelectorThemeData with Diagnosticable {
     required this.gridTileTheme,
     required this.listTileTheme,
     required this.fieldTileTheme,
+    required this.expansionTileTheme,
     required this.radioTheme,
     required this.checkboxTheme,
     required this.chipBarThemeData,
@@ -115,6 +120,8 @@ class SelectorThemeData with Diagnosticable {
   /// Theme overrides for range field tiles.
   final SelectorFieldTileTheme fieldTileTheme;
 
+  final SelectorExpansionTileTheme expansionTileTheme;
+
   /// Theme used for radio controls when rendered by selector widgets.
   final RadioThemeData radioTheme;
 
@@ -138,6 +145,7 @@ class SelectorThemeData with Diagnosticable {
     SelectorGridTileTheme? gridTileTheme,
     SelectorListTileTheme? listTileTheme,
     SelectorFieldTileTheme? fieldTileTheme,
+    SelectorExpansionTileTheme? expansionTileTheme,
     RadioThemeData? radioTheme,
     CheckboxThemeData? checkboxTheme,
     SelectorChipBarTheme? chipBarThemeData,
@@ -157,6 +165,7 @@ class SelectorThemeData with Diagnosticable {
       gridTileTheme: gridTileTheme ?? this.gridTileTheme,
       listTileTheme: listTileTheme ?? this.listTileTheme,
       fieldTileTheme: fieldTileTheme ?? this.fieldTileTheme,
+      expansionTileTheme: expansionTileTheme ?? this.expansionTileTheme,
       radioTheme: radioTheme ?? this.radioTheme,
       checkboxTheme: checkboxTheme ?? this.checkboxTheme,
       chipBarThemeData: chipBarThemeData ?? this.chipBarThemeData,
@@ -191,6 +200,8 @@ class SelectorThemeData with Diagnosticable {
           SelectorListTileTheme.lerp(a?.listTileTheme, b?.listTileTheme, t),
       fieldTileTheme:
           SelectorFieldTileTheme.lerp(a?.fieldTileTheme, b?.fieldTileTheme, t),
+      expansionTileTheme: SelectorExpansionTileTheme.lerp(
+          a?.expansionTileTheme, b?.expansionTileTheme, t),
       radioTheme: RadioThemeData.lerp(a?.radioTheme, b?.radioTheme, t),
       checkboxTheme:
           CheckboxThemeData.lerp(a?.checkboxTheme, b?.checkboxTheme, t),
@@ -213,6 +224,7 @@ class SelectorThemeData with Diagnosticable {
         gridTileTheme,
         listTileTheme,
         fieldTileTheme,
+        expansionTileTheme,
         radioTheme,
         checkboxTheme,
         chipBarThemeData,
@@ -239,6 +251,7 @@ class SelectorThemeData with Diagnosticable {
         other.gridTileTheme == gridTileTheme &&
         other.listTileTheme == listTileTheme &&
         other.fieldTileTheme == fieldTileTheme &&
+        other.expansionTileTheme == expansionTileTheme &&
         other.radioTheme == radioTheme &&
         other.checkboxTheme == checkboxTheme &&
         other.chipBarThemeData == chipBarThemeData;

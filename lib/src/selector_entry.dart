@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import 'constants.dart';
 
 /// Special entry id representing the "Any" entry.
@@ -241,6 +243,9 @@ class SelectorCategoryEntry<E> extends SelectorEntry<E> {
     this.headerSelectionMode = SelectionMode.single,
     this.footer,
     this.footerSelectionMode = SelectionMode.single,
+    this.listConfig,
+    this.gridConfig,
+    this.chipConfig,
     required super.id,
     required super.name,
     required super.children,
@@ -257,6 +262,12 @@ class SelectorCategoryEntry<E> extends SelectorEntry<E> {
   SelectorEntry<E>? footer;
   final SelectionMode footerSelectionMode;
 
+  final SelectorListConfig? listConfig;
+
+  final SelectorGridConfig? gridConfig;
+
+  final SelectorChipConfig? chipConfig;
+
   SelectorCategoryEntry<E> copyWith({
     String? id,
     String? name,
@@ -268,6 +279,9 @@ class SelectorCategoryEntry<E> extends SelectorEntry<E> {
     SelectionMode? headerSelectionMode,
     SelectorEntry<E>? footer,
     SelectionMode? footerSelectionMode,
+    SelectorListConfig? listConfig,
+    SelectorGridConfig? gridConfig,
+    SelectorChipConfig? chipConfig,
   }) {
     return SelectorCategoryEntry<E>(
       id: id ?? this.id,
@@ -280,6 +294,9 @@ class SelectorCategoryEntry<E> extends SelectorEntry<E> {
       headerSelectionMode: headerSelectionMode ?? this.headerSelectionMode,
       footer: footer ?? this.footer,
       footerSelectionMode: footerSelectionMode ?? this.footerSelectionMode,
+      listConfig: listConfig ?? this.listConfig,
+      gridConfig: gridConfig ?? this.gridConfig,
+      chipConfig: chipConfig ?? this.chipConfig,
     );
   }
 
@@ -290,15 +307,19 @@ class SelectorCategoryEntry<E> extends SelectorEntry<E> {
             runtimeType == other.runtimeType &&
             other.id == id &&
             other.name == name &&
-            other.selectionMode == selectionMode;
+            other.selectionMode == selectionMode &&
+            other.listConfig == listConfig &&
+            other.gridConfig == gridConfig &&
+            other.chipConfig == chipConfig;
   }
 
   @override
-  int get hashCode => Object.hash(id, name, selectionMode);
+  int get hashCode =>
+      Object.hash(id, name, selectionMode, listConfig, gridConfig, chipConfig);
 
   @override
   String toString() =>
-      'SelectorCategoryEntry(id: $id, name: $name, selectionMode: $selectionMode, header: $header, footer: $footer)';
+      'SelectorCategoryEntry(id: $id, name: $name, selectionMode: $selectionMode, header: $header, footer: $footer, listConfig: $listConfig, gridConfig: $gridConfig)';
 }
 
 extension SelectorCategoryEntryExtension on SelectorCategoryEntry {
@@ -384,4 +405,29 @@ extension SelectorEntryExt on SelectorEntry {
     }
     return childMaxLevel + 1;
   }
+}
+
+@immutable
+class SelectorListConfig {
+  const SelectorListConfig();
+}
+
+@immutable
+class SelectorGridConfig {
+  const SelectorGridConfig({
+    required this.crossAxisCount,
+    this.mainAxisSpacing = 0.0,
+    this.crossAxisSpacing = 0.0,
+    this.childAspectRatio = 1.0,
+  });
+
+  final int crossAxisCount;
+  final double mainAxisSpacing;
+  final double crossAxisSpacing;
+  final double childAspectRatio;
+}
+
+@immutable
+class SelectorChipConfig {
+  const SelectorChipConfig();
 }

@@ -26,6 +26,7 @@ class SelectorGridView<T extends SelectorEntry> extends StatefulWidget {
     this.focusListener,
     this.padding,
     this.tileVariant,
+    this.showTitle = true,
   });
 
   // final int index;
@@ -45,6 +46,8 @@ class SelectorGridView<T extends SelectorEntry> extends StatefulWidget {
   final double childAspectRatio;
 
   final SelectorGridTileVariant? tileVariant;
+
+  final bool showTitle;
 
   @override
   State<SelectorGridView<T>> createState() => SelectorGridViewState<T>();
@@ -187,8 +190,8 @@ class SelectorGridViewState<T extends SelectorEntry>
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Category title
-          if (widget.category != null)
+          // Category label
+          if (widget.category != null && widget.showTitle)
             Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: Text(

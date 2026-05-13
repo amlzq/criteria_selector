@@ -157,79 +157,76 @@ class SelectorListViewState<T extends SelectorEntry>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Padding(
+    return SingleChildScrollView(
+      physics: const ClampingScrollPhysics(),
       padding: widget.padding,
-      child: SingleChildScrollView(
-        physics: const ClampingScrollPhysics(),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Category title
-            if (widget.categoryName != null)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: Text(
-                  widget.categoryName ?? '',
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
-                  ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Category label
+          if (widget.categoryName != null)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Text(
+                widget.categoryName ?? '',
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
                 ),
               ),
-            // An input item at header
-            if (firstCustomEntry != null)
-              SelectorFieldTile(
-                firstCustomEntry!,
-                padding: const EdgeInsets.only(top: 10.0),
-                minController: _minController,
-                maxController: _maxController,
-                minFocusNode: _minFocusNode,
-                maxFocusNode: _maxFocusNode,
-              ),
-            // List of items
-            ListView.separated(
-              shrinkWrap: true,
-              physics: const ClampingScrollPhysics(),
-              padding: EdgeInsets.zero,
-              itemCount: entriesWithoutCustom.length,
-              itemBuilder: (context, index) {
-                final entry = entriesWithoutCustom[index];
-                final selected =
-                    widget.selectedEntries?.contains(entry) ?? false;
-                if (SelectionMode.single == widget.selectionMode) {
-                  return SelectorRadioListTile(
-                    onTap: () => _onItemTap(index, entry),
-                    label: entry.name ?? '',
-                    selected: selected,
-                    radioBuilder: widget.radioBuilder,
-                  );
-                } else {
-                  return SelectorCheckboxListTile(
-                    onTap: () => _onItemTap(index, entry),
-                    label: entry.name ?? '',
-                    checked: selected,
-                    checkboxBuilder: widget.checkboxBuilder,
-                  );
-                }
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return const SizedBox(height: 6);
-              },
             ),
-            // An input item at footer
-            if (lastCustomEntry != null)
-              SelectorFieldTile(
-                lastCustomEntry!,
-                padding: const EdgeInsets.only(top: 10.0),
-                minController: _minController,
-                maxController: _maxController,
-                minFocusNode: _minFocusNode,
-                maxFocusNode: _maxFocusNode,
-              ),
-          ],
-        ),
+          // An input item at header
+          if (firstCustomEntry != null)
+            SelectorFieldTile(
+              firstCustomEntry!,
+              padding: const EdgeInsets.only(top: 10.0),
+              minController: _minController,
+              maxController: _maxController,
+              minFocusNode: _minFocusNode,
+              maxFocusNode: _maxFocusNode,
+            ),
+          // List of items
+          ListView.separated(
+            shrinkWrap: true,
+            physics: const ClampingScrollPhysics(),
+            padding: EdgeInsets.zero,
+            itemCount: entriesWithoutCustom.length,
+            itemBuilder: (context, index) {
+              final entry = entriesWithoutCustom[index];
+              final selected = widget.selectedEntries?.contains(entry) ?? false;
+              if (SelectionMode.single == widget.selectionMode) {
+                return SelectorRadioListTile(
+                  onTap: () => _onItemTap(index, entry),
+                  label: entry.name ?? '',
+                  selected: selected,
+                  radioBuilder: widget.radioBuilder,
+                );
+              } else {
+                return SelectorCheckboxListTile(
+                  onTap: () => _onItemTap(index, entry),
+                  label: entry.name ?? '',
+                  checked: selected,
+                  checkboxBuilder: widget.checkboxBuilder,
+                );
+              }
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return const SizedBox(height: 6);
+            },
+          ),
+          // An input item at footer
+          if (lastCustomEntry != null)
+            SelectorFieldTile(
+              lastCustomEntry!,
+              padding: const EdgeInsets.only(top: 10.0),
+              minController: _minController,
+              maxController: _maxController,
+              minFocusNode: _minFocusNode,
+              maxFocusNode: _maxFocusNode,
+            ),
+        ],
       ),
     );
   }

@@ -146,34 +146,78 @@ class HouseFiltersRepository {
     await Future.delayed(const Duration(milliseconds: 250));
     final more = moreFromJson(await loadJsonData('more.json'));
     debugPrint('more length: ${more.length}');
+
+    SelectorListConfig? listConfig(String categoryId) {
+      if (categoryId == 'expanded_search') {
+        return const SelectorListConfig();
+      } else {
+        return null;
+      }
+    }
+
+    SelectorGridConfig? gridConfig(String categoryId) {
+      if (categoryId == 'home_type' ||
+          categoryId == 'lists_details' ||
+          categoryId == 'commute') {
+        return const SelectorGridConfig(
+          crossAxisCount: 2,
+          childAspectRatio: 5,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+        );
+      }
+      if (categoryId == 'square_feet' ||
+          categoryId == 'lot_size' ||
+          categoryId == 'home_features') {
+        return const SelectorGridConfig(
+          crossAxisCount: 3,
+          childAspectRatio: 3,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+        );
+      } else {
+        return null;
+      }
+    }
+
+    SelectorChipConfig? chipConfig(String categoryId) {
+      return null;
+    }
+
     SelectorEntries entries = more
         .map(
           (category) => SelectorCategoryEntry(
             id: category.id!,
             name: category.name!,
             children: category.data
-                ?.map((l1) => l1.id == 'area'
-                    ? SelectorRangeEntry(
-                        parentId: category.id!,
-                        id: l1.id!,
-                        name: l1.name,
-                        min: l1.min,
-                        max: l1.max,
-                      )
-                    : SelectorTextEntry(
-                        parentId: category.id!,
-                        id: l1.id!,
-                        name: l1.name,
-                      ))
+                ?.map((l1) =>
+                    (category.id == 'square_feet' || category.id == 'lot_size')
+                        ? SelectorRangeEntry(
+                            parentId: category.id!,
+                            id: l1.id!,
+                            name: l1.name,
+                            min: l1.min,
+                            max: l1.max,
+                          )
+                        : SelectorTextEntry(
+                            parentId: category.id!,
+                            id: l1.id!,
+                            name: l1.name,
+                          ))
                 .toSet(),
-            selectionMode: SelectionMode.multiple,
+            selectionMode: category.id == 'expanded_search'
+                ? SelectionMode.single
+                : SelectionMode.multiple,
+            listConfig: listConfig(category.id!),
+            gridConfig: gridConfig(category.id!),
+            chipConfig: chipConfig(category.id!),
           ),
         )
         .toSet();
 
     // Insert the "Custom range" option
     for (SelectorEntry category in entries) {
-      if (category.id == 'area') {
+      if (category.id == 'square_feet' || category.id == 'lot_size') {
         category.children?.add(SelectorIntEntry.custom(
             parentId: category.id,
             minHintText: noMinHintText,

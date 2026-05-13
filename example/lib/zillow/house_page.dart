@@ -208,8 +208,9 @@ class _HousePageState extends State<HousePage> {
             final count = await _repo.previewCount(_filter!);
             if (!mounted || requestId != _moreApplyTextRequestId) return;
             final l10n = AppLocalizations.of(context);
-            _moreApplyText.value =
-                count == 0 ? (l10n?.nohomes ?? '') : (l10n?.viewhomes(count) ?? '');
+            _moreApplyText.value = count == 0
+                ? (l10n?.nohomes ?? '')
+                : (l10n?.viewhomes(count) ?? '');
           } catch (_) {
             if (!mounted || requestId != _moreApplyTextRequestId) return;
             _moreApplyText.value = AppLocalizations.of(context)?.apply ?? '';
@@ -302,8 +303,8 @@ class _HousePageState extends State<HousePage> {
                 // resetDataFetcher: _filtersRepo.fetchPriceResetData,
                 selectionMode: SelectionMode.multiple,
                 tileVariant: SelectorGridTileVariant.outlined,
-                crossAxisCount: 1,
-                childAspectRatio: 10,
+                crossAxisCount: 2,
+                childAspectRatio: 5,
                 mainAxisSpacing: 10,
                 crossAxisSpacing: 10,
               ),
@@ -318,16 +319,11 @@ class _HousePageState extends State<HousePage> {
                 mainAxisSpacing: 10,
                 crossAxisSpacing: 10,
               ),
-              FlattenSelector(
+              ListSelector(
                 dataFetcher: _filtersRepo.fetchMoreData,
                 selectedDataFetcher: _filtersRepo.fetchMoreSelectedData,
                 resetDataFetcher: _filtersRepo.fetchMoreResetData,
                 selectionMode: SelectionMode.multiple,
-                crossAxisCount: 3,
-                childAspectRatio: 2.5,
-                crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
-                categoryBarTheme: const SelectorCategoryBarTheme(size: 108),
                 actionBarTheme: SelectorActionBarTheme(
                   resetText: AppLocalizations.of(context)?.reset ?? '',
                   applyText: AppLocalizations.of(context)?.apply ?? '',
@@ -379,7 +375,8 @@ class _HousePageState extends State<HousePage> {
                 } else if (snapshot.hasError) {
                   return Center(
                     child: Text(
-                      l10n?.loadError('${snapshot.error}') ?? '${snapshot.error}',
+                      l10n?.loadError('${snapshot.error}') ??
+                          '${snapshot.error}',
                     ),
                   );
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
