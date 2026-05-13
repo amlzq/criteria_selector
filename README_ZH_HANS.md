@@ -7,8 +7,8 @@
 ## 功能特性
 
 - 类似 TabBar 的筛选条：每个 Tab 点击后展示对应的下拉浮层面板。
-- 内置多种选择器布局：CascadingSelector、GridSelector、FlattenSelector、ListSelector（适用于排序）。
-- 支持单选/多选、“不限（Any）”选项，以及即点即应用的条目。
+- 内置多种选择器布局：CascadingSelector、GridSelector、FlattenSelector、ListSelector。
+- 支持单选/多选、“不限（Any）”选项，以及即点即应用的选项。
 - 通过 `SelectorRangeEntry.custom` 支持自定义区间输入（min/max）。
 - 支持异步数据加载，并可选骨架屏占位（`dataFetcher` + `skeletonBuilder`）。
 - 通过 `DropselectTabBarTheme` 与 `SelectorThemeData` 定制 UI，同时支持自定义操作栏与 tile 主题。

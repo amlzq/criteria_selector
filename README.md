@@ -7,8 +7,8 @@ A typical use case is a list filtering selector.
 ## Features
 
 - TabBar-like filter bar that shows a dropdown overlay panel for each tab.
-- Built-in selector layouts: CascadingSelector, GridSelector, FlattenSelector, and ListSelector (useful for sorting).
-- Supports single & multiple selection, an "Any" option, and immediate-apply items.
+- Built-in selector layouts: CascadingSelector, GridSelector, FlattenSelector, and ListSelector.
+- Supports single & multiple selection, an "Any" entry, and immediate-apply entries.
 - Supports custom range inputs (min/max) via `SelectorRangeEntry.custom`.
 - Async data loading with optional skeleton placeholders (`dataFetcher` + `skeletonBuilder`).
 - Customizable UI via `DropselectTabBarTheme` and `SelectorThemeData`, plus custom action bars and tile themes.
