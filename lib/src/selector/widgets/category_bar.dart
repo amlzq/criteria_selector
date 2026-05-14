@@ -21,6 +21,7 @@ class SelectorCategoryBar<T extends SelectorEntry> extends StatelessWidget {
     this.scrollDirection = Axis.horizontal,
     this.size,
     this.padding,
+    this.isScrollable = false,
     this.backgroundColor,
     this.selectedColor,
     this.labelStyle,
@@ -44,6 +45,8 @@ class SelectorCategoryBar<T extends SelectorEntry> extends StatelessWidget {
   final double? size;
 
   final EdgeInsetsGeometry? padding;
+
+  final bool isScrollable;
 
   final Color? backgroundColor;
 
@@ -75,6 +78,7 @@ class SelectorCategoryBar<T extends SelectorEntry> extends StatelessWidget {
     // final height = scrollDirection == Axis.horizontal ? effctiveSize : null;
 
     final effectivePadding = padding ?? theme.padding ?? defaults.padding!;
+    final containerPadding = isScrollable ? EdgeInsets.zero : effectivePadding;
 
     final effectiveBackgroundColor =
         backgroundColor ?? theme.backgroundColor ?? defaults.backgroundColor!;
@@ -113,13 +117,15 @@ class SelectorCategoryBar<T extends SelectorEntry> extends StatelessWidget {
     return Container(
       width: width,
       // height: height,
-      padding: effectivePadding,
+      padding: containerPadding,
       color: effectiveBackgroundColor,
       child: scrollDirection == Axis.vertical
           ? _VerticalBar(
               entries: entries,
               selectedCategories: selectedCategories,
               focusedIndex: focusedIndex,
+              isScrollable: isScrollable,
+              padding: effectivePadding,
               selectedColor: effectiveSelectedColor,
               labelStyle: effectiveLabelStyle,
               selectedLabelStyle: effectiveSelectedLabelStyle,
@@ -135,6 +141,8 @@ class SelectorCategoryBar<T extends SelectorEntry> extends StatelessWidget {
               entries: entries,
               selectedCategories: selectedCategories,
               focusedIndex: focusedIndex,
+              isScrollable: isScrollable,
+              padding: effectivePadding,
               selectedColor: effectiveSelectedColor,
               labelStyle: effectiveLabelStyle,
               selectedLabelStyle: effectiveSelectedLabelStyle,
@@ -156,6 +164,8 @@ class _HorizontalBar<T extends SelectorEntry> extends StatelessWidget {
     required this.entries,
     required this.selectedCategories,
     required this.focusedIndex,
+    required this.isScrollable,
+    required this.padding,
     this.selectedColor,
     required this.labelStyle,
     required this.selectedLabelStyle,
@@ -171,6 +181,9 @@ class _HorizontalBar<T extends SelectorEntry> extends StatelessWidget {
   final List<T> entries;
   final Set<T> selectedCategories;
   final int focusedIndex;
+
+  final bool isScrollable;
+  final EdgeInsetsGeometry padding;
 
   final Color? selectedColor;
   final TextStyle labelStyle;
@@ -199,78 +212,103 @@ class _HorizontalBar<T extends SelectorEntry> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: List.generate(entries.length, (int index) {
-        final entry = entries[index] as SelectorCategoryEntry;
-        final selected = selectedCategories.contains(entry);
-        final label = entry.name ?? '';
-        final textStyle = selected ? selectedLabelStyle : labelStyle;
-        final fontSize = textStyle.fontSize ?? 14;
-        return Expanded(
-          child: InkWell(
-            onTap: () => onTap(index, entry),
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final resolvedIndicatorPadding =
-                    indicatorPadding.resolve(Directionality.of(context));
-                final double maxIndicatorWidth =
-                    (constraints.maxWidth - resolvedIndicatorPadding.horizontal)
-                        .clamp(0.0, double.infinity)
-                        .toDouble();
-                final double labelIndicatorWidth = _measureLabelWidth(
-                  context,
-                  label,
-                  textStyle,
-                ).clamp(0.0, maxIndicatorWidth).toDouble();
-                final double indicatorWidth =
-                    indicatorSize == SelectorCategoryBarIndicatorSize.label
-                        ? labelIndicatorWidth
-                        : maxIndicatorWidth;
-                return Container(
-                  color: selected ? selectedTileColor : null,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 4.5, vertical: 6),
-                  alignment: Alignment.center,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        label,
-                        style: textStyle,
-                        strutStyle: StrutStyle(
-                          fontSize: fontSize,
-                          height: 20 / fontSize,
-                          forceStrutHeight: true,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 4),
-                      Padding(
-                        padding: indicatorPadding,
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: AnimatedContainer(
-                            duration: indicatorAnimationDuration,
-                            curve: Curves.easeOut,
-                            height: indicatorHeight,
-                            width: selected ? indicatorWidth : 0,
-                            decoration: BoxDecoration(
-                              color: indicatorColor,
-                              borderRadius:
-                                  BorderRadius.circular(indicatorHeight / 2),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+    final tabs = List<Widget>.generate(entries.length, (int index) {
+      final entry = entries[index] as SelectorCategoryEntry;
+      final selected = selectedCategories.contains(entry);
+      final label = entry.name ?? '';
+      final textStyle = selected ? selectedLabelStyle : labelStyle;
+      final fontSize = textStyle.fontSize ?? 14;
+
+      Widget tab = InkWell(
+        onTap: () => onTap(index, entry),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final resolvedIndicatorPadding =
+                indicatorPadding.resolve(Directionality.of(context));
+            final double maxIndicatorWidth =
+                (constraints.maxWidth - resolvedIndicatorPadding.horizontal)
+                    .clamp(0.0, double.infinity)
+                    .toDouble();
+            final double labelIndicatorWidth = _measureLabelWidth(
+              context,
+              label,
+              textStyle,
+            ).clamp(0.0, maxIndicatorWidth).toDouble();
+            final double indicatorWidth =
+                indicatorSize == SelectorCategoryBarIndicatorSize.label
+                    ? labelIndicatorWidth
+                    : maxIndicatorWidth;
+            return Container(
+              color: selected ? selectedTileColor : null,
+              padding: const EdgeInsets.symmetric(horizontal: 4.5, vertical: 6),
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    label,
+                    style: textStyle,
+                    strutStyle: StrutStyle(
+                      fontSize: fontSize,
+                      height: 20 / fontSize,
+                      forceStrutHeight: true,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                );
-              },
-            ),
-          ),
-        );
-      }),
+                  const SizedBox(height: 4),
+                  Padding(
+                    padding: indicatorPadding,
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: AnimatedContainer(
+                        duration: indicatorAnimationDuration,
+                        curve: Curves.easeOut,
+                        height: indicatorHeight,
+                        width: selected ? indicatorWidth : 0,
+                        decoration: BoxDecoration(
+                          color: indicatorColor,
+                          borderRadius:
+                              BorderRadius.circular(indicatorHeight / 2),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      );
+
+      if (isScrollable) {
+        const double horizontalPadding = 4.5;
+        final double labelWidth = _measureLabelWidth(context, label, textStyle);
+        tab = SizedBox(width: labelWidth + horizontalPadding * 2, child: tab);
+      } else {
+        tab = Expanded(child: tab);
+      }
+
+      return tab;
+    });
+
+    final row = Row(
+      mainAxisSize: isScrollable ? MainAxisSize.min : MainAxisSize.max,
+      children: tabs,
+    );
+
+    if (!isScrollable) {
+      return row;
+    }
+
+    return ScrollConfiguration(
+      behavior: ScrollConfiguration.of(context).copyWith(overscroll: false),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        physics: const ClampingScrollPhysics(),
+        padding: padding,
+        child: row,
+      ),
     );
   }
 }
@@ -280,6 +318,8 @@ class _VerticalBar<T extends SelectorEntry> extends StatelessWidget {
     required this.entries,
     required this.selectedCategories,
     required this.focusedIndex,
+    required this.isScrollable,
+    required this.padding,
     this.selectedTileColor,
     this.selectedColor,
     this.labelStyle,
@@ -291,6 +331,9 @@ class _VerticalBar<T extends SelectorEntry> extends StatelessWidget {
   final Set<T> selectedCategories;
   final int focusedIndex;
 
+  final bool isScrollable;
+  final EdgeInsetsGeometry padding;
+
   final Color? selectedTileColor;
 
   final Color? selectedColor;
@@ -301,35 +344,57 @@ class _VerticalBar<T extends SelectorEntry> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: const ClampingScrollPhysics(),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: List.generate(entries.length, (int index) {
-          final entry = entries[index];
-          final selected = selectedCategories.contains(entry);
-          final focused = focusedIndex == index;
-          return SelectorListTile(
-            label: entry.name ?? '',
-            selected: focused,
-            selectedTileColor: selectedTileColor,
-            leading: Container(
-              width: 12,
-              alignment: Alignment.centerLeft,
-              child: Container(
-                width: 6,
-                height: 6,
-                decoration: BoxDecoration(
-                  color: entry.hasChildren && selected
-                      ? selectedColor
-                      : Colors.transparent,
-                  shape: BoxShape.circle,
-                ),
-              ),
+    final tiles = List<Widget>.generate(entries.length, (int index) {
+      final entry = entries[index];
+      final selected = selectedCategories.contains(entry);
+      final focused = focusedIndex == index;
+      return SelectorListTile(
+        label: entry.name ?? '',
+        selected: focused,
+        selectedTileColor: selectedTileColor,
+        leading: Container(
+          width: 12,
+          alignment: Alignment.centerLeft,
+          child: Container(
+            width: 6,
+            height: 6,
+            decoration: BoxDecoration(
+              color: entry.hasChildren && selected
+                  ? selectedColor
+                  : Colors.transparent,
+              shape: BoxShape.circle,
             ),
-            onTap: () => onTap(index, entry),
+          ),
+        ),
+        onTap: () => onTap(index, entry),
+      );
+    });
+
+    final column = LayoutBuilder(
+      builder: (context, constraints) {
+        if (!isScrollable && constraints.hasBoundedHeight) {
+          return Column(
+            children: tiles.map((tile) => Expanded(child: tile)).toList(),
           );
-        }),
+        }
+
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: tiles,
+        );
+      },
+    );
+
+    if (!isScrollable) {
+      return column;
+    }
+
+    return ScrollConfiguration(
+      behavior: ScrollConfiguration.of(context).copyWith(overscroll: false),
+      child: SingleChildScrollView(
+        physics: const ClampingScrollPhysics(),
+        padding: padding,
+        child: column,
       ),
     );
   }

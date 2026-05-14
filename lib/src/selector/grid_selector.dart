@@ -385,6 +385,7 @@ class GridSelectorViewState extends State<GridSelectorView> {
       children: [
         if (widget.entries.length > 1)
           SelectorCategoryBar(
+            isScrollable: false,
             onTap: (index, item) =>
                 _onCategoryItemTap(item as SelectorCategoryEntry),
             entries: widget.entries,

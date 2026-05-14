@@ -657,6 +657,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
               // Category list (left)
               SelectorCategoryBar(
                 scrollDirection: Axis.vertical,
+                isScrollable: true,
                 size: selector?.categoryBarTheme?.size,
                 backgroundColor: categoryBackgroundColor,
                 selectedColor: effectiveSelectedColor,

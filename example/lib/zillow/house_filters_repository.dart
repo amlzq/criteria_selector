@@ -147,14 +147,6 @@ class HouseFiltersRepository {
     final more = moreFromJson(await loadJsonData('more.json'));
     debugPrint('more length: ${more.length}');
 
-    SelectorListConfig? listConfig(String categoryId) {
-      if (categoryId == 'expanded_search') {
-        return const SelectorListConfig();
-      } else {
-        return null;
-      }
-    }
-
     SelectorGridConfig? gridConfig(String categoryId) {
       if (categoryId == 'home_type' ||
           categoryId == 'lists_details' ||
@@ -181,6 +173,9 @@ class HouseFiltersRepository {
     }
 
     SelectorChipConfig? chipConfig(String categoryId) {
+      if (categoryId == 'expanded_search') {
+        return const SelectorChipConfig();
+      }
       return null;
     }
 
@@ -208,7 +203,6 @@ class HouseFiltersRepository {
             selectionMode: category.id == 'expanded_search'
                 ? SelectionMode.single
                 : SelectionMode.multiple,
-            listConfig: listConfig(category.id!),
             gridConfig: gridConfig(category.id!),
             chipConfig: chipConfig(category.id!),
           ),

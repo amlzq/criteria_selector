@@ -335,6 +335,7 @@ class ListSelectorViewState extends State<ListSelectorView> {
                                         key: ValueKey('category_$index'),
                                         category: category,
                                         showTitle: false,
+                                        isWrapable: true,
                                         entries: entries,
                                         selectedEntries: selectedEntries,
                                         onItemTap: (index, item) =>
