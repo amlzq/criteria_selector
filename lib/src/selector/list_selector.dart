@@ -304,8 +304,8 @@ class ListSelectorViewState extends State<ListSelectorView> {
                         child: listConfig != null
                             ? SelectorListView(
                                 key: ValueKey('category_$index'),
-                                // category: category,
-                                // showTitle: false,
+                                category: category,
+                                showTitle: false,
                                 entries: entries,
                                 selectedEntries: selectedEntries,
                                 onItemTap: (index, item) => _onTerminalItemTap(
@@ -333,8 +333,8 @@ class ListSelectorViewState extends State<ListSelectorView> {
                                 : chipConfig != null
                                     ? SelectorChipBar(
                                         key: ValueKey('category_$index'),
-                                        // category: category,
-                                        // showTitle: false,
+                                        category: category,
+                                        showTitle: false,
                                         entries: entries,
                                         selectedEntries: selectedEntries,
                                         onItemTap: (index, item) =>

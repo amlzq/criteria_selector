@@ -17,7 +17,7 @@ const kSelectorChipBarHeight = 44.0;
 class SelectorChipBar<T extends SelectorEntry> extends StatelessWidget {
   const SelectorChipBar({
     super.key,
-    this.label,
+    this.category,
     required this.entries,
     this.selectedEntries,
     this.variant,
@@ -29,9 +29,11 @@ class SelectorChipBar<T extends SelectorEntry> extends StatelessWidget {
     required this.onItemTap,
     this.padding,
     this.selectionMode = SelectionMode.single,
+    this.isWrapable = false,
+    this.showTitle = true,
   });
 
-  final String? label;
+  final SelectorEntry? category;
 
   final List<T> entries;
   final SelectorEntries? selectedEntries;
@@ -49,6 +51,10 @@ class SelectorChipBar<T extends SelectorEntry> extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
 
   final SelectionMode selectionMode;
+
+  final bool isWrapable;
+
+  final bool showTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -86,61 +92,103 @@ class SelectorChipBar<T extends SelectorEntry> extends StatelessWidget {
         .copyWith(inherit: true);
 
     return Container(
-      height: kSelectorChipBarHeight,
+      height: isWrapable ? null : kSelectorChipBarHeight,
       color: effectiveBackgroundColor,
       padding: effectivePadding,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           const SizedBox(width: 12),
-          Text(label ?? ''),
-          const SizedBox(width: 12),
+          if (category != null && showTitle) Text(category?.name ?? ''),
+          if (category != null && showTitle) const SizedBox(width: 12),
           Expanded(
-            child: ListView.separated(
-              padding: EdgeInsets.zero,
-              physics: const ClampingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              itemCount: entries.length,
-              itemBuilder: (context, index) {
-                final item = entries[index] as SelectorChildEntry;
-                final selected = (selectedEntries?.contains(item) ?? false);
+            child: isWrapable
+                ? Wrap(
+                    spacing: 12,
+                    runSpacing: 12,
+                    children: [
+                      for (final entry in entries.asMap().entries)
+                        (() {
+                          final index = entry.key;
+                          final item = entry.value as SelectorChildEntry;
+                          final selected =
+                              (selectedEntries?.contains(item) ?? false);
 
-                final textStyle = selected
-                    ? effectiveSelectedLabelStyle
-                    : effectiveLabelStyle;
+                          final textStyle = selected
+                              ? effectiveSelectedLabelStyle
+                              : effectiveLabelStyle;
 
-                return ChoiceChip(
-                  padding: EdgeInsets.zero,
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  showCheckmark: false,
-                  label: DefaultTextStyle(
-                    style: textStyle,
-                    child: Text(item.name ?? ''),
-                  ),
-                  // labelPadding: EdgeInsets.zero,
-                  selectedColor: effectiveSelectedColor,
-                  side: effectiveVariant == SelectorChipVariant.filled
-                      ? BorderSide.none
-                      : BorderSide(
-                          color:
-                              selected ? effectiveSelectedColor : Colors.grey,
+                          return ChoiceChip(
+                            padding: EdgeInsets.zero,
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
+                            showCheckmark: false,
+                            label: DefaultTextStyle(
+                              style: textStyle,
+                              child: Text(item.name ?? ''),
+                            ),
+                            selectedColor: effectiveSelectedColor,
+                            side: effectiveVariant == SelectorChipVariant.filled
+                                ? BorderSide.none
+                                : BorderSide(
+                                    color: selected
+                                        ? effectiveSelectedColor
+                                        : Colors.grey,
+                                  ),
+                            selected: selected,
+                            onSelected: (_) => onItemTap(index, item),
+                          );
+                        })(),
+                    ],
+                  )
+                : ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    padding: EdgeInsets.zero,
+                    physics: const ClampingScrollPhysics(),
+                    itemCount: entries.length,
+                    itemBuilder: (context, index) {
+                      final item = entries[index] as SelectorChildEntry;
+                      final selected =
+                          (selectedEntries?.contains(item) ?? false);
+
+                      final textStyle = selected
+                          ? effectiveSelectedLabelStyle
+                          : effectiveLabelStyle;
+
+                      return ChoiceChip(
+                        padding: EdgeInsets.zero,
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        showCheckmark: false,
+                        label: DefaultTextStyle(
+                          style: textStyle,
+                          child: Text(item.name ?? ''),
                         ),
-                  selected: selected,
-                  onSelected: (_) => onItemTap(index, item),
-                );
+                        // labelPadding: EdgeInsets.zero,
+                        selectedColor: effectiveSelectedColor,
+                        side: effectiveVariant == SelectorChipVariant.filled
+                            ? BorderSide.none
+                            : BorderSide(
+                                color: selected
+                                    ? effectiveSelectedColor
+                                    : Colors.grey,
+                              ),
+                        selected: selected,
+                        onSelected: (_) => onItemTap(index, item),
+                      );
 
-                // return Container(
-                //   padding: const EdgeInsets.symmetric(horizontal: 8),
-                //   alignment: Alignment.center,
-                //   decoration: BoxDecoration(
-                //     color: Colors.grey[200],
-                //     borderRadius: BorderRadius.circular(4),
-                //   ),
-                //   child: Text(item.name ?? ''),
-                // );
-              },
-              separatorBuilder: (context, index) => const SizedBox(width: 12),
-            ),
+                      // return Container(
+                      //   padding: const EdgeInsets.symmetric(horizontal: 8),
+                      //   alignment: Alignment.center,
+                      //   decoration: BoxDecoration(
+                      //     color: Colors.grey[200],
+                      //     borderRadius: BorderRadius.circular(4),
+                      //   ),
+                      //   child: Text(item.name ?? ''),
+                      // );
+                    },
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(width: 12),
+                  ),
           ),
           const SizedBox(width: 12),
         ],

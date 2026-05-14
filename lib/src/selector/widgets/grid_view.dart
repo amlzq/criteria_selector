@@ -30,7 +30,7 @@ class SelectorGridView<T extends SelectorEntry> extends StatefulWidget {
   });
 
   // final int index;
-  final SelectorCategoryEntry? category;
+  final SelectorEntry? category;
   final List<T> entries;
   final SelectorEntries? selectedEntries;
 
@@ -203,6 +203,7 @@ class SelectorGridViewState<T extends SelectorEntry>
                 ),
               ),
             ),
+          // An input item at header
           if (_firstCustomEntry != null)
             SelectorFieldTile(
               _firstCustomEntry!,
@@ -236,6 +237,7 @@ class SelectorGridViewState<T extends SelectorEntry>
               );
             },
           ),
+          // An input item at footer
           if (_lastCustomEntry != null)
             SelectorFieldTile(
               _lastCustomEntry!,

@@ -675,7 +675,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
                     if (categoryHeader != null &&
                         categoryHeader.children != null)
                       SelectorChipBar(
-                        label: categoryHeader.name,
+                        category: categoryHeader,
                         entries: categoryHeader.children!.toList(),
                         selectedEntries: headerSelected,
                         onItemTap: (index, entry) => _onHeaderOrFooterItemTap
@@ -775,7 +775,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
                     if (categoryFooter != null &&
                         categoryFooter.children != null)
                       SelectorChipBar(
-                        label: categoryFooter.name,
+                        category: categoryFooter,
                         entries: categoryFooter.children!.toList(),
                         selectedEntries: footerSelected,
                         onItemTap: (index, entry) => _onHeaderOrFooterItemTap

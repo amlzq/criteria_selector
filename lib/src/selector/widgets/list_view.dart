@@ -14,8 +14,7 @@ import 'skeleton_box.dart';
 class SelectorListView<T extends SelectorEntry> extends StatefulWidget {
   const SelectorListView({
     super.key,
-    this.categoryId,
-    this.categoryName,
+    this.category,
     required this.entries,
     this.selectedEntries,
     required this.onItemTap,
@@ -24,10 +23,10 @@ class SelectorListView<T extends SelectorEntry> extends StatefulWidget {
     this.selectionMode = SelectionMode.single,
     this.radioBuilder,
     this.checkboxBuilder,
+    this.showTitle = true,
   });
 
-  final String? categoryId;
-  final String? categoryName;
+  final SelectorEntry? category;
 
   final List<T> entries;
   final SelectorEntries? selectedEntries;
@@ -43,6 +42,8 @@ class SelectorListView<T extends SelectorEntry> extends StatefulWidget {
 
   final ToggleWidgetBuilder? radioBuilder;
   final ToggleWidgetBuilder? checkboxBuilder;
+
+  final bool showTitle;
 
   @override
   State<SelectorListView<T>> createState() => SelectorListViewState<T>();
@@ -123,7 +124,7 @@ class SelectorListViewState<T extends SelectorEntry>
       });
     }
     widget.inputListener
-        ?.call(widget.categoryId, _minController!.text, _maxController!.text);
+        ?.call(widget.category?.id, _minController!.text, _maxController!.text);
   }
 
   bool get inputNotEmpty =>
@@ -165,11 +166,11 @@ class SelectorListViewState<T extends SelectorEntry>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Category label
-          if (widget.categoryName != null)
+          if (widget.category != null && widget.showTitle)
             Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: Text(
-                widget.categoryName ?? '',
+                widget.category?.name ?? '',
                 style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
