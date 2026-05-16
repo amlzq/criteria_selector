@@ -329,6 +329,9 @@ class _HousePageState extends State<HousePage> {
                   resetText: AppLocalizations.of(context)?.reset ?? '',
                   applyText: AppLocalizations.of(context)?.apply ?? '',
                 ),
+                chipBarTheme: const SelectorChipBarTheme(
+                  variant: SelectorChipVariant.outlined,
+                ),
               ),
               ListSelector(
                 dataFetcher: _filtersRepo.fetchSortData,
