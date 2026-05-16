@@ -230,7 +230,7 @@ class _DropselectTabBarState extends State<DropselectTabBar> {
 
     final barBottom = offset.dy + size.height;
 
-    final screenHeight = MediaQuery.of(context).size.height;
+    final screenHeight = MediaQuery.sizeOf(context).height;
 
     availableHeight = screenHeight - barBottom;
     return availableHeight;

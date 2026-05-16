@@ -125,7 +125,7 @@ class SkeletonTile extends StatelessWidget {
   Widget build(BuildContext context) {
     var effectiveWidth = width;
     if (random != null) {
-      final screenHalfWidth = (MediaQuery.of(context).size.width ~/ 2).toInt();
+      final screenHalfWidth = (MediaQuery.sizeOf(context).width ~/ 2).toInt();
       effectiveWidth = (random!.nextInt(screenHalfWidth - widthUsed.toInt()) +
               screenHalfWidth)
           .toDouble();
