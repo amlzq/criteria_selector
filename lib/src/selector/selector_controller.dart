@@ -54,10 +54,10 @@ class SelectorController extends ChangeNotifier {
   //   previousCity = null;
   // }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  // }
 
   static SelectorController? of(BuildContext context) {
     return context

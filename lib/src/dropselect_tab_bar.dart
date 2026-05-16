@@ -584,13 +584,13 @@ class _DropselectTabBarDefaults extends DropselectTabBarTheme {
   TextStyle? get unselectedLabelStyle => _textTheme.titleMedium;
 
   @override
-  Widget? get indicator => Icon(
+  Widget? get indicator => const Icon(
         Icons.arrow_drop_up,
         // color: labelColor,
       );
 
   @override
-  Widget? get unselectedIndicator => Icon(
+  Widget? get unselectedIndicator => const Icon(
         Icons.arrow_drop_down,
         // color: unselectedLabelColor,
       );

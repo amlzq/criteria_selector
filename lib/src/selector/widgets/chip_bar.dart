@@ -71,11 +71,11 @@ class SelectorChipBar<T extends SelectorEntry> extends StatelessWidget {
     final effectivePadding = padding ?? theme.padding ?? defaults.padding!;
 
     // Resolve unselected color
-    final effectiveColor = color ??
-        theme.color ??
-        labelStyle?.color ??
-        theme.labelStyle?.color ??
-        defaults.color!;
+    // final effectiveColor = color ??
+    //     theme.color ??
+    //     labelStyle?.color ??
+    //     theme.labelStyle?.color ??
+    //     defaults.color!;
 
     // Resolve selected color
     final effectiveSelectedColor = selectedColor ??

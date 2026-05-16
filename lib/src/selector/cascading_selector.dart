@@ -65,7 +65,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
 
   /// Gradient colors for each level
   late List<Color> _backgroundColors;
-  late List<Color> _textColors;
+  // late List<Color> _textColors;
 
   @override
   void initState() {
@@ -623,9 +623,9 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
     final theme = SelectorTheme.of(context);
 
     /// Maximum level for the current category
-    final maxLevel = tempSelectedCategory.maxLevel;
-    final isMultipleSelectionMode =
-        SelectionMode.multiple == tempSelectedCategory.selectionMode;
+    // final maxLevel = tempSelectedCategory.maxLevel;
+    // final isMultipleSelectionMode =
+    //     SelectionMode.multiple == tempSelectedCategory.selectionMode;
 
     final categoryHeader = tempSelectedCategory.header;
     final categoryFooter = tempSelectedCategory.footer;
@@ -692,10 +692,10 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
                           final selectedEntries =
                               _selectedEntriesPerLevel.elementAtOrNull(level) ??
                                   {};
-                          final isMiddleLevel = level < _currentLevel;
+                          // final isMiddleLevel = level < _currentLevel;
                           // Focused item at the current level
-                          final focusedItem =
-                              _tempSelectedEntryPerLevel.elementAtOrNull(level);
+                          // final focusedItem =
+                          //     _tempSelectedEntryPerLevel.elementAtOrNull(level);
                           // Get background color for this level
                           final bgColor = level < _backgroundColors.length
                               ? _backgroundColors[level]
