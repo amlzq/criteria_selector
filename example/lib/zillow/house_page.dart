@@ -275,6 +275,7 @@ class _HousePageState extends State<HousePage> {
           ),
           DropselectTabBar(
             controller: _controller,
+            isScrollable: true,
             // labelColor: Colors.orange,
             // indicator: Icon(Icons.arrow_upward, size: 16),
             // unselectedIndicator: Icon(Icons.arrow_downward, size: 16),

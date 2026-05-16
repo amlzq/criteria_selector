@@ -209,17 +209,6 @@ class HouseFiltersRepository {
         )
         .toSet();
 
-    // Insert the "Custom range" entry
-    for (SelectorEntry category in entries) {
-      if (category.id == 'square_feet' || category.id == 'lot_size') {
-        category.children?.add(SelectorIntEntry.custom(
-            parentId: category.id,
-            minHintText: noMinHintText,
-            maxHintText: noMaxHintText));
-        break;
-      }
-    }
-
     debugPrint('more length: ${entries.length}');
     return Future.value(entries);
   }

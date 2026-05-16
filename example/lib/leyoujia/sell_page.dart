@@ -185,6 +185,7 @@ class _SellPageState extends State<SellPage> {
             ),
             child: DropselectTabBar(
               controller: _controller,
+              isScrollable: true,
               // labelColor: Colors.orange,
               // indicator: Icon(Icons.arrow_upward),
               // unselectedIndicator: Icon(Icons.arrow_downward),

@@ -381,7 +381,7 @@ class HouseFiltersRepository {
         )
         .toSet();
 
-    // 插入"价格自定义"选项
+    // 插入"面积自定义"选项
     for (SelectorEntry category in entries) {
       if (category.id == 'area') {
         category.children?.add(SelectorIntEntry.custom(
@@ -389,7 +389,7 @@ class HouseFiltersRepository {
             name: customAreaName,
             minHintText: minHintText,
             maxHintText: maxHintText));
-        break;
+        continue;
       }
     }
 
@@ -439,7 +439,7 @@ class HouseFiltersRepository {
         )
         .toSet();
 
-    // 插入"价格自定义"选项
+    // 插入"面积自定义"选项
     for (SelectorEntry category in entries) {
       if (category.id == 'area') {
         category.children?.add(SelectorIntEntry.custom(
@@ -447,7 +447,7 @@ class HouseFiltersRepository {
             name: customAreaName,
             minHintText: minHintText,
             maxHintText: maxHintText));
-        break;
+        continue;
       }
     }
 
