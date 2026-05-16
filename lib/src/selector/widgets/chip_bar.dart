@@ -52,8 +52,10 @@ class SelectorChipBar<T extends SelectorEntry> extends StatelessWidget {
 
   final SelectionMode selectionMode;
 
+  /// Whether the chip bar is wrapable.
   final bool isWrapable;
 
+  /// Whether to show the category title.
   final bool showTitle;
 
   @override

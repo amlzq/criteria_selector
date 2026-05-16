@@ -46,7 +46,8 @@ abstract class Selector {
     this.gridTileTheme,
     this.listTileTheme,
     this.fieldTileTheme,
-    this.chipBarThemeData,
+    this.expansionTileTheme,
+    this.chipBarTheme,
     this.skeletonBuilder,
   });
 
@@ -109,8 +110,11 @@ abstract class Selector {
   /// Theme overrides for range field tiles.
   final SelectorFieldTileTheme? fieldTileTheme;
 
+  /// Theme overrides for expansion tiles.
+  final SelectorExpansionTileTheme? expansionTileTheme;
+
   /// Theme overrides for the selected chips bar.
-  final SelectorChipBarTheme? chipBarThemeData;
+  final SelectorChipBarTheme? chipBarTheme;
 
   /// Optional builder for the loading skeleton.
   final WidgetBuilder? skeletonBuilder;
@@ -155,7 +159,8 @@ class CascadingSelector extends Selector {
     super.gridTileTheme,
     super.listTileTheme,
     super.fieldTileTheme,
-    super.chipBarThemeData,
+    super.expansionTileTheme,
+    super.chipBarTheme,
     super.skeletonBuilder,
   });
 
@@ -212,7 +217,8 @@ class ListSelector extends Selector {
     super.gridTileTheme,
     super.listTileTheme,
     super.fieldTileTheme,
-    super.chipBarThemeData,
+    super.expansionTileTheme,
+    super.chipBarTheme,
     super.skeletonBuilder,
   });
 
@@ -266,7 +272,8 @@ class GridSelector extends Selector {
     super.gridTileTheme,
     super.listTileTheme,
     super.fieldTileTheme,
-    super.chipBarThemeData,
+    super.expansionTileTheme,
+    super.chipBarTheme,
     super.skeletonBuilder,
   });
 
@@ -335,7 +342,8 @@ class FlattenSelector extends Selector {
     super.gridTileTheme,
     super.listTileTheme,
     super.fieldTileTheme,
-    super.chipBarThemeData,
+    super.expansionTileTheme,
+    super.chipBarTheme,
     super.skeletonBuilder,
   });
 

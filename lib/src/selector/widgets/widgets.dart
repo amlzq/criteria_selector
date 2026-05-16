@@ -4,6 +4,8 @@ export 'category_bar.dart';
 export 'category_bar_theme.dart';
 export 'chip_bar.dart';
 export 'chip_bar_theme.dart';
+export 'expansion_tile.dart';
+export 'expansion_tile_theme.dart';
 export 'field_tile.dart';
 export 'field_tile_theme.dart';
 export 'grid_tile.dart';

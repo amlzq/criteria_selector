@@ -6,7 +6,6 @@ import '../selector.dart';
 import '../selector_entry.dart';
 import '../selector_utils.dart';
 import 'selector_controller.dart';
-import 'widgets/expansion_tile.dart';
 import 'widgets/widgets.dart';
 
 /// Standard list view
@@ -277,6 +276,10 @@ class ListSelectorViewState extends State<ListSelectorView> {
   Widget build(BuildContext context) {
     final selectionMode = controller?.selectionMode;
 
+    // final listTileTheme = selector?.listTileTheme;
+    // final gridTileTheme = selector?.gridTileTheme;
+    final chipBarTheme = selector?.chipBarTheme;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -306,6 +309,7 @@ class ListSelectorViewState extends State<ListSelectorView> {
                                 key: ValueKey('category_$index'),
                                 category: category,
                                 showTitle: false,
+
                                 entries: entries,
                                 selectedEntries: selectedEntries,
                                 onItemTap: (index, item) => _onTerminalItemTap(
@@ -336,6 +340,16 @@ class ListSelectorViewState extends State<ListSelectorView> {
                                         category: category,
                                         showTitle: false,
                                         isWrapable: true,
+                                        backgroundColor:
+                                            chipBarTheme?.backgroundColor,
+                                        variant: chipBarTheme?.variant,
+                                        padding: chipBarTheme?.padding,
+                                        selectedColor:
+                                            chipBarTheme?.selectedColor,
+                                        color: chipBarTheme?.color,
+                                        labelStyle: chipBarTheme?.labelStyle,
+                                        selectedLabelStyle:
+                                            chipBarTheme?.selectedLabelStyle,
                                         entries: entries,
                                         selectedEntries: selectedEntries,
                                         onItemTap: (index, item) =>
