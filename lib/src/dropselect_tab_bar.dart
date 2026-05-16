@@ -28,6 +28,7 @@ class DropselectTabBar extends StatefulWidget implements PreferredSizeWidget {
     required this.tabs,
     required this.selectors,
     this.height,
+    this.isScrollable = false,
     this.backgroundColor,
     this.elevation = 0.0,
     this.labelColor,
@@ -57,6 +58,8 @@ class DropselectTabBar extends StatefulWidget implements PreferredSizeWidget {
   /// If null, [DropselectTabBarTheme.height] is used. If that
   /// is also null, the default is [kDropselectTabBarHeight].
   final double? height;
+
+  final bool isScrollable;
 
   /// The color of the [DropselectTabBar] itself.
   ///
@@ -301,12 +304,13 @@ class _DropselectTabBarState extends State<DropselectTabBar> {
                 defaults.backgroundColor!,
             elevation: widget.elevation,
             child: SizedBox(
+              width: double.infinity,
               height: height,
-              child: Row(
-                children: <Widget>[
-                  for (int i = 0; i < widget.tabs.length; i++)
-                    Expanded(
-                      child: _DropselectTabInfo(
+              child: Builder(
+                builder: (context) {
+                  final tabs = <Widget>[
+                    for (int i = 0; i < widget.tabs.length; i++)
+                      _DropselectTabInfo(
                         index: i,
                         onTap: (tabData) => _handleTap(tabData),
                         indicator: widget.indicator,
@@ -323,8 +327,31 @@ class _DropselectTabBarState extends State<DropselectTabBar> {
                           child: widget.tabs[i],
                         ),
                       ),
+                  ];
+
+                  final row = Row(
+                    mainAxisSize: widget.isScrollable
+                        ? MainAxisSize.min
+                        : MainAxisSize.max,
+                    children: widget.isScrollable
+                        ? tabs
+                        : tabs.map((t) => Expanded(child: t)).toList(),
+                  );
+
+                  if (!widget.isScrollable) {
+                    return row;
+                  }
+
+                  return ScrollConfiguration(
+                    behavior: ScrollConfiguration.of(context)
+                        .copyWith(overscroll: false),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      physics: const ClampingScrollPhysics(),
+                      child: row,
                     ),
-                ],
+                  );
+                },
               ),
             ),
           ),
