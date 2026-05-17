@@ -268,7 +268,7 @@ class _HousePageState extends State<HousePage> {
               child: Image.asset(
                 'assets/realestate/banner1.jpg',
                 width: double.infinity,
-                height: 180.0,
+                height: 120.0,
                 fit: BoxFit.cover,
               ),
             ),
@@ -325,10 +325,8 @@ class _HousePageState extends State<HousePage> {
                 selectedDataFetcher: _filtersRepo.fetchMoreSelectedData,
                 resetDataFetcher: _filtersRepo.fetchMoreResetData,
                 selectionMode: SelectionMode.multiple,
-                actionBarTheme: SelectorActionBarTheme(
-                  resetText: AppLocalizations.of(context)?.reset ?? '',
-                  applyText: AppLocalizations.of(context)?.apply ?? '',
-                ),
+                resetText: AppLocalizations.of(context)?.reset ?? '',
+                applyText: AppLocalizations.of(context)?.apply ?? '',
                 chipBarTheme: const SelectorChipBarTheme(
                   variant: SelectorChipVariant.outlined,
                 ),

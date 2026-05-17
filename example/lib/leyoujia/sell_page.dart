@@ -174,12 +174,6 @@ class _SellPageState extends State<SellPage> {
                   overlayStyle: dropdownTabBarTheme.overlayStyle?.copyWith(
                     maxHeightFactor: 0.8,
                   ),
-                  selectorTheme: dropdownTabBarTheme.selectorTheme?.copyWith(
-                    actionBarTheme: SelectorActionBarTheme(
-                      resetText: AppLocalizations.of(context)?.clear ?? '',
-                      applyText: AppLocalizations.of(context)?.done ?? '',
-                    ),
-                  ),
                 ),
               ],
             ),

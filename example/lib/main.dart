@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
+        CriteriaSelectorLocalizationsDelegate(),
       ],
       supportedLocales: const [
         Locale('en'),
@@ -48,17 +49,10 @@ class MyApp extends StatelessWidget {
         ),
       ],
       builder: (context, child) {
-        final l10n = AppLocalizations.of(context);
         final theme = baseTheme.copyWith(
           extensions: <ThemeExtension<dynamic>>[
             DropselectTabBarTheme(
-              selectorTheme: SelectorThemeData(
-                baseTheme,
-                actionBarTheme: SelectorActionBarTheme(
-                  resetText: l10n?.reset ?? '',
-                  applyText: l10n?.apply ?? '',
-                ),
-              ),
+              selectorTheme: SelectorThemeData(baseTheme),
             ),
           ],
         );

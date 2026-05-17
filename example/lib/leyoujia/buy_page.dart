@@ -277,7 +277,7 @@ class _BuyPageState extends State<BuyPage> {
               child: Image.asset(
                 'assets/realestate/banner0.jpg',
                 width: double.infinity,
-                height: 180.0,
+                height: 120.0,
                 fit: BoxFit.cover,
               ),
             ),
@@ -334,9 +334,7 @@ class _BuyPageState extends State<BuyPage> {
                 childAspectRatio: 2.5,
                 mainAxisSpacing: 10,
                 crossAxisSpacing: 10,
-                actionBarTheme: SelectorActionBarTheme(
-                  applyText: AppLocalizations.of(context)?.apply ?? '',
-                ),
+                applyText: AppLocalizations.of(context)?.apply ?? '',
               ),
               FlattenSelector(
                 dataFetcher: _filtersRepo.fetchFloorPlanBuyData,
