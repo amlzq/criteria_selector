@@ -126,15 +126,15 @@ class DropselectTabController extends ChangeNotifier {
   }
 
   /// Dispatches an apply event and updates the tab result label.
-  void handleApply(SelectorEntries selected) {
+  void handleApply(SelectorEntries selected, String multipleText) {
     if (_isDisposed) return;
     final result =
         DropselectResult(tabData: currentTabData, selected: selected);
     hideSelector();
     onApplied?.call(result);
     final customLabel = result.tabData.labelGetter?.call(result);
-    result.tabData.resultLabel =
-        customLabel ?? SelectorUtils.getResultLabel(result.selected);
+    result.tabData.resultLabel = customLabel ??
+        SelectorUtils.getResultLabel(result.selected, multipleText);
     notifyListeners();
   }
 

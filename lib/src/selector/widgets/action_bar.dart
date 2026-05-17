@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../i18n/localizations.dart';
 import '../selector_theme.dart';
 import '../selector_theme_data.dart';
 import 'action_bar_theme.dart';
@@ -55,11 +56,11 @@ class SelectorActionBar extends StatelessWidget {
     final effectiveApplyFlex =
         applyFlex ?? theme.applyFlex ?? defaults.applyFlex!;
 
-    final effectiveResetText =
-        resetText ?? theme.resetText ?? defaults.resetText!;
+    final localizations = CriteriaSelectorLocalizations.of(context);
 
-    final effectiveApplyText =
-        applyText ?? theme.applyText ?? defaults.applyText!;
+    final effectiveResetText = resetText ?? localizations?.reset ?? 'Reset';
+
+    final effectiveApplyText = applyText ?? localizations?.apply ?? 'Apply';
 
     final effectiveResetButtonStyle =
         resetButtonStyle ?? theme.resetButtonStyle ?? defaults.resetButtonStyle;
@@ -146,10 +147,4 @@ class _SelectorActionBarDefaults extends SelectorActionBarTheme {
 
   @override
   int? get applyFlex => 6;
-
-  @override
-  String? get resetText => 'Reset';
-
-  @override
-  String? get applyText => 'Apply';
 }

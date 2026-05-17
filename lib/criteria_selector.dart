@@ -11,6 +11,7 @@ export 'src/dropselect_tab_bar.dart';
 export 'src/dropselect_tab_bar_theme.dart';
 export 'src/dropselect_tab_controller.dart';
 export 'src/dropselect_tab_data.dart';
+export 'src/i18n/localizations_delegate.dart';
 export 'src/selector.dart';
 export 'src/selector/selector_controller.dart';
 export 'src/selector/selector_theme.dart';

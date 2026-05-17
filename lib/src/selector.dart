@@ -41,6 +41,8 @@ abstract class Selector {
     this.backgroundColorHigh,
     this.backgroundColorHighest,
     this.onBackgroundColorHighest,
+    this.resetText,
+    this.applyText,
     this.actionBarTheme,
     this.categoryBarTheme,
     this.gridTileTheme,
@@ -94,6 +96,10 @@ abstract class Selector {
 
   /// Text/icon color used on top of [backgroundColorHighest].
   final Color? onBackgroundColorHighest;
+
+  final String? resetText;
+
+  final String? applyText;
 
   /// Theme overrides for the action bar widget.
   final SelectorActionBarTheme? actionBarTheme;
@@ -154,6 +160,8 @@ class CascadingSelector extends Selector {
     super.backgroundColorHigh,
     super.backgroundColorHighest,
     super.onBackgroundColorHighest,
+    super.resetText,
+    super.applyText,
     super.actionBarTheme,
     super.categoryBarTheme,
     super.gridTileTheme,
@@ -212,6 +220,8 @@ class ListSelector extends Selector {
     super.backgroundColorHigh,
     super.backgroundColorHighest,
     super.onBackgroundColorHighest,
+    super.resetText,
+    super.applyText,
     super.actionBarTheme,
     super.categoryBarTheme,
     super.gridTileTheme,
@@ -267,6 +277,8 @@ class GridSelector extends Selector {
     super.backgroundColorHigh,
     super.backgroundColorHighest,
     super.onBackgroundColorHighest,
+    super.resetText,
+    super.applyText,
     super.actionBarTheme,
     super.categoryBarTheme,
     super.gridTileTheme,
@@ -337,6 +349,8 @@ class FlattenSelector extends Selector {
     super.backgroundColorHigh,
     super.backgroundColorHighest,
     super.onBackgroundColorHighest,
+    super.resetText,
+    super.applyText,
     super.actionBarTheme,
     super.categoryBarTheme,
     super.gridTileTheme,

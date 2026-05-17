@@ -18,12 +18,6 @@ class SelectorActionBarTheme with Diagnosticable {
   /// Flex for the apply button in the row.
   final int? applyFlex;
 
-  /// Label text for the reset action.
-  final String? resetText;
-
-  /// Label text for the apply action.
-  final String? applyText;
-
   /// Button style override for the reset button.
   final ButtonStyle? resetButtonStyle;
 
@@ -35,8 +29,6 @@ class SelectorActionBarTheme with Diagnosticable {
     this.padding,
     this.resetFlex,
     this.applyFlex,
-    this.resetText,
-    this.applyText,
     this.resetButtonStyle,
     this.applyButtonStyle,
   });
@@ -47,8 +39,6 @@ class SelectorActionBarTheme with Diagnosticable {
     EdgeInsets? padding,
     int? resetFlex,
     int? applyFlex,
-    String? resetText,
-    String? applyText,
     ButtonStyle? resetButtonStyle,
     ButtonStyle? applyButtonStyle,
   }) {
@@ -57,8 +47,6 @@ class SelectorActionBarTheme with Diagnosticable {
       padding: padding ?? this.padding,
       resetFlex: resetFlex ?? this.resetFlex,
       applyFlex: applyFlex ?? this.applyFlex,
-      resetText: resetText ?? this.resetText,
-      applyText: applyText ?? this.applyText,
       resetButtonStyle: resetButtonStyle ?? this.resetButtonStyle,
       applyButtonStyle: applyButtonStyle ?? this.applyButtonStyle,
     );
@@ -79,8 +67,6 @@ class SelectorActionBarTheme with Diagnosticable {
       padding: EdgeInsets.lerp(a?.padding, b?.padding, t),
       resetFlex: a?.resetFlex ?? b?.resetFlex ?? 1.toInt(),
       applyFlex: a?.applyFlex ?? b?.applyFlex ?? 1.toInt(),
-      resetText: a?.resetText ?? b?.resetText ?? 'Reset',
-      applyText: a?.applyText ?? b?.applyText ?? 'Apply',
       resetButtonStyle:
           ButtonStyle.lerp(a?.resetButtonStyle, b?.resetButtonStyle, t),
       applyButtonStyle:
@@ -94,8 +80,6 @@ class SelectorActionBarTheme with Diagnosticable {
         padding,
         resetFlex,
         applyFlex,
-        resetText,
-        applyText,
         resetButtonStyle,
         applyButtonStyle,
       );
@@ -113,8 +97,6 @@ class SelectorActionBarTheme with Diagnosticable {
         other.padding == padding &&
         other.resetFlex == resetFlex &&
         other.applyFlex == applyFlex &&
-        other.resetText == resetText &&
-        other.applyText == applyText &&
         other.resetButtonStyle == resetButtonStyle &&
         other.applyButtonStyle == applyButtonStyle;
   }

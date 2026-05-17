@@ -493,7 +493,10 @@ class SelectorUtils {
   }
 
   // Computes an effective label from the current selection and returns it.
-  static String? getResultLabel(SelectorEntries? resultEntries) {
+  static String? getResultLabel(
+    SelectorEntries? resultEntries,
+    String multipleText,
+  ) {
     if (resultEntries == null) return null;
 
     // Keep traversing after the first valid label is found; once a second one is
@@ -535,7 +538,7 @@ class SelectorUtils {
     }
 
     for (final entry in resultEntries) {
-      if (collectCandidateLabels(entry)) return 'Multiple';
+      if (collectCandidateLabels(entry)) return multipleText;
     }
     return firstLabel;
   }

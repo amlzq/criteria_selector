@@ -8,6 +8,7 @@ import 'dropselect_overlay_style.dart';
 import 'dropselect_tab_bar_theme.dart';
 import 'dropselect_tab_controller.dart';
 import 'dropselect_tab_data.dart';
+import 'i18n/localizations.dart';
 import 'selector.dart';
 import 'selector/selector_theme_data.dart';
 
@@ -272,6 +273,10 @@ class _DropselectTabBarState extends State<DropselectTabBar> {
 
     final effectiveSelectorTheme = widget.selectorTheme ?? theme?.selectorTheme;
 
+    final localizations = CriteriaSelectorLocalizations.of(context);
+
+    final effectiveMultipleText = localizations?.multiple ?? 'Multiple';
+
     return DropselectTabControllerProvider(
       controller: _controller,
       child: CompositedTransformTarget(
@@ -287,7 +292,10 @@ class _DropselectTabBarState extends State<DropselectTabBar> {
                 selector: _controller!.previousSelector!,
                 style: overlayStyle,
                 onChangeTap: _controller!.handleChange,
-                onApplyTap: _controller!.handleApply,
+                onApplyTap: (selected) => _controller!.handleApply(
+                  selected,
+                  effectiveMultipleText,
+                ),
                 onResetTap: _controller!.handleReset,
                 onOverlayTap: () {
                   // FocusScope.of(context).unfocus();

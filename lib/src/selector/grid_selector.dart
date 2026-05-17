@@ -405,8 +405,8 @@ class GridSelectorViewState extends State<GridSelectorView> {
                 onApplyTap: _onApplyTap,
               ) ??
               SelectorActionBar(
-                resetText: selector?.actionBarTheme?.resetText,
-                applyText: selector?.actionBarTheme?.applyText,
+                resetText: selector?.resetText,
+                applyText: selector?.applyText,
                 resetFlex: selector?.actionBarTheme?.resetFlex,
                 applyFlex: selector?.actionBarTheme?.applyFlex,
                 onResetTap: _onResetTap,
