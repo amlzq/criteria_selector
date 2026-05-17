@@ -268,7 +268,7 @@ void main() {
       final child = _text('r', 'c', 'Child', children: {leaf});
       final root = _category('r', 'Root', children: {child});
 
-      expect(SelectorUtils.getResultLabel({root}), 'Leaf');
+      expect(SelectorUtils.getResultLabel({root}, 'Leaf'), 'Leaf');
     });
 
     test('returns parent name for "any" leaf (except when parent is category)',
@@ -277,7 +277,7 @@ void main() {
       final child = _text('r', 'c', 'Child', children: {any});
       final root = _category('r', 'Root', children: {child});
 
-      expect(SelectorUtils.getResultLabel({root}), 'Child');
+      expect(SelectorUtils.getResultLabel({root}, 'Child'), 'Child');
     });
 
     test('returns Multiple when multiple valid labels exist', () {
@@ -285,7 +285,7 @@ void main() {
       final p2 = _text('r', 'p2', 'P2', children: {_text('p2', 'l2', 'L2')});
       final root = _category('r', 'Root', children: {p1, p2});
 
-      expect(SelectorUtils.getResultLabel({root}), 'Multiple');
+      expect(SelectorUtils.getResultLabel({root}, 'Multiple'), 'Multiple');
     });
   });
 
