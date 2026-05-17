@@ -16,7 +16,7 @@ A typical use case is a list filtering selector.
 ### Selector Types
 
 | GridSelector | FlattenSelector | ListSelector | ListSelector |
-| --- | --- | --- | --- | --- |
+| --- | --- | --- | --- |
 | ![GridSelector](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/price.gif) | ![GridSelector](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/rooms.gif) | ![FlattenSelector](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/more.gif) | ![SortSelector](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/sort.gif) |
 
 ## Getting started

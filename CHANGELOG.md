@@ -1,16 +1,11 @@
 ## 0.1.0
 
-### 🚀 Features
-
-* **unify category prop and add chip wrap**
-* **make SelectorCategoryBar scrollable**
-* **add isScrollable option to DropselectTabBar**
-* **add expansion tile and category configs**
-* **add expansionTileTheme and rename chipBarThemeData**
-
-### ⚡ Performance Improvements
-
-* **replace MediaQuery.of with MediaQuery.sizeOf**
+* **FEATURE** unify category prop and add chip wrap
+* **FEATURE** make SelectorCategoryBar scrollable
+* **FEATURE** add isScrollable option to DropselectTabBar
+* **FEATURE** add expansion tile and category configs
+* **FEATURE** add expansionTileTheme and rename chipBarThemeData
+* **IMPROVEMENT** replace MediaQuery.of with MediaQuery.sizeOf
 
 ## 0.0.1
 
