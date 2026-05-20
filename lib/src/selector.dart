@@ -148,6 +148,7 @@ class CascadingSelector extends Selector {
     this.terminalBackgroundColor,
     this.checkboxBuilder,
     this.radioBuilder,
+    this.isScrollable = false,
     super.selectionMode = SelectionMode.single,
     super.dataFetcher,
     super.selectedDataFetcher,
@@ -183,6 +184,8 @@ class CascadingSelector extends Selector {
 
   /// Optional custom checkbox widget builder.
   final ToggleWidgetBuilder? checkboxBuilder;
+
+  final bool isScrollable;
 
   @override
   Widget buildBody(

@@ -60,6 +60,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
   int _currentLevel = 0;
 
   final List<ScrollController> _scrollControllers = [];
+  final ScrollController _cascadeHorizontalController = ScrollController();
 
   SelectorController? controller;
 
@@ -76,6 +77,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
   @override
   void dispose() {
     _disposeScrollControllers();
+    _cascadeHorizontalController.dispose();
     controller?.dispose();
     super.dispose();
   }
@@ -137,7 +139,60 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
     // Scroll to selected list item after build
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollToSelectedItem();
+      _scrollCascadeToEnd();
     });
+  }
+
+  void _scrollCascadeToEnd() {
+    if (selector?.isScrollable != true) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_cascadeHorizontalController.hasClients) return;
+      final maxScroll = _cascadeHorizontalController.position.maxScrollExtent;
+      _cascadeHorizontalController.animateTo(
+        maxScroll,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+      );
+    });
+  }
+
+  double _measureMaxLabelWidth(
+    BuildContext context,
+    Iterable<SelectorEntry> entries,
+    TextStyle style,
+  ) {
+    final textDirection = Directionality.of(context);
+    final textScaler = MediaQuery.textScalerOf(context);
+    double maxWidth = 0;
+    for (final entry in entries) {
+      final label = entry.name ?? '';
+      if (label.isEmpty) continue;
+      final painter = TextPainter(
+        text: TextSpan(text: label, style: style),
+        textDirection: textDirection,
+        maxLines: 1,
+        textScaler: textScaler,
+      )..layout();
+      if (painter.width > maxWidth) maxWidth = painter.width;
+    }
+    return maxWidth;
+  }
+
+  double _estimateCascadeColumnWidth(BuildContext context, int cascadeIndex) {
+    const horizontalPadding = 20.0;
+    const trailingWidth = 48.0;
+    const badgeWidth = 24.0;
+
+    final entries = _cascadingList[cascadeIndex];
+    const textStyle = TextStyle(fontSize: 14);
+
+    final maxLabelWidth = _measureMaxLabelWidth(context, entries, textStyle);
+    final hasTrailing = entries.any((e) => !e.hasChildren && e.enabled);
+    final width = maxLabelWidth +
+        horizontalPadding +
+        badgeWidth +
+        (hasTrailing ? trailingWidth : 0);
+    return width.clamp(160.0, double.infinity).toDouble();
   }
 
   SelectorEntries _headerSelectedFor(String categoryId) =>
@@ -381,6 +436,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
       _ensureAnySelected(newCategoryEntry);
     }
     setState(() {});
+    _scrollCascadeToEnd();
   }
 
   /// Tap handler for a middle node
@@ -420,6 +476,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
     // });
 
     setState(() {});
+    _scrollCascadeToEnd();
   }
 
   /// Tap handler for a terminal node
@@ -616,11 +673,80 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
     controller?.reset();
   }
 
+  Widget buildCascadeList(int cascadeIndex, double? width) {
+    final entries = _cascadingList[cascadeIndex];
+    final level = cascadeIndex + 1;
+    final selectedEntries =
+        _selectedEntriesPerLevel.elementAtOrNull(level) ?? {};
+    final bgColor = level < _backgroundColors.length
+        ? _backgroundColors[level]
+        : Colors.white;
+    final selectedColor = level + 1 < _backgroundColors.length
+        ? _backgroundColors[level + 1]
+        : Colors.white;
+
+    final child = ColoredBox(
+      color: bgColor,
+      child: ListView.builder(
+        physics: const ClampingScrollPhysics(),
+        controller: _scrollControllers[cascadeIndex],
+        itemCount: entries.length,
+        itemBuilder: (context, index) {
+          final entry = entries[index] as SelectorTextEntry;
+          if (!entry.hasChildren && entry.enabled) {
+            final selected = selectedEntries.contains(entry);
+            if (SelectionMode.single == childrenSelectionMode) {
+              return SelectorRadioListTile(
+                label: entry.name ?? '',
+                selected: selected,
+                radioBuilder: selector?.radioBuilder,
+                enabled: entry.enabled,
+                onTap: () {
+                  _onTerminalItemTap.call(cascadeIndex, entry);
+                },
+              );
+            } else {
+              return SelectorCheckboxListTile(
+                label: entry.name ?? '',
+                checked: selected,
+                checkboxBuilder: selector?.checkboxBuilder,
+                enabled: entry.enabled,
+                onTap: () => _onTerminalItemTap.call(cascadeIndex, entry),
+              );
+            }
+          } else {
+            final selected = _tempSelectedEntryPerLevel.contains(entry);
+            final selectedCount = _selectedEntriesPerLevel
+                    .elementAtOrNull(level + 1)
+                    ?.where((e) =>
+                        e is SelectorChildEntry && e.parentId == entry.id)
+                    .length ??
+                0;
+            return SelectorListTile(
+              label: entry.name ?? '',
+              selected: selected,
+              selectedTileColor: selectedColor,
+              badge: selectedCount > 0 ? selectedCount.toString() : null,
+              enabled: entry.enabled,
+              onTap: () => _onMiddleItemTap.call(cascadeIndex, entry),
+            );
+          }
+        },
+      ),
+    );
+
+    if (width == null) {
+      return Flexible(child: child);
+    }
+    return SizedBox(width: width, child: child);
+  }
+
   @override
   Widget build(BuildContext context) {
     debugPrint('_currentLevel=$_currentLevel');
 
     final theme = SelectorTheme.of(context);
+    final isScrollable = selector?.isScrollable == true;
 
     /// Maximum level for the current category
     // final maxLevel = tempSelectedCategory.maxLevel;
@@ -669,9 +795,11 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
                     _onCategoryItemTap(entry as SelectorCategoryEntry),
               ),
               // Children lists (right)
+              // selector.isScrollable
               Expanded(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (categoryHeader != null &&
                         categoryHeader.children != null)
@@ -683,95 +811,43 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
                             .call(true, index, entry as SelectorChildEntry),
                       ),
                     Expanded(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: List.generate(_cascadingList.length,
-                            (cascadeIndex) {
-                          final entries = _cascadingList[cascadeIndex];
-                          final level = cascadeIndex + 1;
-                          final selectedEntries =
-                              _selectedEntriesPerLevel.elementAtOrNull(level) ??
-                                  {};
-                          // final isMiddleLevel = level < _currentLevel;
-                          // Focused item at the current level
-                          // final focusedItem =
-                          //     _tempSelectedEntryPerLevel.elementAtOrNull(level);
-                          // Get background color for this level
-                          final bgColor = level < _backgroundColors.length
-                              ? _backgroundColors[level]
-                              : Colors.white;
-                          // Get selected item color (background color of next level)
-                          final selectedColor =
-                              level + 1 < _backgroundColors.length
-                                  ? _backgroundColors[level + 1]
-                                  : Colors.white;
-                          return Flexible(
-                            child: ColoredBox(
-                              color: bgColor,
-                              child: ListView.builder(
-                                physics: const ClampingScrollPhysics(),
-                                controller: _scrollControllers[cascadeIndex],
-                                itemCount: entries.length,
-                                itemBuilder: (context, index) {
-                                  final entry =
-                                      entries[index] as SelectorTextEntry;
-                                  if (!entry.hasChildren && entry.enabled) {
-                                    // && level == maxLevel - 1
-                                    final selected =
-                                        selectedEntries.contains(entry);
-                                    if (SelectionMode.single ==
-                                        childrenSelectionMode) {
-                                      return SelectorRadioListTile(
-                                        label: entry.name ?? '',
-                                        selected: selected,
-                                        radioBuilder: selector?.radioBuilder,
-                                        enabled: entry.enabled,
-                                        onTap: () {
-                                          _onTerminalItemTap.call(
-                                              cascadeIndex, entry);
-                                        },
-                                      );
-                                    } else {
-                                      return SelectorCheckboxListTile(
-                                        label: entry.name ?? '',
-                                        checked: selected,
-                                        checkboxBuilder:
-                                            selector?.checkboxBuilder,
-                                        enabled: entry.enabled,
-                                        onTap: () => _onTerminalItemTap.call(
-                                            cascadeIndex, entry),
-                                      );
-                                    }
-                                  } else {
-                                    final selected = _tempSelectedEntryPerLevel
-                                        .contains(entry);
-                                    final selectedCount =
-                                        _selectedEntriesPerLevel
-                                                .elementAtOrNull(level + 1)
-                                                ?.where((e) =>
-                                                    e is SelectorChildEntry &&
-                                                    e.parentId == entry.id)
-                                                .length ??
-                                            0;
-                                    return SelectorListTile(
-                                      label: entry.name ?? '',
-                                      selected: selected,
-                                      // selectedColor: selectedColor,
-                                      selectedTileColor: selectedColor,
-                                      badge: selectedCount > 0
-                                          ? selectedCount.toString()
-                                          : null,
-                                      enabled: entry.enabled,
-                                      onTap: () => _onMiddleItemTap.call(
-                                          cascadeIndex, entry),
-                                    );
-                                  }
-                                },
+                      child: isScrollable
+                          ? LayoutBuilder(
+                              builder: (context, constraints) {
+                                final row = Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: List.generate(
+                                    _cascadingList.length,
+                                    (cascadeIndex) => buildCascadeList(
+                                      cascadeIndex,
+                                      _estimateCascadeColumnWidth(
+                                        context,
+                                        cascadeIndex,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                                return ScrollConfiguration(
+                                  behavior: ScrollConfiguration.of(context)
+                                      .copyWith(overscroll: false),
+                                  child: SingleChildScrollView(
+                                    controller: _cascadeHorizontalController,
+                                    scrollDirection: Axis.horizontal,
+                                    physics: const ClampingScrollPhysics(),
+                                    child: row,
+                                  ),
+                                );
+                              },
+                            )
+                          : Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: List.generate(
+                                _cascadingList.length,
+                                (cascadeIndex) =>
+                                    buildCascadeList(cascadeIndex, null),
                               ),
                             ),
-                          );
-                        }),
-                      ),
                     ),
                     if (categoryFooter != null &&
                         categoryFooter.children != null)
