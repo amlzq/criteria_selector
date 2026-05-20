@@ -126,7 +126,7 @@ class _MapPageState extends State<MapPage> {
         final nearbyRadiusMeters =
             result.findIdsAtLevel(category, 1).firstOrNull;
         filter.nearbyRadiusMeters = nearbyRadiusMeters;
-        filter.userLatLon = userLatLon; // TODO: 增加选择拦截器，在选之前请求定位，否则不能选
+        filter.userLatLon = userLatLon;
       }
     } else if (result.tabIndex == 1) {
       // 价格筛选
@@ -228,6 +228,8 @@ class _MapPageState extends State<MapPage> {
   }
 
   void _handleSelectorApply(DropselectResult result) {
+    _showSelectedResult(result);
+
     final l10n = AppLocalizations.of(context);
     _filter = _dropselectResultParser(result);
     if (_filter == null) {
@@ -312,9 +314,11 @@ class _MapPageState extends State<MapPage> {
             ],
             onChanged: (DropselectResult result) {
               debugPrint('onChanged: $result');
+              _handleSelectorChange(result);
             },
             onApplied: (DropselectResult result) {
               debugPrint('onApplied: $result');
+              _handleSelectorApply(result);
             },
             onReset: () {
               debugPrint('onReset');

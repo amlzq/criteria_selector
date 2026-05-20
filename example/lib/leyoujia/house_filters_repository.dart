@@ -88,6 +88,14 @@ class HouseFiltersRepository {
                                 id: l2.id!,
                                 name: l2.name!,
                                 enabled: l2.enabled ?? true,
+                                children: l2.data
+                                    ?.map((l3) => SelectorTextEntry(
+                                          parentId: l2.id!,
+                                          id: l3.id!,
+                                          name: l3.name!,
+                                          enabled: l3.enabled ?? true,
+                                        ))
+                                    .toSet(),
                               ))
                           .toSet(),
                       immediate: category.id == 'nearby',
@@ -694,15 +702,15 @@ class FloorPlanData {
     if (json['data'] != null) {
       data = <FloorPlanItem>[];
       json['data'].forEach((v) {
-        data!.add(new FloorPlanItem.fromJson(v));
+        data!.add(FloorPlanItem.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = this.id;
-    data['name'] = this.name;
+    data['id'] = id;
+    data['name'] = name;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
@@ -727,10 +735,10 @@ class FloorPlanItem {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['min'] = this.min;
-    data['max'] = this.max;
+    data['id'] = id;
+    data['name'] = name;
+    data['min'] = min;
+    data['max'] = max;
     return data;
   }
 }
@@ -754,8 +762,8 @@ class SortData {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = this.id;
-    data['name'] = this.name;
+    data['id'] = id;
+    data['name'] = name;
     return data;
   }
 }

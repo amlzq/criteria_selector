@@ -128,7 +128,7 @@ class _RentPageState extends State<RentPage> {
         final nearbyRadiusMeters =
             result.findIdsAtLevel(category, 1).firstOrNull;
         filter.nearbyRadiusMeters = nearbyRadiusMeters;
-        filter.userLatLon = userLatLon; // TODO: 增加选择拦截器，在选之前请求定位，否则不能选
+        filter.userLatLon = userLatLon;
       }
     } else if (result.tabIndex == 1) {
       // 价格筛选

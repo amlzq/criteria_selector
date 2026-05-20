@@ -82,7 +82,7 @@ class _SellPageState extends State<SellPage> {
         final nearbyRadiusMeters =
             result.findIdsAtLevel(category, 1).firstOrNull;
         _filter?.nearbyRadiusMeters = nearbyRadiusMeters;
-        _filter?.userLatLon = userLatLon; // TODO: 增加选择拦截器，在选之前请求定位，否则不能选
+        _filter?.userLatLon = userLatLon;
       }
     } else if (result.tabIndex == 1) {
       // 价格筛选
@@ -204,6 +204,7 @@ class _SellPageState extends State<SellPage> {
               ],
               selectors: [
                 CascadingSelector(
+                  isScrollable: true,
                   dataFetcher: _filtersRepo.fetchRegionData,
                   selectedDataFetcher: _filtersRepo.fetchRegionSelectedData,
                   resetDataFetcher: _filtersRepo.fetchRegionResetData,
