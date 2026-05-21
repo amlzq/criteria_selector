@@ -31,5 +31,9 @@
     "customArea": "自定义面积",
     "userCityName": "深圳",
     "viewhomes": "查看 {count} 套",
-    "nohomes": "暂无房源"
+    "nohomes": "暂无房源",
+    "themeMode": "主题模式",
+    "themeSystem": "跟随系统",
+    "themeLight": "浅色",
+    "themeDark": "深色"
 }

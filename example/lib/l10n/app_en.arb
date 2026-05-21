@@ -31,5 +31,9 @@
   "customArea": "Custom area",
   "userCityName": "Shenzhen",
   "viewhomes": "View {count} homes",
-  "nohomes": "No homes"
+  "nohomes": "No homes",
+  "themeMode": "Theme",
+  "themeSystem": "System",
+  "themeLight": "Light",
+  "themeDark": "Dark"
 }

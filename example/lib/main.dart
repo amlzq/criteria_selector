@@ -14,18 +14,38 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  ThemeMode _themeMode = ThemeMode.system;
+
+  @override
   Widget build(BuildContext context) {
-    final baseTheme = ThemeData(
-      colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+    const seedColor = Colors.deepPurple;
+    final lightTheme = ThemeData(
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: seedColor,
+        brightness: Brightness.light,
+      ),
+      useMaterial3: true,
+    );
+    final darkTheme = ThemeData(
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: seedColor,
+        brightness: Brightness.dark,
+      ),
       useMaterial3: true,
     );
     return MaterialApp(
       onGenerateTitle: (context) => AppLocalizations.of(context)?.appName ?? '',
-      theme: baseTheme,
+      theme: lightTheme,
+      darkTheme: darkTheme,
+      themeMode: _themeMode,
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -49,6 +69,7 @@ class MyApp extends StatelessWidget {
         ),
       ],
       builder: (context, child) {
+        final baseTheme = Theme.of(context);
         final theme = baseTheme.copyWith(
           extensions: <ThemeExtension<dynamic>>[
             DropselectTabBarTheme(
@@ -61,13 +82,27 @@ class MyApp extends StatelessWidget {
           child: child ?? const SizedBox.shrink(),
         );
       },
-      home: const MyHomePage(),
+      home: MyHomePage(
+        themeMode: _themeMode,
+        onThemeModeChanged: (mode) {
+          setState(() {
+            _themeMode = mode;
+          });
+        },
+      ),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+  const MyHomePage({
+    super.key,
+    required this.themeMode,
+    required this.onThemeModeChanged,
+  });
+
+  final ThemeMode themeMode;
+  final ValueChanged<ThemeMode> onThemeModeChanged;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -81,6 +116,28 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(l10n?.appName ?? ''),
+        actions: [
+          PopupMenuButton<ThemeMode>(
+            initialValue: widget.themeMode,
+            onSelected: widget.onThemeModeChanged,
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: ThemeMode.system,
+                child: Text(l10n?.themeSystem ?? 'System'),
+              ),
+              PopupMenuItem(
+                value: ThemeMode.light,
+                child: Text(l10n?.themeLight ?? 'Light'),
+              ),
+              PopupMenuItem(
+                value: ThemeMode.dark,
+                child: Text(l10n?.themeDark ?? 'Dark'),
+              ),
+            ],
+            icon: const Icon(Icons.brightness_6_outlined),
+            tooltip: l10n?.themeMode ?? 'Theme',
+          ),
+        ],
       ),
       body: Center(
         child: Column(
