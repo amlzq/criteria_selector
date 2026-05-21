@@ -12,6 +12,9 @@ import 'selector_utils.dart';
 /// the overlay visibility. It also forwards selection events through
 /// [onChanged], [onApplied], and [onReset].
 class DropselectTabController extends ChangeNotifier {
+  static const Duration _kOverlayAnimationDuration =
+      Duration(milliseconds: 240);
+
   /// Fired whenever a selector reports a selection change.
   DropselectResultCallback? onChanged;
 
@@ -53,6 +56,11 @@ class DropselectTabController extends ChangeNotifier {
   final portalCtrl = OverlayPortalController();
   final layerLink = LayerLink();
 
+  TickerProvider? _tickerProvider;
+  AnimationController? _overlayAnimCtrl;
+  Animation<double>? _overlayAnimation;
+  bool _isExpanded = false;
+
   // OverlayEntry? _entry;
 
   // BuildContext? get barContext => _barContext;
@@ -75,9 +83,62 @@ class DropselectTabController extends ChangeNotifier {
   /// The selector previously used for the overlay.
   Selector? previousSelector;
 
+  Animation<double> get overlayAnimation =>
+      _overlayAnimation ?? AlwaysStoppedAnimation(_isExpanded ? 1.0 : 0.0);
+
+  void attachTickerProvider(TickerProvider tickerProvider) {
+    if (_isDisposed) return;
+    if (identical(_tickerProvider, tickerProvider) &&
+        _overlayAnimCtrl != null) {
+      return;
+    }
+
+    if (_tickerProvider != null &&
+        !identical(_tickerProvider, tickerProvider)) {
+      detachTickerProvider();
+    }
+
+    _tickerProvider = tickerProvider;
+    _ensureOverlayAnimationController();
+    final animCtrl = _overlayAnimCtrl;
+    if (animCtrl == null) return;
+    animCtrl.value = _isExpanded ? 1.0 : 0.0;
+  }
+
+  void detachTickerProvider() {
+    _tickerProvider = null;
+    _overlayAnimation = null;
+    final animCtrl = _overlayAnimCtrl;
+    _overlayAnimCtrl = null;
+    animCtrl?.dispose();
+  }
+
+  void _ensureOverlayAnimationController() {
+    final tickerProvider = _tickerProvider;
+    if (tickerProvider == null) return;
+
+    final existingCtrl = _overlayAnimCtrl;
+    if (existingCtrl != null) {
+      return;
+    }
+
+    final animCtrl = AnimationController(
+      vsync: tickerProvider,
+      duration: _kOverlayAnimationDuration,
+    );
+    _overlayAnimCtrl = animCtrl;
+    _overlayAnimation = CurvedAnimation(
+      parent: animCtrl,
+      curve: Curves.easeOutCubic,
+      reverseCurve: Curves.easeInCubic,
+    );
+  }
+
   @override
   void dispose() {
     _isDisposed = true;
+    hideSelector(immediate: true);
+    detachTickerProvider();
     tabDataMap.clear();
     // removeOverlay();
     super.dispose();
@@ -95,26 +156,73 @@ class DropselectTabController extends ChangeNotifier {
   /// [currentIndex] is updated.
   void toggleSelector({int? index}) {
     if (_isDisposed) return;
-    if (currentIndex != index || !isSelectorShowing) {
-      portalCtrl.show();
-      // _animCtrl.forward(from: 0);
-    } else {
-      portalCtrl.hide();
-      // _animCtrl.reverse().then((_) => portalCtrl.hide());
+    if (currentIndex != index || !_isExpanded) {
+      _showSelector(index);
+      return;
     }
-    currentIndex = index;
-    notifyListeners();
+    hideSelector();
   }
 
-  bool get isSelectorShowing => portalCtrl.isShowing;
+  bool get isSelectorShowing => _isExpanded;
 
   /// Hides the selector overlay if it is showing.
-  void hideSelector() {
+  void hideSelector({bool immediate = false}) {
     if (_isDisposed) return;
-    // removeOverlay();
-    if (isSelectorShowing) {
-      portalCtrl.hide();
+
+    if (!_isExpanded && !portalCtrl.isShowing) {
+      return;
     }
+
+    _isExpanded = false;
+    notifyListeners();
+
+    if (immediate) {
+      _overlayAnimCtrl?.value = 0.0;
+      portalCtrl.hide();
+      notifyListeners();
+      return;
+    }
+
+    final animCtrl = _overlayAnimCtrl;
+    if (animCtrl == null) {
+      portalCtrl.hide();
+      notifyListeners();
+      return;
+    }
+
+    if (!portalCtrl.isShowing) {
+      animCtrl.value = 0.0;
+      return;
+    }
+
+    animCtrl.reverse(from: animCtrl.value).whenComplete(() {
+      if (_isDisposed) return;
+      if (portalCtrl.isShowing) {
+        portalCtrl.hide();
+      }
+      notifyListeners();
+    });
+  }
+
+  void _showSelector(int? index) {
+    if (_isDisposed) return;
+    if (index == null) return;
+
+    currentIndex = index;
+    _isExpanded = true;
+
+    _ensureOverlayAnimationController();
+    final animCtrl = _overlayAnimCtrl;
+
+    if (!portalCtrl.isShowing) {
+      portalCtrl.show();
+      animCtrl?.forward(from: 0.0);
+      notifyListeners();
+      return;
+    }
+
+    animCtrl?.value = 1.0;
+    notifyListeners();
   }
 
   /// Dispatches a selection change event.

@@ -17,6 +17,7 @@ class DropselectOverlay extends StatelessWidget {
     super.key,
     required this.selector,
     required this.style,
+    this.animation,
     this.onChangeTap,
     this.onApplyTap,
     this.onResetTap,
@@ -28,6 +29,8 @@ class DropselectOverlay extends StatelessWidget {
   final Selector selector;
 
   final DropselectOverlayStyle? style;
+
+  final Animation<double>? animation;
 
   final SelectorCallback? onChangeTap;
   final SelectorCallback? onApplyTap;
@@ -52,29 +55,48 @@ class DropselectOverlay extends StatelessWidget {
     final effectiveBackgroundColor =
         style?.backgroundColor ?? defaults.backgroundColor!;
 
-    return Material(
-      color: effectiveBackgroundColor,
-      child: GestureDetector(
-        onTap: () {
-          debugPrint('overlay taped');
-          onOverlayTap?.call();
-        },
-        behavior: HitTestBehavior.opaque,
-        child: Stack(
-          children: [
-            ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: maxHeight),
-              child: SelectorPanel(
-                selector: selector,
-                onChangeTap: onChangeTap,
-                onApplyTap: onApplyTap,
-                onResetTap: onResetTap,
-                selectorTheme: selectorTheme,
-              ),
-            ),
-          ],
+    final effectiveAnimation = animation ?? const AlwaysStoppedAnimation(1.0);
+
+    return AnimatedBuilder(
+      animation: effectiveAnimation,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: maxHeight),
+        child: SelectorPanel(
+          selector: selector,
+          onChangeTap: onChangeTap,
+          onApplyTap: onApplyTap,
+          onResetTap: onResetTap,
+          selectorTheme: selectorTheme,
         ),
       ),
+      builder: (context, child) {
+        final t = effectiveAnimation.value;
+        final barrierColor =
+            Color.lerp(Colors.transparent, effectiveBackgroundColor, t) ??
+                effectiveBackgroundColor;
+
+        return Material(
+          color: barrierColor,
+          child: GestureDetector(
+            onTap: () {
+              debugPrint('overlay taped');
+              onOverlayTap?.call();
+            },
+            behavior: HitTestBehavior.opaque,
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: FadeTransition(
+                opacity: effectiveAnimation,
+                child: SizeTransition(
+                  sizeFactor: effectiveAnimation,
+                  axisAlignment: -1.0,
+                  child: child,
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

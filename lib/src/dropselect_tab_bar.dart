@@ -118,7 +118,8 @@ class DropselectTabBar extends StatefulWidget implements PreferredSizeWidget {
   }
 }
 
-class _DropselectTabBarState extends State<DropselectTabBar> {
+class _DropselectTabBarState extends State<DropselectTabBar>
+    with SingleTickerProviderStateMixin {
   DropselectTabController? _controller;
   int? _previousIndex;
 
@@ -140,7 +141,8 @@ class _DropselectTabBarState extends State<DropselectTabBar> {
     final controller = _controller;
     if (controller != null) {
       controller.removeListener(_handleDropselectTabControllerTick);
-      controller.hideSelector();
+      controller.hideSelector(immediate: true);
+      controller.detachTickerProvider();
       controller.onChanged = null;
       controller.onApplied = null;
       controller.onReset = null;
@@ -171,6 +173,7 @@ class _DropselectTabBarState extends State<DropselectTabBar> {
       _controller!.onApplied = widget.onApplied;
       _controller!.onReset = widget.onReset;
     }
+    _controller!.attachTickerProvider(this);
   }
 
   void _handleDropselectTabControllerTick() {
@@ -291,6 +294,7 @@ class _DropselectTabBarState extends State<DropselectTabBar> {
               child: DropselectOverlay(
                 selector: _controller!.previousSelector!,
                 style: overlayStyle,
+                animation: _controller!.overlayAnimation,
                 onChangeTap: _controller!.handleChange,
                 onApplyTap: (selected) => _controller!.handleApply(
                   selected,
