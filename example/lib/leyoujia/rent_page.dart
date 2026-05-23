@@ -276,7 +276,8 @@ class _RentPageState extends State<RentPage> {
             ],
             selectors: [
               CascadingSelector(
-                dataFetcher: _filtersRepo.fetchRegionData,
+                dataFetcher: () =>
+                    _filtersRepo.fetchRegionData(singleAll: true),
                 selectedDataFetcher: _filtersRepo.fetchRegionSelectedData,
                 resetDataFetcher: _filtersRepo.fetchRegionResetData,
                 selectionMode: SelectionMode.single,
@@ -297,6 +298,7 @@ class _RentPageState extends State<RentPage> {
                 dataFetcher: _filtersRepo.fetchRentalData,
                 selectedDataFetcher: _filtersRepo.fetchRentalSelectedData,
                 resetDataFetcher: _filtersRepo.fetchRentalResetData,
+                selectionMode: SelectionMode.single,
                 tileVariant: SelectorGridTileVariant.outlined,
                 crossAxisCount: 4,
                 childAspectRatio: 2.5,
@@ -304,11 +306,12 @@ class _RentPageState extends State<RentPage> {
                 crossAxisSpacing: 10,
               ),
               FlattenSelector(
-                dataFetcher: _filtersRepo.fetchFloorPlanRentData,
+                dataFetcher: () =>
+                    _filtersRepo.fetchFloorPlanRentData(singleAll: true),
                 selectedDataFetcher:
                     _filtersRepo.fetchFloorPlanRentSelectedData,
                 resetDataFetcher: _filtersRepo.fetchFloorPlanRentResetData,
-                selectionMode: SelectionMode.multiple,
+                selectionMode: SelectionMode.single,
                 crossAxisCount: 3,
                 childAspectRatio: 2.5,
                 crossAxisSpacing: 8,

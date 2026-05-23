@@ -51,8 +51,8 @@ class HouseFiltersRepository {
 
   SelectorEntries? fetchRegionResetData() => regionIniteialSelected;
 
-  Future<SelectorEntries> fetchRegionData() async {
-    // simulate network delay
+  Future<SelectorEntries> fetchRegionData({bool singleAll = false}) async {
+    // 模拟网络延迟
     await Future.delayed(const Duration(milliseconds: 250));
 
     // 板块/地段
@@ -101,7 +101,7 @@ class HouseFiltersRepository {
                       immediate: category.id == 'nearby',
                     ))
                 .toSet(),
-            selectionMode: category.id == 'nearby'
+            selectionMode: singleAll || category.id == 'nearby'
                 ? SelectionMode.single
                 : SelectionMode.multiple,
           ),
@@ -156,7 +156,7 @@ class HouseFiltersRepository {
   SelectorEntries? fetchBuyPriceResetData() => buyPriceIniteialSelected;
 
   Future<SelectorEntries> fetchBuyPriceData() async {
-    // simulate network delay
+    // 模拟网络延迟
     await Future.delayed(const Duration(milliseconds: 250));
 
     final totalPrice =
@@ -227,7 +227,7 @@ class HouseFiltersRepository {
   SelectorEntries? fetchSellPriceResetData() => sellPriceIniteialSelected;
 
   Future<SelectorEntries> fetchSellPriceData() async {
-    // simulate network delay
+    // 模拟网络延迟
     await Future.delayed(const Duration(milliseconds: 250));
 
     final totalPrice =
@@ -300,7 +300,7 @@ class HouseFiltersRepository {
   SelectorEntries? fetchRentalResetData() => rentalIniteialSelected;
 
   Future<SelectorEntries> fetchRentalData() async {
-    // simulate network delay
+    // 模拟网络延迟
     await Future.delayed(const Duration(milliseconds: 250));
 
     final rent =
@@ -322,7 +322,7 @@ class HouseFiltersRepository {
                       max: l1.max,
                     ))
                 .toSet(),
-            selectionMode: SelectionMode.multiple,
+            selectionMode: SelectionMode.single,
           ),
         )
         .toSet();
@@ -359,7 +359,7 @@ class HouseFiltersRepository {
   SelectorEntries? fetchFloorPlanBuyResetData() => floorPlanBuyIniteialSelected;
 
   Future<SelectorEntries> fetchFloorPlanBuyData() async {
-    // simulate network delay
+    // 模拟网络延迟
     await Future.delayed(const Duration(milliseconds: 250));
     final floorPlan =
         floorPlanFromJson(await loadJsonData('floor_plan_buy.json'));
@@ -417,7 +417,7 @@ class HouseFiltersRepository {
       floorPlanSellIniteialSelected;
 
   Future<SelectorEntries> fetchFloorPlanSellData() async {
-    // simulate network delay
+    // 模拟网络延迟
     await Future.delayed(const Duration(milliseconds: 250));
     final floorPlan =
         floorPlanFromJson(await loadJsonData('floor_plan_sell.json'));
@@ -474,8 +474,9 @@ class HouseFiltersRepository {
   SelectorEntries? fetchFloorPlanRentResetData() =>
       floorPlanRentIniteialSelected;
 
-  Future<SelectorEntries> fetchFloorPlanRentData() async {
-    // simulate network delay
+  Future<SelectorEntries> fetchFloorPlanRentData(
+      {bool singleAll = false}) async {
+    // 模拟网络延迟
     await Future.delayed(const Duration(milliseconds: 250));
     final floorPlan =
         floorPlanFromJson(await loadJsonData('floor_plan_rent.json'));
@@ -500,7 +501,8 @@ class HouseFiltersRepository {
                         name: l1.name,
                       ))
                 .toSet(),
-            selectionMode: SelectionMode.multiple,
+            selectionMode:
+                singleAll ? SelectionMode.single : SelectionMode.multiple,
           ),
         )
         .toSet();
@@ -522,7 +524,7 @@ class HouseFiltersRepository {
   SelectorEntries? fetchSortBuyResetData() => sortBuyIniteialSelected;
 
   Future<SelectorEntries> fetchSortBuyData() async {
-    // simulate network delay
+    // 模拟网络延迟
     await Future.delayed(const Duration(milliseconds: 250));
     final sort = sortFromJson(await loadJsonData('sort_buy.json'));
     debugPrint('sort length: ${sort.length}');
@@ -551,7 +553,7 @@ class HouseFiltersRepository {
   SelectorEntries? fetchSortSellResetData() => sortSellIniteialSelected;
 
   Future<SelectorEntries> fetchSortSellData() async {
-    // simulate network delay
+    // 模拟网络延迟
     await Future.delayed(const Duration(milliseconds: 250));
     final sort = sortFromJson(await loadJsonData('sort_sell.json'));
     debugPrint('sort length: ${sort.length}');
@@ -580,7 +582,7 @@ class HouseFiltersRepository {
   SelectorEntries? fetchSortRentResetData() => sortRentIniteialSelected;
 
   Future<SelectorEntries> fetchSortRentData() async {
-    // simulate network delay
+    // 模拟网络延迟
     await Future.delayed(const Duration(milliseconds: 250));
     final sort = sortFromJson(await loadJsonData('sort_rent.json'));
     debugPrint('sort length: ${sort.length}');
