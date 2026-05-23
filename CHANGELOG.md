@@ -1,3 +1,9 @@
+## 0.1.1
+
+* **FEATURE** add i18n for labels
+* **FEATURE** CascadingSelector added isScrollable
+* **FEATURE** animate dropdown overlay via controller
+
 ## 0.1.0
 
 * **FEATURE** unify category prop and add chip wrap
