@@ -15,29 +15,14 @@ enum SelectorChipVariant {
 @immutable
 class SelectorChipBarTheme with Diagnosticable {
   const SelectorChipBarTheme({
-    this.color,
-    this.labelStyle,
-    this.selectedColor,
-    this.selectedLabelStyle,
-    this.variant,
     this.backgroundColor,
     this.padding,
+    this.variant,
+    this.chipColor,
+    this.selectedChipColor,
+    this.labelStyle,
+    this.selectedLabelStyle,
   });
-
-  /// Chip color used when selected.
-  final Color? selectedColor;
-
-  /// Chip color used when unselected.
-  final Color? color;
-
-  /// Label style used when unselected.
-  final TextStyle? labelStyle;
-
-  /// Label style used when selected.
-  final TextStyle? selectedLabelStyle;
-
-  /// Chip visual variant.
-  final SelectorChipVariant? variant;
 
   /// Background color of the chip bar.
   final Color? backgroundColor;
@@ -45,24 +30,39 @@ class SelectorChipBarTheme with Diagnosticable {
   /// Outer padding of the chip bar.
   final EdgeInsetsGeometry? padding;
 
+  /// Chip visual variant.
+  final SelectorChipVariant? variant;
+
+  /// Chip color used when unselected.
+  final Color? chipColor;
+
+  /// Chip color used when selected.
+  final Color? selectedChipColor;
+
+  /// Label style used when unselected.
+  final TextStyle? labelStyle;
+
+  /// Label style used when selected.
+  final TextStyle? selectedLabelStyle;
+
   /// Returns a copy of this theme with the given fields replaced.
   SelectorChipBarTheme copyWith({
-    Color? color,
-    TextStyle? labelStyle,
-    Color? selectedColor,
-    TextStyle? selectedLabelStyle,
-    SelectorChipVariant? variant,
     Color? backgroundColor,
     EdgeInsetsGeometry? padding,
+    SelectorChipVariant? variant,
+    Color? chipColor,
+    Color? selectedChipColor,
+    TextStyle? labelStyle,
+    TextStyle? selectedLabelStyle,
   }) {
     return SelectorChipBarTheme(
-      color: color ?? this.color,
-      labelStyle: labelStyle ?? this.labelStyle,
-      selectedColor: selectedColor ?? this.selectedColor,
-      selectedLabelStyle: selectedLabelStyle ?? this.selectedLabelStyle,
-      variant: variant ?? this.variant,
       backgroundColor: backgroundColor ?? this.backgroundColor,
       padding: padding ?? this.padding,
+      variant: variant ?? this.variant,
+      chipColor: chipColor ?? this.chipColor,
+      selectedChipColor: selectedChipColor ?? this.selectedChipColor,
+      labelStyle: labelStyle ?? this.labelStyle,
+      selectedLabelStyle: selectedLabelStyle ?? this.selectedLabelStyle,
     );
   }
 
@@ -77,27 +77,6 @@ class SelectorChipBarTheme with Diagnosticable {
       return a;
     }
     return SelectorChipBarTheme(
-      color: Color.lerp(
-        a?.color,
-        b?.color,
-        t,
-      ),
-      labelStyle: TextStyle.lerp(
-        a?.labelStyle,
-        b?.labelStyle,
-        t,
-      ),
-      selectedColor: Color.lerp(
-        a?.selectedColor,
-        b?.selectedColor,
-        t,
-      ),
-      selectedLabelStyle: TextStyle.lerp(
-        a?.selectedLabelStyle,
-        b?.selectedLabelStyle,
-        t,
-      ),
-      variant: t < 0.5 ? a?.variant : b?.variant,
       backgroundColor: Color.lerp(
         a?.backgroundColor,
         b?.backgroundColor,
@@ -108,18 +87,39 @@ class SelectorChipBarTheme with Diagnosticable {
         b?.padding,
         t,
       ),
+      variant: t < 0.5 ? a?.variant : b?.variant,
+      chipColor: Color.lerp(
+        a?.chipColor,
+        b?.chipColor,
+        t,
+      ),
+      selectedChipColor: Color.lerp(
+        a?.selectedChipColor,
+        b?.selectedChipColor,
+        t,
+      ),
+      labelStyle: TextStyle.lerp(
+        a?.labelStyle,
+        b?.labelStyle,
+        t,
+      ),
+      selectedLabelStyle: TextStyle.lerp(
+        a?.selectedLabelStyle,
+        b?.selectedLabelStyle,
+        t,
+      ),
     );
   }
 
   @override
   int get hashCode => Object.hash(
-        color,
-        labelStyle,
-        selectedColor,
-        selectedLabelStyle,
-        variant,
         backgroundColor,
         padding,
+        variant,
+        chipColor,
+        selectedChipColor,
+        labelStyle,
+        selectedLabelStyle,
       );
 
   @override
@@ -131,12 +131,12 @@ class SelectorChipBarTheme with Diagnosticable {
       return false;
     }
     return other is SelectorChipBarTheme &&
-        other.color == color &&
-        other.labelStyle == labelStyle &&
-        other.selectedColor == selectedColor &&
-        other.selectedLabelStyle == selectedLabelStyle &&
-        other.variant == variant &&
         other.backgroundColor == backgroundColor &&
-        other.padding == padding;
+        other.variant == variant &&
+        other.padding == padding &&
+        other.chipColor == chipColor &&
+        other.selectedChipColor == selectedChipColor &&
+        other.labelStyle == labelStyle &&
+        other.selectedLabelStyle == selectedLabelStyle;
   }
 }

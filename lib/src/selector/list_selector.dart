@@ -338,20 +338,20 @@ class ListSelectorViewState extends State<ListSelectorView> {
                                     ? SelectorChipBar(
                                         key: ValueKey('category_$index'),
                                         category: category,
+                                        entries: entries,
+                                        selectedEntries: selectedEntries,
                                         showTitle: false,
                                         isWrapable: true,
                                         backgroundColor:
                                             chipBarTheme?.backgroundColor,
-                                        variant: chipBarTheme?.variant,
                                         padding: chipBarTheme?.padding,
-                                        selectedColor:
-                                            chipBarTheme?.selectedColor,
-                                        color: chipBarTheme?.color,
+                                        variant: chipBarTheme?.variant,
+                                        chipColor: chipBarTheme?.chipColor,
+                                        selectedChipColor:
+                                            chipBarTheme?.selectedChipColor,
                                         labelStyle: chipBarTheme?.labelStyle,
                                         selectedLabelStyle:
                                             chipBarTheme?.selectedLabelStyle,
-                                        entries: entries,
-                                        selectedEntries: selectedEntries,
                                         onItemTap: (index, item) =>
                                             _onTerminalItemTap(
                                                 item as SelectorChildEntry),

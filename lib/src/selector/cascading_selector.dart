@@ -807,6 +807,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
                         category: categoryHeader,
                         entries: categoryHeader.children!.toList(),
                         selectedEntries: headerSelected,
+                        variant: SelectorChipVariant.filled,
                         onItemTap: (index, entry) => _onHeaderOrFooterItemTap
                             .call(true, index, entry as SelectorChildEntry),
                       ),
@@ -855,6 +856,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
                         category: categoryFooter,
                         entries: categoryFooter.children!.toList(),
                         selectedEntries: footerSelected,
+                        variant: SelectorChipVariant.filled,
                         onItemTap: (index, entry) => _onHeaderOrFooterItemTap
                             .call(false, index, entry as SelectorChildEntry),
                       ),

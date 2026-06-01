@@ -5,6 +5,7 @@ import '../../selector_entry.dart';
 import '../selector_theme.dart';
 import '../selector_theme_data.dart';
 import 'chip_bar_theme.dart';
+import 'extensions.dart';
 
 /// Default height for [SelectorChipBar].
 const kSelectorChipBarHeight = 44.0;
@@ -20,35 +21,23 @@ class SelectorChipBar<T extends SelectorEntry> extends StatelessWidget {
     this.category,
     required this.entries,
     this.selectedEntries,
-    this.variant,
-    this.color,
-    this.labelStyle,
-    this.selectedColor,
-    this.selectedLabelStyle,
-    this.backgroundColor,
-    required this.onItemTap,
-    this.padding,
     this.selectionMode = SelectionMode.single,
     this.isWrapable = false,
     this.showTitle = true,
+    this.backgroundColor,
+    this.padding,
+    this.variant,
+    this.chipColor,
+    this.selectedChipColor,
+    this.labelStyle,
+    this.selectedLabelStyle,
+    required this.onItemTap,
   });
 
   final SelectorEntry? category;
 
   final List<T> entries;
   final SelectorEntries? selectedEntries;
-
-  final SelectorChipVariant? variant;
-  final Color? color;
-  final TextStyle? labelStyle;
-  final Color? selectedColor;
-  final TextStyle? selectedLabelStyle;
-
-  final Color? backgroundColor;
-
-  final ItemTapCallback onItemTap;
-
-  final EdgeInsetsGeometry? padding;
 
   final SelectionMode selectionMode;
 
@@ -57,6 +46,20 @@ class SelectorChipBar<T extends SelectorEntry> extends StatelessWidget {
 
   /// Whether to show the category title.
   final bool showTitle;
+
+  final Color? backgroundColor;
+
+  final EdgeInsetsGeometry? padding;
+
+  final SelectorChipVariant? variant;
+
+  final Color? chipColor;
+  final Color? selectedChipColor;
+
+  final TextStyle? labelStyle;
+  final TextStyle? selectedLabelStyle;
+
+  final ItemTapCallback onItemTap;
 
   @override
   Widget build(BuildContext context) {
@@ -68,21 +71,16 @@ class SelectorChipBar<T extends SelectorEntry> extends StatelessWidget {
     final effectiveBackgroundColor =
         backgroundColor ?? theme.backgroundColor ?? defaults.backgroundColor!;
 
-    final effectivePadding = padding ?? theme.padding ?? defaults.padding!;
+    final effectivePadding = padding ??
+        theme.padding ??
+        (isWrapable ? defaults.padding! : const EdgeInsets.only(left: 12));
 
-    // Resolve unselected color
-    // final effectiveColor = color ??
-    //     theme.color ??
-    //     labelStyle?.color ??
-    //     theme.labelStyle?.color ??
-    //     defaults.color!;
+    final effectiveChipColor =
+        chipColor ?? theme.chipColor ?? defaults.chipColor!;
 
-    // Resolve selected color
-    final effectiveSelectedColor = selectedColor ??
-        theme.selectedColor ??
-        selectedLabelStyle?.color ??
-        theme.selectedLabelStyle?.color ??
-        defaults.selectedColor!;
+    final effectiveSelectedChipColor = selectedChipColor ??
+        theme.selectedChipColor ??
+        defaults.selectedChipColor!;
 
     final effectiveLabelStyle =
         (labelStyle ?? theme.labelStyle ?? defaults.labelStyle!)
@@ -93,6 +91,25 @@ class SelectorChipBar<T extends SelectorEntry> extends StatelessWidget {
             defaults.selectedLabelStyle!)
         .copyWith(inherit: true);
 
+    final children = [
+      for (final entry in entries.asMap().entries)
+        (() {
+          final index = entry.key;
+          final item = entry.value as SelectorChildEntry;
+          final selected = (selectedEntries?.contains(item) ?? false);
+          return _Chip(
+            label: item.name ?? '',
+            selected: selected,
+            variant: effectiveVariant,
+            color: effectiveChipColor,
+            selectedColor: effectiveSelectedChipColor,
+            labelStyle: effectiveLabelStyle,
+            selectedLabelStyle: effectiveSelectedLabelStyle,
+            onTap: () => onItemTap(index, item),
+          );
+        })(),
+    ];
+
     return Container(
       height: isWrapable ? null : kSelectorChipBarHeight,
       color: effectiveBackgroundColor,
@@ -100,100 +117,79 @@ class SelectorChipBar<T extends SelectorEntry> extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const SizedBox(width: 12),
+          // const SizedBox(width: 12),
           if (category != null && showTitle) Text(category?.name ?? ''),
           if (category != null && showTitle) const SizedBox(width: 12),
           Expanded(
             child: isWrapable
-                ? Wrap(
-                    spacing: 12,
-                    runSpacing: 12,
-                    children: [
-                      for (final entry in entries.asMap().entries)
-                        (() {
-                          final index = entry.key;
-                          final item = entry.value as SelectorChildEntry;
-                          final selected =
-                              (selectedEntries?.contains(item) ?? false);
-
-                          final textStyle = selected
-                              ? effectiveSelectedLabelStyle
-                              : effectiveLabelStyle;
-
-                          return ChoiceChip(
-                            padding: EdgeInsets.zero,
-                            materialTapTargetSize:
-                                MaterialTapTargetSize.shrinkWrap,
-                            showCheckmark: false,
-                            label: DefaultTextStyle(
-                              style: textStyle,
-                              child: Text(item.name ?? ''),
-                            ),
-                            selectedColor: effectiveSelectedColor,
-                            side: effectiveVariant == SelectorChipVariant.filled
-                                ? BorderSide.none
-                                : BorderSide(
-                                    color: selected
-                                        ? effectiveSelectedColor
-                                        : Colors.grey,
-                                  ),
-                            selected: selected,
-                            onSelected: (_) => onItemTap(index, item),
-                          );
-                        })(),
-                    ],
-                  )
-                : ListView.separated(
-                    scrollDirection: Axis.horizontal,
+                ? Wrap(spacing: 12, runSpacing: 12, children: children)
+                : SingleChildScrollView(
                     padding: EdgeInsets.zero,
                     physics: const ClampingScrollPhysics(),
-                    itemCount: entries.length,
-                    itemBuilder: (context, index) {
-                      final item = entries[index] as SelectorChildEntry;
-                      final selected =
-                          (selectedEntries?.contains(item) ?? false);
-
-                      final textStyle = selected
-                          ? effectiveSelectedLabelStyle
-                          : effectiveLabelStyle;
-
-                      return ChoiceChip(
-                        padding: EdgeInsets.zero,
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        showCheckmark: false,
-                        label: DefaultTextStyle(
-                          style: textStyle,
-                          child: Text(item.name ?? ''),
-                        ),
-                        // labelPadding: EdgeInsets.zero,
-                        selectedColor: effectiveSelectedColor,
-                        side: effectiveVariant == SelectorChipVariant.filled
-                            ? BorderSide.none
-                            : BorderSide(
-                                color: selected
-                                    ? effectiveSelectedColor
-                                    : Colors.grey,
-                              ),
-                        selected: selected,
-                        onSelected: (_) => onItemTap(index, item),
-                      );
-
-                      // return Container(
-                      //   padding: const EdgeInsets.symmetric(horizontal: 8),
-                      //   alignment: Alignment.center,
-                      //   decoration: BoxDecoration(
-                      //     color: Colors.grey[200],
-                      //     borderRadius: BorderRadius.circular(4),
-                      //   ),
-                      //   child: Text(item.name ?? ''),
-                      // );
-                    },
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(width: 12),
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children:
+                          children.separateWith(const SizedBox(width: 12)),
+                    ),
                   ),
           ),
           const SizedBox(width: 12),
         ],
+      ),
+    );
+  }
+}
+
+class _Chip extends StatelessWidget {
+  const _Chip({
+    super.key,
+    required this.label,
+    this.selected = false,
+    required this.variant,
+    required this.color,
+    required this.selectedColor,
+    required this.labelStyle,
+    required this.selectedLabelStyle,
+    this.enabled = true,
+    required this.onTap,
+  });
+
+  final String label;
+
+  final bool selected;
+
+  final SelectorChipVariant variant;
+
+  final Color color;
+  final Color selectedColor;
+
+  final TextStyle labelStyle;
+  final TextStyle selectedLabelStyle;
+
+  final bool enabled;
+
+  final GestureTapCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final effectiveColor = selected ? selectedColor : color;
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        decoration: BoxDecoration(
+          color: variant == SelectorChipVariant.filled ? effectiveColor : null,
+          border: variant == SelectorChipVariant.filled
+              ? null
+              : Border.all(color: effectiveColor, width: 1.2),
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Text(
+          label,
+          style: labelStyle,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
       ),
     );
   }
@@ -216,16 +212,16 @@ class _SelectorChipBarDefaults extends SelectorChipBarTheme {
   SelectorChipVariant? get variant => SelectorChipVariant.filled;
 
   @override
-  Color? get color => _theme.onBackgroundColorHighest;
+  Color? get chipColor => _theme.backgroundColorHighest;
+
+  @override
+  Color? get selectedChipColor => _theme.selectedColor;
 
   @override
   TextStyle? get labelStyle => _textTheme.bodyMedium?.copyWith(
         fontSize: 14,
         color: _theme.onBackgroundColorHighest,
       );
-
-  @override
-  Color? get selectedColor => _theme.selectedColor;
 
   @override
   TextStyle? get selectedLabelStyle => _textTheme.bodyMedium?.copyWith(

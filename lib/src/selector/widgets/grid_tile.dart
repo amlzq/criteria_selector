@@ -93,12 +93,9 @@ class SelectorGridTile extends StatelessWidget {
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: backgroundColor,
-          border: effectiveVariant == SelectorGridTileVariant.outlined
-              ? Border.all(
-                  color: borderColor,
-                  width: 1.2,
-                )
-              : null,
+          border: effectiveVariant == SelectorGridTileVariant.filled
+              ? null
+              : Border.all(color: borderColor, width: 1.2),
           borderRadius: BorderRadius.circular(4),
         ),
         child: Text(
