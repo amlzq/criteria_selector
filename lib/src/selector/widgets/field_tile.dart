@@ -10,16 +10,6 @@ import 'field_tile_theme.dart';
 ///
 /// This widget renders two numeric text fields for min/max input.
 class SelectorFieldTile extends StatelessWidget {
-  final SelectorRangeEntry entry;
-  final EdgeInsetsGeometry? padding;
-
-  final TextEditingController? minController;
-  final TextEditingController? maxController;
-  final FocusNode? minFocusNode;
-  final FocusNode? maxFocusNode;
-
-  final Color? selectedColor;
-
   const SelectorFieldTile(
     this.entry, {
     super.key,
@@ -30,6 +20,20 @@ class SelectorFieldTile extends StatelessWidget {
     this.maxFocusNode,
     this.selectedColor,
   });
+
+  final SelectorRangeEntry entry;
+
+  final EdgeInsetsGeometry? padding;
+
+  final TextEditingController? minController;
+
+  final TextEditingController? maxController;
+
+  final FocusNode? minFocusNode;
+
+  final FocusNode? maxFocusNode;
+
+  final Color? selectedColor;
 
   @override
   Widget build(BuildContext context) {

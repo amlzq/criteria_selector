@@ -30,41 +30,40 @@ class SelectorCategoryBarTheme with Diagnosticable {
     this.indicatorAnimationDuration,
   });
 
-  /// Background color of the category bar.
+  /// Overrides the default value of [SelectorCategoryBar.selectedColor].
   final Color? backgroundColor;
 
-  /// When `SelectorCategoryBar.scrollDirection` is `Axis.vertical`, this value represents the width;
-  /// when `SelectorCategoryBar.scrollDirection` is `Axis.horizontal`, this value represents the height.
+  /// Overrides the default value of [SelectorCategoryBar.size].
   final double? size;
 
-  /// Outer padding of the bar.
+  /// Overrides the default value of [SelectorCategoryBar.padding].
   final EdgeInsetsGeometry? padding;
 
-  /// Color used to indicate the selected category.
+  /// Overrides the default value of [SelectorCategoryBar.selectedColor].
   final Color? selectedColor;
 
-  /// Text style used for the selected category label.
+  /// Overrides the default value of [SelectorCategoryBar.labelStyle].
   final TextStyle? labelStyle;
 
-  /// Text style used for unselected category labels.
+  /// Overrides the default value of [SelectorCategoryBar.selectedLabelStyle].
   final TextStyle? selectedLabelStyle;
 
-  /// Color used to indicate the selected category tile.
+  /// Overrides the default value of [SelectorCategoryBar.selectedTileColor].
   final Color? selectedTileColor;
 
-  /// Color of the selection indicator.
+  /// Overrides the default value of [SelectorCategoryBar.indicatorColor].
   final Color? indicatorColor;
 
-  /// Height of the selection indicator.
+  /// Overrides the default value of [SelectorCategoryBar.indicatorHeight].
   final double? indicatorHeight;
 
-  /// Padding around the indicator.
+  /// Overrides the default value of [SelectorCategoryBar.indicatorPadding].
   final EdgeInsetsGeometry? indicatorPadding;
 
-  /// Controls whether indicator width matches the tab or the label.
+  /// Overrides the default value of [SelectorCategoryBar.indicatorSize].
   final SelectorCategoryBarIndicatorSize? indicatorSize;
 
-  /// Animation duration for indicator width changes.
+  /// Overrides the default value of [SelectorCategoryBar.indicatorAnimationDuration].
   final Duration? indicatorAnimationDuration;
 
   /// Returns a copy of this theme with the given fields replaced.

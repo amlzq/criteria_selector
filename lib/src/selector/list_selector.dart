@@ -325,6 +325,8 @@ class ListSelectorViewState extends State<ListSelectorView> {
                                         gridConfig.crossAxisSpacing,
                                     childAspectRatio:
                                         gridConfig.childAspectRatio,
+                                    tileVariant:
+                                        selector?.gridTileTheme?.variant,
                                     category: category,
                                     showTitle: false,
                                     entries: entries,

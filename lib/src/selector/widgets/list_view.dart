@@ -29,6 +29,7 @@ class SelectorListView<T extends SelectorEntry> extends StatefulWidget {
   final SelectorEntry? category;
 
   final List<T> entries;
+
   final SelectorEntries? selectedEntries;
 
   final ItemTapCallback onItemTap;
@@ -41,6 +42,7 @@ class SelectorListView<T extends SelectorEntry> extends StatefulWidget {
   final SelectionMode selectionMode;
 
   final ToggleWidgetBuilder? radioBuilder;
+
   final ToggleWidgetBuilder? checkboxBuilder;
 
   final bool showTitle;

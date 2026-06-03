@@ -46,6 +46,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
   final List<SelectorEntries> _selectedEntriesPerLevel = [];
 
   final Map<String, SelectorEntries> _selectedHeaderEntries = {};
+
   final Map<String, SelectorEntries> _selectedFooterEntries = {};
 
   /// Temporarily selected (focused) item per level (usually a parent node)
@@ -60,6 +61,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
   int _currentLevel = 0;
 
   final List<ScrollController> _scrollControllers = [];
+
   final ScrollController _cascadeHorizontalController = ScrollController();
 
   SelectorController? controller;

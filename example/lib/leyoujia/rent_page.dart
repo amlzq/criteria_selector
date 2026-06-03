@@ -299,11 +299,13 @@ class _RentPageState extends State<RentPage> {
                 selectedDataFetcher: _filtersRepo.fetchRentalSelectedData,
                 resetDataFetcher: _filtersRepo.fetchRentalResetData,
                 selectionMode: SelectionMode.single,
-                tileVariant: SelectorGridTileVariant.outlined,
                 crossAxisCount: 4,
                 childAspectRatio: 2.5,
                 mainAxisSpacing: 10,
                 crossAxisSpacing: 10,
+                gridTileTheme: const SelectorGridTileTheme(
+                  variant: SelectorGridTileVariant.outlined,
+                ),
               ),
               FlattenSelector(
                 dataFetcher: () =>

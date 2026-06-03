@@ -16,54 +16,65 @@ const kSelectorListTileHeight = 44.0;
 class SelectorListTile extends StatelessWidget {
   const SelectorListTile({
     super.key,
+    this.leading,
     required this.label,
     this.sublabel,
-    this.labelStyle,
-    this.sublabelStyle,
+    this.trailing,
     this.selectedColor,
     this.textColor,
-    this.selected = false,
+    this.labelStyle,
+    this.sublabelStyle,
     this.tileColor,
     this.selectedTileColor,
-    this.leading,
-    this.trailing,
     this.badge,
+    this.selected = false,
     this.enabled = true,
     this.onTap,
   });
+
+  /// An optional icon to display before the label.
+  final Widget? leading;
+
+  /// The primary content of the list label.
+  final String label;
+
+  /// Additional content displayed below the label.
+  final String? sublabel;
+
+  /// A widget to display after the label.
+  final Widget? trailing;
+
+  /// Defines the color used for icons and text when the list label is selected.
+  final Color? selectedColor;
+
+  /// Defines the text color for the [label], [sublabel], [leading], and [trailing].
+  final Color? textColor;
+
+  /// The text style for SelectorListTile's [label].
+  final TextStyle? labelStyle;
+
+  /// The text style for SelectorListTile's [sublabel].
+  final TextStyle? sublabelStyle;
+
+  /// Defines the background color of `SelectorListTile` when [selected] is false.
+  final Color? tileColor;
+
+  /// Defines the background color of `SelectorListTile` when [selected] is true.
+  final Color? selectedTileColor;
+
+  /// A widget to display top-trailing.
+  final String? badge;
+
+  /// If this tile is also [enabled] then icons and text are rendered with the same color.
+  final bool selected;
+
+  /// Whether this list tile is interactive.
+  final bool enabled;
 
   /// Called when the user taps this list tile.
   ///
   /// Inoperative if [enabled] is false.
   final GestureTapCallback? onTap;
-
-  final String label;
-  final String? sublabel;
-
-  final TextStyle? labelStyle;
-  final TextStyle? sublabelStyle;
-
-  final bool selected;
-
-  final Color? selectedColor;
-
-  final Color? textColor;
-
-  /// An optional icon to display before the label.
-  final Widget? leading;
-
-  /// An optional icon to display after the label.
-  final Widget? trailing;
-
-  final Color? tileColor;
-  final Color? selectedTileColor;
-
-  /// Whether to show a badge
-  ///
-  /// Visible when the item's children have selected entries.
-  final String? badge;
-
-  final bool enabled;
 
   @override
   Widget build(BuildContext context) {

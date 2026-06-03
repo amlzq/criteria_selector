@@ -6,24 +6,6 @@ import '../selector_theme.dart';
 /// Theme configuration for [SelectorActionBar].
 @immutable
 class SelectorActionBarTheme with Diagnosticable {
-  /// Background color of the action bar.
-  final Color? backgroundColor;
-
-  /// Outer padding of the action bar content.
-  final EdgeInsets? padding;
-
-  /// Flex for the reset button in the row.
-  final int? resetFlex;
-
-  /// Flex for the apply button in the row.
-  final int? applyFlex;
-
-  /// Button style override for the reset button.
-  final ButtonStyle? resetButtonStyle;
-
-  /// Button style override for the apply button.
-  final ButtonStyle? applyButtonStyle;
-
   const SelectorActionBarTheme({
     this.backgroundColor,
     this.padding,
@@ -32,6 +14,24 @@ class SelectorActionBarTheme with Diagnosticable {
     this.resetButtonStyle,
     this.applyButtonStyle,
   });
+
+  /// Overrides the default value of [SelectorActionBar.selectedColor].
+  final Color? backgroundColor;
+
+  /// Overrides the default value of [SelectorActionBar.padding].
+  final EdgeInsets? padding;
+
+  /// Overrides the default value of [SelectorActionBar.resetFlex].
+  final int? resetFlex;
+
+  /// Overrides the default value of [SelectorActionBar.applyFlex].
+  final int? applyFlex;
+
+  /// Overrides the default value of [SelectorActionBar.resetButtonStyle].
+  final ButtonStyle? resetButtonStyle;
+
+  /// Overrides the default value of [SelectorActionBar.applyButtonStyle].
+  final ButtonStyle? applyButtonStyle;
 
   /// Returns a copy of this theme with the given fields replaced.
   SelectorActionBarTheme copyWith({

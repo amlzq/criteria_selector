@@ -30,7 +30,9 @@ class SelectorPanel extends StatefulWidget {
   final Selector selector;
 
   final SelectorCallback? onChangeTap;
+
   final SelectorCallback? onApplyTap;
+
   final VoidCallback? onResetTap;
 
   final SelectorThemeData? selectorTheme;

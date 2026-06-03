@@ -18,28 +18,28 @@ class SelectorListTileTheme with Diagnosticable {
     this.checkboxBuilder,
   });
 
-  /// Color used to indicate selection (e.g. selected text or badge).
+  /// Overrides the default value of [SelectorListTile.selectedColor].
   final Color? selectedColor;
 
-  /// Text color used when unselected.
+  /// Overrides the default value of [SelectorListTile.textColor].
   final Color? textColor;
 
-  /// Background color used when unselected.
+  /// Overrides the default value of [SelectorListTile.tileColor].
   final Color? tileColor;
 
-  /// Background color used when selected.
+  /// Overrides the default value of [SelectorListTile.selectedTileColor].
   final Color? selectedTileColor;
 
-  /// Label style used by list tiles.
+  /// Overrides the default value of [SelectorListTile.labelStyle].
   final TextStyle? labelStyle;
 
-  /// Sublabel style used by list tiles.
+  /// Overrides the default value of [SelectorListTile.sublabelStyle].
   final TextStyle? sublabelStyle;
 
-  /// Builds a radio widget for [SelectorRadioListTile].
+  /// Overrides the default value of [SelectorListTile.radioBuilder].
   final ToggleWidgetBuilder? radioBuilder;
 
-  /// Builds a checkbox widget for [SelectorCheckboxListTile].
+  /// Overrides the default value of [SelectorListTile.checkboxBuilder].
   final ToggleWidgetBuilder? checkboxBuilder;
 
   /// Returns a copy of this theme with the given fields replaced.

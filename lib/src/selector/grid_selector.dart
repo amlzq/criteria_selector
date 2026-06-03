@@ -364,7 +364,7 @@ class GridSelectorViewState extends State<GridSelectorView> {
         childAspectRatio: selector!.childAspectRatio,
         mainAxisSpacing: selector!.mainAxisSpacing,
         crossAxisSpacing: selector!.crossAxisSpacing,
-        tileVariant: selector!.tileVariant,
+        tileVariant: selector?.gridTileTheme?.variant,
         entries: entries,
         selectedEntries: selectedEntries,
         // inputListener: _inputListener,

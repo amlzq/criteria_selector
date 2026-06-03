@@ -31,7 +31,9 @@ class SelectorGridView<T extends SelectorEntry> extends StatefulWidget {
 
   // final int index;
   final SelectorEntry? category;
+
   final List<T> entries;
+
   final SelectorEntries? selectedEntries;
 
   final ItemTapCallback onItemTap;
@@ -41,8 +43,11 @@ class SelectorGridView<T extends SelectorEntry> extends StatefulWidget {
   final EdgeInsetsGeometry? padding;
 
   final int crossAxisCount;
+
   final double mainAxisSpacing;
+
   final double crossAxisSpacing;
+
   final double childAspectRatio;
 
   final SelectorGridTileVariant? tileVariant;

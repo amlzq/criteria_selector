@@ -289,11 +289,13 @@ class _MapPageState extends State<MapPage> {
                 dataFetcher: _filtersRepo.fetchBuyPriceData,
                 selectedDataFetcher: _filtersRepo.fetchBuyPriceSelectedData,
                 selectionMode: SelectionMode.single,
-                tileVariant: SelectorGridTileVariant.outlined,
                 crossAxisCount: 4,
                 childAspectRatio: 2.5,
                 mainAxisSpacing: 10,
                 crossAxisSpacing: 10,
+                gridTileTheme: const SelectorGridTileTheme(
+                  variant: SelectorGridTileVariant.outlined,
+                ),
               ),
               FlattenSelector(
                 dataFetcher: _filtersRepo.fetchFloorPlanBuyData,

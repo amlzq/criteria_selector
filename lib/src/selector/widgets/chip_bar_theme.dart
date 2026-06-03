@@ -24,25 +24,25 @@ class SelectorChipBarTheme with Diagnosticable {
     this.selectedLabelStyle,
   });
 
-  /// Background color of the chip bar.
+  /// Overrides the default value of [SelectorChipBar.selectedColor].
   final Color? backgroundColor;
 
-  /// Outer padding of the chip bar.
+  /// Overrides the default value of [SelectorChipBar.padding].
   final EdgeInsetsGeometry? padding;
 
-  /// Chip visual variant.
+  /// Overrides the default value of [SelectorChipBar.variant].
   final SelectorChipVariant? variant;
 
-  /// Chip color used when unselected.
+  /// Overrides the default value of [SelectorChipBar.chipColor].
   final Color? chipColor;
 
-  /// Chip color used when selected.
+  /// Overrides the default value of [SelectorChipBar.selectedChipColor].
   final Color? selectedChipColor;
 
-  /// Label style used when unselected.
+  /// Overrides the default value of [SelectorChipBar.labelStyle].
   final TextStyle? labelStyle;
 
-  /// Label style used when selected.
+  /// Overrides the default value of [SelectorChipBar.selectedLabelStyle].
   final TextStyle? selectedLabelStyle;
 
   /// Returns a copy of this theme with the given fields replaced.

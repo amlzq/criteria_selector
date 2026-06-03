@@ -267,7 +267,6 @@ class GridSelector extends Selector {
     this.mainAxisSpacing = 0.0,
     this.crossAxisSpacing = 0.0,
     this.childAspectRatio = 1.0,
-    this.tileVariant,
     super.selectionMode = SelectionMode.single,
     super.dataFetcher,
     super.selectedDataFetcher,
@@ -303,9 +302,6 @@ class GridSelector extends Selector {
 
   /// Child aspect ratio for each tile.
   final double childAspectRatio;
-
-  /// Optional tile variant to control visual style.
-  final SelectorGridTileVariant? tileVariant;
 
   @override
   Widget buildBody(

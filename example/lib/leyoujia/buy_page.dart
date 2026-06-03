@@ -329,11 +329,13 @@ class _BuyPageState extends State<BuyPage> {
                 selectedDataFetcher: _filtersRepo.fetchBuyPriceSelectedData,
                 // resetDataFetcher: _filtersRepo.fetchBuyPriceResetData,
                 selectionMode: SelectionMode.multiple,
-                tileVariant: SelectorGridTileVariant.outlined,
                 crossAxisCount: 4,
                 childAspectRatio: 2.5,
                 mainAxisSpacing: 10,
                 crossAxisSpacing: 10,
+                gridTileTheme: const SelectorGridTileTheme(
+                  variant: SelectorGridTileVariant.outlined,
+                ),
                 applyText: AppLocalizations.of(context)?.apply ?? '',
               ),
               FlattenSelector(

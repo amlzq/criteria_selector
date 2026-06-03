@@ -224,11 +224,13 @@ class _SellPageState extends State<SellPage> {
                   selectedDataFetcher: _filtersRepo.fetchSellPriceSelectedData,
                   resetDataFetcher: _filtersRepo.fetchSellPriceResetData,
                   selectionMode: SelectionMode.single,
-                  tileVariant: SelectorGridTileVariant.outlined,
                   crossAxisCount: 4,
                   childAspectRatio: 2.5,
                   mainAxisSpacing: 10,
                   crossAxisSpacing: 10,
+                  gridTileTheme: const SelectorGridTileTheme(
+                    variant: SelectorGridTileVariant.outlined,
+                  ),
                 ),
                 FlattenSelector(
                   dataFetcher: _filtersRepo.fetchFloorPlanSellData,

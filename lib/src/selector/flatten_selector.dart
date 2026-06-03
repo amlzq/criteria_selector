@@ -37,11 +37,15 @@ class FlattenSelectorView extends StatefulWidget {
   });
 
   final List<SelectorEntry> entries;
+
   final Set<SelectorEntry>? previousSelected;
 
   final int crossAxisCount;
+
   final double mainAxisSpacing;
+
   final double crossAxisSpacing;
+
   final double childAspectRatio;
 
   @override
@@ -57,6 +61,7 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
   final List<SelectorEntries> _selectedEntriesPerLevel = [];
 
   var _isScrollingProgrammatically = false;
+
   final GlobalKey _scrollViewKey = GlobalKey();
 
   SelectorController? controller;
@@ -464,6 +469,7 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
                           childAspectRatio: widget.childAspectRatio,
                           mainAxisSpacing: widget.mainAxisSpacing,
                           crossAxisSpacing: widget.crossAxisSpacing,
+                          tileVariant: selector?.gridTileTheme?.variant,
                           category: category,
                           entries: entries,
                           selectedEntries: selectedEntries,

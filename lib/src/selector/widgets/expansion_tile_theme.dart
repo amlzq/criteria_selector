@@ -13,14 +13,19 @@ class SelectorExpansionTileTheme with Diagnosticable {
     this.collapseCurve,
   });
 
+  /// Overrides the default value of [SelectorExpansionTile.selectedColor].
   final EdgeInsetsGeometry? titlePadding;
 
+  /// Overrides the default value of [SelectorExpansionTile.childPadding].
   final EdgeInsetsGeometry? childPadding;
 
+  /// Overrides the default value of [SelectorExpansionTile.animationDuration].
   final Duration? animationDuration;
 
+  /// Overrides the default value of [SelectorExpansionTile.expansionCurve].
   final Curve? expansionCurve;
 
+  /// Overrides the default value of [SelectorExpansionTile.collapseCurve].
   final Curve? collapseCurve;
 
   SelectorExpansionTileTheme copyWith({

@@ -11,7 +11,9 @@ class SelectorController extends ChangeNotifier {
   final Selector selector;
 
   final SelectorCallback? changeCallback;
+
   final SelectorCallback? applyCallback;
+
   final VoidCallback? resetCallback;
 
   SelectorController({

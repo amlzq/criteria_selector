@@ -13,16 +13,16 @@ class SelectorFieldTileTheme with Diagnosticable {
     this.sublabelStyle,
   });
 
-  /// Color used to indicate selection/focus.
+  /// Overrides the default value of [SelectorFieldTile.selectedColor].
   final Color? selectedColor;
 
-  /// Text color used by field tile content.
+  /// Overrides the default value of [SelectorFieldTile.textColor].
   final Color? textColor;
 
-  /// Label style used by field tile content.
+  /// Overrides the default value of [SelectorFieldTile.labelStyle].
   final TextStyle? labelStyle;
 
-  /// Sublabel style used by field tile content.
+  /// Overrides the default value of [SelectorFieldTile.sublabelStyle].
   final TextStyle? sublabelStyle;
 
   /// Returns a copy of this theme with the given fields replaced.

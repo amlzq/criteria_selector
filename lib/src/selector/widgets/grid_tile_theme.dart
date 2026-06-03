@@ -20,22 +20,30 @@ class SelectorGridTileTheme with Diagnosticable {
     this.labelStyle,
     this.sublabelStyle,
     this.variant,
+    this.tileColor,
+    this.selectedTileColor,
   });
 
-  /// Color used to indicate selection.
+  /// Overrides the default value of [SelectorGridTile.selectedColor].
   final Color? selectedColor;
 
-  /// Text color used when unselected.
+  /// Overrides the default value of [SelectorGridTile.textColor].
   final Color? textColor;
 
-  /// Label style used by the tile.
+  /// Overrides the default value of [SelectorGridTile.labelStyle].
   final TextStyle? labelStyle;
 
-  /// Sublabel style used by the tile.
+  /// Overrides the default value of [SelectorGridTile.sublabelStyle].
   final TextStyle? sublabelStyle;
 
-  /// Visual variant for the tile.
+  /// Overrides the default value of [SelectorGridTile.variant].
   final SelectorGridTileVariant? variant;
+
+  /// Overrides the default value of [SelectorGridTile.tileColor].
+  final Color? tileColor;
+
+  /// Overrides the default value of [SelectorGridTile.selectedTileColor].
+  final Color? selectedTileColor;
 
   /// Returns a copy of this theme with the given fields replaced.
   SelectorGridTileTheme copyWith({
@@ -44,6 +52,8 @@ class SelectorGridTileTheme with Diagnosticable {
     TextStyle? labelStyle,
     TextStyle? sublabelStyle,
     SelectorGridTileVariant? variant,
+    Color? tileColor,
+    Color? selectedTileColor,
   }) {
     return SelectorGridTileTheme(
       selectedColor: selectedColor ?? this.selectedColor,
@@ -51,6 +61,8 @@ class SelectorGridTileTheme with Diagnosticable {
       labelStyle: labelStyle ?? this.labelStyle,
       sublabelStyle: sublabelStyle ?? this.sublabelStyle,
       variant: variant ?? this.variant,
+      tileColor: tileColor ?? this.tileColor,
+      selectedTileColor: selectedTileColor ?? this.selectedTileColor,
     );
   }
 
@@ -86,6 +98,16 @@ class SelectorGridTileTheme with Diagnosticable {
         t,
       ),
       variant: t < 0.5 ? a?.variant : b?.variant,
+      tileColor: Color.lerp(
+        a?.tileColor,
+        b?.tileColor,
+        t,
+      ),
+      selectedTileColor: Color.lerp(
+        a?.selectedTileColor,
+        b?.selectedTileColor,
+        t,
+      ),
     );
   }
 
@@ -96,6 +118,8 @@ class SelectorGridTileTheme with Diagnosticable {
         labelStyle,
         sublabelStyle,
         variant,
+        tileColor,
+        selectedTileColor,
       );
 
   @override
@@ -111,6 +135,8 @@ class SelectorGridTileTheme with Diagnosticable {
         other.textColor == textColor &&
         other.labelStyle == labelStyle &&
         other.sublabelStyle == sublabelStyle &&
-        other.variant == variant;
+        other.variant == variant &&
+        other.tileColor == tileColor &&
+        other.selectedTileColor == selectedTileColor;
   }
 }

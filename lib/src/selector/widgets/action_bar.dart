@@ -26,18 +26,23 @@ class SelectorActionBar extends StatelessWidget {
   });
 
   final Color? backgroundColor;
+
   final EdgeInsetsGeometry? padding;
 
   final int? resetFlex;
+
   final int? applyFlex;
 
   final ButtonStyle? resetButtonStyle;
+
   final ButtonStyle? applyButtonStyle;
 
   final String? resetText;
+
   final String? applyText;
 
   final GestureTapCallback? onResetTap;
+
   final GestureTapCallback? onApplyTap;
 
   @override

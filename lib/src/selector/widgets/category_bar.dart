@@ -38,10 +38,13 @@ class SelectorCategoryBar<T extends SelectorEntry> extends StatelessWidget {
   final List<T> entries;
 
   final Set<T> selectedCategories;
+
   final int focusedIndex;
 
   final Axis scrollDirection;
 
+  /// When `SelectorCategoryBar.scrollDirection` is `Axis.vertical`, this value represents the width;
+  /// when `SelectorCategoryBar.scrollDirection` is `Axis.horizontal`, this value represents the height.
   final double? size;
 
   final EdgeInsetsGeometry? padding;
@@ -52,15 +55,21 @@ class SelectorCategoryBar<T extends SelectorEntry> extends StatelessWidget {
 
   /// Selected color for text.
   final Color? selectedColor;
+
   final TextStyle? labelStyle;
+
   final TextStyle? selectedLabelStyle;
 
   final Color? selectedTileColor;
 
   final Color? indicatorColor;
+
   final double? indicatorHeight;
+
   final EdgeInsetsGeometry? indicatorPadding;
+
   final SelectorCategoryBarIndicatorSize? indicatorSize;
+
   final Duration? indicatorAnimationDuration;
 
   final ItemTapCallback onTap;

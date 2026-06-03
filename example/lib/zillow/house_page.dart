@@ -303,22 +303,26 @@ class _HousePageState extends State<HousePage> {
                 selectedDataFetcher: _filtersRepo.fetchPriceSelectedData,
                 // resetDataFetcher: _filtersRepo.fetchPriceResetData,
                 selectionMode: SelectionMode.multiple,
-                tileVariant: SelectorGridTileVariant.outlined,
-                crossAxisCount: 2,
-                childAspectRatio: 5,
+                crossAxisCount: 1,
+                childAspectRatio: 10,
                 mainAxisSpacing: 10,
                 crossAxisSpacing: 10,
+                gridTileTheme: const SelectorGridTileTheme(
+                  variant: SelectorGridTileVariant.outlined,
+                ),
               ),
               GridSelector(
                 dataFetcher: _filtersRepo.fetchRoomsData,
                 selectedDataFetcher: _filtersRepo.fetchRoomsSelectedData,
                 // resetDataFetcher: _filtersRepo.fetchRoomsResetData,
                 selectionMode: SelectionMode.multiple,
-                tileVariant: SelectorGridTileVariant.outlined,
                 crossAxisCount: 4,
                 childAspectRatio: 2.5,
                 mainAxisSpacing: 10,
                 crossAxisSpacing: 10,
+                gridTileTheme: const SelectorGridTileTheme(
+                  variant: SelectorGridTileVariant.outlined,
+                ),
               ),
               ListSelector(
                 dataFetcher: _filtersRepo.fetchMoreData,
@@ -327,6 +331,9 @@ class _HousePageState extends State<HousePage> {
                 selectionMode: SelectionMode.multiple,
                 resetText: AppLocalizations.of(context)?.reset ?? '',
                 applyText: AppLocalizations.of(context)?.apply ?? '',
+                gridTileTheme: const SelectorGridTileTheme(
+                  variant: SelectorGridTileVariant.outlined,
+                ),
                 chipBarTheme: const SelectorChipBarTheme(
                   variant: SelectorChipVariant.outlined,
                 ),

@@ -37,6 +37,7 @@ class SelectorChipBar<T extends SelectorEntry> extends StatelessWidget {
   final SelectorEntry? category;
 
   final List<T> entries;
+
   final SelectorEntries? selectedEntries;
 
   final SelectionMode selectionMode;
@@ -54,9 +55,11 @@ class SelectorChipBar<T extends SelectorEntry> extends StatelessWidget {
   final SelectorChipVariant? variant;
 
   final Color? chipColor;
+
   final Color? selectedChipColor;
 
   final TextStyle? labelStyle;
+
   final TextStyle? selectedLabelStyle;
 
   final ItemTapCallback onItemTap;
@@ -82,6 +85,13 @@ class SelectorChipBar<T extends SelectorEntry> extends StatelessWidget {
         theme.selectedChipColor ??
         defaults.selectedChipColor!;
 
+    final selectedTextColor = effectiveVariant == SelectorChipVariant.filled
+        ? (ThemeData.estimateBrightnessForColor(effectiveSelectedChipColor) ==
+                Brightness.dark
+            ? Colors.white
+            : Colors.black)
+        : effectiveSelectedChipColor;
+
     final effectiveLabelStyle =
         (labelStyle ?? theme.labelStyle ?? defaults.labelStyle!)
             .copyWith(inherit: true);
@@ -89,7 +99,7 @@ class SelectorChipBar<T extends SelectorEntry> extends StatelessWidget {
     final effectiveSelectedLabelStyle = (selectedLabelStyle ??
             theme.selectedLabelStyle ??
             defaults.selectedLabelStyle!)
-        .copyWith(inherit: true);
+        .copyWith(inherit: true, color: selectedTextColor);
 
     final children = [
       for (final entry in entries.asMap().entries)
@@ -105,6 +115,7 @@ class SelectorChipBar<T extends SelectorEntry> extends StatelessWidget {
             selectedColor: effectiveSelectedChipColor,
             labelStyle: effectiveLabelStyle,
             selectedLabelStyle: effectiveSelectedLabelStyle,
+            enabled: item.enabled,
             onTap: () => onItemTap(index, item),
           );
         })(),
@@ -142,7 +153,6 @@ class SelectorChipBar<T extends SelectorEntry> extends StatelessWidget {
 
 class _Chip extends StatelessWidget {
   const _Chip({
-    super.key,
     required this.label,
     this.selected = false,
     required this.variant,
@@ -172,7 +182,11 @@ class _Chip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveColor = selected ? selectedColor : color;
+    final effectiveColor = enabled
+        ? selected
+            ? selectedColor
+            : color
+        : Colors.grey[500]!;
     return InkWell(
       onTap: onTap,
       child: Container(
@@ -186,7 +200,7 @@ class _Chip extends StatelessWidget {
         ),
         child: Text(
           label,
-          style: labelStyle,
+          style: selected ? selectedLabelStyle : labelStyle,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
