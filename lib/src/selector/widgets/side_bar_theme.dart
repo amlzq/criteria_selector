@@ -4,29 +4,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../selector_theme.dart';
+import 'side_bar.dart';
 
-/// Indicator sizing mode for [SelectorCategoryBarTheme].
-///
-/// Deprecated: use SelectorTabBarIndicatorSize for horizontal bars.
+/// Defines a theme for [SelectorSideBar] widgets.
 @immutable
-@Deprecated('Use SelectorTabBarIndicatorSize (horizontal).')
-enum SelectorCategoryBarIndicatorSize {
-  tab,
-  label,
-}
-
-/// Theme configuration for [SelectorCategoryBar].
-///
-/// Deprecated:
-/// - Use SelectorTabBarTheme for horizontal bars.
-/// - Use SelectorSideBarTheme for vertical bars.
-@immutable
-@Deprecated(
-    'Use SelectorTabBarTheme (horizontal) or SelectorSideBarTheme (vertical).')
-class SelectorCategoryBarTheme with Diagnosticable {
-  const SelectorCategoryBarTheme({
+class SelectorSideBarTheme with Diagnosticable {
+  const SelectorSideBarTheme({
     this.backgroundColor,
-    this.size,
+    this.width,
     this.padding,
     this.selectedColor,
     this.labelStyle,
@@ -35,50 +20,46 @@ class SelectorCategoryBarTheme with Diagnosticable {
     this.indicatorColor,
     this.indicatorHeight,
     this.indicatorPadding,
-    this.indicatorSize,
     this.indicatorAnimationDuration,
   });
 
-  /// Overrides the default value of [SelectorCategoryBar.selectedColor].
+  /// Overrides the default value of [SelectorSideBar.selectedColor].
   final Color? backgroundColor;
 
-  /// Overrides the default value of [SelectorCategoryBar.size].
-  final double? size;
+  /// Overrides the default value of [SelectorSideBar.width].
+  final double? width;
 
-  /// Overrides the default value of [SelectorCategoryBar.padding].
+  /// Overrides the default value of [SelectorSideBar.padding].
   final EdgeInsetsGeometry? padding;
 
-  /// Overrides the default value of [SelectorCategoryBar.selectedColor].
+  /// Overrides the default value of [SelectorSideBar.selectedColor].
   final Color? selectedColor;
 
-  /// Overrides the default value of [SelectorCategoryBar.labelStyle].
+  /// Overrides the default value of [SelectorSideBar.labelStyle].
   final TextStyle? labelStyle;
 
-  /// Overrides the default value of [SelectorCategoryBar.selectedLabelStyle].
+  /// Overrides the default value of [SelectorSideBar.selectedLabelStyle].
   final TextStyle? selectedLabelStyle;
 
-  /// Overrides the default value of [SelectorCategoryBar.selectedTileColor].
+  /// Overrides the default value of [SelectorSideBar.selectedTileColor].
   final Color? selectedTileColor;
 
-  /// Overrides the default value of [SelectorCategoryBar.indicatorColor].
+  /// Overrides the default value of [SelectorSideBar.indicatorColor].
   final Color? indicatorColor;
 
-  /// Overrides the default value of [SelectorCategoryBar.indicatorHeight].
+  /// Overrides the default value of [SelectorSideBar.indicatorHeight].
   final double? indicatorHeight;
 
-  /// Overrides the default value of [SelectorCategoryBar.indicatorPadding].
+  /// Overrides the default value of [SelectorSideBar.indicatorPadding].
   final EdgeInsetsGeometry? indicatorPadding;
 
-  /// Overrides the default value of [SelectorCategoryBar.indicatorSize].
-  final SelectorCategoryBarIndicatorSize? indicatorSize;
-
-  /// Overrides the default value of [SelectorCategoryBar.indicatorAnimationDuration].
+  /// Overrides the default value of [SelectorSideBar.indicatorAnimationDuration].
   final Duration? indicatorAnimationDuration;
 
   /// Returns a copy of this theme with the given fields replaced.
-  SelectorCategoryBarTheme copyWith({
+  SelectorSideBarTheme copyWith({
     Color? backgroundColor,
-    double? size,
+    double? width,
     EdgeInsetsGeometry? padding,
     Color? selectedColor,
     TextStyle? labelStyle,
@@ -87,12 +68,11 @@ class SelectorCategoryBarTheme with Diagnosticable {
     Color? indicatorColor,
     double? indicatorHeight,
     EdgeInsetsGeometry? indicatorPadding,
-    SelectorCategoryBarIndicatorSize? indicatorSize,
     Duration? indicatorAnimationDuration,
   }) {
-    return SelectorCategoryBarTheme(
+    return SelectorSideBarTheme(
       backgroundColor: backgroundColor ?? this.backgroundColor,
-      size: size ?? this.size,
+      width: width ?? this.width,
       padding: padding ?? this.padding,
       selectedColor: selectedColor ?? this.selectedColor,
       labelStyle: labelStyle ?? this.labelStyle,
@@ -101,25 +81,24 @@ class SelectorCategoryBarTheme with Diagnosticable {
       indicatorColor: indicatorColor ?? this.indicatorColor,
       indicatorHeight: indicatorHeight ?? this.indicatorHeight,
       indicatorPadding: indicatorPadding ?? this.indicatorPadding,
-      indicatorSize: indicatorSize ?? this.indicatorSize,
       indicatorAnimationDuration:
           indicatorAnimationDuration ?? this.indicatorAnimationDuration,
     );
   }
 
-  static SelectorCategoryBarTheme of(BuildContext context) {
-    return SelectorTheme.of(context).categoryBarTheme;
+  static SelectorSideBarTheme of(BuildContext context) {
+    return SelectorTheme.of(context).sideBarTheme;
   }
 
   /// Linearly interpolates between two category bar themes.
-  static SelectorCategoryBarTheme lerp(
-      SelectorCategoryBarTheme? a, SelectorCategoryBarTheme? b, double t) {
+  static SelectorSideBarTheme lerp(
+      SelectorSideBarTheme? a, SelectorSideBarTheme? b, double t) {
     if (identical(a, b) && a != null) {
       return a;
     }
-    return SelectorCategoryBarTheme(
+    return SelectorSideBarTheme(
       backgroundColor: Color.lerp(a?.backgroundColor, b?.backgroundColor, t),
-      size: lerpDouble(a?.size, b?.size, t),
+      width: lerpDouble(a?.width, b?.width, t),
       padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
       selectedColor: Color.lerp(a?.selectedColor, b?.selectedColor, t),
       labelStyle: TextStyle.lerp(a?.labelStyle, b?.labelStyle, t),
@@ -140,14 +119,13 @@ class SelectorCategoryBarTheme with Diagnosticable {
         b?.indicatorPadding,
         t,
       ),
-      indicatorSize: t < 0.5 ? a?.indicatorSize : b?.indicatorSize,
     );
   }
 
   @override
   int get hashCode => Object.hash(
         backgroundColor,
-        size,
+        width,
         padding,
         selectedColor,
         labelStyle,
@@ -156,7 +134,6 @@ class SelectorCategoryBarTheme with Diagnosticable {
         indicatorColor,
         indicatorHeight,
         indicatorPadding,
-        indicatorSize,
         indicatorAnimationDuration,
       );
 
@@ -168,9 +145,9 @@ class SelectorCategoryBarTheme with Diagnosticable {
     if (other.runtimeType != runtimeType) {
       return false;
     }
-    return other is SelectorCategoryBarTheme &&
+    return other is SelectorSideBarTheme &&
         other.backgroundColor == backgroundColor &&
-        other.size == size &&
+        other.width == width &&
         other.padding == padding &&
         other.selectedColor == selectedColor &&
         other.labelStyle == labelStyle &&
@@ -179,7 +156,6 @@ class SelectorCategoryBarTheme with Diagnosticable {
         other.indicatorColor == indicatorColor &&
         other.indicatorHeight == indicatorHeight &&
         other.indicatorPadding == indicatorPadding &&
-        other.indicatorSize == indicatorSize &&
         other.indicatorAnimationDuration == indicatorAnimationDuration;
   }
 }

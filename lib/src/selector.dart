@@ -44,7 +44,10 @@ abstract class Selector {
     this.resetText,
     this.applyText,
     this.actionBarTheme,
+    @Deprecated('Use [tabBarTheme] (horizontal) or [sideBarTheme] (vertical).')
     this.categoryBarTheme,
+    this.tabBarTheme,
+    this.sideBarTheme,
     this.gridTileTheme,
     this.listTileTheme,
     this.fieldTileTheme,
@@ -105,7 +108,16 @@ abstract class Selector {
   final SelectorActionBarTheme? actionBarTheme;
 
   /// Theme overrides for the category bar widget.
+  ///
+  /// Deprecated: this was used by SelectorCategoryBar. Migrate to:
+  /// - [tabBarTheme] to style SelectorTabBar (horizontal).
+  /// - [sideBarTheme] to style SelectorSideBar (vertical).
+  @Deprecated('Use [tabBarTheme] (horizontal) or [sideBarTheme] (vertical).')
   final SelectorCategoryBarTheme? categoryBarTheme;
+
+  final SelectorTabBarTheme? tabBarTheme;
+
+  final SelectorSideBarTheme? sideBarTheme;
 
   /// Theme overrides for grid tiles.
   final SelectorGridTileTheme? gridTileTheme;
@@ -165,6 +177,8 @@ class CascadingSelector extends Selector {
     super.applyText,
     super.actionBarTheme,
     super.categoryBarTheme,
+    super.tabBarTheme,
+    super.sideBarTheme,
     super.gridTileTheme,
     super.listTileTheme,
     super.fieldTileTheme,
@@ -227,6 +241,8 @@ class ListSelector extends Selector {
     super.applyText,
     super.actionBarTheme,
     super.categoryBarTheme,
+    super.tabBarTheme,
+    super.sideBarTheme,
     super.gridTileTheme,
     super.listTileTheme,
     super.fieldTileTheme,
@@ -283,6 +299,8 @@ class GridSelector extends Selector {
     super.applyText,
     super.actionBarTheme,
     super.categoryBarTheme,
+    super.sideBarTheme,
+    super.tabBarTheme,
     super.gridTileTheme,
     super.listTileTheme,
     super.fieldTileTheme,
@@ -352,6 +370,8 @@ class FlattenSelector extends Selector {
     super.applyText,
     super.actionBarTheme,
     super.categoryBarTheme,
+    super.sideBarTheme,
+    super.tabBarTheme,
     super.gridTileTheme,
     super.listTileTheme,
     super.fieldTileTheme,

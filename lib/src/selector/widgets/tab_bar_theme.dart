@@ -4,27 +4,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../selector_theme.dart';
+import 'tab_bar.dart';
 
-/// Indicator sizing mode for [SelectorCategoryBarTheme].
-///
-/// Deprecated: use SelectorTabBarIndicatorSize for horizontal bars.
+/// Defines a theme for [SelectorTabBar] widgets.
 @immutable
-@Deprecated('Use SelectorTabBarIndicatorSize (horizontal).')
-enum SelectorCategoryBarIndicatorSize {
-  tab,
-  label,
-}
-
-/// Theme configuration for [SelectorCategoryBar].
-///
-/// Deprecated:
-/// - Use SelectorTabBarTheme for horizontal bars.
-/// - Use SelectorSideBarTheme for vertical bars.
-@immutable
-@Deprecated(
-    'Use SelectorTabBarTheme (horizontal) or SelectorSideBarTheme (vertical).')
-class SelectorCategoryBarTheme with Diagnosticable {
-  const SelectorCategoryBarTheme({
+class SelectorTabBarTheme with Diagnosticable {
+  const SelectorTabBarTheme({
     this.backgroundColor,
     this.size,
     this.padding,
@@ -39,44 +24,44 @@ class SelectorCategoryBarTheme with Diagnosticable {
     this.indicatorAnimationDuration,
   });
 
-  /// Overrides the default value of [SelectorCategoryBar.selectedColor].
+  /// Overrides the default value of [SelectorTabBar.selectedColor].
   final Color? backgroundColor;
 
-  /// Overrides the default value of [SelectorCategoryBar.size].
+  /// Overrides the default value of [SelectorTabBar.size].
   final double? size;
 
-  /// Overrides the default value of [SelectorCategoryBar.padding].
+  /// Overrides the default value of [SelectorTabBar.padding].
   final EdgeInsetsGeometry? padding;
 
-  /// Overrides the default value of [SelectorCategoryBar.selectedColor].
+  /// Overrides the default value of [SelectorTabBar.selectedColor].
   final Color? selectedColor;
 
-  /// Overrides the default value of [SelectorCategoryBar.labelStyle].
+  /// Overrides the default value of [SelectorTabBar.labelStyle].
   final TextStyle? labelStyle;
 
-  /// Overrides the default value of [SelectorCategoryBar.selectedLabelStyle].
+  /// Overrides the default value of [SelectorTabBar.selectedLabelStyle].
   final TextStyle? selectedLabelStyle;
 
-  /// Overrides the default value of [SelectorCategoryBar.selectedTileColor].
+  /// Overrides the default value of [SelectorTabBar.selectedTileColor].
   final Color? selectedTileColor;
 
-  /// Overrides the default value of [SelectorCategoryBar.indicatorColor].
+  /// Overrides the default value of [SelectorTabBar.indicatorColor].
   final Color? indicatorColor;
 
-  /// Overrides the default value of [SelectorCategoryBar.indicatorHeight].
+  /// Overrides the default value of [SelectorTabBar.indicatorHeight].
   final double? indicatorHeight;
 
-  /// Overrides the default value of [SelectorCategoryBar.indicatorPadding].
+  /// Overrides the default value of [SelectorTabBar.indicatorPadding].
   final EdgeInsetsGeometry? indicatorPadding;
 
-  /// Overrides the default value of [SelectorCategoryBar.indicatorSize].
-  final SelectorCategoryBarIndicatorSize? indicatorSize;
+  /// Overrides the default value of [SelectorTabBar.indicatorSize].
+  final SelectorTabBarIndicatorSize? indicatorSize;
 
-  /// Overrides the default value of [SelectorCategoryBar.indicatorAnimationDuration].
+  /// Overrides the default value of [SelectorTabBar.indicatorAnimationDuration].
   final Duration? indicatorAnimationDuration;
 
   /// Returns a copy of this theme with the given fields replaced.
-  SelectorCategoryBarTheme copyWith({
+  SelectorTabBarTheme copyWith({
     Color? backgroundColor,
     double? size,
     EdgeInsetsGeometry? padding,
@@ -87,10 +72,10 @@ class SelectorCategoryBarTheme with Diagnosticable {
     Color? indicatorColor,
     double? indicatorHeight,
     EdgeInsetsGeometry? indicatorPadding,
-    SelectorCategoryBarIndicatorSize? indicatorSize,
+    SelectorTabBarIndicatorSize? indicatorSize,
     Duration? indicatorAnimationDuration,
   }) {
-    return SelectorCategoryBarTheme(
+    return SelectorTabBarTheme(
       backgroundColor: backgroundColor ?? this.backgroundColor,
       size: size ?? this.size,
       padding: padding ?? this.padding,
@@ -107,17 +92,17 @@ class SelectorCategoryBarTheme with Diagnosticable {
     );
   }
 
-  static SelectorCategoryBarTheme of(BuildContext context) {
-    return SelectorTheme.of(context).categoryBarTheme;
+  static SelectorTabBarTheme of(BuildContext context) {
+    return SelectorTheme.of(context).tabBarTheme;
   }
 
-  /// Linearly interpolates between two category bar themes.
-  static SelectorCategoryBarTheme lerp(
-      SelectorCategoryBarTheme? a, SelectorCategoryBarTheme? b, double t) {
+  /// Linearly interpolates between two tab bar themes.
+  static SelectorTabBarTheme lerp(
+      SelectorTabBarTheme? a, SelectorTabBarTheme? b, double t) {
     if (identical(a, b) && a != null) {
       return a;
     }
-    return SelectorCategoryBarTheme(
+    return SelectorTabBarTheme(
       backgroundColor: Color.lerp(a?.backgroundColor, b?.backgroundColor, t),
       size: lerpDouble(a?.size, b?.size, t),
       padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
@@ -168,7 +153,7 @@ class SelectorCategoryBarTheme with Diagnosticable {
     if (other.runtimeType != runtimeType) {
       return false;
     }
-    return other is SelectorCategoryBarTheme &&
+    return other is SelectorTabBarTheme &&
         other.backgroundColor == backgroundColor &&
         other.size == size &&
         other.padding == padding &&

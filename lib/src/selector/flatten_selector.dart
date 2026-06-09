@@ -430,10 +430,9 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Left category list
-              SelectorCategoryBar(
-                scrollDirection: Axis.vertical,
+              SelectorSideBar(
                 isScrollable: true,
-                size: selector?.categoryBarTheme?.size,
+                width: selector?.sideBarTheme?.width,
                 backgroundColor: categoryBackgroundColor,
                 selectedColor: effectiveSelectedColor,
                 selectedTileColor: terminalBackgroundColor,
@@ -541,9 +540,8 @@ class PlattenSelectorSkeleton extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SelectorCategoryBarSkeleton(
-                  scrollDirection: Axis.vertical,
-                  size: selector.categoryBarTheme?.size,
+                SelectorSideBarSkeleton(
+                  width: selector.sideBarTheme?.width,
                   backgroundColor: categoryBackgroundColor,
                 ),
                 Flexible(

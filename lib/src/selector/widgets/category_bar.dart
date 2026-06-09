@@ -12,6 +12,16 @@ import 'skeleton_box.dart';
 ///
 /// The bar renders the category entries horizontally and indicates the current
 /// selection via an animated indicator.
+///
+/// Deprecated:
+/// - Use SelectorTabBar for horizontal category bars (instead of `scrollDirection: Axis.horizontal`).
+/// - Use SelectorSideBar for vertical category bars (instead of `scrollDirection: Axis.vertical`).
+///
+/// Migration:
+/// - `indicatorColor` / `indicatorHeight` / `indicatorPadding` / `indicatorAnimationDuration` map to SelectorTabBar.
+/// - `indicatorSize` (SelectorCategoryBarIndicatorSize) maps to SelectorTabBarIndicatorSize.
+/// - `size`: for vertical bars use `SelectorSideBar.width`; for horizontal bars wrap SelectorTabBar with `SizedBox(height: ...)`.
+@Deprecated('Use SelectorTabBar (horizontal) or SelectorSideBar (vertical).')
 class SelectorCategoryBar<T extends SelectorEntry> extends StatelessWidget {
   const SelectorCategoryBar({
     super.key,
@@ -410,6 +420,12 @@ class _VerticalBar<T extends SelectorEntry> extends StatelessWidget {
 }
 
 /// Loading skeleton for [SelectorCategoryBar].
+///
+/// Deprecated: migrate to:
+/// - SelectorTabBarSkeleton (horizontal).
+/// - SelectorSideBarSkeleton (vertical).
+@Deprecated(
+    'Use SelectorTabBarSkeleton (horizontal) or SelectorSideBarSkeleton (vertical).')
 class SelectorCategoryBarSkeleton extends StatelessWidget {
   const SelectorCategoryBarSkeleton({
     super.key,

@@ -8,6 +8,8 @@ import 'widgets/expansion_tile_theme.dart';
 import 'widgets/field_tile_theme.dart';
 import 'widgets/grid_tile_theme.dart';
 import 'widgets/list_tile_theme.dart';
+import 'widgets/side_bar_theme.dart';
+import 'widgets/tab_bar_theme.dart';
 
 /// Theme configuration for selector widgets.
 ///
@@ -27,7 +29,10 @@ class SelectorThemeData with Diagnosticable {
     Color? backgroundColorHighest,
     Color? onBackgroundColorHighest,
     SelectorActionBarTheme? actionBarTheme,
+    @Deprecated('Use [tabBarTheme] (horizontal) or [sideBarTheme] (vertical).')
     SelectorCategoryBarTheme? categoryBarTheme,
+    SelectorTabBarTheme? tabBarTheme,
+    SelectorSideBarTheme? sideBarTheme,
     SelectorGridTileTheme? gridTileTheme,
     SelectorListTileTheme? listTileTheme,
     SelectorFieldTileTheme? fieldTileTheme,
@@ -49,6 +54,8 @@ class SelectorThemeData with Diagnosticable {
           onBackgroundColorHighest ?? theme.colorScheme.onSurfaceVariant,
       actionBarTheme: actionBarTheme ?? const SelectorActionBarTheme(),
       categoryBarTheme: categoryBarTheme ?? const SelectorCategoryBarTheme(),
+      tabBarTheme: tabBarTheme ?? const SelectorTabBarTheme(),
+      sideBarTheme: sideBarTheme ?? const SelectorSideBarTheme(),
       gridTileTheme: gridTileTheme ?? const SelectorGridTileTheme(),
       listTileTheme: listTileTheme ?? const SelectorListTileTheme(),
       fieldTileTheme: fieldTileTheme ?? const SelectorFieldTileTheme(),
@@ -70,7 +77,10 @@ class SelectorThemeData with Diagnosticable {
     required this.backgroundColorHighest,
     required this.onBackgroundColorHighest,
     required this.actionBarTheme,
+    @Deprecated('Use [tabBarTheme] (horizontal) or [sideBarTheme] (vertical).')
     required this.categoryBarTheme,
+    required this.tabBarTheme,
+    required this.sideBarTheme,
     required this.gridTileTheme,
     required this.listTileTheme,
     required this.fieldTileTheme,
@@ -109,7 +119,18 @@ class SelectorThemeData with Diagnosticable {
   final SelectorActionBarTheme actionBarTheme;
 
   /// Theme overrides for the category bar widget.
+  ///
+  /// Deprecated: this was used by SelectorCategoryBar. Migrate to:
+  /// - [tabBarTheme] to style SelectorTabBar (horizontal).
+  /// - [sideBarTheme] to style SelectorSideBar (vertical).
+  @Deprecated('Use [tabBarTheme] (horizontal) or [sideBarTheme] (vertical).')
   final SelectorCategoryBarTheme categoryBarTheme;
+
+  /// Theme overrides for the tab bar widget.
+  final SelectorTabBarTheme tabBarTheme;
+
+  /// Theme overrides for the side bar widget.
+  final SelectorSideBarTheme sideBarTheme;
 
   /// Theme overrides for grid tiles.
   final SelectorGridTileTheme gridTileTheme;
@@ -141,7 +162,10 @@ class SelectorThemeData with Diagnosticable {
     Color? backgroundColorHighest,
     Color? onBackgroundColorHighest,
     SelectorActionBarTheme? actionBarTheme,
+    @Deprecated('Use [tabBarTheme] (horizontal) or [sideBarTheme] (vertical).')
     SelectorCategoryBarTheme? categoryBarTheme,
+    SelectorTabBarTheme? tabBarTheme,
+    SelectorSideBarTheme? sideBarTheme,
     SelectorGridTileTheme? gridTileTheme,
     SelectorListTileTheme? listTileTheme,
     SelectorFieldTileTheme? fieldTileTheme,
@@ -162,6 +186,8 @@ class SelectorThemeData with Diagnosticable {
           onBackgroundColorHighest ?? this.onBackgroundColorHighest,
       actionBarTheme: actionBarTheme ?? this.actionBarTheme,
       categoryBarTheme: categoryBarTheme ?? this.categoryBarTheme,
+      tabBarTheme: tabBarTheme ?? this.tabBarTheme,
+      sideBarTheme: sideBarTheme ?? this.sideBarTheme,
       gridTileTheme: gridTileTheme ?? this.gridTileTheme,
       listTileTheme: listTileTheme ?? this.listTileTheme,
       fieldTileTheme: fieldTileTheme ?? this.fieldTileTheme,
@@ -194,6 +220,9 @@ class SelectorThemeData with Diagnosticable {
           SelectorActionBarTheme.lerp(a?.actionBarTheme, b?.actionBarTheme, t),
       categoryBarTheme: SelectorCategoryBarTheme.lerp(
           a?.categoryBarTheme, b?.categoryBarTheme, t),
+      tabBarTheme: SelectorTabBarTheme.lerp(a?.tabBarTheme, b?.tabBarTheme, t),
+      sideBarTheme:
+          SelectorSideBarTheme.lerp(a?.sideBarTheme, b?.sideBarTheme, t),
       gridTileTheme:
           SelectorGridTileTheme.lerp(a?.gridTileTheme, b?.gridTileTheme, t),
       listTileTheme:
@@ -221,6 +250,8 @@ class SelectorThemeData with Diagnosticable {
         onBackgroundColorHighest,
         actionBarTheme,
         categoryBarTheme,
+        tabBarTheme,
+        sideBarTheme,
         gridTileTheme,
         listTileTheme,
         fieldTileTheme,
@@ -248,6 +279,8 @@ class SelectorThemeData with Diagnosticable {
         other.onBackgroundColorHighest == onBackgroundColorHighest &&
         other.actionBarTheme == actionBarTheme &&
         other.categoryBarTheme == categoryBarTheme &&
+        other.tabBarTheme == tabBarTheme &&
+        other.sideBarTheme == sideBarTheme &&
         other.gridTileTheme == gridTileTheme &&
         other.listTileTheme == listTileTheme &&
         other.fieldTileTheme == fieldTileTheme &&

@@ -14,4 +14,8 @@ export 'grid_view.dart';
 export 'list_tile.dart';
 export 'list_tile_theme.dart';
 export 'list_view.dart';
+export 'side_bar.dart';
+export 'side_bar_theme.dart';
 export 'skeleton_box.dart';
+export 'tab_bar.dart';
+export 'tab_bar_theme.dart';

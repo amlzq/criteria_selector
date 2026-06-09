@@ -783,10 +783,9 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Category list (left)
-              SelectorCategoryBar(
-                scrollDirection: Axis.vertical,
+              SelectorSideBar(
                 isScrollable: true,
-                size: selector?.categoryBarTheme?.size,
+                width: selector?.sideBarTheme?.width,
                 backgroundColor: categoryBackgroundColor,
                 selectedColor: effectiveSelectedColor,
                 selectedTileColor: selectedTileColor,

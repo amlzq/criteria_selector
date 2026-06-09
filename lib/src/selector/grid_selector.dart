@@ -384,7 +384,7 @@ class GridSelectorViewState extends State<GridSelectorView> {
       mainAxisSize: MainAxisSize.min,
       children: [
         if (widget.entries.length > 1)
-          SelectorCategoryBar(
+          SelectorTabBar(
             isScrollable: false,
             onTap: (index, item) =>
                 _onCategoryItemTap(item as SelectorCategoryEntry),
@@ -439,7 +439,7 @@ class GridSelectorSkeleton extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const SelectorCategoryBarSkeleton(),
+        const SelectorTabBarSkeleton(),
         Flexible(
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
