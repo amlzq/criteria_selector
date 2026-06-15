@@ -587,13 +587,13 @@ class _DropselectTabBarDefaults extends DropselectTabBarTheme {
   Color? get labelColor => _colors.primary;
 
   @override
-  TextStyle? get labelStyle => _textTheme.titleMedium;
+  TextStyle? get labelStyle => _textTheme.titleSmall;
 
   @override
   Color? get unselectedLabelColor => _colors.onSurface;
 
   @override
-  TextStyle? get unselectedLabelStyle => _textTheme.titleMedium;
+  TextStyle? get unselectedLabelStyle => _textTheme.titleSmall;
 
   @override
   Widget? get indicator => const Icon(

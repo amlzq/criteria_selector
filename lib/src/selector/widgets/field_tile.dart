@@ -187,10 +187,10 @@ class _SelectorFieldTileDefaults extends SelectorFieldTileTheme {
   Color? get textColor => _theme.onBackgroundColorHighest;
 
   @override
-  TextStyle? get labelStyle => _textTheme.bodyMedium;
+  TextStyle? get labelStyle => _textTheme.bodyLarge;
 
   @override
-  TextStyle? get sublabelStyle => _textTheme.bodySmall;
+  TextStyle? get sublabelStyle => _textTheme.bodyMedium;
 
   @override
   Color? get selectedColor => _theme.selectedColor;

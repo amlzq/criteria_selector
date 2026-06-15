@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
 /// Visual configuration for [DropselectOverlay].
+@immutable
 class DropselectOverlayStyle {
-  /// Overrides the default value of [Selector.overlayStyle.height].
-  // final double? height;
+  const DropselectOverlayStyle({
+    this.maxHeightFactor,
+    this.backgroundColor,
+    this.decoration,
+  });
 
   /// Panel height = maxHeightFactor * available height (space from the bottom of the bar to the bottom of the screen).
   /// Note: this only affects scrollable selector content with unconstrained height. For constrained content, height is determined by Wrap.
@@ -15,13 +19,6 @@ class DropselectOverlayStyle {
 
   /// Optional decoration applied to the overlay material.
   final Decoration? decoration;
-
-  DropselectOverlayStyle({
-    // this.height,
-    this.maxHeightFactor,
-    this.backgroundColor,
-    this.decoration,
-  });
 
   DropselectOverlayStyle copyWith({
     double? maxHeightFactor,

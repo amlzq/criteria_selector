@@ -11,12 +11,10 @@ import 'tab_bar.dart';
 class SelectorTabBarTheme with Diagnosticable {
   const SelectorTabBarTheme({
     this.backgroundColor,
-    this.size,
     this.padding,
     this.selectedColor,
     this.labelStyle,
     this.selectedLabelStyle,
-    this.selectedTileColor,
     this.indicatorColor,
     this.indicatorHeight,
     this.indicatorPadding,
@@ -26,9 +24,6 @@ class SelectorTabBarTheme with Diagnosticable {
 
   /// Overrides the default value of [SelectorTabBar.selectedColor].
   final Color? backgroundColor;
-
-  /// Overrides the default value of [SelectorTabBar.size].
-  final double? size;
 
   /// Overrides the default value of [SelectorTabBar.padding].
   final EdgeInsetsGeometry? padding;
@@ -41,9 +36,6 @@ class SelectorTabBarTheme with Diagnosticable {
 
   /// Overrides the default value of [SelectorTabBar.selectedLabelStyle].
   final TextStyle? selectedLabelStyle;
-
-  /// Overrides the default value of [SelectorTabBar.selectedTileColor].
-  final Color? selectedTileColor;
 
   /// Overrides the default value of [SelectorTabBar.indicatorColor].
   final Color? indicatorColor;
@@ -77,12 +69,10 @@ class SelectorTabBarTheme with Diagnosticable {
   }) {
     return SelectorTabBarTheme(
       backgroundColor: backgroundColor ?? this.backgroundColor,
-      size: size ?? this.size,
       padding: padding ?? this.padding,
       selectedColor: selectedColor ?? this.selectedColor,
       labelStyle: labelStyle ?? this.labelStyle,
       selectedLabelStyle: selectedLabelStyle ?? this.selectedLabelStyle,
-      selectedTileColor: selectedTileColor ?? this.selectedTileColor,
       indicatorColor: indicatorColor ?? this.indicatorColor,
       indicatorHeight: indicatorHeight ?? this.indicatorHeight,
       indicatorPadding: indicatorPadding ?? this.indicatorPadding,
@@ -104,18 +94,12 @@ class SelectorTabBarTheme with Diagnosticable {
     }
     return SelectorTabBarTheme(
       backgroundColor: Color.lerp(a?.backgroundColor, b?.backgroundColor, t),
-      size: lerpDouble(a?.size, b?.size, t),
       padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
       selectedColor: Color.lerp(a?.selectedColor, b?.selectedColor, t),
       labelStyle: TextStyle.lerp(a?.labelStyle, b?.labelStyle, t),
       selectedLabelStyle: TextStyle.lerp(
         a?.selectedLabelStyle,
         b?.selectedLabelStyle,
-        t,
-      ),
-      selectedTileColor: Color.lerp(
-        a?.selectedTileColor,
-        b?.selectedTileColor,
         t,
       ),
       indicatorColor: Color.lerp(a?.indicatorColor, b?.indicatorColor, t),
@@ -132,12 +116,10 @@ class SelectorTabBarTheme with Diagnosticable {
   @override
   int get hashCode => Object.hash(
         backgroundColor,
-        size,
         padding,
         selectedColor,
         labelStyle,
         selectedLabelStyle,
-        selectedTileColor,
         indicatorColor,
         indicatorHeight,
         indicatorPadding,
@@ -155,12 +137,10 @@ class SelectorTabBarTheme with Diagnosticable {
     }
     return other is SelectorTabBarTheme &&
         other.backgroundColor == backgroundColor &&
-        other.size == size &&
         other.padding == padding &&
         other.selectedColor == selectedColor &&
         other.labelStyle == labelStyle &&
         other.selectedLabelStyle == selectedLabelStyle &&
-        other.selectedTileColor == selectedTileColor &&
         other.indicatorColor == indicatorColor &&
         other.indicatorHeight == indicatorHeight &&
         other.indicatorPadding == indicatorPadding &&

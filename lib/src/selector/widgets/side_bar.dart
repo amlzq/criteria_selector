@@ -213,15 +213,11 @@ class _SelectorSideBarDefaults extends SelectorSideBarTheme {
   Color? get selectedColor => _theme.selectedColor;
 
   @override
-  TextStyle? get labelStyle => _textTheme.bodyMedium?.copyWith(
-        fontSize: 14,
-        color: selectedColor,
-      );
+  TextStyle? get labelStyle => _textTheme.bodyLarge;
 
   @override
   TextStyle? get selectedLabelStyle => _textTheme.bodyMedium?.copyWith(
-        fontSize: 14,
-        color: _theme.onBackgroundColorHighest,
+        color: _theme.selectedColor,
       );
 
   @override

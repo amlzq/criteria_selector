@@ -486,17 +486,21 @@ class _HousePageState extends State<HousePage> {
                                     Expanded(
                                       child: Text(
                                         house.title ?? '',
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontSize: 26,
                                           fontWeight: FontWeight.w700,
-                                          color: Color(0xFF121826),
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
                                         ),
                                       ),
                                     ),
-                                    const Text(
+                                    Text(
                                       '•••',
                                       style: TextStyle(
-                                        color: Color(0xFF0A66FF),
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary,
                                         fontSize: 22,
                                         fontWeight: FontWeight.w700,
                                       ),
@@ -508,7 +512,6 @@ class _HousePageState extends State<HousePage> {
                                   house.second ?? '',
                                   style: const TextStyle(
                                     fontSize: 20,
-                                    color: Color(0xFF1E2431),
                                     height: 1.1,
                                   ),
                                 ),
@@ -517,7 +520,6 @@ class _HousePageState extends State<HousePage> {
                                   house.address ?? '',
                                   style: const TextStyle(
                                     fontSize: 22,
-                                    color: Color(0xFF1E2431),
                                     height: 1.15,
                                   ),
                                 ),
@@ -527,7 +529,6 @@ class _HousePageState extends State<HousePage> {
                                     broker!,
                                     style: const TextStyle(
                                       fontSize: 16,
-                                      color: Color(0xFF5A6E95),
                                       letterSpacing: 0.3,
                                     ),
                                   ),

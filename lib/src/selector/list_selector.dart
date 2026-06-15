@@ -301,7 +301,7 @@ class ListSelectorViewState extends State<ListSelectorView> {
                       final gridConfig = category.gridConfig;
                       final chipConfig = category.chipConfig;
                       return SelectorExpansionTile(
-                        title: Text(category.name ?? ''),
+                        title: category.name ?? '',
                         titlePadding: const EdgeInsets.symmetric(vertical: 10),
                         initiallyExpanded: true,
                         child: listConfig != null

@@ -327,7 +327,7 @@ class _BuyPageState extends State<BuyPage> {
               GridSelector(
                 dataFetcher: _filtersRepo.fetchBuyPriceData,
                 selectedDataFetcher: _filtersRepo.fetchBuyPriceSelectedData,
-                // resetDataFetcher: _filtersRepo.fetchBuyPriceResetData,
+                resetDataFetcher: _filtersRepo.fetchBuyPriceResetData,
                 selectionMode: SelectionMode.multiple,
                 crossAxisCount: 4,
                 childAspectRatio: 2.5,
@@ -347,7 +347,7 @@ class _BuyPageState extends State<BuyPage> {
                 childAspectRatio: 2.5,
                 crossAxisSpacing: 8,
                 mainAxisSpacing: 8,
-                categoryBarTheme: const SelectorCategoryBarTheme(size: 98),
+                sideBarTheme: const SelectorSideBarTheme(width: 98),
                 actionBarBuilder: (
                   context, {
                   required onResetTap,

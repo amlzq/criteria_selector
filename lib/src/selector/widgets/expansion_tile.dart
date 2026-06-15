@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../selector_theme.dart';
+import '../selector_theme_data.dart';
 import 'expansion_tile_theme.dart';
 
 const kSelectorExpansionTileAnimationDuration = Duration(milliseconds: 200);
@@ -7,7 +9,9 @@ const kSelectorExpansionTileAnimationDuration = Duration(milliseconds: 200);
 class SelectorExpansionTile extends StatefulWidget {
   const SelectorExpansionTile({
     super.key,
-    this.title,
+    required this.title,
+    this.titleStyle,
+    this.selectedColor,
     required this.child,
     this.showTrailingIcon = true,
     this.titlePadding,
@@ -21,7 +25,11 @@ class SelectorExpansionTile extends StatefulWidget {
     this.onExpansionChanged,
   });
 
-  final Widget? title;
+  final String title;
+
+  final TextStyle? titleStyle;
+
+  final Color? selectedColor;
 
   final Widget child;
 
@@ -158,7 +166,17 @@ class _SelectorExpansionTileState extends State<SelectorExpansionTile>
   }
 
   Widget _buildChildren(BuildContext context, Widget? child) {
-    final theme = SelectorExpansionTileTheme.of(context);
+    final _SelectorExpansionTileDefaults defaults =
+        _SelectorExpansionTileDefaults(context);
+
+    final SelectorExpansionTileTheme theme =
+        SelectorExpansionTileTheme.of(context);
+
+    final effectiveTitleStyle =
+        (widget.titleStyle ?? theme.titleStyle ?? defaults.titleStyle!);
+
+    final effectiveSelectedColor =
+        widget.selectedColor ?? theme.selectedColor ?? defaults.selectedColor!;
 
     final trailingIcon = widget.showTrailingIcon
         ? RotationTransition(
@@ -174,7 +192,9 @@ class _SelectorExpansionTileState extends State<SelectorExpansionTile>
       padding: widget.titlePadding ?? theme.titlePadding ?? EdgeInsets.zero,
       child: Row(
         children: [
-          Expanded(child: widget.title ?? const SizedBox.shrink()),
+          Expanded(
+            child: Text(widget.title, style: effectiveTitleStyle),
+          ),
           trailingIcon,
         ],
       ),
@@ -209,7 +229,7 @@ class _SelectorExpansionTileState extends State<SelectorExpansionTile>
 
   @override
   Widget build(BuildContext context) {
-    final SelectorExpansionTileTheme expansionTileTheme =
+    final SelectorExpansionTileTheme theme =
         SelectorExpansionTileTheme.of(context);
 
     final bool closed = !_isExpanded && _animationController.isDismissed;
@@ -220,9 +240,7 @@ class _SelectorExpansionTileState extends State<SelectorExpansionTile>
       child: TickerMode(
         enabled: !closed,
         child: Padding(
-          padding: widget.childPadding ??
-              expansionTileTheme.childPadding ??
-              EdgeInsets.zero,
+          padding: widget.childPadding ?? theme.childPadding ?? EdgeInsets.zero,
           child: widget.child,
         ),
       ),
@@ -234,4 +252,18 @@ class _SelectorExpansionTileState extends State<SelectorExpansionTile>
       child: shouldRemoveChildren ? null : result,
     );
   }
+}
+
+class _SelectorExpansionTileDefaults extends SelectorExpansionTileTheme {
+  _SelectorExpansionTileDefaults(this.context) : super();
+
+  final BuildContext context;
+  late final SelectorThemeData _theme = SelectorTheme.of(context);
+  late final TextTheme _textTheme = Theme.of(context).textTheme;
+
+  @override
+  TextStyle? get titleStyle => _textTheme.titleLarge;
+
+  @override
+  Color? get selectedColor => _theme.selectedColor;
 }

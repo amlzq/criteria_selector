@@ -33,7 +33,9 @@ class DropselectOverlay extends StatelessWidget {
   final Animation<double>? animation;
 
   final SelectorCallback? onChangeTap;
+
   final SelectorCallback? onApplyTap;
+
   final VoidCallback? onResetTap;
 
   final GestureTapCallback? onOverlayTap;

@@ -72,7 +72,8 @@ class SelectorGridTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final SelectorGridTileTheme defaults = _SelectorGridTileDefaults(context);
+    final SelectorGridTileTheme defaults =
+        _SelectorGridTileDefaults(context, enabled, selected);
     final theme = SelectorGridTileTheme.of(context);
 
     final effectiveSelectedColor =
@@ -81,24 +82,16 @@ class SelectorGridTile extends StatelessWidget {
     final effectiveVariant = variant ?? theme.variant ?? defaults.variant!;
 
     final effectiveTileColor =
+        tileColor ?? theme.tileColor ?? defaults.tileColor!;
+
+    final effectiveSelectedTileColor = selectedTileColor ??
+        theme.selectedTileColor ??
+        defaults.selectedTileColor!;
+
+    final tileBackgroundColor =
         effectiveVariant == SelectorGridTileVariant.filled
-            ? tileColor ?? theme.tileColor ?? defaults.tileColor!
+            ? (selected ? effectiveSelectedTileColor : effectiveTileColor)
             : Colors.transparent;
-
-    final effectiveSelectedTileColor =
-        effectiveVariant == SelectorGridTileVariant.filled
-            ? selectedTileColor ??
-                theme.selectedTileColor ??
-                defaults.selectedTileColor
-            : Colors.transparent;
-
-    final tileBackgroundColor = selected
-        ? effectiveSelectedTileColor ?? effectiveTileColor
-        : effectiveTileColor;
-
-    final effectiveBorder = effectiveVariant == SelectorGridTileVariant.filled
-        ? null
-        : Border.all(color: tileBackgroundColor, width: 1.2);
 
     final selectedTextColor = effectiveVariant == SelectorGridTileVariant.filled
         ? (ThemeData.estimateBrightnessForColor(tileBackgroundColor) ==
@@ -111,7 +104,13 @@ class SelectorGridTile extends StatelessWidget {
         ? selected
             ? selectedTextColor
             : textColor ?? theme.textColor ?? defaults.textColor!
-        : Colors.grey[500];
+        : Colors.grey[500]!;
+
+    final effectiveBorder = effectiveVariant == SelectorGridTileVariant.filled
+        ? null
+        : Border.all(
+            color: selected ? effectiveSelectedColor : effectiveTextColor,
+            width: 1.2);
 
     return InkWell(
       onTap: onTap,
@@ -138,9 +137,15 @@ class SelectorGridTile extends StatelessWidget {
 }
 
 class _SelectorGridTileDefaults extends SelectorGridTileTheme {
-  _SelectorGridTileDefaults(this.context) : super();
+  _SelectorGridTileDefaults(
+    this.context,
+    this.isEnabled,
+    this.isSelected,
+  ) : super();
 
   final BuildContext context;
+  final bool isEnabled;
+  final bool isSelected;
   late final SelectorThemeData _theme = SelectorTheme.of(context);
   late final TextTheme _textTheme = Theme.of(context).textTheme;
 
@@ -151,14 +156,17 @@ class _SelectorGridTileDefaults extends SelectorGridTileTheme {
   Color? get textColor => _theme.onBackgroundColorHighest;
 
   @override
-  TextStyle? get labelStyle => _textTheme.bodyMedium;
+  TextStyle? get labelStyle => _textTheme.bodyLarge;
 
   @override
-  TextStyle? get sublabelStyle => _textTheme.bodySmall;
+  TextStyle? get sublabelStyle => _textTheme.bodyMedium;
 
   @override
   SelectorGridTileVariant? get variant => SelectorGridTileVariant.filled;
 
   @override
-  Color? get tileColor => _theme.backgroundColorHighest;
+  Color? get tileColor => _theme.backgroundColorHigh;
+
+  @override
+  Color? get selectedTileColor => _theme.selectedColor.withOpacity(0.12);
 }

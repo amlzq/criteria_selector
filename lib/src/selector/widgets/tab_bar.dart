@@ -25,7 +25,6 @@ class SelectorTabBar<T extends SelectorEntry> extends StatelessWidget {
     this.selectedColor,
     this.labelStyle,
     this.selectedLabelStyle,
-    this.selectedTileColor,
     this.indicatorColor,
     this.indicatorHeight,
     this.indicatorPadding,
@@ -52,8 +51,6 @@ class SelectorTabBar<T extends SelectorEntry> extends StatelessWidget {
   final TextStyle? labelStyle;
 
   final TextStyle? selectedLabelStyle;
-
-  final Color? selectedTileColor;
 
   /// The color of the line that appears below the selected tab.
   final Color? indicatorColor;
@@ -102,10 +99,6 @@ class SelectorTabBar<T extends SelectorEntry> extends StatelessWidget {
         theme.selectedLabelStyle ??
         defaults.selectedLabelStyle!;
 
-    final effectiveSelectedTileColor = selectedTileColor ??
-        theme.selectedTileColor ??
-        defaults.selectedTileColor;
-
     final effectiveIndicatorColor =
         indicatorColor ?? theme.indicatorColor ?? defaults.indicatorColor!;
 
@@ -127,7 +120,6 @@ class SelectorTabBar<T extends SelectorEntry> extends StatelessWidget {
       final entry = entries[index] as SelectorCategoryEntry;
       final selected = selectedCategories.contains(entry);
       final label = entry.name ?? '';
-      final textStyle = selected ? selectedLabelStyle : labelStyle;
 
       Widget tab = _Tab(
         label: label,
@@ -135,9 +127,8 @@ class SelectorTabBar<T extends SelectorEntry> extends StatelessWidget {
         selected: selected,
         padding: effectivePadding,
         selectedColor: effectiveSelectedColor,
-        textStyle: effectiveLabelStyle,
-        selectedLabelStyle: effectiveSelectedLabelStyle,
-        selectedTileColor: effectiveSelectedTileColor,
+        labelStyle:
+            selected ? effectiveSelectedLabelStyle : effectiveLabelStyle,
         indicatorColor: effectiveIndicatorColor,
         indicatorHeight: effectiveIndicatorHeight,
         indicatorPadding: effectiveIndicatorPadding,
@@ -185,13 +176,11 @@ class SelectorTabBar<T extends SelectorEntry> extends StatelessWidget {
 class _Tab extends StatelessWidget {
   const _Tab({
     required this.label,
+    required this.labelStyle,
     required this.isScrollable,
     required this.selected,
     required this.padding,
     required this.selectedColor,
-    required this.textStyle,
-    required this.selectedLabelStyle,
-    required this.selectedTileColor,
     required this.indicatorColor,
     required this.indicatorHeight,
     required this.indicatorPadding,
@@ -202,6 +191,8 @@ class _Tab extends StatelessWidget {
 
   final String label;
 
+  final TextStyle labelStyle;
+
   final bool selected;
 
   final bool isScrollable;
@@ -209,12 +200,6 @@ class _Tab extends StatelessWidget {
   final EdgeInsetsGeometry padding;
 
   final Color? selectedColor;
-
-  final TextStyle textStyle;
-
-  final TextStyle selectedLabelStyle;
-
-  final Color? selectedTileColor;
 
   final Color indicatorColor;
 
@@ -241,7 +226,7 @@ class _Tab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fontSize = textStyle.fontSize ?? 14;
+    final fontSize = labelStyle.fontSize ?? 14;
     return InkWell(
       onTap: onTap,
       child: LayoutBuilder(
@@ -257,7 +242,7 @@ class _Tab extends StatelessWidget {
           final double labelIndicatorWidth = _measureLabelWidth(
             context,
             label,
-            textStyle,
+            labelStyle,
           ).clamp(0.0, maxIndicatorWidth).toDouble();
 
           final double indicatorWidth =
@@ -265,16 +250,14 @@ class _Tab extends StatelessWidget {
                   ? labelIndicatorWidth
                   : maxIndicatorWidth;
 
-          return Container(
-            color: selected ? selectedTileColor : null,
+          return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4.5, vertical: 6),
-            alignment: Alignment.center,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   label,
-                  style: textStyle,
+                  style: labelStyle,
                   strutStyle: StrutStyle(
                     fontSize: fontSize,
                     height: 20 / fontSize,
@@ -371,25 +354,17 @@ class _SelectorTabBarDefaults extends SelectorTabBarTheme {
   Color? get backgroundColor => _theme.backgroundColor;
 
   @override
-  double? get size => 80;
-
-  @override
   EdgeInsetsGeometry? get padding => EdgeInsets.zero;
 
   @override
   Color? get selectedColor => _theme.selectedColor;
 
   @override
-  TextStyle? get labelStyle => _textTheme.bodyMedium?.copyWith(
-        fontSize: 14,
-        color: selectedColor,
-      );
+  TextStyle? get labelStyle => _textTheme.titleSmall;
 
   @override
-  TextStyle? get selectedLabelStyle => _textTheme.bodyMedium?.copyWith(
-        fontSize: 14,
-        color: _theme.onBackgroundColorHighest,
-      );
+  TextStyle? get selectedLabelStyle =>
+      _textTheme.titleSmall?.copyWith(color: selectedColor);
 
   @override
   Color? get indicatorColor => selectedColor;

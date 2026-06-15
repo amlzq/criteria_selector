@@ -232,14 +232,12 @@ class _SelectorChipBarDefaults extends SelectorChipBarTheme {
   Color? get selectedChipColor => _theme.selectedColor;
 
   @override
-  TextStyle? get labelStyle => _textTheme.bodyMedium?.copyWith(
-        fontSize: 14,
+  TextStyle? get labelStyle => _textTheme.labelLarge?.copyWith(
         color: _theme.onBackgroundColorHighest,
       );
 
   @override
-  TextStyle? get selectedLabelStyle => _textTheme.bodyMedium?.copyWith(
-        fontSize: 14,
+  TextStyle? get selectedLabelStyle => _textTheme.labelLarge?.copyWith(
         color: _theme.onSelectedColor,
       );
 }

@@ -6,15 +6,23 @@ import '../selector_theme.dart';
 @immutable
 class SelectorExpansionTileTheme with Diagnosticable {
   const SelectorExpansionTileTheme({
+    this.titleStyle,
     this.titlePadding,
+    this.selectedColor,
     this.childPadding,
     this.animationDuration,
     this.expansionCurve,
     this.collapseCurve,
   });
 
+  /// Overrides the default value of [SelectorExpansionTile.titleStyle].
+  final TextStyle? titleStyle;
+
   /// Overrides the default value of [SelectorExpansionTile.selectedColor].
   final EdgeInsetsGeometry? titlePadding;
+
+  /// Overrides the default value of [SelectorExpansionTile.selectedColor].
+  final Color? selectedColor;
 
   /// Overrides the default value of [SelectorExpansionTile.childPadding].
   final EdgeInsetsGeometry? childPadding;
@@ -29,14 +37,18 @@ class SelectorExpansionTileTheme with Diagnosticable {
   final Curve? collapseCurve;
 
   SelectorExpansionTileTheme copyWith({
+    TextStyle? titleStyle,
     EdgeInsetsGeometry? titlePadding,
+    Color? selectedColor,
     EdgeInsetsGeometry? childPadding,
     Duration? animationDuration,
     Curve? expansionCurve,
     Curve? collapseCurve,
   }) {
     return SelectorExpansionTileTheme(
+      titleStyle: titleStyle ?? this.titleStyle,
       titlePadding: titlePadding ?? this.titlePadding,
+      selectedColor: selectedColor ?? this.selectedColor,
       childPadding: childPadding ?? this.childPadding,
       animationDuration: animationDuration ?? this.animationDuration,
       expansionCurve: expansionCurve ?? this.expansionCurve,
@@ -54,9 +66,19 @@ class SelectorExpansionTileTheme with Diagnosticable {
       return a;
     }
     return SelectorExpansionTileTheme(
+      titleStyle: TextStyle.lerp(
+        a?.titleStyle,
+        b?.titleStyle,
+        t,
+      ),
       titlePadding: EdgeInsetsGeometry.lerp(
         a?.titlePadding,
         b?.titlePadding,
+        t,
+      ),
+      selectedColor: Color.lerp(
+        a?.selectedColor,
+        b?.selectedColor,
         t,
       ),
       childPadding: EdgeInsetsGeometry.lerp(
@@ -72,7 +94,9 @@ class SelectorExpansionTileTheme with Diagnosticable {
 
   @override
   int get hashCode => Object.hash(
+        titleStyle,
         titlePadding,
+        selectedColor,
         childPadding,
         animationDuration,
         expansionCurve,
@@ -88,7 +112,9 @@ class SelectorExpansionTileTheme with Diagnosticable {
       return false;
     }
     return other is SelectorExpansionTileTheme &&
+        other.titleStyle == titleStyle &&
         other.titlePadding == titlePadding &&
+        other.selectedColor == selectedColor &&
         other.childPadding == childPadding &&
         other.animationDuration == animationDuration &&
         other.expansionCurve == expansionCurve &&
