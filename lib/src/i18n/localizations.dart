@@ -52,6 +52,46 @@ class CriteriaSelectorLocalizations {
       'apply': 'Apply',
       'multiple': 'Multiple',
     },
+    'es': {
+      'reset': 'Restablecer',
+      'apply': 'Aplicar',
+      'multiple': 'Multiple',
+    },
+    'pt': {
+      'reset': 'Redefinir',
+      'apply': 'Aplicar',
+      'multiple': 'Múltipla',
+    },
+    'id': {
+      'reset': 'Atur Ulang',
+      'apply': 'Terapkan',
+      'multiple': 'Multi',
+    },
+    'vi': {
+      'reset': 'Đặt lại',
+      'apply': 'Áp dụng',
+      'multiple': 'Nhiều lựa chọn',
+    },
+    'fr': {
+      'reset': 'Réinitialiser',
+      'apply': 'Appliquer',
+      'multiple': 'Multiple',
+    },
+    'de': {
+      'reset': 'Zurücksetzen',
+      'apply': 'Anwenden',
+      'multiple': 'Mehrfach',
+    },
+    'ja': {
+      'reset': 'リセット',
+      'apply': '適用',
+      'multiple': '複数',
+    },
+    'ko': {
+      'reset': '초기화',
+      'apply': '적용',
+      'multiple': '다중',
+    },
     'zh_Hans': {
       'reset': '重置',
       'apply': '应用',
