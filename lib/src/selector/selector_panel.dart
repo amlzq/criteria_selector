@@ -94,13 +94,7 @@ class _SelectorPanelState extends State<SelectorPanel> {
                     behavior: HitTestBehavior.opaque,
                     onTap: () {
                       debugPrint('selector taped');
-                      // Unfocus the current focus scope if needed
-                      FocusScopeNode currentFocus = FocusScope.of(context);
-                      if (!currentFocus.hasPrimaryFocus &&
-                          currentFocus.focusedChild != null) {
-                        FocusManager.instance.primaryFocus?.unfocus();
-                      }
-                      // FocusScope.of(context).unfocus();
+                      FocusScope.of(context).unfocus();
                     },
                     child: controller.selector.buildBody(
                         context, entries, controller.previousSelected),

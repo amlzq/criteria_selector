@@ -136,12 +136,18 @@ class DropselectTabController extends ChangeNotifier {
 
   @override
   void dispose() {
-    _isDisposed = true;
     hideSelector(immediate: true);
+    _isDisposed = true;
     detachTickerProvider();
     tabDataMap.clear();
     // removeOverlay();
     super.dispose();
+  }
+
+  void _safePortalHide() {
+    try {
+      portalCtrl.hide();
+    } catch (_) {}
   }
 
   @override
@@ -167,7 +173,13 @@ class DropselectTabController extends ChangeNotifier {
 
   /// Hides the selector overlay if it is showing.
   void hideSelector({bool immediate = false}) {
-    if (_isDisposed) return;
+    if (_isDisposed) {
+      if (immediate) {
+        _overlayAnimCtrl?.value = 0.0;
+        _safePortalHide();
+      }
+      return;
+    }
 
     if (!_isExpanded && !portalCtrl.isShowing) {
       return;
@@ -178,14 +190,14 @@ class DropselectTabController extends ChangeNotifier {
 
     if (immediate) {
       _overlayAnimCtrl?.value = 0.0;
-      portalCtrl.hide();
+      _safePortalHide();
       notifyListeners();
       return;
     }
 
     final animCtrl = _overlayAnimCtrl;
     if (animCtrl == null) {
-      portalCtrl.hide();
+      _safePortalHide();
       notifyListeners();
       return;
     }
@@ -198,7 +210,7 @@ class DropselectTabController extends ChangeNotifier {
     animCtrl.reverse(from: animCtrl.value).whenComplete(() {
       if (_isDisposed) return;
       if (portalCtrl.isShowing) {
-        portalCtrl.hide();
+        _safePortalHide();
       }
       notifyListeners();
     });
