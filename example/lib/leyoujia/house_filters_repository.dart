@@ -137,6 +137,7 @@ class HouseFiltersRepository {
   /// 排序 初始选中项
   DropselectResult? buyPriceResult;
 
+  /// 初始选中项
   final buyPriceIniteialSelected = {
     SelectorCategoryEntry(
       id: 'total',
@@ -153,6 +154,7 @@ class HouseFiltersRepository {
   SelectorEntries? fetchBuyPriceSelectedData() =>
       buyPriceResult?.selected; // ?? buyPriceIniteialSelected;
 
+  /// 重置按钮的选中项
   SelectorEntries? fetchBuyPriceResetData() => buyPriceIniteialSelected;
 
   Future<SelectorEntries> fetchBuyPriceData() async {
@@ -370,7 +372,7 @@ class HouseFiltersRepository {
             id: category.id!,
             name: category.name!,
             children: category.data
-                ?.map((l1) => l1.id == 'area'
+                ?.map((l1) => category.id == 'area'
                     ? SelectorRangeEntry(
                         parentId: category.id!,
                         id: l1.id!,
@@ -428,7 +430,7 @@ class HouseFiltersRepository {
             id: category.id!,
             name: category.name!,
             children: category.data
-                ?.map((l1) => l1.id == 'area'
+                ?.map((l1) => category.id == 'area'
                     ? SelectorRangeEntry(
                         parentId: category.id!,
                         id: l1.id!,
@@ -487,7 +489,7 @@ class HouseFiltersRepository {
             id: category.id!,
             name: category.name!,
             children: category.data
-                ?.map((l1) => l1.id == 'area'
+                ?.map((l1) => category.id == 'area'
                     ? SelectorRangeEntry(
                         parentId: category.id!,
                         id: l1.id!,

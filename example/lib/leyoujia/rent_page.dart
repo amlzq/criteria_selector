@@ -173,7 +173,7 @@ class _RentPageState extends State<RentPage> {
         // 面积
         filter.area = <Map<String, dynamic>>[];
         for (var e in category.children ?? {}) {
-          e as SelectorIntEntry;
+          e as SelectorRangeEntry;
           filter.area!.add({"id": e.id, "min": e.min, "max": e.max});
         }
       }

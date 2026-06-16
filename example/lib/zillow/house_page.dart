@@ -118,13 +118,13 @@ class _HousePageState extends State<HousePage> {
       if (category.id == 'bedrooms') {
         filter.bedrooms = <String>[];
         for (var e in category.children ?? {}) {
-          e as SelectorTextEntry;
+          e as SelectorIntEntry;
           filter.bedrooms!.add(e.id);
         }
       } else if (category.id == 'bathrooms') {
         filter.bathrooms = <String>[];
         for (var e in category.children ?? {}) {
-          e as SelectorTextEntry;
+          e as SelectorIntEntry;
           filter.bathrooms!.add(e.id);
         }
       }
