@@ -42,32 +42,50 @@ class SelectorPanel extends StatefulWidget {
 }
 
 class _SelectorPanelState extends State<SelectorPanel> {
+  late SelectorController _controller;
+
   @override
   void initState() {
     super.initState();
+    _controller = _createController();
+  }
+
+  @override
+  void didUpdateWidget(covariant SelectorPanel oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.selector != widget.selector ||
+        oldWidget.onChangeTap != widget.onChangeTap ||
+        oldWidget.onApplyTap != widget.onApplyTap ||
+        oldWidget.onResetTap != widget.onResetTap) {
+      _controller.dispose();
+      _controller = _createController();
+    }
   }
 
   @override
   void dispose() {
+    _controller.dispose();
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final controller = SelectorController(
+  SelectorController _createController() {
+    return SelectorController(
       selector: widget.selector,
       changeCallback: widget.onChangeTap,
       applyCallback: widget.onApplyTap,
       resetCallback: widget.onResetTap,
     );
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return SelectorTheme(
       data:
           widget.selectorTheme ?? SelectorThemeData.fallback(Theme.of(context)),
       child: ColoredBox(
         color: SelectorTheme.of(context).backgroundColor,
         child: SelectorControllerProvider(
-          controller: controller,
+          controller: _controller,
           child: FutureBuilder<SelectorEntries>(
             future: widget.selector.data,
             builder: (context, snapshot) {
@@ -96,13 +114,13 @@ class _SelectorPanelState extends State<SelectorPanel> {
                       debugPrint('selector taped');
                       FocusScope.of(context).unfocus();
                     },
-                    child: controller.selector.buildBody(
-                        context, entries, controller.previousSelected),
+                    child: _controller.selector.buildBody(
+                        context, entries, _controller.previousSelected),
                   );
                 }
               } else {
                 // Request in progress: show loading
-                return controller.selector.buildSkeleton(context);
+                return _controller.selector.buildSkeleton(context);
               }
             },
           ),

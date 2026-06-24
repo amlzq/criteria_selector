@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 import '../selector.dart';
 import '../selector_entry.dart';
-import '../selector_utils.dart';
 import 'selector_controller.dart';
 import 'widgets/widgets.dart';
 
@@ -30,28 +29,7 @@ class ListSelectorViewState extends State<ListSelectorView> {
   /// Focused category entry
   int _tempSelectedCategoryIndex = 0;
 
-  final List<SelectorEntries> _selectedEntriesPerLevel = [];
-
   SelectorController? controller;
-
-  final level = 2;
-
-  @override
-  void initState() {
-    super.initState();
-
-    if (widget.previousSelected != null &&
-        (widget.previousSelected?.isNotEmpty ?? false)) {
-      // Restore previous selection
-      _selectedEntriesPerLevel.addAll(SelectorUtils.restorePreviousSelected(
-          widget.entries, widget.previousSelected));
-    } else {
-      // Check whether there is an "Any" entry; if so, select it by default
-      _selectAnyItemIfHas();
-    }
-
-    _tempSelectedCategoryIndex = 0;
-  }
 
   @override
   void didChangeDependencies() {
@@ -65,16 +43,29 @@ class ListSelectorViewState extends State<ListSelectorView> {
     _updateSelectorController(context);
   }
 
+  @override
+  void dispose() {
+    controller?.removeListener(_handleSelectorControllerTick);
+    super.dispose();
+  }
+
   void _updateSelectorController(BuildContext context) {
     if (controller == null) {
       controller = SelectorController.of(context)!;
       controller?.addListener(_handleSelectorControllerTick);
     }
+    controller?.bindState(
+      widget.entries,
+      initializeAnyIfEmpty: true,
+      previousSelectedOverride: widget.previousSelected,
+    );
   }
 
   ListSelector? get selector => controller?.selector as ListSelector;
 
-  void _handleSelectorControllerTick() {}
+  void _handleSelectorControllerTick() {
+    if (mounted) setState(() {});
+  }
 
   SelectionMode? get selectorSelectionMode {
     if (SelectionMode.multiple == categorySelectionMode) {
@@ -87,22 +78,6 @@ class ListSelectorViewState extends State<ListSelectorView> {
   }
 
   SelectionMode? get categorySelectionMode => controller?.selectionMode;
-
-  /// Checks whether the selected category has an "Any" item
-  void _selectAnyItemIfHas() {
-    _selectedEntriesPerLevel.clear();
-    while (_selectedEntriesPerLevel.length < level) {
-      _selectedEntriesPerLevel.add({});
-    }
-    for (var category in widget.entries) {
-      final anyItem = category.children?.singleWhereOrNull(testAnyElement);
-      if (anyItem != null) {
-        // If there is an "Any" entry, select it.
-        _selectedEntriesPerLevel[0].add(category);
-        _selectedEntriesPerLevel[1].add(anyItem);
-      }
-    }
-  }
 
   SelectorCategoryEntry? get selectedCategory =>
       widget.entries.elementAtOrNull(_tempSelectedCategoryIndex)
@@ -117,60 +92,27 @@ class ListSelectorViewState extends State<ListSelectorView> {
       String categoryId, String minValue, String maxValue) {
     var minInt = int.tryParse(minValue) ?? 0;
     var maxInt = int.tryParse(maxValue) ?? 0;
-    if (minInt != 0 || maxInt != 0) {
-      // Valid custom input provided
-      if (minInt > maxInt) {
-        final temp = minInt;
-        minInt = maxInt;
-        maxInt = temp;
-      }
-      // Update the custom item
-      final category =
-          widget.entries.singleWhereOrNull((e) => e.id == categoryId);
-      final customItem =
-          category?.children?.singleWhereOrNull(testCustomElement);
-      if (customItem != null && customItem is SelectorRangeEntry) {
-        customItem.min = minInt;
-        customItem.max = maxInt;
-        customItem.name = '$minInt-$maxInt';
-        _onTerminalItemTap(customItem);
-      }
+    if (minInt > maxInt) {
+      final temp = minInt;
+      minInt = maxInt;
+      maxInt = temp;
     }
+    controller?.setCustomRangeForParent(
+      parentId: categoryId,
+      min: (minInt == 0) ? null : minInt,
+      max: (maxInt == 0) ? null : maxInt,
+      applyIfImmediate: true,
+    );
   }
 
   void _onTerminalItemTap(SelectorChildEntry item) {
     final isCategoryTree = widget.entries.firstOrNull is SelectorCategoryEntry;
-    final requiredLevel = isCategoryTree ? 2 : 1;
-    while (_selectedEntriesPerLevel.length < requiredLevel) {
-      _selectedEntriesPerLevel.add({});
-    }
-
     if (!isCategoryTree) {
-      final selectedEntries = _selectedEntriesPerLevel[0];
-      final selectionMode = controller?.selectionMode ?? SelectionMode.single;
-
-      if (item.isAny) {
-        selectedEntries
-          ..clear()
-          ..add(item);
-      } else {
-        selectedEntries.removeWhere((e) => e is SelectorChildEntry && e.isAny);
-        if (SelectionMode.single == selectionMode) {
-          if (selectedEntries.contains(item)) {
-            return;
-          }
-          selectedEntries
-            ..clear()
-            ..add(item);
-        } else {
-          if (selectedEntries.contains(item)) {
-            selectedEntries.remove(item);
-          } else {
-            selectedEntries.add(item);
-          }
-        }
-      }
-
+      controller?.toggleFlatEntry(
+        item,
+        selectorSelectionMode: selectorSelectionMode ?? SelectionMode.single,
+        isCategoryTree: false,
+      );
       _setStateOrImmediateApply(item);
       return;
     }
@@ -181,52 +123,12 @@ class ListSelectorViewState extends State<ListSelectorView> {
       return;
     }
     final category = categoryEntry;
-
-    final childrenSelectionMode = category.selectionMode;
-    final selectedEntries = _selectedEntriesPerLevel[1];
-
-    if (item.isAny) {
-      selectedEntries
-          .removeWhere((e) => testSameParentElement(e, item.parentId));
-      selectedEntries.add(item);
-    } else if (item is SelectorRangeEntry && item.isCustom) {
-      selectedEntries
-          .removeWhere((e) => testSameParentElement(e, item.parentId));
-      selectedEntries.add(item);
-    } else {
-      selectedEntries.removeWhere((e) =>
-          (e as SelectorChildEntry).parentId == item.parentId && e.isAny);
-
-      if (SelectionMode.single == childrenSelectionMode) {
-        if (selectedEntries.contains(item)) {
-          return;
-        }
-        selectedEntries
-            .removeWhere((e) => testSameParentElement(e, item.parentId));
-        selectedEntries.add(item);
-      } else {
-        if (selectedEntries.contains(item)) {
-          selectedEntries.remove(item);
-        } else {
-          selectedEntries.add(item);
-        }
-      }
-    }
-
-    final hasSelectionInCategory =
-        selectedEntries.any((e) => testSameParentElement(e, category.id));
-    if (hasSelectionInCategory) {
-      _selectedEntriesPerLevel[0].add(category);
-    } else {
-      final anyItem = category.children?.singleWhereOrNull(testAnyElement);
-      if (anyItem != null) {
-        selectedEntries.add(anyItem);
-        _selectedEntriesPerLevel[0].add(category);
-      } else {
-        _selectedEntriesPerLevel[0].remove(category);
-      }
-    }
-
+    controller?.toggleFlatEntry(
+      item,
+      selectorSelectionMode: selectorSelectionMode ?? SelectionMode.single,
+      isCategoryTree: true,
+      category: category,
+    );
     _setStateOrImmediateApply(item);
   }
 
@@ -237,39 +139,19 @@ class ListSelectorViewState extends State<ListSelectorView> {
     } else {
       // Update UI state
       setState(() {});
-
-      final newEntries = SelectorUtils.cloneTree(
-        widget.entries,
-        _selectedEntriesPerLevel,
-        deepCloneSelectedSubtree: false,
-      );
-      controller?.change(newEntries);
+      controller?.emitChangeFromState();
     }
   }
 
   void _onResetTap() {
-    _selectedEntriesPerLevel.clear();
-    _selectedEntriesPerLevel.addAll(SelectorUtils.restorePreviousSelected(
-        widget.entries, controller?.resetSelected));
-
+    controller?.resetState(initializeAnyIfEmpty: true);
     _tempSelectedCategoryIndex = 0;
-
-    // _selectedCategory =
-    //     _selectedEntriesPerLevel[0].first as SelectorCategoryEntry;
-
     setState(() {});
     controller?.reset();
   }
 
   void _onApplyTap() {
-    if (_selectedEntriesPerLevel.isEmpty) {
-      controller?.apply({});
-      return;
-    }
-
-    final entries = widget.entries.toSet();
-    SelectorUtils.clippingTree(entries, _selectedEntriesPerLevel, 0);
-    controller?.apply(entries);
+    controller?.applyFromState();
   }
 
   @override
@@ -295,7 +177,7 @@ class ListSelectorViewState extends State<ListSelectorView> {
                       final category =
                           widget.entries[index] as SelectorCategoryEntry;
                       final selectedEntries =
-                          _selectedEntriesPerLevel.elementAtOrNull(1) ?? {};
+                          controller?.selectedEntriesAtLevel(1) ?? {};
                       final entries = category.children?.toList() ?? [];
                       final listConfig = category.listConfig;
                       final gridConfig = category.gridConfig;
@@ -309,12 +191,18 @@ class ListSelectorViewState extends State<ListSelectorView> {
                                 key: ValueKey('category_$index'),
                                 category: category,
                                 showTitle: false,
-
                                 entries: entries,
                                 selectedEntries: selectedEntries,
                                 onItemTap: (index, item) => _onTerminalItemTap(
                                     item as SelectorChildEntry),
-                                // focusListener: _focusListener,
+                                inputListener:
+                                    (categoryId, minValue, maxValue) {
+                                  _customItemSelection(
+                                    categoryId ?? category.id,
+                                    minValue,
+                                    maxValue,
+                                  );
+                                },
                               )
                             : gridConfig != null
                                 ? SelectorGridView(
@@ -366,8 +254,7 @@ class ListSelectorViewState extends State<ListSelectorView> {
                 )
               : SelectorListView(
                   entries: widget.entries,
-                  selectedEntries:
-                      _selectedEntriesPerLevel.elementAtOrNull(0) ?? {},
+                  selectedEntries: controller?.selectedEntriesAtLevel(0) ?? {},
                   onItemTap: (_, entry) =>
                       _onTerminalItemTap(entry as SelectorChildEntry),
                   radioBuilder: selector?.radioBuilder,

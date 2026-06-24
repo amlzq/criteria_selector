@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 import '../selector.dart';
 import '../selector_entry.dart';
-import '../selector_utils.dart';
 import 'selector_controller.dart';
 import 'widgets/widgets.dart';
 
@@ -40,35 +39,18 @@ class GridSelectorViewState extends State<GridSelectorView> {
   /// Focused category entry
   late SelectorCategoryEntry _tempSelectedCategory;
 
-  /// Selected entries per level (actual selections), fixed to two levels
-  final List<SelectorEntries> _selectedEntriesPerLevel = [];
-
   SelectorController? controller;
-
-  final level = 2;
+  bool _didInitCategoryFromState = false;
 
   @override
   void initState() {
     super.initState();
-
-    if (widget.previousSelected != null &&
-        (widget.previousSelected?.isNotEmpty ?? false)) {
-      // Previous selection
-      _initializeSelectedEntriesPerLevel(
-          widget.entries, widget.previousSelected, 0);
-      _tempSelectedCategory =
-          (_selectedEntriesPerLevel.elementAtOrNull(0)?.firstOrNull ??
-              widget.entries.first) as SelectorCategoryEntry;
-    } else {
-      // Default selection
-      _tempSelectedCategory = widget.entries.first as SelectorCategoryEntry;
-      _selectAnyEntryIfHas();
-    }
+    _tempSelectedCategory = widget.entries.first as SelectorCategoryEntry;
   }
 
   @override
   void dispose() {
-    controller?.dispose();
+    controller?.removeListener(_handleSelectorControllerTick);
     super.dispose();
   }
 
@@ -89,53 +71,27 @@ class GridSelectorViewState extends State<GridSelectorView> {
       controller = SelectorController.of(context)!;
       controller?.addListener(_handleSelectorControllerTick);
     }
+    controller?.bindState(
+      widget.entries,
+      initializeAnyIfEmpty: true,
+      previousSelectedOverride: widget.previousSelected,
+    );
+    if (!_didInitCategoryFromState) {
+      final selectedCategory = controller
+          ?.selectedEntriesAtLevel(0)
+          .whereType<SelectorCategoryEntry>()
+          .firstOrNull;
+      if (selectedCategory != null) {
+        _tempSelectedCategory = selectedCategory;
+      }
+      _didInitCategoryFromState = true;
+    }
   }
 
   GridSelector? get selector => controller?.selector as GridSelector;
 
-  void _handleSelectorControllerTick() {}
-
-  void _initializeSelectedEntriesPerLevel(List<SelectorEntry>? entries,
-      Set<SelectorEntry>? selectedEntries, int level) {
-    if (entries == null ||
-        entries.isEmpty ||
-        selectedEntries == null ||
-        selectedEntries.isEmpty) {
-      return;
-    }
-    _selectedEntriesPerLevel.add({});
-    for (var selectedEntry in selectedEntries) {
-      final entry = entries.singleWhereOrNull((e) => e.id == selectedEntry.id);
-      if (entry != null) {
-        _selectedEntriesPerLevel[level].add(entry);
-        if (entry is SelectorRangeEntry && entry.isCustom) {
-          // If it's a custom entry, restore the previous input values.
-          selectedEntry as SelectorRangeEntry;
-          entry.min = selectedEntry.min;
-          entry.max = selectedEntry.max;
-        }
-      }
-      if (selectedEntry.children?.isNotEmpty == true) {
-        _initializeSelectedEntriesPerLevel(
-            entry?.children?.toList(), selectedEntry.children, level + 1);
-      }
-    }
-  }
-
-  /// Checks whether the selected category has an "Any" entry
-  void _selectAnyEntryIfHas() {
-    _selectedEntriesPerLevel.clear();
-    while (_selectedEntriesPerLevel.length < level) {
-      _selectedEntriesPerLevel.add({});
-    }
-    for (var category in widget.entries) {
-      final anyEntry = category.children?.singleWhereOrNull(testAnyElement);
-      if (anyEntry != null) {
-        // If there is an "Any" entry, select it.
-        _selectedEntriesPerLevel[0].add(category);
-        _selectedEntriesPerLevel[1].add(anyEntry);
-      }
-    }
+  void _handleSelectorControllerTick() {
+    if (mounted) setState(() {});
   }
 
   /// Selection Mode for category entries
@@ -160,103 +116,25 @@ class GridSelectorViewState extends State<GridSelectorView> {
   void _onCategoryItemTap(SelectorCategoryEntry entry) {
     if (entry == _tempSelectedCategory) return;
     _tempSelectedCategory = entry;
-
-    if (SelectionMode.single == categorySelectionMode) {
-      // Single-select mode: reset previous selection when switching category.
-
-      _selectedEntriesPerLevel.clear();
-      while (_selectedEntriesPerLevel.length < level) {
-        _selectedEntriesPerLevel.add({});
-      }
-
-      _selectAnyEntryIfHas();
-    } else {
-      // Multi-select mode: keep previous selection when switching categories.
-
-      // // Sync custom input state for the newly focused category.
-      // final customItem = _checkCustomItem();
-
-      // while (_selectedEntriesPerLevel.length < level) {
-      //   _selectedEntriesPerLevel.add({});
-      // }
-
-      // final selectedChildren = _selectedEntriesPerLevel[1];
-      // final hasChildOfCategory = selectedChildren.any(
-      //   (e) => e is SelectorChildEntry && e.parentId == item.id,
-      // );
-
-      // // For a category without selection yet, default to its "Any" entry
-      // // without clearing selections from other categories.
-      // if (!hasChildOfCategory && (customItem == null || !inputNotEmpty)) {
-      //   final anyItem = item.children?.singleWhereOrNull(testAnyElement);
-      //   if (anyItem != null) {
-      //     selectedChildren.removeWhere(
-      //       (e) => e is SelectorChildEntry && e.parentId == item.id,
-      //     );
-      //     selectedChildren.add(anyItem);
-      //     _selectedEntriesPerLevel[0].add(item);
-      //   }
-      // } else if (hasChildOfCategory) {
-      //   _selectedEntriesPerLevel[0].add(item);
-      // }
-    }
+    controller?.focusCategoryEntry(
+      entry,
+      selectionMode: categorySelectionMode ?? SelectionMode.single,
+    );
     setState(() {});
   }
 
   void _onTerminalItemTap(SelectorChildEntry entry) {
-    while (_selectedEntriesPerLevel.length < level) {
-      _selectedEntriesPerLevel.add({});
-    }
-    final selectedEntries = _selectedEntriesPerLevel[1];
+    final category = widget.entries
+        .whereType<SelectorCategoryEntry>()
+        .singleWhereOrNull((e) => e.id == entry.parentId);
+    if (category == null) return;
 
-    if (entry.isAny) {
-      // "Any" entry
-      // Remove items that share the same parent from the selected list
-      selectedEntries
-          .removeWhere((e) => testSameParentElement(e, entry.parentId));
-      selectedEntries.add(entry);
-    } else if (entry is SelectorRangeEntry && entry.isCustom) {
-      // Custom range entry
-
-      // Remove other entry in the same category
-      selectedEntries
-          .removeWhere((e) => testSameParentElement(e, entry.parentId));
-      selectedEntries.add(entry);
-    } else {
-      // Normal entry
-
-      // If there is an "Any" entry or an custom range entry, remove it
-      selectedEntries.removeWhere(
-          (e) => testSameParentAnyOrCustomElement(e, entry.parentId));
-
-      if (SelectionMode.single == childrenSelectionMode) {
-        // Single-select mode
-        if (selectedEntries.contains(entry)) {
-        } else {
-          selectedEntries
-              .removeWhere((e) => testSameParentElement(e, entry.parentId));
-          selectedEntries.add(entry);
-        }
-      } else {
-        // Multi-select mode
-        if (selectedEntries.contains(entry)) {
-          selectedEntries.remove(entry);
-        } else {
-          selectedEntries.add(entry);
-        }
-      }
-    }
-
-    // Keep parent selection state consistent
-    if (selectedEntries.contains(entry)) {
-      // If it was a select action, select the parent as well
-      _selectedEntriesPerLevel[0].add(_tempSelectedCategory);
-    } else if (selectedEntries.isEmpty) {
-      // If it was a deselect action and no children are selected, deselect the parent as well
-      _selectedEntriesPerLevel[0].remove(_tempSelectedCategory);
-      // If there is an "Any" child entry, select it
-      _selectAnyEntryIfHas();
-    }
+    controller?.toggleFlatEntry(
+      entry,
+      selectorSelectionMode: selectorSelectionMode ?? SelectionMode.single,
+      isCategoryTree: true,
+      category: category,
+    );
 
     _setStateOrImmediateApply(entry);
   }
@@ -266,49 +144,13 @@ class GridSelectorViewState extends State<GridSelectorView> {
       // No need to tap "Apply"; return result immediately
       _onApplyTap();
     } else {
-      // if (item is SelectorRangeEntry && item.isCustom) {
-      // } else {
-      // Update UI state
       setState(() {});
-      // }
-
-      final newEntries = SelectorUtils.cloneTree(
-        widget.entries,
-        _selectedEntriesPerLevel,
-        deepCloneSelectedSubtree: false,
-      );
-      controller?.change(newEntries);
+      controller?.emitChangeFromState();
     }
   }
 
   void _onResetTap() {
-    _selectedEntriesPerLevel.elementAtOrNull(1)?.removeWhere(
-        (e) => testSameParentElement(e, _tempSelectedCategory.id));
-
-    final index = widget.entries.indexOf(_tempSelectedCategory);
-    final resetSelected = controller?.resetSelected?.elementAtOrNull(index);
-    final selectedEntries = resetSelected != null ? {resetSelected} : null;
-
-    if (selectedEntries != null && selectedEntries.isNotEmpty) {
-      // Specific reset selection
-      _initializeSelectedEntriesPerLevel(widget.entries, selectedEntries, 0);
-    } else {
-      // Default selection
-      for (var category in widget.entries) {
-        final customEntry =
-            category.children?.singleWhereOrNull(testCustomElement);
-        if (customEntry != null && customEntry is SelectorRangeEntry) {
-          customEntry.min = null;
-          customEntry.max = null;
-        }
-      }
-      final anyEntry =
-          _tempSelectedCategory.children?.singleWhereOrNull(testAnyElement);
-      if (anyEntry != null) {
-        _selectedEntriesPerLevel[1].add(anyEntry);
-      }
-    }
-
+    controller?.resetState(initializeAnyIfEmpty: true);
     setState(() {});
     controller?.reset();
   }
@@ -322,32 +164,21 @@ class GridSelectorViewState extends State<GridSelectorView> {
       String categoryId, String minValue, String maxValue) {
     var minInt = int.tryParse(minValue) ?? 0;
     var maxInt = int.tryParse(maxValue) ?? 0;
-    if (minInt != 0 || maxInt != 0) {
-      // Valid custom input provided
-      if (minInt > maxInt) {
-        final temp = minInt;
-        minInt = maxInt;
-        maxInt = temp;
-      }
-      // Update the custom item
-      final category =
-          widget.entries.singleWhereOrNull((e) => e.id == categoryId);
-      debugPrint('target category: $category');
-      final customEntry =
-          category?.children?.singleWhereOrNull(testCustomElement);
-      if (customEntry != null && customEntry is SelectorRangeEntry) {
-        customEntry.min = minInt;
-        customEntry.max = maxInt;
-        customEntry.name = '$minInt-$maxInt';
-        _onTerminalItemTap(customEntry);
-      }
+    if (minInt > maxInt) {
+      final temp = minInt;
+      minInt = maxInt;
+      maxInt = temp;
     }
+    controller?.setCustomRangeForParent(
+      parentId: categoryId,
+      min: (minInt == 0) ? null : minInt,
+      max: (maxInt == 0) ? null : maxInt,
+      applyIfImmediate: true,
+    );
   }
 
   void _onApplyTap() {
-    final entries = widget.entries.toSet();
-    SelectorUtils.clippingTree(entries, _selectedEntriesPerLevel, 0);
-    controller?.apply(entries);
+    controller?.applyFromState();
   }
 
   @override
@@ -355,9 +186,8 @@ class GridSelectorViewState extends State<GridSelectorView> {
     final gridviews = List.generate(widget.entries.length, (int index) {
       final category = widget.entries[index];
       final entries = category.children?.toList() ?? [];
-      final selectedEntries = _selectedEntriesPerLevel[1]
-          .where((e) => e is SelectorChildEntry && e.parentId == category.id)
-          .toSet();
+      final selectedEntries =
+          controller?.selectedEntriesForParent(category.id, level: 1) ?? {};
       return SelectorGridView(
         key: ValueKey('category_$index'),
         crossAxisCount: selector!.crossAxisCount,

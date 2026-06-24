@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants.dart';
@@ -64,9 +65,13 @@ class SelectorListViewState<T extends SelectorEntry>
   FocusNode? _minFocusNode;
   FocusNode? _maxFocusNode;
 
+  late SelectorEntries _selectedEntries;
+
   @override
   void initState() {
     super.initState();
+
+    _selectedEntries = widget.selectedEntries ?? {};
 
     firstCustomEntry = widget.entries.firstCustomOrNull;
     lastCustomEntry = widget.entries.lastCustomOrNull;
@@ -75,20 +80,32 @@ class SelectorListViewState<T extends SelectorEntry>
     if (firstCustomEntry != null || lastCustomEntry != null) {
       entriesWithoutCustom = widget.entries.where(testNotCustomItem).toList();
       _initializeInput();
-      _minController?.text =
-          (firstCustomEntry ?? lastCustomEntry)!.min?.toString() ?? '';
-      _maxController?.text =
-          (firstCustomEntry ?? lastCustomEntry)!.max?.toString() ?? '';
+      _restoreCustomSelectionToInputs();
     }
   }
 
   @override
   void didUpdateWidget(covariant SelectorListView<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _minController?.text =
-        (firstCustomEntry ?? lastCustomEntry)!.min?.toString() ?? '';
-    _maxController?.text =
-        (firstCustomEntry ?? lastCustomEntry)!.max?.toString() ?? '';
+    _selectedEntries = widget.selectedEntries ?? {};
+
+    firstCustomEntry = widget.entries.firstCustomOrNull;
+    lastCustomEntry = widget.entries.lastCustomOrNull;
+
+    entriesWithoutCustom = widget.entries;
+    if (firstCustomEntry != null || lastCustomEntry != null) {
+      entriesWithoutCustom = widget.entries.where(testNotCustomItem).toList();
+      _initializeInput();
+      _restoreCustomSelectionToInputs();
+    }
+  }
+
+  void _restoreCustomSelectionToInputs() {
+    final selectedCustom = _selectedEntries
+        .whereType<SelectorRangeEntry>()
+        .firstWhereOrNull((e) => e.isCustom);
+    _minController?.text = selectedCustom?.min?.toString() ?? '';
+    _maxController?.text = selectedCustom?.max?.toString() ?? '';
   }
 
   @override
