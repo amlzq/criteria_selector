@@ -107,35 +107,35 @@ class _SellPageState extends State<SellPage> {
     } else if (result.tabIndex == 2) {
       // 户型筛选
       _filtersRepo.floorPlanSellResult = result;
-      final category = result.selected.firstOrNull;
-      if (category == null) return;
-      if (category.id == 'living_room') {
-        // 居室
-        _filter?.livingRoom = <String>[];
-        for (var e in category.children ?? {}) {
-          e as SelectorTextEntry;
-          _filter?.livingRoom!.add(e.id);
-        }
-      } else if (category.id == 'bathroom') {
-        // 卫生间
-        _filter?.bathroom = <String>[];
-        for (var e in category.children ?? {}) {
-          e as SelectorTextEntry;
-          _filter?.bathroom!.add(e.id);
-        }
-      } else if (category.id == 'balcony') {
-        // 阳台
-        _filter?.balcony = <String>[];
-        for (var e in category.children ?? {}) {
-          e as SelectorTextEntry;
-          _filter?.balcony!.add(e.id);
-        }
-      } else if (category.id == 'area') {
-        // 面积
-        _filter?.area = <Map<String, dynamic>>[];
-        for (var e in category.children ?? {}) {
-          e as SelectorIntEntry;
-          _filter?.area!.add({"id": e.id, "min": e.min, "max": e.max});
+      for (var category in result.selected) {
+        if (category.id == 'living_room') {
+          // 居室
+          _filter?.livingRoom = <String>[];
+          for (var e in category.children ?? {}) {
+            e as SelectorTextEntry;
+            _filter?.livingRoom!.add(e.id);
+          }
+        } else if (category.id == 'bathroom') {
+          // 卫生间
+          _filter?.bathroom = <String>[];
+          for (var e in category.children ?? {}) {
+            e as SelectorTextEntry;
+            _filter?.bathroom!.add(e.id);
+          }
+        } else if (category.id == 'balcony') {
+          // 阳台
+          _filter?.balcony = <String>[];
+          for (var e in category.children ?? {}) {
+            e as SelectorTextEntry;
+            _filter?.balcony!.add(e.id);
+          }
+        } else if (category.id == 'area') {
+          // 面积
+          _filter?.area = <Map<String, dynamic>>[];
+          for (var e in category.children ?? {}) {
+            e as SelectorIntEntry;
+            _filter?.area!.add({"id": e.id, "min": e.min, "max": e.max});
+          }
         }
       }
     } else if (result.tabIndex == 3) {
@@ -242,6 +242,7 @@ class _SellPageState extends State<SellPage> {
                   childAspectRatio: 2.5,
                   crossAxisSpacing: 8,
                   mainAxisSpacing: 8,
+                  sideBarTheme: const SelectorSideBarTheme(width: 98),
                 ),
                 ListSelector(
                   dataFetcher: _filtersRepo.fetchSortSellData,

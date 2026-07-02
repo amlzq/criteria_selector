@@ -104,7 +104,7 @@ class DropselectOverlay extends StatelessWidget {
 }
 
 class _DropselectOverlayDefaults extends DropselectOverlayStyle {
-  _DropselectOverlayDefaults(this.context)
+  const _DropselectOverlayDefaults(this.context)
       : super(maxHeightFactor: kDropselectOverlayMaxHeightFactor);
 
   final BuildContext context;

@@ -26,6 +26,17 @@ class _BuyPageState extends State<BuyPage> {
   Timer? _floorPlanApplyTextDebounce;
   int _floorPlanApplyTextRequestId = 0;
 
+  final moreShortcut = [
+    MoreItem(id: '3701', name: '现房'),
+    MoreItem(id: '3903', name: '折扣好盘'),
+    MoreItem(id: '3904', name: '免费专车'),
+    MoreItem(id: '3605', name: '本月开盘'),
+    MoreItem(id: '3902', name: '优惠活动'),
+    MoreItem(id: '4004', name: 'VR看房'),
+  ];
+
+  final _moreShortcutSelected = <String>{};
+
   @override
   void initState() {
     super.initState();
@@ -142,7 +153,8 @@ class _BuyPageState extends State<BuyPage> {
           e as SelectorIntEntry;
           filter.totalPrice!.add({"id": e.id, "min": e.min, "max": e.max});
         }
-      } else if (category.id == 'unit') {
+      }
+      if (category.id == 'unit') {
         // 单价
         filter.unitPrice = <Map<String, dynamic>>[];
         for (var e in category.children ?? {}) {
@@ -153,38 +165,93 @@ class _BuyPageState extends State<BuyPage> {
     } else if (result.tabIndex == 2) {
       // 户型筛选
       _filtersRepo.floorPlanBuyResult = result;
-      final category = result.selected.firstOrNull;
-      if (category == null) return null;
-      if (category.id == 'living_room') {
-        // 居室
-        filter.livingRoom = <String>[];
-        for (var e in category.children ?? {}) {
-          e as SelectorTextEntry;
-          filter.livingRoom!.add(e.id);
-        }
-      } else if (category.id == 'bathroom') {
-        // 卫生间
-        filter.bathroom = <String>[];
-        for (var e in category.children ?? {}) {
-          e as SelectorTextEntry;
-          filter.bathroom!.add(e.id);
-        }
-      } else if (category.id == 'balcony') {
-        // 阳台
-        filter.balcony = <String>[];
-        for (var e in category.children ?? {}) {
-          e as SelectorTextEntry;
-          filter.balcony!.add(e.id);
-        }
-      } else if (category.id == 'area') {
-        // 面积
-        filter.area = <Map<String, dynamic>>[];
-        for (var e in category.children ?? {}) {
-          e as SelectorIntEntry;
-          filter.area!.add({"id": e.id, "min": e.min, "max": e.max});
+      for (var category in result.selected) {
+        if (category.id == 'living_room') {
+          // 居室
+          filter.livingRoom = <String>[];
+          for (var e in category.children ?? {}) {
+            e as SelectorTextEntry;
+            filter.livingRoom!.add(e.id);
+          }
+        } else if (category.id == 'bathroom') {
+          // 卫生间
+          filter.bathroom = <String>[];
+          for (var e in category.children ?? {}) {
+            e as SelectorTextEntry;
+            filter.bathroom!.add(e.id);
+          }
+        } else if (category.id == 'balcony') {
+          // 阳台
+          filter.balcony = <String>[];
+          for (var e in category.children ?? {}) {
+            e as SelectorTextEntry;
+            filter.balcony!.add(e.id);
+          }
+        } else if (category.id == 'area') {
+          // 面积
+          filter.area = <Map<String, dynamic>>[];
+          for (var e in category.children ?? {}) {
+            e as SelectorIntEntry;
+            filter.area!.add({"id": e.id, "min": e.min, "max": e.max});
+          }
         }
       }
     } else if (result.tabIndex == 3) {
+      // 更多筛选
+      _filtersRepo.moreBuyResult = result;
+      for (var category in result.selected) {
+        if (category.id == 'home_type') {
+          // 类型
+          filter.homeType = <String>[];
+          for (var e in category.children ?? {}) {
+            e as SelectorTextEntry;
+            filter.homeType!.add(e.id);
+          }
+        } else if (category.id == 'sale_status') {
+          // 销售状态
+          filter.saleStatus = <String>[];
+          for (var e in category.children ?? {}) {
+            e as SelectorTextEntry;
+            filter.saleStatus!.add(e.id);
+          }
+        } else if (category.id == 'open_time') {
+          // 开盘时间
+          filter.openTime = <String>[];
+          for (var e in category.children ?? {}) {
+            e as SelectorTextEntry;
+            filter.openTime!.add(e.id);
+          }
+        } else if (category.id == 'delivery_time') {
+          // 交房时间
+          filter.deliveryTime = <String>[];
+          for (var e in category.children ?? {}) {
+            e as SelectorTextEntry;
+            filter.deliveryTime!.add(e.id);
+          }
+        } else if (category.id == 'decoration_status') {
+          // 装修状况
+          filter.decorationStatus = <String>[];
+          for (var e in category.children ?? {}) {
+            e as SelectorTextEntry;
+            filter.decorationStatus!.add(e.id);
+          }
+        } else if (category.id == 'building_features') {
+          // 楼盘特色
+          filter.buildingFeatures = <String>[];
+          for (var e in category.children ?? {}) {
+            e as SelectorTextEntry;
+            filter.buildingFeatures!.add(e.id);
+          }
+        } else if (category.id == 'house_view_service') {
+          // 看房服务
+          filter.houseViewService = <String>[];
+          for (var e in category.children ?? {}) {
+            e as SelectorTextEntry;
+            filter.houseViewService!.add(e.id);
+          }
+        }
+      }
+    } else if (result.tabIndex == 4) {
       // 排序筛选
       _filtersRepo.sortBuyResult = result;
       final entry = result.selected.firstOrNull;
@@ -233,12 +300,30 @@ class _BuyPageState extends State<BuyPage> {
     final l10n = AppLocalizations.of(context);
     _filter = _dropselectResultParser(result);
     if (_filter == null) {
+      if (result.tabIndex == 3) {
+        _moreShortcutSelected.clear();
+        setState(() {});
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n?.filterParseFailed ?? '')),
       );
       return;
     }
-
+    if (result.tabIndex == 3) {
+      final latestMoreFilterSelected = <String>[];
+      if (_filter!.deliveryTime != null) {
+        latestMoreFilterSelected.addAll(_filter!.deliveryTime!);
+      }
+      if (_filter!.buildingFeatures != null) {
+        latestMoreFilterSelected.addAll(_filter!.buildingFeatures!);
+      }
+      if (_filter!.openTime != null) {
+        latestMoreFilterSelected.addAll(_filter!.openTime!);
+      }
+      _moreShortcutSelected.clear();
+      _moreShortcutSelected.addAll(latestMoreFilterSelected);
+      setState(() {});
+    }
     _repo.refreshData(_filter!);
   }
 
@@ -301,6 +386,7 @@ class _BuyPageState extends State<BuyPage> {
               ),
               DropselectTab(label: l10n?.price ?? ''),
               DropselectTab(label: l10n?.floorPlan ?? ''),
+              DropselectTab(label: l10n?.more ?? ''),
               DropselectTab(
                 child: Image.asset('assets/sorting.png', width: 16, height: 16),
               ),
@@ -360,6 +446,28 @@ class _BuyPageState extends State<BuyPage> {
                   );
                 },
               ),
+              FlattenSelector(
+                dataFetcher: _filtersRepo.fetchMoreBuyData,
+                selectedDataFetcher: _filtersRepo.fetchMoreBuySelectedData,
+                resetDataFetcher: _filtersRepo.fetchMoreBuyResetData,
+                selectionMode: SelectionMode.multiple,
+                crossAxisCount: 3,
+                childAspectRatio: 2.5,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+                sideBarTheme: const SelectorSideBarTheme(width: 98),
+                actionBarBuilder: (
+                  context, {
+                  required onResetTap,
+                  required onApplyTap,
+                }) {
+                  return MyActionBar(
+                    applyTextVN: _floorPlanApplyText,
+                    onResetTap: onResetTap,
+                    onApplyTap: onApplyTap,
+                  );
+                },
+              ),
               ListSelector(
                 dataFetcher: _filtersRepo.fetchSortBuyData,
                 selectedDataFetcher: _filtersRepo.fetchSortBuySelectedData,
@@ -401,6 +509,43 @@ class _BuyPageState extends State<BuyPage> {
                     AppLocalizations.of(context)?.apply ?? '';
               }
             },
+          ),
+          Container(
+            height: 48,
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
+            child: ListView.separated(
+              padding: EdgeInsets.zero,
+              physics: const ClampingScrollPhysics(),
+              scrollDirection: Axis.horizontal,
+              itemCount: moreShortcut.length,
+              itemBuilder: (context, int index) {
+                final item = moreShortcut[index];
+                return ChoiceChip(
+                  padding: EdgeInsets.zero,
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  showCheckmark: false,
+                  label: Text(item.name ?? ''),
+                  selected: _moreShortcutSelected.contains(item.id ?? ''),
+                  onSelected: (bool selected) async {
+                    setState(() {
+                      if (selected) {
+                        _moreShortcutSelected.add(item.id ?? '');
+                      } else {
+                        _moreShortcutSelected.remove(item.id ?? '');
+                      }
+                    });
+                    final ok = await _controller.apply(
+                        tabIndex: 3, selectedEntryIds: _moreShortcutSelected);
+                    if (!ok) {
+                      debugPrint('apply failed');
+                    }
+                  },
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return const SizedBox(width: 10);
+              },
+            ),
           ),
           Expanded(
             child: StreamBuilder<List<House>>(

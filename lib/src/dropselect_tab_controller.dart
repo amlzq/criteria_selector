@@ -4,6 +4,7 @@ import 'constants.dart';
 import 'dropselect_result.dart';
 import 'dropselect_tab_data.dart';
 import 'selector.dart';
+import 'selector_entry.dart';
 import 'selector_utils.dart';
 
 /// Controller for [DropselectTabBar] and its selector overlay.
@@ -82,6 +83,20 @@ class DropselectTabController extends ChangeNotifier {
 
   /// The selector previously used for the overlay.
   Selector? previousSelector;
+
+  List<Selector>? _selectors;
+
+  void attachSelectors(List<Selector> selectors) {
+    if (_isDisposed) return;
+    _selectors = selectors;
+  }
+
+  Selector? _selectorAt(int tabIndex) {
+    final selectors = _selectors;
+    if (selectors == null) return null;
+    if (tabIndex < 0 || tabIndex >= selectors.length) return null;
+    return selectors[tabIndex];
+  }
 
   Animation<double> get overlayAnimation =>
       _overlayAnimation ?? AlwaysStoppedAnimation(_isExpanded ? 1.0 : 0.0);
@@ -258,12 +273,217 @@ class DropselectTabController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Programmatically applies selection ids to the tab at [tabIndex].
+  ///
+  /// This method does not open the selector panel. Instead, it resolves
+  /// [selectedEntryIds] against the selector data, builds a [DropselectResult],
+  /// fires [onApplied], updates the tab label, and notifies listeners.
+  ///
+  /// Matching rules:
+  /// - Matching is performed by entry id only.
+  /// - If the same id appears in multiple branches, all matching entries are
+  ///   included in the applied result.
+  /// - Header and footer entries are supported.
+  /// - Custom range entries are not supported.
+  /// - Category ids are not allowed in [selectedEntryIds].
+  ///
+  /// Return value:
+  /// - Returns `true` when the apply flow completes successfully, including the
+  ///   case where no entry ids match and the result is treated as cleared/empty.
+  /// - Returns `false` when the input is invalid or the selector data cannot be
+  ///   prepared, such as:
+  ///   - [tabIndex] does not resolve to a tab/selector
+  ///   - a category id is present in [selectedEntryIds]
+  ///   - a custom range id is present in [selectedEntryIds]
+  ///   - selector data cannot be loaded
+  Future<bool> apply({
+    required int tabIndex,
+    required Set<String> selectedEntryIds,
+    String multipleText = 'Multiple',
+  }) async {
+    if (_isDisposed) return false;
+    final tabData = tabDataMap[tabIndex];
+    if (tabData == null) return false;
+
+    final selector = _selectorAt(tabIndex);
+    if (selector == null) return false;
+
+    Future<SelectorEntries>? dataFuture = selector.data;
+    dataFuture ??= selector.dataFetcher?.call();
+    if (dataFuture == null) return false;
+    selector.data ??= dataFuture;
+
+    late final SelectorEntries entries;
+    try {
+      entries = await dataFuture;
+    } catch (_) {
+      return false;
+    }
+
+    final ctx = _DropselectApplyContext(selectedEntryIds);
+    final selected = _buildAppliedSelection(entries.toList(), ctx);
+    if (ctx.invalidCategoryHit) return false;
+    if (ctx.invalidCustomHit) return false;
+
+    final result = DropselectResult(tabData: tabData, selected: selected);
+    onApplied?.call(result);
+    final customLabel = tabData.labelGetter?.call(result);
+    tabData.resultLabel = customLabel ??
+        SelectorUtils.getResultLabel(result.selected, multipleText);
+    notifyListeners();
+    return true;
+  }
+
+  static SelectorEntries _buildAppliedSelection(
+    List<SelectorEntry> roots,
+    _DropselectApplyContext ctx,
+  ) {
+    final SelectorEntries result = {};
+    for (final root in roots) {
+      final cropped = _cropEntry(root, ctx);
+      if (ctx.invalidCategoryHit || ctx.invalidCustomHit) return {};
+      if (cropped != null) result.add(cropped);
+    }
+    return result;
+  }
+
+  static SelectorEntry? _cropEntry(
+    SelectorEntry entry,
+    _DropselectApplyContext ctx,
+  ) {
+    if (entry is SelectorCategoryEntry) {
+      if (ctx.selectedEntryIds.contains(entry.id)) {
+        ctx.invalidCategoryHit = true;
+        return null;
+      }
+
+      final Set<SelectorEntry> croppedChildren = {};
+      final children = entry.children;
+      if (children != null) {
+        for (final child in children) {
+          final cropped = _cropEntry(child, ctx);
+          if (ctx.invalidCategoryHit || ctx.invalidCustomHit) return null;
+          if (cropped != null) croppedChildren.add(cropped);
+        }
+      }
+
+      final header =
+          entry.header == null ? null : _cropEntry(entry.header!, ctx);
+      if (ctx.invalidCategoryHit || ctx.invalidCustomHit) return null;
+
+      final footer =
+          entry.footer == null ? null : _cropEntry(entry.footer!, ctx);
+      if (ctx.invalidCategoryHit || ctx.invalidCustomHit) return null;
+
+      if (croppedChildren.isEmpty && header == null && footer == null) {
+        return null;
+      }
+
+      return SelectorCategoryEntry(
+        selectionMode: entry.selectionMode,
+        header: header,
+        headerSelectionMode: entry.headerSelectionMode,
+        footer: footer,
+        footerSelectionMode: entry.footerSelectionMode,
+        listConfig: entry.listConfig,
+        gridConfig: entry.gridConfig,
+        chipConfig: entry.chipConfig,
+        id: entry.id,
+        name: entry.name ?? '',
+        children: croppedChildren,
+        enabled: entry.enabled,
+        immediate: entry.immediate,
+      );
+    }
+
+    final bool isHit = ctx.selectedEntryIds.contains(entry.id);
+    if (isHit) {
+      if (entry is SelectorRangeEntry && entry.id == kCustomEntryId) {
+        ctx.invalidCustomHit = true;
+        return null;
+      }
+      ctx.matchedCount++;
+    }
+
+    final Set<SelectorEntry> croppedChildren = {};
+    final children = entry.children;
+    if (children != null) {
+      for (final child in children) {
+        final cropped = _cropEntry(child, ctx);
+        if (ctx.invalidCategoryHit || ctx.invalidCustomHit) return null;
+        if (cropped != null) croppedChildren.add(cropped);
+      }
+    }
+
+    if (!isHit && croppedChildren.isEmpty) return null;
+
+    return _cloneEntry(entry,
+        children: croppedChildren.isEmpty ? null : croppedChildren);
+  }
+
+  static SelectorEntry _cloneEntry(
+    SelectorEntry entry, {
+    required Set<SelectorEntry>? children,
+  }) {
+    if (entry is SelectorTextEntry) {
+      return SelectorTextEntry(
+        parentId: entry.parentId,
+        id: entry.id,
+        name: entry.name,
+        children: children,
+        enabled: entry.enabled,
+        immediate: entry.immediate,
+      );
+    }
+
+    if (entry is SelectorRangeEntry) {
+      return SelectorRangeEntry(
+        min: entry.min,
+        max: entry.max,
+        inputLabel: entry.inputLabel,
+        minHintText: entry.minHintText,
+        maxHintText: entry.maxHintText,
+        parentId: entry.parentId,
+        id: entry.id,
+        name: entry.name,
+        children: children,
+        enabled: entry.enabled,
+        immediate: entry.immediate,
+        extra: entry.extra,
+      );
+    }
+
+    if (entry is SelectorChildEntry) {
+      return SelectorChildEntry(
+        parentId: entry.parentId,
+        id: entry.id,
+        name: entry.name,
+        children: children,
+        enabled: entry.enabled,
+        immediate: entry.immediate,
+        extra: entry.extra,
+      );
+    }
+
+    throw UnsupportedError(
+        'Unsupported SelectorEntry type: ${entry.runtimeType}');
+  }
+
   /// Dispatches a reset event.
   void handleReset() {
     if (_isDisposed) return;
     // hideSelector();
     onReset?.call();
   }
+}
+
+class _DropselectApplyContext {
+  final Set<String> selectedEntryIds;
+  bool invalidCategoryHit = false;
+  bool invalidCustomHit = false;
+  int matchedCount = 0;
+
+  _DropselectApplyContext(this.selectedEntryIds);
 }
 
 class _DropselectTabControllerScope extends InheritedWidget {

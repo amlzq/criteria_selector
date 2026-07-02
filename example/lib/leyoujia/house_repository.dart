@@ -79,6 +79,13 @@ class HouseFilter {
   List<String>? bathroom;
   List<String>? balcony;
   List<Map<String, dynamic>>? area;
+  List<String>? homeType;
+  List<String>? saleStatus;
+  List<String>? openTime;
+  List<String>? deliveryTime;
+  List<String>? decorationStatus;
+  List<String>? buildingFeatures;
+  List<String>? houseViewService;
   String? sort;
 
   HouseFilter({
@@ -91,6 +98,13 @@ class HouseFilter {
     this.bathroom,
     this.balcony,
     this.area,
+    this.homeType,
+    this.saleStatus,
+    this.openTime,
+    this.deliveryTime,
+    this.decorationStatus,
+    this.buildingFeatures,
+    this.houseViewService,
     this.sort,
   });
 
@@ -109,6 +123,13 @@ class HouseFilter {
     data['bathroom'] = bathroom;
     data['balcony'] = balcony;
     data['area'] = area;
+    data['home_type'] = homeType;
+    data['sale_status'] = saleStatus;
+    data['open_time'] = openTime;
+    data['delivery_time'] = deliveryTime;
+    data['decoration_status'] = decorationStatus;
+    data['building_features'] = buildingFeatures;
+    data['house_view_service'] = houseViewService;
     data['sort'] = sort;
     return data;
   }

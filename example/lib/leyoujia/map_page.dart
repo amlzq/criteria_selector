@@ -151,35 +151,35 @@ class _MapPageState extends State<MapPage> {
     } else if (result.tabIndex == 2) {
       // 户型筛选
       _filtersRepo.floorPlanBuyResult = result;
-      final category = result.selected.firstOrNull;
-      if (category == null) return null;
-      if (category.id == 'living_room') {
-        // 居室
-        filter.livingRoom = <String>[];
-        for (var e in category.children ?? {}) {
-          e as SelectorTextEntry;
-          filter.livingRoom!.add(e.id);
-        }
-      } else if (category.id == 'bathroom') {
-        // 卫生间
-        filter.bathroom = <String>[];
-        for (var e in category.children ?? {}) {
-          e as SelectorTextEntry;
-          filter.bathroom!.add(e.id);
-        }
-      } else if (category.id == 'balcony') {
-        // 阳台
-        filter.balcony = <String>[];
-        for (var e in category.children ?? {}) {
-          e as SelectorTextEntry;
-          filter.balcony!.add(e.id);
-        }
-      } else if (category.id == 'area') {
-        // 面积
-        filter.area = <Map<String, dynamic>>[];
-        for (var e in category.children ?? {}) {
-          e as SelectorIntEntry;
-          filter.area!.add({"id": e.id, "min": e.min, "max": e.max});
+      for (var category in result.selected) {
+        if (category.id == 'living_room') {
+          // 居室
+          filter.livingRoom = <String>[];
+          for (var e in category.children ?? {}) {
+            e as SelectorTextEntry;
+            filter.livingRoom!.add(e.id);
+          }
+        } else if (category.id == 'bathroom') {
+          // 卫生间
+          filter.bathroom = <String>[];
+          for (var e in category.children ?? {}) {
+            e as SelectorTextEntry;
+            filter.bathroom!.add(e.id);
+          }
+        } else if (category.id == 'balcony') {
+          // 阳台
+          filter.balcony = <String>[];
+          for (var e in category.children ?? {}) {
+            e as SelectorTextEntry;
+            filter.balcony!.add(e.id);
+          }
+        } else if (category.id == 'area') {
+          // 面积
+          filter.area = <Map<String, dynamic>>[];
+          for (var e in category.children ?? {}) {
+            e as SelectorIntEntry;
+            filter.area!.add({"id": e.id, "min": e.min, "max": e.max});
+          }
         }
       }
     } else if (result.tabIndex == 3) {

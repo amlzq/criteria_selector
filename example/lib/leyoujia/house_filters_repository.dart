@@ -513,6 +513,41 @@ class HouseFiltersRepository {
     return Future.value(entries);
   }
 
+  /// 更多的 初始选中项
+  DropselectResult? moreBuyResult;
+
+  final moreBuyIniteialSelected = <SelectorTextEntry>{};
+
+  SelectorEntries? fetchMoreBuySelectedData() =>
+      moreBuyResult?.selected ?? moreBuyIniteialSelected;
+
+  SelectorEntries? fetchMoreBuyResetData() => moreBuyIniteialSelected;
+
+  Future<SelectorEntries> fetchMoreBuyData() async {
+    // 模拟网络延迟
+    await Future.delayed(const Duration(milliseconds: 250));
+    final more = moreFromJson(await loadJsonData('more_buy.json'));
+    debugPrint('more length: ${more.length}');
+    SelectorEntries entries = more
+        .map(
+          (category) => SelectorCategoryEntry(
+            id: category.id!,
+            name: category.name!,
+            children: category.data
+                ?.map((l1) => SelectorTextEntry(
+                      parentId: category.id!,
+                      id: l1.id!,
+                      name: l1.name,
+                    ))
+                .toSet(),
+            selectionMode: SelectionMode.multiple,
+          ),
+        )
+        .toSet();
+    debugPrint('more length: ${entries.length}');
+    return Future.value(entries);
+  }
+
   /// 排序 初始选中项
   DropselectResult? sortBuyResult;
 
@@ -743,6 +778,60 @@ class FloorPlanItem {
     data['name'] = name;
     data['min'] = min;
     data['max'] = max;
+    return data;
+  }
+}
+
+List<MoreData> moreFromJson(String str) =>
+    List<MoreData>.from(json.decode(str).map((x) => MoreData.fromJson(x)));
+
+String moreToJson(List<MoreData> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
+class MoreData {
+  String? id;
+  String? name;
+  List<MoreItem>? data;
+
+  MoreData({this.id, this.name, this.data});
+
+  MoreData.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    if (json['data'] != null) {
+      data = <MoreItem>[];
+      json['data'].forEach((v) {
+        data!.add(MoreItem.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    if (this.data != null) {
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class MoreItem {
+  String? id;
+  String? name;
+
+  MoreItem({this.id, this.name});
+
+  MoreItem.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
     return data;
   }
 }

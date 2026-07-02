@@ -173,6 +173,7 @@ class _DropselectTabBarState extends State<DropselectTabBar>
       _controller!.onApplied = widget.onApplied;
       _controller!.onReset = widget.onReset;
     }
+    _controller!.attachSelectors(widget.selectors);
     _controller!.attachTickerProvider(this);
   }
 
@@ -192,13 +193,19 @@ class _DropselectTabBarState extends State<DropselectTabBar>
     _controller!.previousSelector = selector;
 
     final data = selector.dataFetcher?.call();
-    selector.data = data;
+    if (data != null) {
+      selector.data = data;
+    }
 
-    final selectedData = selector.selectedDataFetcher?.call();
-    selector.selectedData = selectedData;
+    final selectedDataFetcher = selector.selectedDataFetcher;
+    if (selectedDataFetcher != null) {
+      selector.selectedData = selectedDataFetcher.call();
+    }
 
-    final resetData = selector.resetDataFetcher?.call();
-    selector.resetData = resetData;
+    final resetDataFetcher = selector.resetDataFetcher;
+    if (resetDataFetcher != null) {
+      selector.resetData = resetDataFetcher.call();
+    }
 
     _controller!.toggleSelector(index: tabData.index);
 
@@ -515,7 +522,7 @@ class DropselectTab extends StatelessWidget {
       onTap: () => info.onTap.call(tabData!),
       child: Container(
         alignment: Alignment.center,
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         child: child ??
             Row(
               mainAxisSize: MainAxisSize.min,
