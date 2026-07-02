@@ -334,6 +334,44 @@ class DropselectTabController extends ChangeNotifier {
     return true;
   }
 
+  Future<bool> select(int tabIndex, Set<String> selectedEntryIds) async {
+    if (_isDisposed) return false;
+    final tabData = tabDataMap[tabIndex];
+    if (tabData == null) return false;
+
+    final selector = _selectorAt(tabIndex);
+    if (selector == null) return false;
+
+    previousSelector = selector;
+
+    Future<SelectorEntries>? dataFuture = selector.data;
+    dataFuture ??= selector.dataFetcher?.call();
+    if (dataFuture == null) return false;
+    selector.data ??= dataFuture;
+
+    final resetDataFetcher = selector.resetDataFetcher;
+    if (resetDataFetcher != null) {
+      selector.resetData ??= resetDataFetcher.call();
+    }
+
+    late final SelectorEntries entries;
+    try {
+      entries = await dataFuture;
+    } catch (_) {
+      return false;
+    }
+
+    final ctx = _DropselectApplyContext(selectedEntryIds);
+    final selected = _buildAppliedSelection(entries.toList(), ctx);
+    if (ctx.invalidCategoryHit) return false;
+    if (ctx.invalidCustomHit) return false;
+
+    selector.selectedData = selected;
+    _showSelector(tabIndex);
+    handleChange(selected);
+    return true;
+  }
+
   static SelectorEntries _buildAppliedSelection(
     List<SelectorEntry> roots,
     _DropselectApplyContext ctx,

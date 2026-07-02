@@ -24,6 +24,10 @@ class _SellPageState extends State<SellPage> {
     super.initState();
     _repo = HouseRepository();
     _filtersRepo = HouseFiltersRepository();
+
+    WidgetsBinding.instance.addPostFrameCallback((Duration duration) {
+      _controller.select(1, {'203', '403'});
+    });
   }
 
   @override
@@ -87,21 +91,21 @@ class _SellPageState extends State<SellPage> {
     } else if (result.tabIndex == 1) {
       // 价格筛选
       _filtersRepo.sellPriceResult = result;
-      final category = result.selected.firstOrNull;
-      if (category == null) return;
-      if (category.id == 'total') {
-        // 总价
-        _filter?.totalPrice = <Map<String, dynamic>>[];
-        for (var e in category.children ?? {}) {
-          e as SelectorIntEntry;
-          _filter?.totalPrice!.add({"id": e.id, "min": e.min, "max": e.max});
-        }
-      } else if (category.id == 'unit') {
-        // 单价
-        _filter?.unitPrice = <Map<String, dynamic>>[];
-        for (var e in category.children ?? {}) {
-          e as SelectorIntEntry;
-          _filter?.unitPrice!.add({"id": e.id, "min": e.min, "max": e.max});
+      for (var category in result.selected) {
+        if (category.id == 'total') {
+          // 总价
+          _filter?.totalPrice = <Map<String, dynamic>>[];
+          for (var e in category.children ?? {}) {
+            e as SelectorIntEntry;
+            _filter?.totalPrice!.add({"id": e.id, "min": e.min, "max": e.max});
+          }
+        } else if (category.id == 'downpay') {
+          // 首付
+          _filter?.unitPrice = <Map<String, dynamic>>[];
+          for (var e in category.children ?? {}) {
+            e as SelectorIntEntry;
+            _filter?.unitPrice!.add({"id": e.id, "min": e.min, "max": e.max});
+          }
         }
       }
     } else if (result.tabIndex == 2) {
@@ -223,7 +227,7 @@ class _SellPageState extends State<SellPage> {
                   dataFetcher: _filtersRepo.fetchSellPriceData,
                   selectedDataFetcher: _filtersRepo.fetchSellPriceSelectedData,
                   resetDataFetcher: _filtersRepo.fetchSellPriceResetData,
-                  selectionMode: SelectionMode.single,
+                  selectionMode: SelectionMode.multiple,
                   crossAxisCount: 4,
                   childAspectRatio: 2.5,
                   mainAxisSpacing: 10,
