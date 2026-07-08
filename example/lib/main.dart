@@ -144,35 +144,19 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              l10n?.realEstate ?? '',
-              style: const TextStyle(fontSize: 16),
-            ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const HousePage()),
-                    );
-                  },
-                  child: Text(l10n?.zillow ?? ''),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const LeyoujiaPage()),
-                    );
-                  },
-                  child: Text(l10n?.leyoujia ?? ''),
-                ),
-              ],
+            TextButton(
+              onPressed: () {
+                final locale = Localizations.localeOf(context);
+                final isCN = locale.countryCode == 'CN';
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        isCN ? const LeyoujiaPage() : const HousePage(),
+                  ),
+                );
+              },
+              child: Text(l10n?.realEstate ?? ''),
             ),
           ],
         ),
