@@ -160,33 +160,36 @@ class SelectorSideBarSkeleton extends StatelessWidget {
       padding: effectivePadding,
       color: effectiveBackgroundColor,
       child: SkeletonBox(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SkeletonTile(
-              width: double.infinity,
-              height: 40,
-              borderRadius: BorderRadius.circular(4),
-            ),
-            const SizedBox(height: 10),
-            SkeletonTile(
-              width: double.infinity,
-              height: 40,
-              borderRadius: BorderRadius.circular(4),
-            ),
-            const SizedBox(height: 10),
-            SkeletonTile(
-              width: double.infinity,
-              height: 40,
-              borderRadius: BorderRadius.circular(4),
-            ),
-            const SizedBox(height: 10),
-            SkeletonTile(
-              width: double.infinity,
-              height: 40,
-              borderRadius: BorderRadius.circular(4),
-            ),
-          ],
+        child: SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SkeletonTile(
+                width: double.infinity,
+                height: 40,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              const SizedBox(height: 10),
+              SkeletonTile(
+                width: double.infinity,
+                height: 40,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              const SizedBox(height: 10),
+              SkeletonTile(
+                width: double.infinity,
+                height: 40,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              const SizedBox(height: 10),
+              SkeletonTile(
+                width: double.infinity,
+                height: 40,
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ],
+          ),
         ),
       ),
     );

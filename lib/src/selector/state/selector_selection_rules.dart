@@ -17,11 +17,6 @@ class SelectorSelectionRules {
     }
 
     tree.ensureLevels(2);
-    final rootSelected = tree.mutableSelectedEntriesAtLevel(0);
-    if (!rootSelected.contains(category)) {
-      rootSelected.add(category);
-    }
-
     final selectedChildren = tree.mutableSelectedEntriesAtLevel(1);
     final hasChildOfCategory = selectedChildren.any(
       (e) => e is SelectorChildEntry && e.parentId == category.id,
@@ -36,6 +31,16 @@ class SelectorSelectionRules {
         (e) => e is SelectorChildEntry && e.parentId == category.id,
       );
       selectedChildren.add(anyItem);
+    }
+
+    final rootSelected = tree.mutableSelectedEntriesAtLevel(0);
+    final hasSelectionInCategory = selectedChildren.any(
+      (e) => e is SelectorChildEntry && e.parentId == category.id,
+    );
+    if (hasSelectionInCategory) {
+      rootSelected.add(category);
+    } else {
+      rootSelected.remove(category);
     }
   }
 
