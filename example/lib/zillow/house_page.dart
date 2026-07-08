@@ -266,7 +266,7 @@ class _HousePageState extends State<HousePage> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12),
               child: Image.asset(
-                'assets/realestate/banner1.jpg',
+                'assets/realestate/banner_sale.jpg',
                 width: double.infinity,
                 height: 120.0,
                 fit: BoxFit.cover,

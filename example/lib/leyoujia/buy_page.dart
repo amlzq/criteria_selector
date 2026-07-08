@@ -6,9 +6,15 @@ import 'package:example/leyoujia/house_repository.dart';
 import 'package:example/leyoujia/utils.dart';
 import 'package:example/log.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'my_widgets.dart';
+
+const _bannerHeight = 150.0;
+const _filterBarHeight = 44.0;
+const _chipBarHeight = 48.0;
+const _filterHeaderHeight = _filterBarHeight + _chipBarHeight;
 
 class BuyPage extends StatefulWidget {
   const BuyPage({super.key});
@@ -37,11 +43,43 @@ class _BuyPageState extends State<BuyPage> {
 
   final _moreShortcutSelected = <String>{};
 
+  StreamSubscription<List<House>>? _housesSubscription;
+  List<House>? _houses;
+  bool _isLoading = true;
+  Object? _error;
+
   @override
   void initState() {
     super.initState();
     _repo = HouseRepository();
     _filtersRepo = HouseFiltersRepository();
+
+    _scrollController.addListener(() {
+      final offset = _scrollController.hasClients
+          ? _scrollController.offset.clamp(0.0, _bannerHeight)
+          : 0.0;
+      if ((offset - _scrollOffsetVN.value).abs() > 0.5) {
+        _scrollOffsetVN.value = offset;
+      }
+    });
+
+    _housesSubscription = _repo.housesStream.listen(
+      (data) {
+        if (!mounted) return;
+        setState(() {
+          _houses = data;
+          _isLoading = false;
+          _error = null;
+        });
+      },
+      onError: (Object e, StackTrace st) {
+        if (!mounted) return;
+        setState(() {
+          _error = e;
+          _isLoading = false;
+        });
+      },
+    );
   }
 
   @override
@@ -62,6 +100,9 @@ class _BuyPageState extends State<BuyPage> {
 
   @override
   void dispose() {
+    _housesSubscription?.cancel();
+    _scrollController.dispose();
+    _scrollOffsetVN.dispose();
     _repo.dispose();
     _controller.dispose();
     _floorPlanApplyTextDebounce?.cancel();
@@ -327,273 +368,559 @@ class _BuyPageState extends State<BuyPage> {
     _repo.refreshData(_filter!);
   }
 
+  final ScrollController _scrollController = ScrollController();
+  final ValueNotifier<double> _scrollOffsetVN = ValueNotifier<double>(0);
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final topPadding = MediaQuery.of(context).padding.top;
+    final searchRowHeight = kToolbarHeight + topPadding;
+    const expandedHeight = kToolbarHeight + _bannerHeight;
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)?.buy ?? ''),
-      ),
-      body: Column(
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Container(
-                  height: 40,
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surfaceContainer,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  alignment: Alignment.centerLeft,
-                  child: Text(l10n?.userCityName ?? userCityName),
-                ),
-              ),
-              IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.asset(
-                'assets/realestate/banner0.jpg',
-                width: double.infinity,
-                height: 120.0,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          DropselectTabBar(
-            controller: _controller,
-            // labelColor: Colors.orange,
-            // indicator: Icon(Icons.arrow_upward, size: 16),
-            // unselectedIndicator: Icon(Icons.arrow_downward, size: 16),
-            // overlayStyle: DropdownOverlayStyle(
-            //   backgroundColor: Colors.orange.withOpacity(0.54),
-            // ),
-            tabs: [
-              DropselectTab(
-                // tag: 'region',
-                label: l10n?.region ?? '',
-                // labelGetter: (DropselectResult result) {
-                //   // 可选：用户根据结果自定义标签
-                //   return '自定义标签';
-                // },
-              ),
-              DropselectTab(label: l10n?.price ?? ''),
-              DropselectTab(label: l10n?.floorPlan ?? ''),
-              DropselectTab(label: l10n?.more ?? ''),
-              DropselectTab(
-                child: Image.asset('assets/sorting.png', width: 16, height: 16),
-              ),
-            ],
-            selectors: [
-              CascadingSelector(
-                dataFetcher: _filtersRepo.fetchRegionData,
-                selectedDataFetcher: _filtersRepo.fetchRegionSelectedData,
-                resetDataFetcher: _filtersRepo.fetchRegionResetData,
-                selectionMode: SelectionMode.single,
-                // skeletonBuilder: (_) => const Center(
-                //     child: CircularProgressIndicator(
-                //   color: Colors.black,
-                // )),
-                // categoryBackgroundColor: Colors.grey[200]!,
-                // terminalBackgroundColor: Colors.white,
-                radioBuilder: (context, selected) {
-                  return MyRadio(value: selected);
-                },
-                checkboxBuilder: (context, selected) {
-                  return MyCheckbox(value: selected);
-                },
-              ),
-              GridSelector(
-                dataFetcher: _filtersRepo.fetchBuyPriceData,
-                selectedDataFetcher: _filtersRepo.fetchBuyPriceSelectedData,
-                resetDataFetcher: _filtersRepo.fetchBuyPriceResetData,
-                selectionMode: SelectionMode.multiple,
-                crossAxisCount: 4,
-                childAspectRatio: 2.5,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-                gridTileTheme: const SelectorGridTileTheme(
-                  variant: SelectorGridTileVariant.outlined,
-                ),
-                applyText: AppLocalizations.of(context)?.apply ?? '',
-              ),
-              FlattenSelector(
-                dataFetcher: _filtersRepo.fetchFloorPlanBuyData,
-                selectedDataFetcher: _filtersRepo.fetchFloorPlanBuySelectedData,
-                resetDataFetcher: _filtersRepo.fetchFloorPlanBuyResetData,
-                selectionMode: SelectionMode.multiple,
-                crossAxisCount: 3,
-                childAspectRatio: 2.5,
-                crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
-                sideBarTheme: const SelectorSideBarTheme(width: 98),
-                actionBarBuilder: (
-                  context, {
-                  required onResetTap,
-                  required onApplyTap,
-                }) {
-                  return MyActionBar(
-                    applyTextVN: _floorPlanApplyText,
-                    onResetTap: onResetTap,
-                    onApplyTap: onApplyTap,
-                  );
-                },
-              ),
-              FlattenSelector(
-                dataFetcher: _filtersRepo.fetchMoreBuyData,
-                selectedDataFetcher: _filtersRepo.fetchMoreBuySelectedData,
-                resetDataFetcher: _filtersRepo.fetchMoreBuyResetData,
-                selectionMode: SelectionMode.multiple,
-                crossAxisCount: 3,
-                childAspectRatio: 2.5,
-                crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
-                sideBarTheme: const SelectorSideBarTheme(width: 98),
-                actionBarBuilder: (
-                  context, {
-                  required onResetTap,
-                  required onApplyTap,
-                }) {
-                  return MyActionBar(
-                    applyTextVN: _floorPlanApplyText,
-                    onResetTap: onResetTap,
-                    onApplyTap: onApplyTap,
-                  );
-                },
-              ),
-              ListSelector(
-                dataFetcher: _filtersRepo.fetchSortBuyData,
-                selectedDataFetcher: _filtersRepo.fetchSortBuySelectedData,
-                resetDataFetcher: _filtersRepo.fetchSortBuyResetData,
-                selectionMode: SelectionMode.single,
-                radioBuilder: (context, selected) {
-                  return MyRadio(value: selected);
-                },
-              ),
-            ],
-            onSelectorShowed: (DropselectTabData tabData) {
-              debugPrint('onShowed: ${tabData.label}');
-            },
-            onSelectorHidden: (DropselectTabData tabData) {
-              debugPrint('onHidden: ${tabData.label}');
-            },
-            onChanged: (DropselectResult result) {
-              debugPrintLarge('onChanged: $result');
-              _handleSelectorChange(result);
-              _showSelectedResult(result);
-            },
-            onApplied: (DropselectResult result) {
-              debugPrintLarge('onApplied: $result');
-              _handleSelectorApply(result);
-              if (result.tabIndex == 2) {
-                _floorPlanApplyTextDebounce?.cancel();
-                _floorPlanApplyTextRequestId++;
-                _floorPlanApplyText.value =
-                    AppLocalizations.of(context)?.apply ?? '';
-              }
-              _showSelectedResult(result);
-            },
-            onReset: () {
-              debugPrint('onReset');
-              if (_controller.currentIndex == 2) {
-                _floorPlanApplyTextDebounce?.cancel();
-                _floorPlanApplyTextRequestId++;
-                _floorPlanApplyText.value =
-                    AppLocalizations.of(context)?.apply ?? '';
-              }
+      body: CustomScrollView(
+        controller: _scrollController,
+        slivers: [
+          ValueListenableBuilder<double>(
+            valueListenable: _scrollOffsetVN,
+            builder: (context, offset, child) {
+              final isCollapsed = offset >= _bannerHeight;
+              final foregroundColor =
+                  isCollapsed ? Colors.black87 : Colors.white;
+              final searchFillColor =
+                  isCollapsed ? const Color(0xFFF2F2F2) : Colors.white;
+              final searchHintColor =
+                  isCollapsed ? Colors.grey[600]! : Colors.grey;
+              final systemOverlayStyle = isCollapsed
+                  ? SystemUiOverlayStyle.dark
+                  : SystemUiOverlayStyle.light;
+              return _buildAppBar(
+                l10n,
+                searchRowHeight: searchRowHeight,
+                expandedHeight: expandedHeight,
+                foregroundColor: foregroundColor,
+                searchFillColor: searchFillColor,
+                searchHintColor: searchHintColor,
+                systemOverlayStyle: systemOverlayStyle,
+              );
             },
           ),
-          Container(
-            height: 48,
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
-            child: ListView.separated(
-              padding: EdgeInsets.zero,
-              physics: const ClampingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              itemCount: moreShortcut.length,
-              itemBuilder: (context, int index) {
-                final item = moreShortcut[index];
-                return ChoiceChip(
-                  padding: EdgeInsets.zero,
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  showCheckmark: false,
-                  label: Text(item.name ?? ''),
-                  selected: _moreShortcutSelected.contains(item.id ?? ''),
-                  onSelected: (bool selected) async {
-                    setState(() {
-                      if (selected) {
-                        _moreShortcutSelected.add(item.id ?? '');
-                      } else {
-                        _moreShortcutSelected.remove(item.id ?? '');
-                      }
-                    });
-                    final ok = await _controller.apply(
-                        tabIndex: 3, selectedEntryIds: _moreShortcutSelected);
-                    if (!ok) {
-                      debugPrint('apply failed');
-                    }
-                  },
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return const SizedBox(width: 10);
-              },
-            ),
-          ),
-          Expanded(
-            child: StreamBuilder<List<House>>(
-              stream: _repo.housesStream,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text(
-                      l10n?.loadError('${snapshot.error}') ??
-                          '${snapshot.error}',
-                    ),
-                  );
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text(l10n?.nohomes ?? ''));
-                }
-                final houses = snapshot.data!;
-                return ListView.builder(
-                  itemCount: houses.length,
-                  itemBuilder: (context, index) {
-                    final house = houses[index];
-                    return Card(
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                      child: ListTile(
-                        leading: AspectRatio(
-                          aspectRatio: 120 / 80,
-                          child: Image.asset(
-                            house.picture ?? '',
-                            width: 120,
-                            height: 80,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        title: Text(house.title ?? ''),
-                        subtitle: Text(house.price ?? ''),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
+          const _NavigationGrid(),
+          _buildSectionHeader('全部房源'),
+          _buildStickyFilter(l10n),
+          _buildHouseList(l10n),
         ],
       ),
     );
   }
+
+  Widget _buildAppBar(
+    AppLocalizations? l10n, {
+    required double searchRowHeight,
+    required double expandedHeight,
+    required Color foregroundColor,
+    required Color searchFillColor,
+    required Color searchHintColor,
+    required SystemUiOverlayStyle systemOverlayStyle,
+  }) {
+    return SliverAppBar(
+      pinned: true,
+      automaticallyImplyLeading: false,
+      centerTitle: false,
+      titleSpacing: 0,
+      systemOverlayStyle: systemOverlayStyle,
+      title: Row(
+        children: [
+          BackButton(color: foregroundColor),
+          const SizedBox(width: 4),
+          Text(
+            l10n?.buy ?? '',
+            style: TextStyle(
+              color: foregroundColor,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: GestureDetector(
+              onTap: () {},
+              child: Container(
+                height: 36,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  color: searchFillColor,
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.search, size: 18, color: searchHintColor),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text(
+                        '搜索热门项目名…',
+                        style: TextStyle(
+                          color: searchHintColor,
+                          fontSize: 13,
+                          fontWeight: FontWeight.normal,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        IconButton(
+          onPressed: () {},
+          icon: Icon(Icons.location_on_outlined, color: foregroundColor),
+        ),
+        IconButton(
+          onPressed: () {},
+          icon: Icon(Icons.chat_bubble_outline, color: foregroundColor),
+        ),
+        const SizedBox(width: 4),
+      ],
+      surfaceTintColor: Colors.transparent,
+      shadowColor: Colors.transparent,
+      elevation: 0,
+      expandedHeight: expandedHeight,
+      flexibleSpace: FlexibleSpaceBar(
+        collapseMode: CollapseMode.pin,
+        background: _buildBannerBackground(),
+      ),
+    );
+  }
+
+  Widget _buildBannerBackground() {
+    return SizedBox.expand(
+      child: Image.asset(
+        'assets/realestate/banner_buy.jpg',
+        fit: BoxFit.cover,
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(String title) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(15, 16, 15, 12),
+        child: Text(
+          title,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStickyFilter(AppLocalizations? l10n) {
+    return SliverPersistentHeader(
+      pinned: true,
+      delegate: _FilterHeaderDelegate(
+        height: _filterHeaderHeight,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            DropselectTabBar(
+              controller: _controller,
+              tabs: [
+                DropselectTab(label: l10n?.region ?? ''),
+                DropselectTab(label: l10n?.price ?? ''),
+                DropselectTab(label: l10n?.floorPlan ?? ''),
+                DropselectTab(label: l10n?.more ?? ''),
+                DropselectTab(
+                  child:
+                      Image.asset('assets/sorting.png', width: 16, height: 16),
+                ),
+              ],
+              selectors: [
+                CascadingSelector(
+                  dataFetcher: _filtersRepo.fetchRegionData,
+                  selectedDataFetcher: _filtersRepo.fetchRegionSelectedData,
+                  resetDataFetcher: _filtersRepo.fetchRegionResetData,
+                  selectionMode: SelectionMode.single,
+                  radioBuilder: (context, selected) {
+                    return MyRadio(value: selected);
+                  },
+                  checkboxBuilder: (context, selected) {
+                    return MyCheckbox(value: selected);
+                  },
+                ),
+                GridSelector(
+                  dataFetcher: _filtersRepo.fetchBuyPriceData,
+                  selectedDataFetcher: _filtersRepo.fetchBuyPriceSelectedData,
+                  resetDataFetcher: _filtersRepo.fetchBuyPriceResetData,
+                  selectionMode: SelectionMode.multiple,
+                  crossAxisCount: 4,
+                  childAspectRatio: 2.5,
+                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 10,
+                  gridTileTheme: const SelectorGridTileTheme(
+                    variant: SelectorGridTileVariant.outlined,
+                  ),
+                  applyText: AppLocalizations.of(context)?.apply ?? '',
+                ),
+                FlattenSelector(
+                  dataFetcher: _filtersRepo.fetchFloorPlanBuyData,
+                  selectedDataFetcher:
+                      _filtersRepo.fetchFloorPlanBuySelectedData,
+                  resetDataFetcher: _filtersRepo.fetchFloorPlanBuyResetData,
+                  selectionMode: SelectionMode.multiple,
+                  crossAxisCount: 3,
+                  childAspectRatio: 2.5,
+                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 8,
+                  sideBarTheme: const SelectorSideBarTheme(width: 98),
+                  actionBarBuilder: (
+                    context, {
+                    required onResetTap,
+                    required onApplyTap,
+                  }) {
+                    return MyActionBar(
+                      applyTextVN: _floorPlanApplyText,
+                      onResetTap: onResetTap,
+                      onApplyTap: onApplyTap,
+                    );
+                  },
+                ),
+                FlattenSelector(
+                  dataFetcher: _filtersRepo.fetchMoreBuyData,
+                  selectedDataFetcher: _filtersRepo.fetchMoreBuySelectedData,
+                  resetDataFetcher: _filtersRepo.fetchMoreBuyResetData,
+                  selectionMode: SelectionMode.multiple,
+                  crossAxisCount: 3,
+                  childAspectRatio: 2.5,
+                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 8,
+                  sideBarTheme: const SelectorSideBarTheme(width: 98),
+                  actionBarBuilder: (
+                    context, {
+                    required onResetTap,
+                    required onApplyTap,
+                  }) {
+                    return MyActionBar(
+                      applyTextVN: _floorPlanApplyText,
+                      onResetTap: onResetTap,
+                      onApplyTap: onApplyTap,
+                    );
+                  },
+                ),
+                ListSelector(
+                  dataFetcher: _filtersRepo.fetchSortBuyData,
+                  selectedDataFetcher: _filtersRepo.fetchSortBuySelectedData,
+                  resetDataFetcher: _filtersRepo.fetchSortBuyResetData,
+                  selectionMode: SelectionMode.single,
+                  radioBuilder: (context, selected) {
+                    return MyRadio(value: selected);
+                  },
+                ),
+              ],
+              onSelectorShowed: (DropselectTabData tabData) {
+                debugPrint('onShowed: ${tabData.label}');
+              },
+              onSelectorHidden: (DropselectTabData tabData) {
+                debugPrint('onHidden: ${tabData.label}');
+              },
+              onChanged: (DropselectResult result) {
+                debugPrintLarge('onChanged: $result');
+                _handleSelectorChange(result);
+                _showSelectedResult(result);
+              },
+              onApplied: (DropselectResult result) {
+                debugPrintLarge('onApplied: $result');
+                _handleSelectorApply(result);
+                if (result.tabIndex == 2) {
+                  _floorPlanApplyTextDebounce?.cancel();
+                  _floorPlanApplyTextRequestId++;
+                  _floorPlanApplyText.value =
+                      AppLocalizations.of(context)?.apply ?? '';
+                }
+                _showSelectedResult(result);
+              },
+              onReset: () {
+                debugPrint('onReset');
+                if (_controller.currentIndex == 2) {
+                  _floorPlanApplyTextDebounce?.cancel();
+                  _floorPlanApplyTextRequestId++;
+                  _floorPlanApplyText.value =
+                      AppLocalizations.of(context)?.apply ?? '';
+                }
+              },
+            ),
+            Container(
+              height: _chipBarHeight,
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
+              child: ListView.separated(
+                padding: EdgeInsets.zero,
+                physics: const ClampingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                itemCount: moreShortcut.length,
+                itemBuilder: (context, int index) {
+                  final item = moreShortcut[index];
+                  return ChoiceChip(
+                    padding: EdgeInsets.zero,
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    showCheckmark: false,
+                    label: Text(item.name ?? ''),
+                    selected: _moreShortcutSelected.contains(item.id ?? ''),
+                    onSelected: (bool selected) async {
+                      setState(() {
+                        if (selected) {
+                          _moreShortcutSelected.add(item.id ?? '');
+                        } else {
+                          _moreShortcutSelected.remove(item.id ?? '');
+                        }
+                      });
+                      final ok = await _controller.apply(
+                          tabIndex: 3, selectedEntryIds: _moreShortcutSelected);
+                      if (!ok) {
+                        debugPrint('apply failed');
+                      }
+                    },
+                  );
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return const SizedBox(width: 10);
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHouseList(AppLocalizations? l10n) {
+    if (_isLoading) {
+      return const SliverFillRemaining(
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+    if (_error != null) {
+      return SliverFillRemaining(
+        child: Center(
+          child: Text(
+            l10n?.loadError('$_error') ?? '$_error',
+          ),
+        ),
+      );
+    }
+    final houses = _houses;
+    if (houses == null || houses.isEmpty) {
+      return SliverFillRemaining(
+        child: Center(child: Text(l10n?.nohomes ?? '')),
+      );
+    }
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      sliver: SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
+            final house = houses[index];
+            return Card(
+              margin: const EdgeInsets.symmetric(vertical: 6),
+              child: ListTile(
+                leading: AspectRatio(
+                  aspectRatio: 120 / 80,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: Image.asset(
+                      house.picture ?? '',
+                      width: 120,
+                      height: 80,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                title: Text(house.title ?? ''),
+                subtitle: Text(house.price ?? ''),
+              ),
+            );
+          },
+          childCount: houses.length,
+        ),
+      ),
+    );
+  }
+}
+
+class _NavData {
+  const _NavData(this.value, this.label, this.color, {this.hot = false});
+  final String value;
+  final String label;
+  final Color color;
+  final bool hot;
+}
+
+class _NavItem {
+  const _NavItem(this.icon, this.label);
+  final IconData icon;
+  final String label;
+}
+
+class _NavigationGrid extends StatelessWidget {
+  const _NavigationGrid();
+
+  @override
+  Widget build(BuildContext context) {
+    const data = [
+      _NavData('768', '全部楼盘', Color(0xFFFF6B6B)),
+      _NavData('605', '在售楼盘', Color(0xFFFFA726)),
+      _NavData('117', '折扣好盘', Color(0xFF66BB6A)),
+      _NavData('23', '特价房源', Color(0xFF42A5F5)),
+      _NavData('1', '本月开盘', Color(0xFFFF6B6B), hot: true),
+    ];
+    const items = [
+      _NavItem(Icons.grid_view_outlined, '板块找房'),
+      _NavItem(Icons.location_on_outlined, '地图找房'),
+      _NavItem(Icons.person_outline, '找经纪人'),
+      _NavItem(Icons.train_outlined, '近地铁'),
+      _NavItem(Icons.school_outlined, '学校找房'),
+    ];
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+        child: Card(
+          elevation: 0,
+          color: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: data
+                      .map((item) => Expanded(
+                            child: InkWell(
+                              onTap: () {},
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Stack(
+                                    clipBehavior: Clip.none,
+                                    children: [
+                                      Container(
+                                        width: 36,
+                                        height: 36,
+                                        decoration: BoxDecoration(
+                                          color: item.color,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            item.value,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      if (item.hot)
+                                        Positioned(
+                                          top: -4,
+                                          right: -10,
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 4, vertical: 1),
+                                            decoration: BoxDecoration(
+                                              color: Colors.red,
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                            ),
+                                            child: const Text(
+                                              'HOT',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 8),
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    item.label,
+                                    style: const TextStyle(
+                                        fontSize: 12, color: Colors.black87),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ))
+                      .toList(),
+                ),
+                const SizedBox(height: 16.0),
+                Row(
+                  children: items
+                      .map((item) => Expanded(
+                            child: InkWell(
+                              onTap: () {},
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(item.icon,
+                                      size: 28, color: Colors.black87),
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    item.label,
+                                    style: const TextStyle(
+                                        fontSize: 12, color: Colors.black87),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ))
+                      .toList(),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _FilterHeaderDelegate extends SliverPersistentHeaderDelegate {
+  const _FilterHeaderDelegate({
+    required this.height,
+    required this.child,
+  });
+
+  final double height;
+  final Widget child;
+
+  @override
+  double get minExtent => height;
+
+  @override
+  double get maxExtent => height;
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Material(
+      color: Theme.of(context).colorScheme.surface,
+      elevation: 0,
+      child: child,
+    );
+  }
+
+  @override
+  bool shouldRebuild(covariant _FilterHeaderDelegate oldDelegate) => true;
 }

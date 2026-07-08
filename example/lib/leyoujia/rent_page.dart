@@ -248,8 +248,8 @@ class _RentPageState extends State<RentPage> {
             width: double.infinity,
             height: 120,
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-            child:
-                Image.asset('assets/realestate/banner0.jpg', fit: BoxFit.cover),
+            child: Image.asset('assets/realestate/banner_realestate.jpg',
+                fit: BoxFit.cover),
           ),
           DropselectTabBar(
             controller: _controller,
