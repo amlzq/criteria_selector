@@ -276,10 +276,10 @@ class _RentPageState extends State<RentPage> {
             ],
             selectorDelegates: [
               CascadingSelectorDelegate(
-                dataFetcher: () =>
+                entriesLoader: () =>
                     _filtersRepo.fetchRegionData(singleAll: true),
-                selectedDataFetcher: _filtersRepo.fetchRegionSelectedData,
-                resetDataFetcher: _filtersRepo.fetchRegionResetData,
+                selectedEntriesLoader: _filtersRepo.fetchRegionSelectedData,
+                resetEntriesLoader: _filtersRepo.fetchRegionResetData,
                 selectionMode: SelectionMode.single,
                 // skeletonBuilder: (_) => const Center(
                 //     child: CircularProgressIndicator(
@@ -295,9 +295,9 @@ class _RentPageState extends State<RentPage> {
                 },
               ),
               GridSelectorDelegate(
-                dataFetcher: _filtersRepo.fetchRentalData,
-                selectedDataFetcher: _filtersRepo.fetchRentalSelectedData,
-                resetDataFetcher: _filtersRepo.fetchRentalResetData,
+                entriesLoader: _filtersRepo.fetchRentalData,
+                selectedEntriesLoader: _filtersRepo.fetchRentalSelectedData,
+                resetEntriesLoader: _filtersRepo.fetchRentalResetData,
                 selectionMode: SelectionMode.single,
                 crossAxisCount: 4,
                 childAspectRatio: 2.5,
@@ -308,11 +308,11 @@ class _RentPageState extends State<RentPage> {
                 ),
               ),
               FlattenSelectorDelegate(
-                dataFetcher: () =>
+                entriesLoader: () =>
                     _filtersRepo.fetchFloorPlanRentData(singleAll: true),
-                selectedDataFetcher:
+                selectedEntriesLoader:
                     _filtersRepo.fetchFloorPlanRentSelectedData,
-                resetDataFetcher: _filtersRepo.fetchFloorPlanRentResetData,
+                resetEntriesLoader: _filtersRepo.fetchFloorPlanRentResetData,
                 selectionMode: SelectionMode.single,
                 crossAxisCount: 3,
                 childAspectRatio: 2.5,
@@ -331,9 +331,9 @@ class _RentPageState extends State<RentPage> {
                 },
               ),
               ListSelectorDelegate(
-                dataFetcher: _filtersRepo.fetchSortRentData,
-                selectedDataFetcher: _filtersRepo.fetchSortRentSelectedData,
-                resetDataFetcher: _filtersRepo.fetchSortRentResetData,
+                entriesLoader: _filtersRepo.fetchSortRentData,
+                selectedEntriesLoader: _filtersRepo.fetchSortRentSelectedData,
+                resetEntriesLoader: _filtersRepo.fetchSortRentResetData,
                 selectionMode: SelectionMode.single,
                 radioBuilder: (context, selected) {
                   return MyRadio(value: selected);

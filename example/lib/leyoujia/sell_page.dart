@@ -209,9 +209,9 @@ class _SellPageState extends State<SellPage> {
               selectorDelegates: [
                 CascadingSelectorDelegate(
                   isScrollable: true,
-                  dataFetcher: _filtersRepo.fetchRegionData,
-                  selectedDataFetcher: _filtersRepo.fetchRegionSelectedData,
-                  resetDataFetcher: _filtersRepo.fetchRegionResetData,
+                  entriesLoader: _filtersRepo.fetchRegionData,
+                  selectedEntriesLoader: _filtersRepo.fetchRegionSelectedData,
+                  resetEntriesLoader: _filtersRepo.fetchRegionResetData,
                   selectionMode: SelectionMode.single,
                   // skeletonBuilder: (_) => const Center(
                   //     child: CircularProgressIndicator(
@@ -224,9 +224,9 @@ class _SellPageState extends State<SellPage> {
                   },
                 ),
                 GridSelectorDelegate(
-                  dataFetcher: _filtersRepo.fetchSellPriceData,
-                  selectedDataFetcher: _filtersRepo.fetchSellPriceSelectedData,
-                  resetDataFetcher: _filtersRepo.fetchSellPriceResetData,
+                  entriesLoader: _filtersRepo.fetchSellPriceData,
+                  selectedEntriesLoader: _filtersRepo.fetchSellPriceSelectedData,
+                  resetEntriesLoader: _filtersRepo.fetchSellPriceResetData,
                   selectionMode: SelectionMode.multiple,
                   crossAxisCount: 4,
                   childAspectRatio: 2.5,
@@ -237,10 +237,10 @@ class _SellPageState extends State<SellPage> {
                   ),
                 ),
                 FlattenSelectorDelegate(
-                  dataFetcher: _filtersRepo.fetchFloorPlanSellData,
-                  selectedDataFetcher:
+                  entriesLoader: _filtersRepo.fetchFloorPlanSellData,
+                  selectedEntriesLoader:
                       _filtersRepo.fetchFloorPlanSellSelectedData,
-                  resetDataFetcher: _filtersRepo.fetchFloorPlanSellResetData,
+                  resetEntriesLoader: _filtersRepo.fetchFloorPlanSellResetData,
                   selectionMode: SelectionMode.multiple,
                   crossAxisCount: 3,
                   childAspectRatio: 2.5,
@@ -249,9 +249,9 @@ class _SellPageState extends State<SellPage> {
                   sideBarTheme: const SelectorSideBarTheme(width: 98),
                 ),
                 ListSelectorDelegate(
-                  dataFetcher: _filtersRepo.fetchSortSellData,
-                  selectedDataFetcher: _filtersRepo.fetchSortSellSelectedData,
-                  resetDataFetcher: _filtersRepo.fetchSortSellResetData,
+                  entriesLoader: _filtersRepo.fetchSortSellData,
+                  selectedEntriesLoader: _filtersRepo.fetchSortSellSelectedData,
+                  resetEntriesLoader: _filtersRepo.fetchSortSellResetData,
                   selectionMode: SelectionMode.single,
                   radioBuilder: (context, selected) {
                     return MyRadio(value: selected);

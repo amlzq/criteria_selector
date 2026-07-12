@@ -46,7 +46,7 @@ void main() {
               ],
               selectorDelegates: [
                 ListSelectorDelegate(
-                  dataFetcher: () async => <SelectorEntry<dynamic>>{
+                  entriesLoader: () async => <SelectorEntry<dynamic>>{
                     SelectorTextEntry<dynamic>.name(id: 'a', name: 'A'),
                   },
                 ),
@@ -93,7 +93,7 @@ void main() {
               ],
               selectorDelegates: [
                 ListSelectorDelegate(
-                  dataFetcher: () async => <SelectorEntry<dynamic>>{
+                  entriesLoader: () async => <SelectorEntry<dynamic>>{
                     SelectorTextEntry<dynamic>.name(id: 'a', name: 'A'),
                     SelectorTextEntry<dynamic>.name(id: 'b', name: 'B'),
                   },
@@ -140,7 +140,7 @@ void main() {
               ],
               selectorDelegates: [
                 ListSelectorDelegate(
-                  dataFetcher: () async => <SelectorEntry<dynamic>>{
+                  entriesLoader: () async => <SelectorEntry<dynamic>>{
                     SelectorTextEntry<dynamic>.name(id: 'a', name: 'A'),
                   },
                 ),
@@ -183,7 +183,7 @@ void main() {
               selectorDelegates: [
                 ListSelectorDelegate(
                   selectionMode: SelectionMode.multiple,
-                  dataFetcher: () async => <SelectorEntry<dynamic>>{
+                  entriesLoader: () async => <SelectorEntry<dynamic>>{
                     SelectorTextEntry<dynamic>.name(id: 'a', name: 'A'),
                     SelectorTextEntry<dynamic>.name(id: 'b', name: 'B'),
                   },
@@ -372,7 +372,7 @@ void main() {
               selectors: [
                 // ignore: deprecated_member_use_from_same_package
                 ListSelector(
-                  dataFetcher: () async => <SelectorEntry<dynamic>>{
+                  entriesLoader: () async => <SelectorEntry<dynamic>>{
                     SelectorTextEntry<dynamic>.name(id: 'a', name: 'A'),
                   },
                 ),

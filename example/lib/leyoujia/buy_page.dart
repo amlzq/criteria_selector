@@ -545,9 +545,9 @@ class _BuyPageState extends State<BuyPage> {
               ],
               selectorDelegates: [
                 CascadingSelectorDelegate(
-                  dataFetcher: _filtersRepo.fetchRegionData,
-                  selectedDataFetcher: _filtersRepo.fetchRegionSelectedData,
-                  resetDataFetcher: _filtersRepo.fetchRegionResetData,
+                  entriesLoader: _filtersRepo.fetchRegionData,
+                  selectedEntriesLoader: _filtersRepo.fetchRegionSelectedData,
+                  resetEntriesLoader: _filtersRepo.fetchRegionResetData,
                   selectionMode: SelectionMode.single,
                   radioBuilder: (context, selected) {
                     return MyRadio(value: selected);
@@ -557,9 +557,9 @@ class _BuyPageState extends State<BuyPage> {
                   },
                 ),
                 GridSelectorDelegate(
-                  dataFetcher: _filtersRepo.fetchBuyPriceData,
-                  selectedDataFetcher: _filtersRepo.fetchBuyPriceSelectedData,
-                  resetDataFetcher: _filtersRepo.fetchBuyPriceResetData,
+                  entriesLoader: _filtersRepo.fetchBuyPriceData,
+                  selectedEntriesLoader: _filtersRepo.fetchBuyPriceSelectedData,
+                  resetEntriesLoader: _filtersRepo.fetchBuyPriceResetData,
                   selectionMode: SelectionMode.multiple,
                   crossAxisCount: 4,
                   childAspectRatio: 2.5,
@@ -571,10 +571,10 @@ class _BuyPageState extends State<BuyPage> {
                   applyText: AppLocalizations.of(context)?.apply ?? '',
                 ),
                 FlattenSelectorDelegate(
-                  dataFetcher: _filtersRepo.fetchFloorPlanBuyData,
-                  selectedDataFetcher:
+                  entriesLoader: _filtersRepo.fetchFloorPlanBuyData,
+                  selectedEntriesLoader:
                       _filtersRepo.fetchFloorPlanBuySelectedData,
-                  resetDataFetcher: _filtersRepo.fetchFloorPlanBuyResetData,
+                  resetEntriesLoader: _filtersRepo.fetchFloorPlanBuyResetData,
                   selectionMode: SelectionMode.multiple,
                   crossAxisCount: 3,
                   childAspectRatio: 2.5,
@@ -594,9 +594,9 @@ class _BuyPageState extends State<BuyPage> {
                   },
                 ),
                 FlattenSelectorDelegate(
-                  dataFetcher: _filtersRepo.fetchMoreBuyData,
-                  selectedDataFetcher: _filtersRepo.fetchMoreBuySelectedData,
-                  resetDataFetcher: _filtersRepo.fetchMoreBuyResetData,
+                  entriesLoader: _filtersRepo.fetchMoreBuyData,
+                  selectedEntriesLoader: _filtersRepo.fetchMoreBuySelectedData,
+                  resetEntriesLoader: _filtersRepo.fetchMoreBuyResetData,
                   selectionMode: SelectionMode.multiple,
                   crossAxisCount: 3,
                   childAspectRatio: 2.5,
@@ -616,9 +616,9 @@ class _BuyPageState extends State<BuyPage> {
                   },
                 ),
                 ListSelectorDelegate(
-                  dataFetcher: _filtersRepo.fetchSortBuyData,
-                  selectedDataFetcher: _filtersRepo.fetchSortBuySelectedData,
-                  resetDataFetcher: _filtersRepo.fetchSortBuyResetData,
+                  entriesLoader: _filtersRepo.fetchSortBuyData,
+                  selectedEntriesLoader: _filtersRepo.fetchSortBuySelectedData,
+                  resetEntriesLoader: _filtersRepo.fetchSortBuyResetData,
                   selectionMode: SelectionMode.single,
                   radioBuilder: (context, selected) {
                     return MyRadio(value: selected);

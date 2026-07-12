@@ -21,7 +21,7 @@ typedef SelectorActionBarBuilder = Widget Function(
 /// Base configuration for a selector.
 ///
 /// A [SelectorDelegate] is responsible for:
-/// - Defining how entries are fetched and restored (via fetcher callbacks).
+/// - Defining how entries are fetched and restored (via loader callbacks).
 /// - Defining UI/theme overrides (colors and per-widget themes).
 /// - Building the selector body widget and a loading skeleton.
 ///
@@ -30,8 +30,14 @@ typedef SelectorActionBarBuilder = Widget Function(
 abstract class SelectorDelegate {
   SelectorDelegate({
     this.selectionMode = SelectionMode.single,
+    this.entriesLoader,
+    this.selectedEntriesLoader,
+    this.resetEntriesLoader,
+    @Deprecated('Use [entriesLoader] instead. Will be removed in the next major version.')
     this.dataFetcher,
+    @Deprecated('Use [selectedEntriesLoader] instead. Will be removed in the next major version.')
     this.selectedDataFetcher,
+    @Deprecated('Use [resetEntriesLoader] instead. Will be removed in the next major version.')
     this.resetDataFetcher,
     this.actionBarBuilder,
     this.selectedColor,
@@ -63,37 +69,65 @@ abstract class SelectorDelegate {
   ///
   /// When provided, the selector panel can display a loading skeleton while
   /// awaiting the result.
+  final Future<SelectorEntries> Function()? entriesLoader;
+
+  /// Fetches the full selectable entries for this selector.
+  ///
+  /// @Deprecated Use [entriesLoader] instead. Will be removed in the next major
+  /// version.
+  @Deprecated('Use [entriesLoader] instead. Will be removed in the next major version.')
   final Future<SelectorEntries> Function()? dataFetcher;
 
   Future<SelectorEntries>? _data;
 
-  /// The selectable entries future, lazily initialized from [dataFetcher] on
-  /// first access.
-  Future<SelectorEntries>? get data => _data ??= dataFetcher?.call();
+  /// The selectable entries future, lazily initialized from [entriesLoader]
+  /// (falling back to the deprecated `dataFetcher` parameter) on first access.
+  Future<SelectorEntries>? get data =>
+      // ignore: deprecated_member_use_from_same_package
+      _data ??= (entriesLoader ?? dataFetcher)?.call();
 
   /// Returns the previously selected entries to restore.
   ///
   /// This is typically used for restoring state when reopening the selector.
+  final SelectorEntries? Function()? selectedEntriesLoader;
+
+  /// Returns the previously selected entries to restore.
+  ///
+  /// @Deprecated Use [selectedEntriesLoader] instead. Will be removed in the
+  /// next major version.
+  @Deprecated('Use [selectedEntriesLoader] instead. Will be removed in the next major version.')
   final SelectorEntries? Function()? selectedDataFetcher;
 
   SelectorEntries? _selectedData;
 
   /// The previously selected entries, lazily initialized from
-  /// [selectedDataFetcher] on first access.
+  /// [selectedEntriesLoader] (falling back to the deprecated
+  /// `selectedDataFetcher` parameter) on first access.
   ///
   /// Can be set explicitly to override the cached value.
   SelectorEntries? get selectedData =>
-      _selectedData ??= selectedDataFetcher?.call();
+      // ignore: deprecated_member_use_from_same_package
+      _selectedData ??= (selectedEntriesLoader ?? selectedDataFetcher)?.call();
   set selectedData(SelectorEntries? value) => _selectedData = value;
 
   /// Returns the selection that should be used when "Reset" is tapped.
+  final SelectorEntries? Function()? resetEntriesLoader;
+
+  /// Returns the selection that should be used when "Reset" is tapped.
+  ///
+  /// @Deprecated Use [resetEntriesLoader] instead. Will be removed in the next
+  /// major version.
+  @Deprecated('Use [resetEntriesLoader] instead. Will be removed in the next major version.')
   final SelectorEntries? Function()? resetDataFetcher;
 
   SelectorEntries? _resetData;
 
-  /// The reset selection entries, lazily initialized from [resetDataFetcher] on
-  /// first access.
-  SelectorEntries? get resetData => _resetData ??= resetDataFetcher?.call();
+  /// The reset selection entries, lazily initialized from [resetEntriesLoader]
+  /// (falling back to the deprecated `resetDataFetcher` parameter) on first
+  /// access.
+  SelectorEntries? get resetData =>
+      // ignore: deprecated_member_use_from_same_package
+      _resetData ??= (resetEntriesLoader ?? resetDataFetcher)?.call();
 
   /// Optional builder to customize the action bar UI.
   final SelectorActionBarBuilder? actionBarBuilder;
@@ -181,9 +215,9 @@ class CascadingSelectorDelegate extends SelectorDelegate {
     this.radioBuilder,
     this.isScrollable = false,
     super.selectionMode = SelectionMode.single,
-    super.dataFetcher,
-    super.selectedDataFetcher,
-    super.resetDataFetcher,
+    super.entriesLoader,
+    super.selectedEntriesLoader,
+    super.resetEntriesLoader,
     super.actionBarBuilder,
     super.selectedColor,
     super.onSelectedColor,
@@ -204,6 +238,12 @@ class CascadingSelectorDelegate extends SelectorDelegate {
     super.expansionTileTheme,
     super.chipBarTheme,
     super.skeletonBuilder,
+    // ignore: deprecated_member_use_from_same_package
+    super.dataFetcher,
+    // ignore: deprecated_member_use_from_same_package
+    super.selectedDataFetcher,
+    // ignore: deprecated_member_use_from_same_package
+    super.resetDataFetcher,
   });
 
   /// Background color used for the category column.
@@ -246,8 +286,14 @@ class ListSelectorDelegate extends SelectorDelegate {
     this.checkboxBuilder,
     this.radioBuilder,
     super.selectionMode = SelectionMode.single,
+    super.entriesLoader,
+    super.selectedEntriesLoader,
+    super.resetEntriesLoader,
+    // ignore: deprecated_member_use_from_same_package
     super.dataFetcher,
+    // ignore: deprecated_member_use_from_same_package
     super.selectedDataFetcher,
+    // ignore: deprecated_member_use_from_same_package
     super.resetDataFetcher,
     super.actionBarBuilder,
     super.selectedColor,
@@ -305,8 +351,14 @@ class GridSelectorDelegate extends SelectorDelegate {
     this.crossAxisSpacing = 0.0,
     this.childAspectRatio = 1.0,
     super.selectionMode = SelectionMode.single,
+    super.entriesLoader,
+    super.selectedEntriesLoader,
+    super.resetEntriesLoader,
+    // ignore: deprecated_member_use_from_same_package
     super.dataFetcher,
+    // ignore: deprecated_member_use_from_same_package
     super.selectedDataFetcher,
+    // ignore: deprecated_member_use_from_same_package
     super.resetDataFetcher,
     super.actionBarBuilder,
     super.selectedColor,
@@ -377,8 +429,14 @@ class FlattenSelectorDelegate extends SelectorDelegate {
     this.crossAxisSpacing = 0.0,
     this.childAspectRatio = 1.0,
     super.selectionMode = SelectionMode.single,
+    super.entriesLoader,
+    super.selectedEntriesLoader,
+    super.resetEntriesLoader,
+    // ignore: deprecated_member_use_from_same_package
     super.dataFetcher,
+    // ignore: deprecated_member_use_from_same_package
     super.selectedDataFetcher,
+    // ignore: deprecated_member_use_from_same_package
     super.resetDataFetcher,
     super.actionBarBuilder,
     super.selectedColor,

@@ -24,9 +24,9 @@ class _DialogPageState extends State<DialogPage> {
 
   void showSortSelector() async {
     final delegate = ListSelectorDelegate(
-      dataFetcher: _filtersRepo.fetchSortBuyData,
-      selectedDataFetcher: _filtersRepo.fetchSortBuySelectedData,
-      resetDataFetcher: _filtersRepo.fetchSortBuyResetData,
+      entriesLoader: _filtersRepo.fetchSortBuyData,
+      selectedEntriesLoader: _filtersRepo.fetchSortBuySelectedData,
+      resetEntriesLoader: _filtersRepo.fetchSortBuyResetData,
       selectionMode: SelectionMode.single,
       radioBuilder: (context, selected) {
         return MyRadio(value: selected);
@@ -76,9 +76,9 @@ class _DialogPageState extends State<DialogPage> {
     // aa.addListener(listener)
 
     final delegate = FlattenSelectorDelegate(
-      dataFetcher: _filtersRepo.fetchFloorPlanBuyData,
-      selectedDataFetcher: _filtersRepo.fetchFloorPlanBuySelectedData,
-      resetDataFetcher: _filtersRepo.fetchFloorPlanBuyResetData,
+      entriesLoader: _filtersRepo.fetchFloorPlanBuyData,
+      selectedEntriesLoader: _filtersRepo.fetchFloorPlanBuySelectedData,
+      resetEntriesLoader: _filtersRepo.fetchFloorPlanBuyResetData,
       selectionMode: SelectionMode.multiple,
       crossAxisCount: 3,
       childAspectRatio: 2.5,
