@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'button_demo_page.dart';
 import 'leyoujia/leyoujia_page.dart';
 import 'zillow/house_page.dart';
 
@@ -158,6 +159,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               },
               child: Text(l10n?.realEstate ?? ''),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ButtonDemoPage(),
+                  ),
+                );
+              },
+              child: const Text('DropdownSelectorButton'),
             ),
           ],
         ),

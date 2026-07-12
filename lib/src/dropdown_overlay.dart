@@ -21,6 +21,7 @@ class DropdownOverlay extends StatelessWidget {
     this.style,
     this.animation,
     this.onOverlayTap,
+    this.alignment = Alignment.topCenter,
   });
 
   /// The content displayed inside the overlay.
@@ -33,6 +34,13 @@ class DropdownOverlay extends StatelessWidget {
   final Animation<double>? animation;
 
   final GestureTapCallback? onOverlayTap;
+
+  /// Horizontal/vertical alignment of the overlay content within the backdrop.
+  ///
+  /// Defaults to [Alignment.topCenter], which matches [DropdownSelectorBar].
+  /// [DropdownSelectorButton] uses [Alignment.topLeft] so the panel anchors
+  /// under the trigger instead of being centered on screen.
+  final AlignmentGeometry alignment;
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +77,7 @@ class DropdownOverlay extends StatelessWidget {
             },
             behavior: HitTestBehavior.opaque,
             child: Align(
-              alignment: Alignment.topCenter,
+              alignment: alignment,
               child: FadeTransition(
                 opacity: effectiveAnimation,
                 child: SizeTransition(

@@ -8,7 +8,8 @@ import 'selector/selector_theme_data.dart';
 /// Add this extension to your app theme to override default tab bar visuals
 /// and overlay styles.
 @immutable
-class DropdownSelectorBarTheme extends ThemeExtension<DropdownSelectorBarTheme> {
+class DropdownSelectorBarTheme
+    extends ThemeExtension<DropdownSelectorBarTheme> {
   const DropdownSelectorBarTheme({
     this.height,
     this.backgroundColor,

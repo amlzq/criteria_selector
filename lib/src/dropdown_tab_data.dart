@@ -6,7 +6,7 @@ class DropdownTabData {
   final int index;
 
   /// Original label provided by the tab (before any result is applied).
-  final String? originalLabel;
+  String? originalLabel;
 
   /// Optional tag for identifying the tab.
   final String? tag;
