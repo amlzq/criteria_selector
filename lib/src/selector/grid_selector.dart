@@ -22,11 +22,13 @@ import 'widgets/widgets.dart';
 /// - In multi-selection mode, the action bar is shown and "Apply" produces the
 ///   final clipped selection tree.
 class GridSelectorView extends StatefulWidget {
+  final GridSelector selector;
   final List<SelectorEntry> entries;
   final Set<SelectorEntry>? previousSelected;
 
   const GridSelectorView({
     super.key,
+    required this.selector,
     required this.entries,
     required this.previousSelected,
   });
@@ -88,14 +90,14 @@ class GridSelectorViewState extends State<GridSelectorView> {
     }
   }
 
-  GridSelector? get selector => controller?.selector as GridSelector;
+  GridSelector get selector => widget.selector;
 
   void _handleSelectorControllerTick() {
     if (mounted) setState(() {});
   }
 
   /// Selection Mode for category entries
-  SelectionMode? get categorySelectionMode => selector?.selectionMode;
+  SelectionMode? get categorySelectionMode => selector.selectionMode;
 
   /// Selection Mode for the selected category sub-items
   SelectionMode get childrenSelectionMode =>
@@ -190,11 +192,11 @@ class GridSelectorViewState extends State<GridSelectorView> {
           controller?.selectedEntriesForParent(category.id, level: 1) ?? {};
       return SelectorGridView(
         key: ValueKey('category_$index'),
-        crossAxisCount: selector!.crossAxisCount,
-        childAspectRatio: selector!.childAspectRatio,
-        mainAxisSpacing: selector!.mainAxisSpacing,
-        crossAxisSpacing: selector!.crossAxisSpacing,
-        tileVariant: selector?.gridTileTheme?.variant,
+        crossAxisCount: selector.crossAxisCount,
+        childAspectRatio: selector.childAspectRatio,
+        mainAxisSpacing: selector.mainAxisSpacing,
+        crossAxisSpacing: selector.crossAxisSpacing,
+        tileVariant: selector.gridTileTheme?.variant,
         entries: entries,
         selectedEntries: selectedEntries,
         // inputListener: _inputListener,
@@ -229,16 +231,16 @@ class GridSelectorViewState extends State<GridSelectorView> {
           ),
         ),
         if (SelectionMode.multiple == selectorSelectionMode)
-          selector?.actionBarBuilder?.call(
+          selector.actionBarBuilder?.call(
                 context,
                 onResetTap: _onResetTap,
                 onApplyTap: _onApplyTap,
               ) ??
               SelectorActionBar(
-                resetText: selector?.resetText,
-                applyText: selector?.applyText,
-                resetFlex: selector?.actionBarTheme?.resetFlex,
-                applyFlex: selector?.actionBarTheme?.applyFlex,
+                resetText: selector.resetText,
+                applyText: selector.applyText,
+                resetFlex: selector.actionBarTheme?.resetFlex,
+                applyFlex: selector.actionBarTheme?.applyFlex,
                 onResetTap: _onResetTap,
                 onApplyTap: _onApplyTap,
               ),

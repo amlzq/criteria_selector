@@ -4,6 +4,7 @@ import 'constants.dart';
 import 'dropselect_result.dart';
 import 'dropselect_tab_data.dart';
 import 'selector.dart';
+import 'selector/selector_controller.dart';
 import 'selector_entry.dart';
 import 'selector_utils.dart';
 
@@ -83,6 +84,20 @@ class DropselectTabController extends ChangeNotifier {
 
   /// The selector previously used for the overlay.
   Selector? previousSelector;
+
+  /// The [SelectorController] for the currently active selector panel, if any.
+  ///
+  /// Created when a selector is shown (see [_showSelector]) and disposed when
+  /// the overlay is hidden. Exposed so that [DropselectTabBar] can pass it to
+  /// [SelectorPanel] via its `controller` parameter.
+  SelectorController? get selectorController => _selectorController;
+  SelectorController? _selectorController;
+
+  /// Localized "Multiple" text used when building apply result labels.
+  ///
+  /// Injected by [DropselectTabBar] from the active localizations before the
+  /// overlay is shown.
+  String? applyMultipleText;
 
   List<Selector>? _selectors;
 
@@ -192,11 +207,13 @@ class DropselectTabController extends ChangeNotifier {
       if (immediate) {
         _overlayAnimCtrl?.value = 0.0;
         _safePortalHide();
+        _disposeSelectorController();
       }
       return;
     }
 
     if (!_isExpanded && !portalCtrl.isShowing) {
+      _disposeSelectorController();
       return;
     }
 
@@ -206,6 +223,7 @@ class DropselectTabController extends ChangeNotifier {
     if (immediate) {
       _overlayAnimCtrl?.value = 0.0;
       _safePortalHide();
+      _disposeSelectorController();
       notifyListeners();
       return;
     }
@@ -213,12 +231,14 @@ class DropselectTabController extends ChangeNotifier {
     final animCtrl = _overlayAnimCtrl;
     if (animCtrl == null) {
       _safePortalHide();
+      _disposeSelectorController();
       notifyListeners();
       return;
     }
 
     if (!portalCtrl.isShowing) {
       animCtrl.value = 0.0;
+      _disposeSelectorController();
       return;
     }
 
@@ -227,6 +247,7 @@ class DropselectTabController extends ChangeNotifier {
       if (portalCtrl.isShowing) {
         _safePortalHide();
       }
+      _disposeSelectorController();
       notifyListeners();
     });
   }
@@ -237,6 +258,9 @@ class DropselectTabController extends ChangeNotifier {
 
     currentIndex = index;
     _isExpanded = true;
+
+    // Create (or refresh) the SelectorController for this selector session.
+    _createSelectorController();
 
     _ensureOverlayAnimationController();
     final animCtrl = _overlayAnimCtrl;
@@ -250,6 +274,33 @@ class DropselectTabController extends ChangeNotifier {
 
     animCtrl?.value = 1.0;
     notifyListeners();
+  }
+
+  /// Creates a [SelectorController] bound to [previousSelector] and wires the
+  /// change/apply/reset listeners to this controller's handlers.
+  ///
+  /// Any previously created controller is disposed first.
+  void _createSelectorController() {
+    _disposeSelectorController();
+    final selector = previousSelector;
+    if (selector == null) return;
+    final ctrl = SelectorController(
+      selectionMode: selector.selectionMode,
+      previousSelected: selector.selectedData,
+      resetSelected: selector.resetData,
+    );
+    ctrl.addChangeListener(handleChange);
+    ctrl.addApplyListener(
+        (selected) => handleApply(selected, applyMultipleText ?? 'Multiple'));
+    ctrl.addResetListener(handleReset);
+    _selectorController = ctrl;
+  }
+
+  /// Disposes the current [SelectorController], if any.
+  void _disposeSelectorController() {
+    final ctrl = _selectorController;
+    _selectorController = null;
+    ctrl?.dispose();
   }
 
   /// Dispatches a selection change event.
@@ -308,10 +359,8 @@ class DropselectTabController extends ChangeNotifier {
     final selector = _selectorAt(tabIndex);
     if (selector == null) return false;
 
-    Future<SelectorEntries>? dataFuture = selector.data;
-    dataFuture ??= selector.dataFetcher?.call();
+    final dataFuture = selector.data;
     if (dataFuture == null) return false;
-    selector.data ??= dataFuture;
 
     late final SelectorEntries entries;
     try {
@@ -344,15 +393,10 @@ class DropselectTabController extends ChangeNotifier {
 
     previousSelector = selector;
 
-    Future<SelectorEntries>? dataFuture = selector.data;
-    dataFuture ??= selector.dataFetcher?.call();
+    final dataFuture = selector.data;
     if (dataFuture == null) return false;
-    selector.data ??= dataFuture;
 
-    final resetDataFetcher = selector.resetDataFetcher;
-    if (resetDataFetcher != null) {
-      selector.resetData ??= resetDataFetcher.call();
-    }
+    selector.resetData;
 
     late final SelectorEntries entries;
     try {

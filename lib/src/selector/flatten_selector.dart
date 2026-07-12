@@ -27,6 +27,7 @@ import 'widgets/widgets.dart';
 class FlattenSelectorView extends StatefulWidget {
   const FlattenSelectorView({
     super.key,
+    required this.selector,
     required this.entries,
     required this.previousSelected,
     required this.crossAxisCount,
@@ -34,6 +35,8 @@ class FlattenSelectorView extends StatefulWidget {
     this.crossAxisSpacing = 0.0,
     this.childAspectRatio = 1.0,
   });
+
+  final FlattenSelector selector;
 
   final List<SelectorEntry> entries;
 
@@ -91,7 +94,7 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
     );
   }
 
-  FlattenSelector? get selector => controller?.selector as FlattenSelector;
+  FlattenSelector get selector => widget.selector;
 
   void _handleSelectorControllerTick() {
     if (mounted) setState(() {});
@@ -110,7 +113,7 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
   }
 
   /// Selection Mode for category entries
-  SelectionMode? get categorySelectionMode => selector?.selectionMode;
+  SelectionMode? get categorySelectionMode => selector.selectionMode;
 
   SelectorCategoryEntry? get selectedCategory =>
       widget.entries.elementAtOrNull(_tempSelectedCategoryIndex)
@@ -305,7 +308,7 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
     final terminalBackgroundColor = theme.backgroundColorHigh;
 
     final effectiveSelectedColor =
-        selector?.selectedColor ?? theme.selectedColor;
+        selector.selectedColor ?? theme.selectedColor;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -317,7 +320,7 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
               // Left category list
               SelectorSideBar(
                 isScrollable: true,
-                width: selector?.sideBarTheme?.width,
+                width: selector.sideBarTheme?.width,
                 backgroundColor: categoryBackgroundColor,
                 selectedColor: effectiveSelectedColor,
                 selectedTileColor: terminalBackgroundColor,
@@ -355,7 +358,7 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
                           childAspectRatio: widget.childAspectRatio,
                           mainAxisSpacing: widget.mainAxisSpacing,
                           crossAxisSpacing: widget.crossAxisSpacing,
-                          tileVariant: selector?.gridTileTheme?.variant,
+                          tileVariant: selector.gridTileTheme?.variant,
                           category: category,
                           entries: entries,
                           selectedEntries: selectedEntries,
@@ -374,16 +377,16 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
           ),
         ),
         if (SelectionMode.multiple == selectorSelectionMode)
-          selector?.actionBarBuilder?.call(
+          selector.actionBarBuilder?.call(
                 context,
                 onResetTap: _onResetTap,
                 onApplyTap: _onApplyTap,
               ) ??
               SelectorActionBar(
-                resetText: selector?.resetText,
-                applyText: selector?.applyText,
-                resetFlex: selector?.actionBarTheme?.resetFlex,
-                applyFlex: selector?.actionBarTheme?.applyFlex,
+                resetText: selector.resetText,
+                applyText: selector.applyText,
+                resetFlex: selector.actionBarTheme?.resetFlex,
+                applyFlex: selector.actionBarTheme?.applyFlex,
                 onResetTap: _onResetTap,
                 onApplyTap: _onApplyTap,
               ),
@@ -396,12 +399,15 @@ class PlattenSelectorSkeleton extends StatelessWidget {
   /// Loading skeleton for [FlattenSelectorView].
   const PlattenSelectorSkeleton({
     super.key,
+    required this.selector,
     this.categoryBackgroundColor,
     required this.crossAxisCount,
     this.mainAxisSpacing = 0.0,
     this.crossAxisSpacing = 0.0,
     this.childAspectRatio = 1.0,
   });
+
+  final FlattenSelector selector;
 
   final Color? categoryBackgroundColor;
 
@@ -413,8 +419,6 @@ class PlattenSelectorSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = SelectorTheme.of(context);
-    final controller = SelectorController.of(context);
-    final selector = controller?.selector as FlattenSelector;
 
     final categoryBackgroundColor = theme.backgroundColor;
 

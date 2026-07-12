@@ -12,11 +12,13 @@ import 'widgets/widgets.dart';
 ///
 /// Suitable for "sorting", etc.
 class ListSelectorView extends StatefulWidget {
+  final ListSelector selector;
   final List<SelectorEntry> entries;
   final Set<SelectorEntry>? previousSelected;
 
   const ListSelectorView({
     super.key,
+    required this.selector,
     required this.entries,
     required this.previousSelected,
   });
@@ -61,7 +63,7 @@ class ListSelectorViewState extends State<ListSelectorView> {
     );
   }
 
-  ListSelector? get selector => controller?.selector as ListSelector;
+  ListSelector get selector => widget.selector;
 
   void _handleSelectorControllerTick() {
     if (mounted) setState(() {});
@@ -160,7 +162,7 @@ class ListSelectorViewState extends State<ListSelectorView> {
 
     // final listTileTheme = selector?.listTileTheme;
     // final gridTileTheme = selector?.gridTileTheme;
-    final chipBarTheme = selector?.chipBarTheme;
+    final chipBarTheme = selector.chipBarTheme;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -214,7 +216,7 @@ class ListSelectorViewState extends State<ListSelectorView> {
                                     childAspectRatio:
                                         gridConfig.childAspectRatio,
                                     tileVariant:
-                                        selector?.gridTileTheme?.variant,
+                                        selector.gridTileTheme?.variant,
                                     category: category,
                                     showTitle: false,
                                     entries: entries,
@@ -257,21 +259,21 @@ class ListSelectorViewState extends State<ListSelectorView> {
                   selectedEntries: controller?.selectedEntriesAtLevel(0) ?? {},
                   onItemTap: (_, entry) =>
                       _onTerminalItemTap(entry as SelectorChildEntry),
-                  radioBuilder: selector?.radioBuilder,
-                  checkboxBuilder: selector?.checkboxBuilder,
+                  radioBuilder: selector.radioBuilder,
+                  checkboxBuilder: selector.checkboxBuilder,
                 ),
         ),
         if (SelectionMode.multiple == selectionMode)
-          selector?.actionBarBuilder?.call(
+          selector.actionBarBuilder?.call(
                 context,
                 onResetTap: _onResetTap,
                 onApplyTap: _onApplyTap,
               ) ??
               SelectorActionBar(
-                resetText: selector?.resetText,
-                applyText: selector?.applyText,
-                resetFlex: selector?.actionBarTheme?.resetFlex,
-                applyFlex: selector?.actionBarTheme?.applyFlex,
+                resetText: selector.resetText,
+                applyText: selector.applyText,
+                resetFlex: selector.actionBarTheme?.resetFlex,
+                applyFlex: selector.actionBarTheme?.applyFlex,
                 onResetTap: _onResetTap,
                 onApplyTap: _onApplyTap,
               ),

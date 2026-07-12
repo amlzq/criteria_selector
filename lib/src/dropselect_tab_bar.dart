@@ -10,6 +10,7 @@ import 'dropselect_tab_controller.dart';
 import 'dropselect_tab_data.dart';
 import 'i18n/localizations.dart';
 import 'selector.dart';
+import 'selector/selector_panel.dart';
 import 'selector/selector_theme_data.dart';
 
 /// Default height for [DropselectTabBar] when no theme override is provided.
@@ -192,21 +193,6 @@ class _DropselectTabBarState extends State<DropselectTabBar>
     final selector = widget.selectors.elementAt(tabData.index);
     _controller!.previousSelector = selector;
 
-    final data = selector.dataFetcher?.call();
-    if (data != null) {
-      selector.data = data;
-    }
-
-    final selectedDataFetcher = selector.selectedDataFetcher;
-    if (selectedDataFetcher != null) {
-      selector.selectedData = selectedDataFetcher.call();
-    }
-
-    final resetDataFetcher = selector.resetDataFetcher;
-    if (resetDataFetcher != null) {
-      selector.resetData = resetDataFetcher.call();
-    }
-
     _controller!.toggleSelector(index: tabData.index);
 
     if (_controller!.isSelectorShowing) {
@@ -287,6 +273,8 @@ class _DropselectTabBarState extends State<DropselectTabBar>
 
     final effectiveMultipleText = localizations?.multiple ?? 'Multiple';
 
+    _controller!.applyMultipleText = effectiveMultipleText;
+
     return DropselectTabControllerProvider(
       controller: _controller,
       child: CompositedTransformTarget(
@@ -299,21 +287,18 @@ class _DropselectTabBarState extends State<DropselectTabBar>
               showWhenUnlinked: false,
               offset: Offset(0, height),
               child: DropselectOverlay(
-                selector: _controller!.previousSelector!,
+                availableHeight: _overlayAvailableHeight,
                 style: overlayStyle,
                 animation: _controller!.overlayAnimation,
-                onChangeTap: _controller!.handleChange,
-                onApplyTap: (selected) => _controller!.handleApply(
-                  selected,
-                  effectiveMultipleText,
-                ),
-                onResetTap: _controller!.handleReset,
                 onOverlayTap: () {
                   // FocusScope.of(context).unfocus();
                   _controller!.hideSelector();
                 },
-                availableHeight: _overlayAvailableHeight,
-                selectorTheme: effectiveSelectorTheme,
+                child: SelectorPanel(
+                  controller: _controller!.selectorController,
+                  selector: _controller!.previousSelector!,
+                  selectorTheme: effectiveSelectorTheme,
+                ),
               ),
             );
           },

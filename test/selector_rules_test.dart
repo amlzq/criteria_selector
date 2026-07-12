@@ -46,7 +46,7 @@ void main() {
       final c = _category('c', 'C', children: {a, b});
 
       final controller = SelectorController(
-        selector: FlattenSelector(crossAxisCount: 3),
+        selectionMode: SelectionMode.single,
       );
       controller.bindState([c], initializeAnyIfEmpty: true);
 
@@ -70,7 +70,7 @@ void main() {
       final c = _category('c', 'C', children: {any, custom, a});
 
       final controller = SelectorController(
-        selector: FlattenSelector(crossAxisCount: 3),
+        selectionMode: SelectionMode.single,
       );
       controller.bindState([c], initializeAnyIfEmpty: true);
 
@@ -103,7 +103,7 @@ void main() {
       final c = _category('c', 'C', children: {parent});
 
       final controller = SelectorController(
-        selector: CascadingSelector(),
+        selectionMode: SelectionMode.single,
       );
       controller.bindState([c], initializeAnyIfEmpty: false);
 
@@ -126,7 +126,7 @@ void main() {
       );
 
       final controller = SelectorController(
-        selector: FlattenSelector(crossAxisCount: 3),
+        selectionMode: SelectionMode.single,
       );
       controller.bindState([c], initializeAnyIfEmpty: false);
 
@@ -151,7 +151,7 @@ void main() {
       );
 
       final controller = SelectorController(
-        selector: FlattenSelector(crossAxisCount: 3),
+        selectionMode: SelectionMode.single,
       );
       controller.bindState([c], initializeAnyIfEmpty: false);
 
@@ -176,7 +176,7 @@ void main() {
       );
 
       final controller = SelectorController(
-        selector: FlattenSelector(crossAxisCount: 3),
+        selectionMode: SelectionMode.single,
       );
       controller.bindState([c], initializeAnyIfEmpty: false);
 
@@ -198,7 +198,7 @@ void main() {
       );
 
       final controller = SelectorController(
-        selector: FlattenSelector(crossAxisCount: 3),
+        selectionMode: SelectionMode.single,
       );
       controller.bindState([c], initializeAnyIfEmpty: false);
 

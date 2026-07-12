@@ -14,6 +14,7 @@ export 'src/dropselect_tab_data.dart';
 export 'src/i18n/localizations_delegate.dart';
 export 'src/selector.dart';
 export 'src/selector/selector_controller.dart';
+export 'src/selector/selector_panel.dart';
 export 'src/selector/selector_theme.dart';
 export 'src/selector/selector_theme_data.dart';
 export 'src/selector/widgets/widgets.dart';

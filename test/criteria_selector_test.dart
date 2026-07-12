@@ -254,7 +254,7 @@ void main() {
 
       final selector = CascadingSelector(selectionMode: SelectionMode.multiple);
       final controller = SelectorController(
-        selector: selector,
+        selectionMode: SelectionMode.multiple,
       );
 
       await tester.pumpWidget(
@@ -323,7 +323,9 @@ void main() {
       };
 
       final selector = CascadingSelector(selectionMode: SelectionMode.multiple);
-      final controller = SelectorController(selector: selector);
+      final controller = SelectorController(
+        selectionMode: SelectionMode.multiple,
+      );
 
       await tester.pumpWidget(
         MaterialApp(

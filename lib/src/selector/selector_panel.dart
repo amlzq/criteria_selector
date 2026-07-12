@@ -7,74 +7,146 @@ import 'selector_controller.dart';
 import 'selector_theme.dart';
 import 'selector_theme_data.dart';
 
-/// Content widget rendered inside the dropselect overlay.
+/// A widget that renders a [Selector] and manages its selection state.
 ///
-/// This widget:
-/// - Creates a [SelectorController] and exposes it via [SelectorControllerProvider].
-/// - Applies [selectorTheme] via [SelectorTheme] for selector widgets.
-/// - Awaits [Selector.data] (typically assigned before showing the overlay) and
-///   renders the selector body or skeleton accordingly.
+/// The panel loads [Selector.data] and displays the selector body once the data
+/// is available, or a skeleton while it is loading. Selector widgets rendered by
+/// the panel are styled according to [selectorTheme].
 ///
-/// Selection events are forwarded through [onChangeTap], [onApplyTap], and
-/// [onResetTap] by the underlying selector views.
+/// The selection state is driven by a [SelectorController]. If [controller] is
+/// omitted, the panel creates and owns an internal controller. In both cases
+/// (an internal controller or a caller-provided one), the panel forwards
+/// selection events through the [onChangeTap], [onApplyTap] and [onResetTap]
+/// callbacks. When [controller] is provided, the caller still owns it and can
+/// drive the selection programmatically (for example, with
+/// [SelectorController.select]); the panel-level callbacks are fired in addition
+/// to any listeners registered directly on the controller.
+///
+/// The active controller is exposed to descendants via
+/// [SelectorControllerProvider].
 class SelectorPanel extends StatefulWidget {
   const SelectorPanel({
     super.key,
     required this.selector,
+    this.controller,
     this.onChangeTap,
     this.onApplyTap,
     this.onResetTap,
     this.selectorTheme,
+    this.errorBuilder,
   });
 
   final Selector selector;
 
+  /// Optional controller that drives the selection state.
+  ///
+  /// When provided, callers can call [SelectorController.select] and other
+  /// methods from outside the panel. The panel will not dispose a controller
+  /// that it did not create.
+  ///
+  /// When a controller is supplied, the panel-level [onChangeTap],
+  /// [onApplyTap] and [onResetTap] callbacks are forwarded in addition to any
+  /// listeners registered directly on the controller. The panel will not
+  /// dispose a controller that it did not create.
+  final SelectorController? controller;
+
+  /// Fired when the selection changes.
+  ///
+  /// Forwarded in both cases, whether [controller] is provided or not.
   final SelectorCallback? onChangeTap;
 
+  /// Fired when the selection is applied.
+  ///
+  /// Forwarded in both cases, whether [controller] is provided or not.
   final SelectorCallback? onApplyTap;
 
+  /// Fired when reset is triggered.
+  ///
+  /// Forwarded in both cases, whether [controller] is provided or not.
   final VoidCallback? onResetTap;
 
   final SelectorThemeData? selectorTheme;
+
+  /// Optional builder invoked when [Selector.data] fails to load.
+  ///
+  /// When omitted, a simple [Text] widget showing the error is rendered.
+  final Widget Function(Object error, StackTrace? stackTrace)? errorBuilder;
 
   @override
   State<SelectorPanel> createState() => _SelectorPanelState();
 }
 
 class _SelectorPanelState extends State<SelectorPanel> {
-  late SelectorController _controller;
+  SelectorController? _internalController;
+  final List<VoidCallback> _unregister = [];
+
+  SelectorController get _controller =>
+      widget.controller ?? _internalController!;
 
   @override
   void initState() {
     super.initState();
-    _controller = _createController();
+    if (widget.controller == null) {
+      _createInternalController();
+    }
+    _registerForwardingListeners();
+  }
+
+  void _createInternalController() {
+    _internalController = SelectorController(
+      selectionMode: widget.selector.selectionMode,
+      previousSelected: widget.selector.selectedData,
+      resetSelected: widget.selector.resetData,
+    );
+  }
+
+  /// Forwards the panel-level callbacks on the active controller, whether it is
+  /// the internal one or a caller-provided one. Listeners are re-registered
+  /// whenever the effective controller instance changes.
+  void _registerForwardingListeners() {
+    _unregister.add(_controller.addChangeListener((selected) {
+      widget.onChangeTap?.call(selected);
+    }));
+    _unregister.add(_controller.addApplyListener((selected) {
+      widget.onApplyTap?.call(selected);
+    }));
+    _unregister.add(_controller.addResetListener(() {
+      widget.onResetTap?.call();
+    }));
+  }
+
+  void _unregisterForwardingListeners() {
+    for (final u in _unregister) {
+      u();
+    }
+    _unregister.clear();
+  }
+
+  void _disposeInternalController() {
+    _internalController?.dispose();
+    _internalController = null;
   }
 
   @override
   void didUpdateWidget(covariant SelectorPanel oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.selector != widget.selector ||
-        oldWidget.onChangeTap != widget.onChangeTap ||
-        oldWidget.onApplyTap != widget.onApplyTap ||
-        oldWidget.onResetTap != widget.onResetTap) {
-      _controller.dispose();
-      _controller = _createController();
+    if (widget.controller != oldWidget.controller) {
+      _unregisterForwardingListeners();
+      if (oldWidget.controller == null) {
+        _disposeInternalController();
+      }
+      if (widget.controller == null) {
+        _createInternalController();
+      }
+      _registerForwardingListeners();
     }
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _unregisterForwardingListeners();
+    _disposeInternalController();
     super.dispose();
-  }
-
-  SelectorController _createController() {
-    return SelectorController(
-      selector: widget.selector,
-      changeCallback: widget.onChangeTap,
-      applyCallback: widget.onApplyTap,
-      resetCallback: widget.onResetTap,
-    );
   }
 
   @override
@@ -89,38 +161,28 @@ class _SelectorPanelState extends State<SelectorPanel> {
           child: FutureBuilder<SelectorEntries>(
             future: widget.selector.data,
             builder: (context, snapshot) {
-              debugPrint('selector data state ${snapshot.connectionState}');
               if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasError) {
-                  debugPrint(
-                      'Error: ${snapshot.error}\n${snapshot.stackTrace}');
-                  // Request failed: show error
-                  return Text("Error: ${snapshot.error}");
+                  final error = snapshot.error!;
+                  final builder = widget.errorBuilder;
+                  if (builder != null) {
+                    return builder(error, snapshot.stackTrace);
+                  }
+                  return Center(child: Text('Error: $error'));
                 } else {
-                  // return controller.selector.buildSkeleton(context);
-
-                  // Request succeeded: show data
                   final entries = snapshot.data?.toList() ?? <SelectorEntry>[];
-                  // final controller = SelectorController(
-                  //   selector: widget.selector,
-                  //   changeCallback: widget.onChangeTap,
-                  //   applyCallback: widget.onApplyTap,
-                  //   resetCallback: widget.onResetTap,
-                  // );
-                  debugPrint('entries length: ${entries.length}');
                   return GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: () {
-                      debugPrint('selector taped');
                       FocusScope.of(context).unfocus();
                     },
-                    child: _controller.selector.buildBody(
+                    child: widget.selector.buildBody(
                         context, entries, _controller.previousSelected),
                   );
                 }
               } else {
                 // Request in progress: show loading
-                return _controller.selector.buildSkeleton(context);
+                return widget.selector.buildSkeleton(context);
               }
             },
           ),

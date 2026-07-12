@@ -1,48 +1,38 @@
 import 'package:flutter/material.dart';
 
-import 'constants.dart';
 import 'dropselect_overlay_style.dart';
-import 'selector.dart';
-import 'selector/selector_panel.dart';
-import 'selector/selector_theme_data.dart';
 
 const kDropselectOverlayMaxHeightFactor = 0.7;
 
-/// Overlay container that hosts a [SelectorPanel].
+/// Overlay container that hosts an arbitrary [child] widget (typically a
+/// [SelectorPanel]).
 ///
-/// This widget is typically displayed by [DropselectTabBar] via
+/// This widget is responsible only for the overlay backdrop, expand/collapse
+/// animation, and max-height constraint. The content is supplied by the caller
+/// via [child], keeping this widget a pure container.
+///
+/// It is typically displayed by [DropselectTabBar] via
 /// [DropselectTabController].
 class DropselectOverlay extends StatelessWidget {
   const DropselectOverlay({
     super.key,
-    required this.selector,
-    required this.style,
-    this.animation,
-    this.onChangeTap,
-    this.onApplyTap,
-    this.onResetTap,
-    this.onOverlayTap,
+    required this.child,
     required this.availableHeight,
-    this.selectorTheme,
+    this.style,
+    this.animation,
+    this.onOverlayTap,
   });
 
-  final Selector selector;
+  /// The content displayed inside the overlay.
+  final Widget child;
+
+  final double availableHeight;
 
   final DropselectOverlayStyle? style;
 
   final Animation<double>? animation;
 
-  final SelectorCallback? onChangeTap;
-
-  final SelectorCallback? onApplyTap;
-
-  final VoidCallback? onResetTap;
-
   final GestureTapCallback? onOverlayTap;
-
-  final double availableHeight;
-
-  final SelectorThemeData? selectorTheme;
 
   @override
   Widget build(BuildContext context) {
@@ -63,20 +53,13 @@ class DropselectOverlay extends StatelessWidget {
       animation: effectiveAnimation,
       child: ConstrainedBox(
         constraints: BoxConstraints(maxHeight: maxHeight),
-        child: SelectorPanel(
-          selector: selector,
-          onChangeTap: onChangeTap,
-          onApplyTap: onApplyTap,
-          onResetTap: onResetTap,
-          selectorTheme: selectorTheme,
-        ),
+        child: child,
       ),
       builder: (context, child) {
         final t = effectiveAnimation.value;
         final barrierColor =
             Color.lerp(Colors.transparent, effectiveBackgroundColor, t) ??
                 effectiveBackgroundColor;
-
         return Material(
           color: barrierColor,
           child: GestureDetector(

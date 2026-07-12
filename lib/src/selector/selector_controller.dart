@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
-import '../selector.dart';
 import '../selector_entry.dart';
 import 'state/selector_selection_rules.dart';
 import 'state/selector_state_snapshot.dart';
@@ -10,36 +9,71 @@ import 'state/selector_state_tree.dart';
 
 /// Controller for a single [Selector] instance.
 ///
-/// This controller exposes the selector configuration and forwards user actions
-/// (change/apply/reset) to the callbacks provided by the owner widget.
+/// This controller manages selector state and forwards user actions
+/// (change/apply/reset) to listeners registered via [addChangeListener],
+/// [addApplyListener], and [addResetListener].
+///
+/// The selection behavior ([selectionMode]) and the initial/reset selection
+/// state ([previousSelected]/[resetSelected]) are injected as plain data at
+/// construction time. The controller does not depend on the [Selector]
+/// configuration class.
 class SelectorController extends ChangeNotifier {
-  final Selector selector;
-
-  final SelectorCallback? changeCallback;
-
-  final SelectorCallback? applyCallback;
-
-  final VoidCallback? resetCallback;
+  final SelectionMode selectionMode;
+  final SelectorEntries? previousSelected;
+  final SelectorEntries? resetSelected;
 
   final SelectorStateTree stateTree = SelectorStateTree();
   final SelectorSelectionRules _selectionRules = const SelectorSelectionRules();
   bool _isDisposed = false;
 
+  final List<SelectorCallback> _changeListeners = [];
+  final List<SelectorCallback> _applyListeners = [];
+  final List<VoidCallback> _resetListeners = [];
+
   SelectorController({
-    required this.selector,
-    this.changeCallback,
-    this.applyCallback,
-    this.resetCallback,
+    required this.selectionMode,
+    this.previousSelected,
+    this.resetSelected,
   });
 
-  /// Selector selection mode; controls how category (level-1) entries are selected
-  SelectionMode get selectionMode => selector.selectionMode;
+  /// Registers a listener to be called when the selection changes.
+  ///
+  /// Returns a [VoidCallback] that unregisters the listener when called.
+  VoidCallback addChangeListener(SelectorCallback listener) {
+    _changeListeners.add(listener);
+    return () => removeChangeListener(listener);
+  }
 
-  /// Previous selection
-  SelectorEntries? get previousSelected => selector.selectedData;
+  /// Unregisters a previously registered change listener.
+  void removeChangeListener(SelectorCallback listener) {
+    _changeListeners.remove(listener);
+  }
 
-  /// Reset selection
-  SelectorEntries? get resetSelected => selector.resetData;
+  /// Registers a listener to be called when the selection is applied.
+  ///
+  /// Returns a [VoidCallback] that unregisters the listener when called.
+  VoidCallback addApplyListener(SelectorCallback listener) {
+    _applyListeners.add(listener);
+    return () => removeApplyListener(listener);
+  }
+
+  /// Unregisters a previously registered apply listener.
+  void removeApplyListener(SelectorCallback listener) {
+    _applyListeners.remove(listener);
+  }
+
+  /// Registers a listener to be called when reset is triggered.
+  ///
+  /// Returns a [VoidCallback] that unregisters the listener when called.
+  VoidCallback addResetListener(VoidCallback listener) {
+    _resetListeners.add(listener);
+    return () => removeResetListener(listener);
+  }
+
+  /// Unregisters a previously registered reset listener.
+  void removeResetListener(VoidCallback listener) {
+    _resetListeners.remove(listener);
+  }
 
   bool get isDisposed => _isDisposed;
 
@@ -469,34 +503,26 @@ class SelectorController extends ChangeNotifier {
     return true;
   }
 
-  /// Notifies listeners that the selection changed.
+  /// Notifies all registered change listeners that the selection changed.
   void change(SelectorEntries selected) {
-    changeCallback?.call(selected);
+    for (final listener in List.of(_changeListeners)) {
+      listener(selected);
+    }
   }
 
-  /// Notifies listeners that the selection was applied.
+  /// Notifies all registered apply listeners that the selection was applied.
   void apply(SelectorEntries selected) {
-    applyCallback?.call(selected);
+    for (final listener in List.of(_applyListeners)) {
+      listener(selected);
+    }
   }
 
-  /// Notifies listeners that reset was requested.
+  /// Notifies all registered reset listeners that reset was requested.
   void reset() {
-    resetCallback?.call();
+    for (final listener in List.of(_resetListeners)) {
+      listener();
+    }
   }
-
-  // void discard() {
-  //   selecteSubdistricts?.clear();
-  //   previousSubdistrict = null;
-  //   selectedDistricts?.clear();
-  //   previousDistrict = null;
-  //   selectedCities?.clear();
-  //   previousCity = null;
-  // }
-
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  // }
 
   static SelectorController? of(BuildContext context) {
     return context
@@ -506,6 +532,9 @@ class SelectorController extends ChangeNotifier {
 
   @override
   void dispose() {
+    _changeListeners.clear();
+    _applyListeners.clear();
+    _resetListeners.clear();
     _isDisposed = true;
     super.dispose();
   }

@@ -64,17 +64,36 @@ abstract class Selector {
   /// When provided, the selector panel can display a loading skeleton while
   /// awaiting the result.
   final Future<SelectorEntries> Function()? dataFetcher;
-  Future<SelectorEntries>? data;
+
+  Future<SelectorEntries>? _data;
+
+  /// The selectable entries future, lazily initialized from [dataFetcher] on
+  /// first access.
+  Future<SelectorEntries>? get data => _data ??= dataFetcher?.call();
 
   /// Returns the previously selected entries to restore.
   ///
   /// This is typically used for restoring state when reopening the selector.
   final SelectorEntries? Function()? selectedDataFetcher;
-  SelectorEntries? selectedData;
+
+  SelectorEntries? _selectedData;
+
+  /// The previously selected entries, lazily initialized from
+  /// [selectedDataFetcher] on first access.
+  ///
+  /// Can be set explicitly to override the cached value.
+  SelectorEntries? get selectedData =>
+      _selectedData ??= selectedDataFetcher?.call();
+  set selectedData(SelectorEntries? value) => _selectedData = value;
 
   /// Returns the selection that should be used when "Reset" is tapped.
   final SelectorEntries? Function()? resetDataFetcher;
-  SelectorEntries? resetData;
+
+  SelectorEntries? _resetData;
+
+  /// The reset selection entries, lazily initialized from [resetDataFetcher] on
+  /// first access.
+  SelectorEntries? get resetData => _resetData ??= resetDataFetcher?.call();
 
   /// Optional builder to customize the action bar UI.
   final SelectorActionBarBuilder? actionBarBuilder;
@@ -208,6 +227,7 @@ class CascadingSelector extends Selector {
     Set<SelectorEntry>? previousSelected,
   ) {
     return CascadingSelectorView(
+      selector: this,
       entries: entries,
       previousSelected: previousSelected,
     );
@@ -264,6 +284,7 @@ class ListSelector extends Selector {
     Set<SelectorEntry>? previousSelected,
   ) {
     return ListSelectorView(
+      selector: this,
       entries: entries,
       previousSelected: previousSelected,
     );
@@ -328,6 +349,7 @@ class GridSelector extends Selector {
     Set<SelectorEntry>? previousSelected,
   ) {
     return GridSelectorView(
+      selector: this,
       entries: entries,
       previousSelected: previousSelected,
     );
@@ -399,6 +421,7 @@ class FlattenSelector extends Selector {
     Set<SelectorEntry>? previousSelected,
   ) {
     return FlattenSelectorView(
+      selector: this,
       entries: entries,
       previousSelected: previousSelected,
       crossAxisCount: crossAxisCount,
@@ -412,6 +435,7 @@ class FlattenSelector extends Selector {
   Widget buildSkeleton(BuildContext context) {
     return skeletonBuilder?.call(context) ??
         PlattenSelectorSkeleton(
+          selector: this,
           crossAxisCount: crossAxisCount,
           mainAxisSpacing: mainAxisSpacing,
           crossAxisSpacing: crossAxisSpacing,
