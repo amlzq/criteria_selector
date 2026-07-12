@@ -1,3 +1,4 @@
+import 'package:example/leyoujia/dialog_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -18,6 +19,15 @@ class LeyoujiaPage extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => DialogPage()),
+                );
+              },
+              child: Text('Dialog Sheet'),
+            ),
             TextButton(
               onPressed: () {
                 Navigator.push(

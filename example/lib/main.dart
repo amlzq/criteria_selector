@@ -147,12 +147,13 @@ class _MyHomePageState extends State<MyHomePage> {
             TextButton(
               onPressed: () {
                 final locale = Localizations.localeOf(context);
-                final isCN = locale.countryCode == 'CN';
+                final isZhHans =
+                    locale.languageCode == 'zh' && locale.scriptCode == 'Hans';
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        isCN ? const LeyoujiaPage() : const HousePage(),
+                        isZhHans ? const LeyoujiaPage() : const HousePage(),
                   ),
                 );
               },
