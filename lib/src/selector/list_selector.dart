@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
-import '../selector.dart';
+import '../selector_delegate.dart';
 import '../selector_entry.dart';
 import 'selector_controller.dart';
 import 'widgets/widgets.dart';
@@ -12,13 +12,13 @@ import 'widgets/widgets.dart';
 ///
 /// Suitable for "sorting", etc.
 class ListSelectorView extends StatefulWidget {
-  final ListSelector selector;
+  final ListSelectorDelegate delegate;
   final List<SelectorEntry> entries;
   final Set<SelectorEntry>? previousSelected;
 
   const ListSelectorView({
     super.key,
-    required this.selector,
+    required this.delegate,
     required this.entries,
     required this.previousSelected,
   });
@@ -63,7 +63,7 @@ class ListSelectorViewState extends State<ListSelectorView> {
     );
   }
 
-  ListSelector get selector => widget.selector;
+  ListSelectorDelegate get delegate => widget.delegate;
 
   void _handleSelectorControllerTick() {
     if (mounted) setState(() {});
@@ -162,7 +162,7 @@ class ListSelectorViewState extends State<ListSelectorView> {
 
     // final listTileTheme = selector?.listTileTheme;
     // final gridTileTheme = selector?.gridTileTheme;
-    final chipBarTheme = selector.chipBarTheme;
+    final chipBarTheme = delegate.chipBarTheme;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -216,7 +216,7 @@ class ListSelectorViewState extends State<ListSelectorView> {
                                     childAspectRatio:
                                         gridConfig.childAspectRatio,
                                     tileVariant:
-                                        selector.gridTileTheme?.variant,
+                                        delegate.gridTileTheme?.variant,
                                     category: category,
                                     showTitle: false,
                                     entries: entries,
@@ -259,21 +259,21 @@ class ListSelectorViewState extends State<ListSelectorView> {
                   selectedEntries: controller?.selectedEntriesAtLevel(0) ?? {},
                   onItemTap: (_, entry) =>
                       _onTerminalItemTap(entry as SelectorChildEntry),
-                  radioBuilder: selector.radioBuilder,
-                  checkboxBuilder: selector.checkboxBuilder,
+                  radioBuilder: delegate.radioBuilder,
+                  checkboxBuilder: delegate.checkboxBuilder,
                 ),
         ),
         if (SelectionMode.multiple == selectionMode)
-          selector.actionBarBuilder?.call(
+          delegate.actionBarBuilder?.call(
                 context,
                 onResetTap: _onResetTap,
                 onApplyTap: _onApplyTap,
               ) ??
               SelectorActionBar(
-                resetText: selector.resetText,
-                applyText: selector.applyText,
-                resetFlex: selector.actionBarTheme?.resetFlex,
-                applyFlex: selector.actionBarTheme?.applyFlex,
+                resetText: delegate.resetText,
+                applyText: delegate.applyText,
+                resetFlex: delegate.actionBarTheme?.resetFlex,
+                applyFlex: delegate.actionBarTheme?.applyFlex,
                 onResetTap: _onResetTap,
                 onApplyTap: _onApplyTap,
               ),

@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
-import '../selector.dart';
+import '../selector_delegate.dart';
 import '../selector_entry.dart';
 import 'selector_controller.dart';
 import 'selector_theme.dart';
@@ -27,7 +27,7 @@ import 'widgets/widgets.dart';
 class FlattenSelectorView extends StatefulWidget {
   const FlattenSelectorView({
     super.key,
-    required this.selector,
+    required this.delegate,
     required this.entries,
     required this.previousSelected,
     required this.crossAxisCount,
@@ -36,7 +36,7 @@ class FlattenSelectorView extends StatefulWidget {
     this.childAspectRatio = 1.0,
   });
 
-  final FlattenSelector selector;
+  final FlattenSelectorDelegate delegate;
 
   final List<SelectorEntry> entries;
 
@@ -94,13 +94,13 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
     );
   }
 
-  FlattenSelector get selector => widget.selector;
+  FlattenSelectorDelegate get delegate => widget.delegate;
 
   void _handleSelectorControllerTick() {
     if (mounted) setState(() {});
   }
 
-  /// Selection Mode for selector.
+  /// Selection Mode for delegate.
   /// It is jointly determined by the category selection mode and the sub-item selection mode.
   SelectionMode? get selectorSelectionMode {
     if (SelectionMode.multiple == categorySelectionMode) {
@@ -113,7 +113,7 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
   }
 
   /// Selection Mode for category entries
-  SelectionMode? get categorySelectionMode => selector.selectionMode;
+  SelectionMode? get categorySelectionMode => delegate.selectionMode;
 
   SelectorCategoryEntry? get selectedCategory =>
       widget.entries.elementAtOrNull(_tempSelectedCategoryIndex)
@@ -308,7 +308,7 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
     final terminalBackgroundColor = theme.backgroundColorHigh;
 
     final effectiveSelectedColor =
-        selector.selectedColor ?? theme.selectedColor;
+        delegate.selectedColor ?? theme.selectedColor;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -320,7 +320,7 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
               // Left category list
               SelectorSideBar(
                 isScrollable: true,
-                width: selector.sideBarTheme?.width,
+                width: delegate.sideBarTheme?.width,
                 backgroundColor: categoryBackgroundColor,
                 selectedColor: effectiveSelectedColor,
                 selectedTileColor: terminalBackgroundColor,
@@ -358,7 +358,7 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
                           childAspectRatio: widget.childAspectRatio,
                           mainAxisSpacing: widget.mainAxisSpacing,
                           crossAxisSpacing: widget.crossAxisSpacing,
-                          tileVariant: selector.gridTileTheme?.variant,
+                          tileVariant: delegate.gridTileTheme?.variant,
                           category: category,
                           entries: entries,
                           selectedEntries: selectedEntries,
@@ -377,16 +377,16 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
           ),
         ),
         if (SelectionMode.multiple == selectorSelectionMode)
-          selector.actionBarBuilder?.call(
+          delegate.actionBarBuilder?.call(
                 context,
                 onResetTap: _onResetTap,
                 onApplyTap: _onApplyTap,
               ) ??
               SelectorActionBar(
-                resetText: selector.resetText,
-                applyText: selector.applyText,
-                resetFlex: selector.actionBarTheme?.resetFlex,
-                applyFlex: selector.actionBarTheme?.applyFlex,
+                resetText: delegate.resetText,
+                applyText: delegate.applyText,
+                resetFlex: delegate.actionBarTheme?.resetFlex,
+                applyFlex: delegate.actionBarTheme?.applyFlex,
                 onResetTap: _onResetTap,
                 onApplyTap: _onApplyTap,
               ),
@@ -399,7 +399,7 @@ class PlattenSelectorSkeleton extends StatelessWidget {
   /// Loading skeleton for [FlattenSelectorView].
   const PlattenSelectorSkeleton({
     super.key,
-    required this.selector,
+    required this.delegate,
     this.categoryBackgroundColor,
     required this.crossAxisCount,
     this.mainAxisSpacing = 0.0,
@@ -407,7 +407,7 @@ class PlattenSelectorSkeleton extends StatelessWidget {
     this.childAspectRatio = 1.0,
   });
 
-  final FlattenSelector selector;
+  final FlattenSelectorDelegate delegate;
 
   final Color? categoryBackgroundColor;
 
@@ -432,7 +432,7 @@ class PlattenSelectorSkeleton extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SelectorSideBarSkeleton(
-                  width: selector.sideBarTheme?.width,
+                  width: delegate.sideBarTheme?.width,
                   backgroundColor: categoryBackgroundColor,
                 ),
                 Flexible(

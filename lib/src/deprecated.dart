@@ -15,6 +15,7 @@ import 'dropdown_selector_result.dart';
 import 'dropdown_tab_data.dart';
 import 'dropdown_selector_controller.dart';
 import 'dropdown_selector_bar_theme.dart';
+import 'selector_delegate.dart';
 import 'constants.dart';
 
 /// Use [DropdownSelectorBar] instead.
@@ -109,3 +110,38 @@ const double kDropselectTabBarHeight = kDropdownSelectorBarHeight;
 )
 const double kDropselectOverlayMaxHeightFactor =
     kDropdownOverlayMaxHeightFactor;
+
+/// Use [SelectorDelegate] instead.
+@Deprecated(
+  'Renamed to SelectorDelegate. The API and behavior are identical; '
+  'simply rename the type. This alias will be removed in a future major version.',
+)
+typedef Selector = SelectorDelegate;
+
+/// Use [CascadingSelectorDelegate] instead.
+@Deprecated(
+  'Renamed to CascadingSelectorDelegate. The API and behavior are identical; '
+  'simply rename the type. This alias will be removed in a future major version.',
+)
+typedef CascadingSelector = CascadingSelectorDelegate;
+
+/// Use [ListSelectorDelegate] instead.
+@Deprecated(
+  'Renamed to ListSelectorDelegate. The API and behavior are identical; '
+  'simply rename the type. This alias will be removed in a future major version.',
+)
+typedef ListSelector = ListSelectorDelegate;
+
+/// Use [GridSelectorDelegate] instead.
+@Deprecated(
+  'Renamed to GridSelectorDelegate. The API and behavior are identical; '
+  'simply rename the type. This alias will be removed in a future major version.',
+)
+typedef GridSelector = GridSelectorDelegate;
+
+/// Use [FlattenSelectorDelegate] instead.
+@Deprecated(
+  'Renamed to FlattenSelectorDelegate. The API and behavior are identical; '
+  'simply rename the type. This alias will be removed in a future major version.',
+)
+typedef FlattenSelector = FlattenSelectorDelegate;

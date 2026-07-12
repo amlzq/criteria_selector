@@ -297,8 +297,8 @@ class _HousePageState extends State<HousePage> {
                 child: Image.asset('assets/sorting.png', width: 16, height: 16),
               ),
             ],
-            selectors: [
-              GridSelector(
+            selectorDelegates: [
+              GridSelectorDelegate(
                 dataFetcher: _filtersRepo.fetchPriceData,
                 selectedDataFetcher: _filtersRepo.fetchPriceSelectedData,
                 // resetDataFetcher: _filtersRepo.fetchPriceResetData,
@@ -311,7 +311,7 @@ class _HousePageState extends State<HousePage> {
                   variant: SelectorGridTileVariant.outlined,
                 ),
               ),
-              GridSelector(
+              GridSelectorDelegate(
                 dataFetcher: _filtersRepo.fetchRoomsData,
                 selectedDataFetcher: _filtersRepo.fetchRoomsSelectedData,
                 // resetDataFetcher: _filtersRepo.fetchRoomsResetData,
@@ -324,7 +324,7 @@ class _HousePageState extends State<HousePage> {
                   variant: SelectorGridTileVariant.outlined,
                 ),
               ),
-              ListSelector(
+              ListSelectorDelegate(
                 dataFetcher: _filtersRepo.fetchMoreData,
                 selectedDataFetcher: _filtersRepo.fetchMoreSelectedData,
                 resetDataFetcher: _filtersRepo.fetchMoreResetData,
@@ -338,7 +338,7 @@ class _HousePageState extends State<HousePage> {
                   variant: SelectorChipVariant.outlined,
                 ),
               ),
-              ListSelector(
+              ListSelectorDelegate(
                 dataFetcher: _filtersRepo.fetchSortData,
                 selectedDataFetcher: _filtersRepo.fetchSortSelectedData,
                 resetDataFetcher: _filtersRepo.fetchSortResetData,

@@ -44,8 +44,8 @@ void main() {
               tabs: const [
                 DropdownTab(label: 'Filter'),
               ],
-              selectors: [
-                ListSelector(
+              selectorDelegates: [
+                ListSelectorDelegate(
                   dataFetcher: () async => <SelectorEntry<dynamic>>{
                     SelectorTextEntry<dynamic>.name(id: 'a', name: 'A'),
                   },
@@ -91,8 +91,8 @@ void main() {
               tabs: const [
                 DropdownTab(label: 'Sort'),
               ],
-              selectors: [
-                ListSelector(
+              selectorDelegates: [
+                ListSelectorDelegate(
                   dataFetcher: () async => <SelectorEntry<dynamic>>{
                     SelectorTextEntry<dynamic>.name(id: 'a', name: 'A'),
                     SelectorTextEntry<dynamic>.name(id: 'b', name: 'B'),
@@ -138,8 +138,8 @@ void main() {
                   labelGetter: (_) => 'Custom',
                 ),
               ],
-              selectors: [
-                ListSelector(
+              selectorDelegates: [
+                ListSelectorDelegate(
                   dataFetcher: () async => <SelectorEntry<dynamic>>{
                     SelectorTextEntry<dynamic>.name(id: 'a', name: 'A'),
                   },
@@ -180,8 +180,8 @@ void main() {
               tabs: const [
                 DropdownTab(label: 'Multi'),
               ],
-              selectors: [
-                ListSelector(
+              selectorDelegates: [
+                ListSelectorDelegate(
                   selectionMode: SelectionMode.multiple,
                   dataFetcher: () async => <SelectorEntry<dynamic>>{
                     SelectorTextEntry<dynamic>.name(id: 'a', name: 'A'),
@@ -252,7 +252,8 @@ void main() {
         ),
       };
 
-      final selector = CascadingSelector(selectionMode: SelectionMode.multiple);
+      final selector =
+          CascadingSelectorDelegate(selectionMode: SelectionMode.multiple);
       final controller = SelectorController(
         selectionMode: SelectionMode.multiple,
       );
@@ -322,7 +323,8 @@ void main() {
         ),
       };
 
-      final selector = CascadingSelector(selectionMode: SelectionMode.multiple);
+      final selector =
+          CascadingSelectorDelegate(selectionMode: SelectionMode.multiple);
       final controller = SelectorController(
         selectionMode: SelectionMode.multiple,
       );
@@ -352,6 +354,52 @@ void main() {
       expect(find.text('Parent'), findsOneWidget);
       expect(find.text('TargetLeaf'), findsOneWidget);
       expect(find.text('Leaf 0'), findsNothing);
+    });
+  });
+
+  group('Deprecated API backward compatibility', () {
+    testWidgets('still works with deprecated `selectors` and `ListSelector`',
+        (tester) async {
+      final controller = DropdownSelectorController();
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            appBar: DropdownSelectorBar(
+              tabs: const [
+                DropdownTab(label: 'Filter'),
+              ],
+              // ignore: deprecated_member_use_from_same_package
+              selectors: [
+                // ignore: deprecated_member_use_from_same_package
+                ListSelector(
+                  dataFetcher: () async => <SelectorEntry<dynamic>>{
+                    SelectorTextEntry<dynamic>.name(id: 'a', name: 'A'),
+                  },
+                ),
+              ],
+              controller: controller,
+            ),
+            body: const SizedBox.expand(),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Filter'));
+      await tester.pumpAndSettle();
+
+      expect(controller.isSelectorShowing, isTrue);
+      expect(find.text('A'), findsOneWidget);
+    });
+
+    test('deprecated selector aliases point to the new Delegate types', () {
+      // ignore: deprecated_member_use_from_same_package
+      final ListSelector list = ListSelectorDelegate();
+      expect(list, isA<ListSelectorDelegate>());
+
+      // ignore: deprecated_member_use_from_same_package
+      final Selector base = list;
+      expect(base, isA<SelectorDelegate>());
     });
   });
 }

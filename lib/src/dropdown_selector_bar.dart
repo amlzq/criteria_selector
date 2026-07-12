@@ -9,7 +9,7 @@ import 'dropdown_selector_bar_theme.dart';
 import 'dropdown_selector_controller.dart';
 import 'dropdown_tab_data.dart';
 import 'i18n/localizations.dart';
-import 'selector.dart';
+import 'selector_delegate.dart';
 import 'selector/selector_panel.dart';
 import 'selector/selector_theme_data.dart';
 
@@ -20,7 +20,7 @@ const kDropdownSelectorBarHeight = 44.0;
 ///
 /// Provide:
 /// - [tabs] to render the bar UI.
-/// - [selectors] to define the selector configuration for each tab.
+/// - [selectorDelegates] to define the selector configuration for each tab.
 ///
 /// The overlay content is driven by [DropdownSelectorController] and the selected
 /// results are delivered via [onChanged] and [onApplied].
@@ -29,7 +29,13 @@ class DropdownSelectorBar extends StatefulWidget
   const DropdownSelectorBar({
     super.key,
     required this.tabs,
-    required this.selectors,
+    @Deprecated(
+      'Use [selectorDelegates] instead. The type and behavior are identical; '
+      'simply rename the parameter. This parameter will be removed in a future '
+      'major version.',
+    )
+    List<SelectorDelegate>? selectors,
+    List<SelectorDelegate>? selectorDelegates,
     this.height,
     this.isScrollable = false,
     this.backgroundColor,
@@ -49,12 +55,14 @@ class DropdownSelectorBar extends StatefulWidget
     this.controller,
     this.initialIndex,
     this.selectorTheme,
-  });
+  })  : assert(selectorDelegates != null || selectors != null,
+            'Either selectorDelegates or selectors must be provided.'),
+        selectorDelegates = selectorDelegates ?? selectors ?? const [];
 
   final List<DropdownTab> tabs;
 
   /// Selector configuration for each tab.
-  final List<Selector> selectors;
+  final List<SelectorDelegate> selectorDelegates;
 
   /// The height of the [DropdownSelectorBar] itself.
   ///
@@ -175,7 +183,7 @@ class _DropdownSelectorBarState extends State<DropdownSelectorBar>
       _controller!.onApplied = widget.onApplied;
       _controller!.onReset = widget.onReset;
     }
-    _controller!.attachSelectors(widget.selectors);
+    _controller!.attachSelectorDelegates(widget.selectorDelegates);
     _controller!.attachTickerProvider(this);
   }
 
@@ -191,8 +199,8 @@ class _DropdownSelectorBarState extends State<DropdownSelectorBar>
 
     // final barHeight = _getBarHeight;
 
-    final selector = widget.selectors.elementAt(tabData.index);
-    _controller!.previousSelector = selector;
+    final selector = widget.selectorDelegates.elementAt(tabData.index);
+    _controller!.previousSelectorDelegate = selector;
 
     _controller!.toggleSelector(index: tabData.index);
 
@@ -244,10 +252,10 @@ class _DropdownSelectorBarState extends State<DropdownSelectorBar>
         return;
       }
       assert(() {
-        if (widget.tabs.length != widget.selectors.length) {
+        if (widget.tabs.length != widget.selectorDelegates.length) {
           throw FlutterError(
             "The number of tabs (${widget.tabs.length}) in the DropdownSelectorBar does not match "
-            "the number of selectors(${widget.selectors.length}).",
+            "the number of selectorDelegates(${widget.selectorDelegates.length}).",
           );
         }
         return true;
@@ -299,7 +307,7 @@ class _DropdownSelectorBarState extends State<DropdownSelectorBar>
                 },
                 child: SelectorPanel(
                   controller: _controller!.selectorController,
-                  selector: _controller!.previousSelector!,
+                  delegate: _controller!.previousSelectorDelegate!,
                   selectorTheme: effectiveSelectorTheme,
                 ),
               ),

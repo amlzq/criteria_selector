@@ -543,8 +543,8 @@ class _BuyPageState extends State<BuyPage> {
                       Image.asset('assets/sorting.png', width: 16, height: 16),
                 ),
               ],
-              selectors: [
-                CascadingSelector(
+              selectorDelegates: [
+                CascadingSelectorDelegate(
                   dataFetcher: _filtersRepo.fetchRegionData,
                   selectedDataFetcher: _filtersRepo.fetchRegionSelectedData,
                   resetDataFetcher: _filtersRepo.fetchRegionResetData,
@@ -556,7 +556,7 @@ class _BuyPageState extends State<BuyPage> {
                     return MyCheckbox(value: selected);
                   },
                 ),
-                GridSelector(
+                GridSelectorDelegate(
                   dataFetcher: _filtersRepo.fetchBuyPriceData,
                   selectedDataFetcher: _filtersRepo.fetchBuyPriceSelectedData,
                   resetDataFetcher: _filtersRepo.fetchBuyPriceResetData,
@@ -570,7 +570,7 @@ class _BuyPageState extends State<BuyPage> {
                   ),
                   applyText: AppLocalizations.of(context)?.apply ?? '',
                 ),
-                FlattenSelector(
+                FlattenSelectorDelegate(
                   dataFetcher: _filtersRepo.fetchFloorPlanBuyData,
                   selectedDataFetcher:
                       _filtersRepo.fetchFloorPlanBuySelectedData,
@@ -593,7 +593,7 @@ class _BuyPageState extends State<BuyPage> {
                     );
                   },
                 ),
-                FlattenSelector(
+                FlattenSelectorDelegate(
                   dataFetcher: _filtersRepo.fetchMoreBuyData,
                   selectedDataFetcher: _filtersRepo.fetchMoreBuySelectedData,
                   resetDataFetcher: _filtersRepo.fetchMoreBuyResetData,
@@ -615,7 +615,7 @@ class _BuyPageState extends State<BuyPage> {
                     );
                   },
                 ),
-                ListSelector(
+                ListSelectorDelegate(
                   dataFetcher: _filtersRepo.fetchSortBuyData,
                   selectedDataFetcher: _filtersRepo.fetchSortBuySelectedData,
                   resetDataFetcher: _filtersRepo.fetchSortBuyResetData,

@@ -4,7 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
-import '../selector.dart';
+import '../selector_delegate.dart';
 import '../selector_entry.dart';
 import 'selector_controller.dart';
 import 'selector_theme.dart';
@@ -25,12 +25,12 @@ import 'widgets/widgets.dart';
 class CascadingSelectorView extends StatefulWidget {
   const CascadingSelectorView({
     super.key,
-    required this.selector,
+    required this.delegate,
     required this.entries,
     required this.previousSelected,
   });
 
-  final CascadingSelector selector;
+  final CascadingSelectorDelegate delegate;
 
   final List<SelectorEntry> entries;
 
@@ -96,10 +96,10 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
       final theme = SelectorTheme.of(context);
 
       final categoryBackgroundColor =
-          selector.categoryBackgroundColor ?? theme.backgroundColor;
+          delegate.categoryBackgroundColor ?? theme.backgroundColor;
 
       final terminalBackgroundColor =
-          selector.terminalBackgroundColor ?? theme.backgroundColorHighest;
+          delegate.terminalBackgroundColor ?? theme.backgroundColorHighest;
 
       // Calculate max depth and gradient colors
       final maxDepth = _calculateMaxDepth(widget.entries.toSet(), 1);
@@ -120,7 +120,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
     setState(() {});
   }
 
-  CascadingSelector get selector => widget.selector;
+  CascadingSelectorDelegate get delegate => widget.delegate;
 
   void _rebuildSelectionState() {
     _tempSelectedEntryPerLevel.clear();
@@ -211,7 +211,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
   }
 
   void _scrollCascadeToEnd() {
-    if (selector.isScrollable != true) return;
+    if (delegate.isScrollable != true) return;
     if (!_cascadeHorizontalController.hasClients) return;
     final maxScroll = _cascadeHorizontalController.position.maxScrollExtent;
     _cascadeHorizontalController.animateTo(
@@ -362,12 +362,12 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
       _tempSelectedEntryPerLevel.first as SelectorCategoryEntry;
 
   /// Selection Mode for category entries
-  SelectionMode? get categorySelectionMode => selector.selectionMode;
+  SelectionMode? get categorySelectionMode => delegate.selectionMode;
 
   /// Selection Mode for the selected category sub-items
   SelectionMode get childrenSelectionMode => tempSelectedCategory.selectionMode;
 
-  /// Selection Mode for selector.
+  /// Selection Mode for delegate.
   /// It is jointly determined by the category selection mode and the sub-item selection mode.
   SelectionMode? get selectorSelectionMode {
     if (SelectionMode.multiple == categorySelectionMode) {
@@ -566,7 +566,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
               return SelectorRadioListTile(
                 label: entry.name ?? '',
                 selected: selected,
-                radioBuilder: selector.radioBuilder,
+                radioBuilder: delegate.radioBuilder,
                 enabled: entry.enabled,
                 onTap: () {
                   _onTerminalItemTap.call(cascadeIndex, entry);
@@ -576,7 +576,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
               return SelectorCheckboxListTile(
                 label: entry.name ?? '',
                 checked: selected,
-                checkboxBuilder: selector.checkboxBuilder,
+                checkboxBuilder: delegate.checkboxBuilder,
                 enabled: entry.enabled,
                 onTap: () => _onTerminalItemTap.call(cascadeIndex, entry),
               );
@@ -613,7 +613,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
     debugPrint('_currentLevel=$_currentLevel');
 
     final theme = SelectorTheme.of(context);
-    final isScrollable = selector.isScrollable == true;
+    final isScrollable = delegate.isScrollable == true;
 
     /// Maximum level for the current category
     // final maxLevel = tempSelectedCategory.maxLevel;
@@ -633,7 +633,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
         : Colors.white;
 
     final effectiveSelectedColor =
-        selector.selectedColor ?? theme.selectedColor;
+        delegate.selectedColor ?? theme.selectedColor;
 
     final tempSelectedCategoryIndex =
         widget.entries.indexOf(tempSelectedCategory);
@@ -650,7 +650,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
               // Category list (left)
               SelectorSideBar(
                 isScrollable: true,
-                width: selector.sideBarTheme?.width,
+                width: delegate.sideBarTheme?.width,
                 backgroundColor: categoryBackgroundColor,
                 selectedColor: effectiveSelectedColor,
                 selectedTileColor: selectedTileColor,
@@ -661,7 +661,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
                     _onCategoryItemTap(entry as SelectorCategoryEntry),
               ),
               // Children lists (right)
-              // selector.isScrollable
+              // delegate.isScrollable
               Expanded(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -733,16 +733,16 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
           ),
         ),
         if (SelectionMode.multiple == selectorSelectionMode)
-          selector.actionBarBuilder?.call(
+          delegate.actionBarBuilder?.call(
                 context,
                 onResetTap: _onResetTap,
                 onApplyTap: _onApplyTap,
               ) ??
               SelectorActionBar(
-                resetText: selector.resetText,
-                applyText: selector.applyText,
-                resetFlex: selector.actionBarTheme?.resetFlex,
-                applyFlex: selector.actionBarTheme?.applyFlex,
+                resetText: delegate.resetText,
+                applyText: delegate.applyText,
+                resetFlex: delegate.actionBarTheme?.resetFlex,
+                applyFlex: delegate.actionBarTheme?.applyFlex,
                 onResetTap: _onResetTap,
                 onApplyTap: _onApplyTap,
               ),

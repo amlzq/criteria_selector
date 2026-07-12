@@ -20,15 +20,15 @@ typedef SelectorActionBarBuilder = Widget Function(
 
 /// Base configuration for a selector.
 ///
-/// A [Selector] is responsible for:
+/// A [SelectorDelegate] is responsible for:
 /// - Defining how entries are fetched and restored (via fetcher callbacks).
 /// - Defining UI/theme overrides (colors and per-widget themes).
 /// - Building the selector body widget and a loading skeleton.
 ///
 /// The actual selection state is managed by [SelectorController] and widgets
 /// under `src/selector/`.
-abstract class Selector {
-  Selector({
+abstract class SelectorDelegate {
+  SelectorDelegate({
     this.selectionMode = SelectionMode.single,
     this.dataFetcher,
     this.selectedDataFetcher,
@@ -173,8 +173,8 @@ abstract class Selector {
 /// A cascading selector for tree-structured data.
 ///
 /// This layout shows categories on the left and a cascading list to the right.
-class CascadingSelector extends Selector {
-  CascadingSelector({
+class CascadingSelectorDelegate extends SelectorDelegate {
+  CascadingSelectorDelegate({
     this.categoryBackgroundColor,
     this.terminalBackgroundColor,
     this.checkboxBuilder,
@@ -227,7 +227,7 @@ class CascadingSelector extends Selector {
     Set<SelectorEntry>? previousSelected,
   ) {
     return CascadingSelectorView(
-      selector: this,
+      delegate: this,
       entries: entries,
       previousSelected: previousSelected,
     );
@@ -241,8 +241,8 @@ class CascadingSelector extends Selector {
 }
 
 /// A single-column list selector.
-class ListSelector extends Selector {
-  ListSelector({
+class ListSelectorDelegate extends SelectorDelegate {
+  ListSelectorDelegate({
     this.checkboxBuilder,
     this.radioBuilder,
     super.selectionMode = SelectionMode.single,
@@ -284,7 +284,7 @@ class ListSelector extends Selector {
     Set<SelectorEntry>? previousSelected,
   ) {
     return ListSelectorView(
-      selector: this,
+      delegate: this,
       entries: entries,
       previousSelected: previousSelected,
     );
@@ -298,8 +298,8 @@ class ListSelector extends Selector {
 }
 
 /// A grid selector.
-class GridSelector extends Selector {
-  GridSelector({
+class GridSelectorDelegate extends SelectorDelegate {
+  GridSelectorDelegate({
     required this.crossAxisCount,
     this.mainAxisSpacing = 0.0,
     this.crossAxisSpacing = 0.0,
@@ -349,7 +349,7 @@ class GridSelector extends Selector {
     Set<SelectorEntry>? previousSelected,
   ) {
     return GridSelectorView(
-      selector: this,
+      delegate: this,
       entries: entries,
       previousSelected: previousSelected,
     );
@@ -370,8 +370,8 @@ class GridSelector extends Selector {
 
 /// A "flatten" selector that renders children in a grid while keeping the
 /// hierarchy behavior.
-class FlattenSelector extends Selector {
-  FlattenSelector({
+class FlattenSelectorDelegate extends SelectorDelegate {
+  FlattenSelectorDelegate({
     required this.crossAxisCount,
     this.mainAxisSpacing = 0.0,
     this.crossAxisSpacing = 0.0,
@@ -421,7 +421,7 @@ class FlattenSelector extends Selector {
     Set<SelectorEntry>? previousSelected,
   ) {
     return FlattenSelectorView(
-      selector: this,
+      delegate: this,
       entries: entries,
       previousSelected: previousSelected,
       crossAxisCount: crossAxisCount,
@@ -435,7 +435,7 @@ class FlattenSelector extends Selector {
   Widget buildSkeleton(BuildContext context) {
     return skeletonBuilder?.call(context) ??
         PlattenSelectorSkeleton(
-          selector: this,
+          delegate: this,
           crossAxisCount: crossAxisCount,
           mainAxisSpacing: mainAxisSpacing,
           crossAxisSpacing: crossAxisSpacing,

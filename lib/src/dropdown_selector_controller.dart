@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'constants.dart';
 import 'dropdown_selector_result.dart';
 import 'dropdown_tab_data.dart';
-import 'selector.dart';
+import 'selector_delegate.dart';
 import 'selector/selector_controller.dart';
 import 'selector_entry.dart';
 import 'selector_utils.dart';
@@ -83,7 +83,7 @@ class DropdownSelectorController extends ChangeNotifier {
   DropdownTabData get currentTabData => tabDataMap[currentIndex]!;
 
   /// The selector previously used for the overlay.
-  Selector? previousSelector;
+  SelectorDelegate? previousSelectorDelegate;
 
   /// The [SelectorController] for the currently active selector panel, if any.
   ///
@@ -99,18 +99,18 @@ class DropdownSelectorController extends ChangeNotifier {
   /// overlay is shown.
   String? applyMultipleText;
 
-  List<Selector>? _selectors;
+  List<SelectorDelegate>? _selectorDelegates;
 
-  void attachSelectors(List<Selector> selectors) {
+  void attachSelectorDelegates(List<SelectorDelegate> selectorDelegates) {
     if (_isDisposed) return;
-    _selectors = selectors;
+    _selectorDelegates = selectorDelegates;
   }
 
-  Selector? _selectorAt(int tabIndex) {
-    final selectors = _selectors;
-    if (selectors == null) return null;
-    if (tabIndex < 0 || tabIndex >= selectors.length) return null;
-    return selectors[tabIndex];
+  SelectorDelegate? _selectorAt(int tabIndex) {
+    final selectorDelegates = _selectorDelegates;
+    if (selectorDelegates == null) return null;
+    if (tabIndex < 0 || tabIndex >= selectorDelegates.length) return null;
+    return selectorDelegates[tabIndex];
   }
 
   Animation<double> get overlayAnimation =>
@@ -276,13 +276,13 @@ class DropdownSelectorController extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Creates a [SelectorController] bound to [previousSelector] and wires the
+  /// Creates a [SelectorController] bound to [previousSelectorDelegate] and wires the
   /// change/apply/reset listeners to this controller's handlers.
   ///
   /// Any previously created controller is disposed first.
   void _createSelectorController() {
     _disposeSelectorController();
-    final selector = previousSelector;
+    final selector = previousSelectorDelegate;
     if (selector == null) return;
     final ctrl = SelectorController(
       selectionMode: selector.selectionMode,
@@ -391,7 +391,7 @@ class DropdownSelectorController extends ChangeNotifier {
     final selector = _selectorAt(tabIndex);
     if (selector == null) return false;
 
-    previousSelector = selector;
+    previousSelectorDelegate = selector;
 
     final dataFuture = selector.data;
     if (dataFuture == null) return false;

@@ -23,7 +23,7 @@ class _DialogPageState extends State<DialogPage> {
   }
 
   void showSortSelector() async {
-    final selector = ListSelector(
+    final delegate = ListSelectorDelegate(
       dataFetcher: _filtersRepo.fetchSortBuyData,
       selectedDataFetcher: _filtersRepo.fetchSortBuySelectedData,
       resetDataFetcher: _filtersRepo.fetchSortBuyResetData,
@@ -33,9 +33,9 @@ class _DialogPageState extends State<DialogPage> {
       },
     );
     final controller = SelectorController(
-      selectionMode: selector.selectionMode,
-      previousSelected: selector.selectedData,
-      resetSelected: selector.resetData,
+      selectionMode: delegate.selectionMode,
+      previousSelected: delegate.selectedData,
+      resetSelected: delegate.resetData,
     );
     controller.addApplyListener((selected) {
       print('addApplyListener: ☎️ $selected');
@@ -58,7 +58,7 @@ class _DialogPageState extends State<DialogPage> {
               ),
               SelectorPanel(
                 controller: controller,
-                selector: selector,
+                delegate: delegate,
                 onApplyTap: (selected) {
                   print('onApplyTap ✅: $selected');
                   Navigator.of(context).pop(selected);
@@ -75,7 +75,7 @@ class _DialogPageState extends State<DialogPage> {
     // final aa = ScrollController();
     // aa.addListener(listener)
 
-    final selector = FlattenSelector(
+    final delegate = FlattenSelectorDelegate(
       dataFetcher: _filtersRepo.fetchFloorPlanBuyData,
       selectedDataFetcher: _filtersRepo.fetchFloorPlanBuySelectedData,
       resetDataFetcher: _filtersRepo.fetchFloorPlanBuyResetData,
@@ -87,9 +87,9 @@ class _DialogPageState extends State<DialogPage> {
       sideBarTheme: const SelectorSideBarTheme(width: 98),
     );
     final controller = SelectorController(
-      selectionMode: selector.selectionMode,
-      previousSelected: selector.selectedData,
-      resetSelected: selector.resetData,
+      selectionMode: delegate.selectionMode,
+      previousSelected: delegate.selectedData,
+      resetSelected: delegate.resetData,
     );
     controller.addChangeListener((selected) {
       print('Changed: ☎️ $selected');
@@ -109,7 +109,7 @@ class _DialogPageState extends State<DialogPage> {
             height: MediaQuery.of(context).size.height * 0.5,
             child: SelectorPanel(
               controller: controller,
-              selector: selector,
+              delegate: delegate,
               onChangeTap: (selected) {
                 print('onChangeTap ✅: $selected');
               },

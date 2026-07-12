@@ -206,8 +206,8 @@ class _SellPageState extends State<SellPage> {
                       Image.asset('assets/sorting.png', width: 16, height: 16),
                 ),
               ],
-              selectors: [
-                CascadingSelector(
+              selectorDelegates: [
+                CascadingSelectorDelegate(
                   isScrollable: true,
                   dataFetcher: _filtersRepo.fetchRegionData,
                   selectedDataFetcher: _filtersRepo.fetchRegionSelectedData,
@@ -223,7 +223,7 @@ class _SellPageState extends State<SellPage> {
                     return MyCheckbox(value: selected);
                   },
                 ),
-                GridSelector(
+                GridSelectorDelegate(
                   dataFetcher: _filtersRepo.fetchSellPriceData,
                   selectedDataFetcher: _filtersRepo.fetchSellPriceSelectedData,
                   resetDataFetcher: _filtersRepo.fetchSellPriceResetData,
@@ -236,7 +236,7 @@ class _SellPageState extends State<SellPage> {
                     variant: SelectorGridTileVariant.outlined,
                   ),
                 ),
-                FlattenSelector(
+                FlattenSelectorDelegate(
                   dataFetcher: _filtersRepo.fetchFloorPlanSellData,
                   selectedDataFetcher:
                       _filtersRepo.fetchFloorPlanSellSelectedData,
@@ -248,7 +248,7 @@ class _SellPageState extends State<SellPage> {
                   mainAxisSpacing: 8,
                   sideBarTheme: const SelectorSideBarTheme(width: 98),
                 ),
-                ListSelector(
+                ListSelectorDelegate(
                   dataFetcher: _filtersRepo.fetchSortSellData,
                   selectedDataFetcher: _filtersRepo.fetchSortSellSelectedData,
                   resetDataFetcher: _filtersRepo.fetchSortSellResetData,

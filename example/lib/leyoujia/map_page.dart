@@ -278,14 +278,14 @@ class _MapPageState extends State<MapPage> {
                 child: Image.asset('assets/sorting.png', width: 16, height: 16),
               ),
             ],
-            selectors: [
-              CascadingSelector(
+            selectorDelegates: [
+              CascadingSelectorDelegate(
                 dataFetcher: _filtersRepo.fetchRegionData,
                 selectedDataFetcher: _filtersRepo.fetchRegionSelectedData,
                 resetDataFetcher: _filtersRepo.fetchRegionResetData,
                 selectionMode: SelectionMode.single,
               ),
-              GridSelector(
+              GridSelectorDelegate(
                 dataFetcher: _filtersRepo.fetchBuyPriceData,
                 selectedDataFetcher: _filtersRepo.fetchBuyPriceSelectedData,
                 selectionMode: SelectionMode.single,
@@ -297,7 +297,7 @@ class _MapPageState extends State<MapPage> {
                   variant: SelectorGridTileVariant.outlined,
                 ),
               ),
-              FlattenSelector(
+              FlattenSelectorDelegate(
                 dataFetcher: _filtersRepo.fetchFloorPlanBuyData,
                 selectedDataFetcher: _filtersRepo.fetchFloorPlanBuySelectedData,
                 resetDataFetcher: _filtersRepo.fetchFloorPlanBuyResetData,
@@ -307,7 +307,7 @@ class _MapPageState extends State<MapPage> {
                 crossAxisSpacing: 8,
                 mainAxisSpacing: 8,
               ),
-              ListSelector(
+              ListSelectorDelegate(
                 dataFetcher: _filtersRepo.fetchSortBuyData,
                 selectedDataFetcher: _filtersRepo.fetchSortBuySelectedData,
                 resetDataFetcher: _filtersRepo.fetchSortBuyResetData,

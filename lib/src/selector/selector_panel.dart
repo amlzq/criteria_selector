@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
-import '../selector.dart';
+import '../selector_delegate.dart';
 import '../selector_entry.dart';
 import 'selector_controller.dart';
 import 'selector_theme.dart';
 import 'selector_theme_data.dart';
 
-/// A widget that renders a [Selector] and manages its selection state.
+/// A widget that renders a [SelectorDelegate] and manages its selection state.
 ///
-/// The panel loads [Selector.data] and displays the selector body once the data
+/// The panel loads [SelectorDelegate.data] and displays the selector body once the data
 /// is available, or a skeleton while it is loading. Selector widgets rendered by
 /// the panel are styled according to [selectorTheme].
 ///
@@ -27,7 +27,7 @@ import 'selector_theme_data.dart';
 class SelectorPanel extends StatefulWidget {
   const SelectorPanel({
     super.key,
-    required this.selector,
+    required this.delegate,
     this.controller,
     this.onChangeTap,
     this.onApplyTap,
@@ -36,7 +36,7 @@ class SelectorPanel extends StatefulWidget {
     this.errorBuilder,
   });
 
-  final Selector selector;
+  final SelectorDelegate delegate;
 
   /// Optional controller that drives the selection state.
   ///
@@ -67,7 +67,7 @@ class SelectorPanel extends StatefulWidget {
 
   final SelectorThemeData? selectorTheme;
 
-  /// Optional builder invoked when [Selector.data] fails to load.
+  /// Optional builder invoked when [SelectorDelegate.data] fails to load.
   ///
   /// When omitted, a simple [Text] widget showing the error is rendered.
   final Widget Function(Object error, StackTrace? stackTrace)? errorBuilder;
@@ -94,9 +94,9 @@ class _SelectorPanelState extends State<SelectorPanel> {
 
   void _createInternalController() {
     _internalController = SelectorController(
-      selectionMode: widget.selector.selectionMode,
-      previousSelected: widget.selector.selectedData,
-      resetSelected: widget.selector.resetData,
+      selectionMode: widget.delegate.selectionMode,
+      previousSelected: widget.delegate.selectedData,
+      resetSelected: widget.delegate.resetData,
     );
   }
 
@@ -159,7 +159,7 @@ class _SelectorPanelState extends State<SelectorPanel> {
         child: SelectorControllerProvider(
           controller: _controller,
           child: FutureBuilder<SelectorEntries>(
-            future: widget.selector.data,
+            future: widget.delegate.data,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasError) {
@@ -176,13 +176,13 @@ class _SelectorPanelState extends State<SelectorPanel> {
                     onTap: () {
                       FocusScope.of(context).unfocus();
                     },
-                    child: widget.selector.buildBody(
+                    child: widget.delegate.buildBody(
                         context, entries, _controller.previousSelected),
                   );
                 }
               } else {
                 // Request in progress: show loading
-                return widget.selector.buildSkeleton(context);
+                return widget.delegate.buildSkeleton(context);
               }
             },
           ),

@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
-import '../selector.dart';
+import '../selector_delegate.dart';
 import '../selector_entry.dart';
 import 'selector_controller.dart';
 import 'widgets/widgets.dart';
@@ -22,13 +22,13 @@ import 'widgets/widgets.dart';
 /// - In multi-selection mode, the action bar is shown and "Apply" produces the
 ///   final clipped selection tree.
 class GridSelectorView extends StatefulWidget {
-  final GridSelector selector;
+  final GridSelectorDelegate delegate;
   final List<SelectorEntry> entries;
   final Set<SelectorEntry>? previousSelected;
 
   const GridSelectorView({
     super.key,
-    required this.selector,
+    required this.delegate,
     required this.entries,
     required this.previousSelected,
   });
@@ -90,20 +90,20 @@ class GridSelectorViewState extends State<GridSelectorView> {
     }
   }
 
-  GridSelector get selector => widget.selector;
+  GridSelectorDelegate get delegate => widget.delegate;
 
   void _handleSelectorControllerTick() {
     if (mounted) setState(() {});
   }
 
   /// Selection Mode for category entries
-  SelectionMode? get categorySelectionMode => selector.selectionMode;
+  SelectionMode? get categorySelectionMode => delegate.selectionMode;
 
   /// Selection Mode for the selected category sub-items
   SelectionMode get childrenSelectionMode =>
       _tempSelectedCategory.selectionMode;
 
-  /// Selection Mode for selector.
+  /// Selection Mode for delegate.
   /// It is jointly determined by the category selection mode and the sub-item selection mode.
   SelectionMode? get selectorSelectionMode {
     if (SelectionMode.multiple == categorySelectionMode) {
@@ -192,11 +192,11 @@ class GridSelectorViewState extends State<GridSelectorView> {
           controller?.selectedEntriesForParent(category.id, level: 1) ?? {};
       return SelectorGridView(
         key: ValueKey('category_$index'),
-        crossAxisCount: selector.crossAxisCount,
-        childAspectRatio: selector.childAspectRatio,
-        mainAxisSpacing: selector.mainAxisSpacing,
-        crossAxisSpacing: selector.crossAxisSpacing,
-        tileVariant: selector.gridTileTheme?.variant,
+        crossAxisCount: delegate.crossAxisCount,
+        childAspectRatio: delegate.childAspectRatio,
+        mainAxisSpacing: delegate.mainAxisSpacing,
+        crossAxisSpacing: delegate.crossAxisSpacing,
+        tileVariant: delegate.gridTileTheme?.variant,
         entries: entries,
         selectedEntries: selectedEntries,
         // inputListener: _inputListener,
@@ -231,16 +231,16 @@ class GridSelectorViewState extends State<GridSelectorView> {
           ),
         ),
         if (SelectionMode.multiple == selectorSelectionMode)
-          selector.actionBarBuilder?.call(
+          delegate.actionBarBuilder?.call(
                 context,
                 onResetTap: _onResetTap,
                 onApplyTap: _onApplyTap,
               ) ??
               SelectorActionBar(
-                resetText: selector.resetText,
-                applyText: selector.applyText,
-                resetFlex: selector.actionBarTheme?.resetFlex,
-                applyFlex: selector.actionBarTheme?.applyFlex,
+                resetText: delegate.resetText,
+                applyText: delegate.applyText,
+                resetFlex: delegate.actionBarTheme?.resetFlex,
+                applyFlex: delegate.actionBarTheme?.applyFlex,
                 onResetTap: _onResetTap,
                 onApplyTap: _onApplyTap,
               ),
