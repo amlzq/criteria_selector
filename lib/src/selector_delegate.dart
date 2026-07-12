@@ -226,7 +226,7 @@ class CascadingSelectorDelegate extends SelectorDelegate {
     List<SelectorEntry> entries,
     Set<SelectorEntry>? previousSelected,
   ) {
-    return CascadingSelectorView(
+    return CascadingSelector(
       delegate: this,
       entries: entries,
       previousSelected: previousSelected,
@@ -283,7 +283,7 @@ class ListSelectorDelegate extends SelectorDelegate {
     List<SelectorEntry> entries,
     Set<SelectorEntry>? previousSelected,
   ) {
-    return ListSelectorView(
+    return ListSelector(
       delegate: this,
       entries: entries,
       previousSelected: previousSelected,
@@ -348,7 +348,7 @@ class GridSelectorDelegate extends SelectorDelegate {
     List<SelectorEntry> entries,
     Set<SelectorEntry>? previousSelected,
   ) {
-    return GridSelectorView(
+    return GridSelector(
       delegate: this,
       entries: entries,
       previousSelected: previousSelected,
@@ -420,7 +420,7 @@ class FlattenSelectorDelegate extends SelectorDelegate {
     List<SelectorEntry> entries,
     Set<SelectorEntry>? previousSelected,
   ) {
-    return FlattenSelectorView(
+    return FlattenSelector(
       delegate: this,
       entries: entries,
       previousSelected: previousSelected,
@@ -435,7 +435,7 @@ class FlattenSelectorDelegate extends SelectorDelegate {
   Widget buildSkeleton(BuildContext context) {
     return skeletonBuilder?.call(context) ??
         PlattenSelectorSkeleton(
-          delegate: this,
+          sideBarWidth: sideBarTheme?.width,
           crossAxisCount: crossAxisCount,
           mainAxisSpacing: mainAxisSpacing,
           crossAxisSpacing: crossAxisSpacing,

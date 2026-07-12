@@ -220,7 +220,7 @@ void main() {
     });
   });
 
-  group('CascadingSelectorView', () {
+  group('CascadingSelector', () {
     testWidgets('restores a connected deepest focused path', (tester) async {
       final branchALeaf = _text('a', 'a_leaf', 'BranchALeaf');
       final branchA = _text('c', 'a', 'BranchA', children: {branchALeaf});

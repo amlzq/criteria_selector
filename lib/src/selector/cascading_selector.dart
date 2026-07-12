@@ -22,8 +22,8 @@ import 'widgets/widgets.dart';
 ///   may be used to apply the final selection.
 /// - If an entry's `immediate` is true, selection is applied immediately
 ///   without requiring the action bar.
-class CascadingSelectorView extends StatefulWidget {
-  const CascadingSelectorView({
+class CascadingSelector extends StatefulWidget {
+  const CascadingSelector({
     super.key,
     required this.delegate,
     required this.entries,
@@ -37,10 +37,10 @@ class CascadingSelectorView extends StatefulWidget {
   final Set<SelectorEntry>? previousSelected;
 
   @override
-  State<CascadingSelectorView> createState() => CascadingSelectorViewState();
+  State<CascadingSelector> createState() => CascadingSelectorState();
 }
 
-class CascadingSelectorViewState extends State<CascadingSelectorView> {
+class CascadingSelectorState extends State<CascadingSelector> {
   /// Temporarily selected (focused) item per level (usually a parent node)
   /// Terminal nodes do not need to be included in the temporary selection list
   final List<SelectorEntry> _tempSelectedEntryPerLevel = [];
@@ -83,7 +83,7 @@ class CascadingSelectorViewState extends State<CascadingSelectorView> {
   }
 
   @override
-  void didUpdateWidget(covariant CascadingSelectorView oldWidget) {
+  void didUpdateWidget(covariant CascadingSelector oldWidget) {
     super.didUpdateWidget(oldWidget);
     _updateSelectorController(context);
   }

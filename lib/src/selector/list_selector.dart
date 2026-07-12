@@ -11,12 +11,12 @@ import 'widgets/widgets.dart';
 /// One-dimensional structured data
 ///
 /// Suitable for "sorting", etc.
-class ListSelectorView extends StatefulWidget {
+class ListSelector extends StatefulWidget {
   final ListSelectorDelegate delegate;
   final List<SelectorEntry> entries;
   final Set<SelectorEntry>? previousSelected;
 
-  const ListSelectorView({
+  const ListSelector({
     super.key,
     required this.delegate,
     required this.entries,
@@ -24,10 +24,10 @@ class ListSelectorView extends StatefulWidget {
   });
 
   @override
-  State<ListSelectorView> createState() => ListSelectorViewState();
+  State<ListSelector> createState() => ListSelectorState();
 }
 
-class ListSelectorViewState extends State<ListSelectorView> {
+class ListSelectorState extends State<ListSelector> {
   /// Focused category entry
   int _tempSelectedCategoryIndex = 0;
 
@@ -40,7 +40,7 @@ class ListSelectorViewState extends State<ListSelectorView> {
   }
 
   @override
-  void didUpdateWidget(covariant ListSelectorView oldWidget) {
+  void didUpdateWidget(covariant ListSelector oldWidget) {
     super.didUpdateWidget(oldWidget);
     _updateSelectorController(context);
   }

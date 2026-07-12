@@ -24,8 +24,8 @@ import 'widgets/widgets.dart';
 ///   without requiring the action bar.
 /// - In multi-selection mode, the action bar is shown and "Apply" produces the
 ///   final clipped selection tree.
-class FlattenSelectorView extends StatefulWidget {
-  const FlattenSelectorView({
+class FlattenSelector extends StatefulWidget {
+  const FlattenSelector({
     super.key,
     required this.delegate,
     required this.entries,
@@ -51,10 +51,10 @@ class FlattenSelectorView extends StatefulWidget {
   final double childAspectRatio;
 
   @override
-  State<FlattenSelectorView> createState() => FlattenSelectorViewState();
+  State<FlattenSelector> createState() => FlattenSelectorState();
 }
 
-class FlattenSelectorViewState extends State<FlattenSelectorView> {
+class FlattenSelectorState extends State<FlattenSelector> {
   /// Focused category entry
   int _tempSelectedCategoryIndex = 0;
 
@@ -77,7 +77,7 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
   }
 
   @override
-  void didUpdateWidget(covariant FlattenSelectorView oldWidget) {
+  void didUpdateWidget(covariant FlattenSelector oldWidget) {
     super.didUpdateWidget(oldWidget);
     _updateSelectorController(context);
   }
@@ -396,10 +396,10 @@ class FlattenSelectorViewState extends State<FlattenSelectorView> {
 }
 
 class PlattenSelectorSkeleton extends StatelessWidget {
-  /// Loading skeleton for [FlattenSelectorView].
+  /// Loading skeleton for [FlattenSelector].
   const PlattenSelectorSkeleton({
     super.key,
-    required this.delegate,
+    this.sideBarWidth,
     this.categoryBackgroundColor,
     required this.crossAxisCount,
     this.mainAxisSpacing = 0.0,
@@ -407,7 +407,7 @@ class PlattenSelectorSkeleton extends StatelessWidget {
     this.childAspectRatio = 1.0,
   });
 
-  final FlattenSelectorDelegate delegate;
+  final double? sideBarWidth;
 
   final Color? categoryBackgroundColor;
 
@@ -432,7 +432,7 @@ class PlattenSelectorSkeleton extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SelectorSideBarSkeleton(
-                  width: delegate.sideBarTheme?.width,
+                  width: sideBarWidth,
                   backgroundColor: categoryBackgroundColor,
                 ),
                 Flexible(
