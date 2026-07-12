@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'constants.dart';
+import 'selector/constants.dart';
 import 'dropdown_selector_result.dart';
 import 'dropdown_tab_data.dart';
-import 'selector_delegate.dart';
+import 'selector/selector_delegate.dart';
 import 'selector/selector_controller.dart';
-import 'selector_entry.dart';
-import 'selector_utils.dart';
+import 'selector/selector_entry.dart';
+import 'selector/selector_utils.dart';
 
 /// Controller for [DropdownSelectorBar] and its selector overlay.
 ///

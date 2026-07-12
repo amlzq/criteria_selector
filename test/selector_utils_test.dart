@@ -1,6 +1,6 @@
-import 'package:criteria_selector/src/constants.dart';
-import 'package:criteria_selector/src/selector_entry.dart';
-import 'package:criteria_selector/src/selector_utils.dart';
+import 'package:criteria_selector/src/selector/constants.dart';
+import 'package:criteria_selector/src/selector/selector_entry.dart';
+import 'package:criteria_selector/src/selector/selector_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 SelectorTextEntry<dynamic> _text(

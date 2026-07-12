@@ -1,8 +1,8 @@
 import 'package:collection/collection.dart';
 
-import '../../constants.dart';
-import '../../selector_entry.dart';
-import '../../selector_utils.dart';
+import '../constants.dart';
+import '../selector_entry.dart';
+import '../selector_utils.dart';
 import 'selector_state_snapshot.dart';
 
 class SelectorStateTree {

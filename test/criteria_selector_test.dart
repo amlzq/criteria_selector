@@ -293,8 +293,7 @@ void main() {
 
       final targetLeaf = _text('parent', 'target_leaf', 'TargetLeaf');
       final leaves = <SelectorEntry<dynamic>>{
-        for (int i = 0; i < 16; i++)
-          _text('parent', 'leaf_$i', 'Leaf $i'),
+        for (int i = 0; i < 16; i++) _text('parent', 'leaf_$i', 'Leaf $i'),
         targetLeaf,
       };
       final parent = _text('c', 'parent', 'Parent', children: leaves);

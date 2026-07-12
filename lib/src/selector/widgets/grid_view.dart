@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import '../../constants.dart';
-import '../../selector_entry.dart';
+import '../constants.dart';
+import '../selector_entry.dart';
 import 'field_tile.dart';
 import 'grid_tile.dart';
 import 'grid_tile_theme.dart';

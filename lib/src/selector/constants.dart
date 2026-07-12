@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 
-import 'dropdown_selector_result.dart';
-import 'dropdown_tab_data.dart';
-import 'selector/selector_controller.dart';
+import '../dropdown_selector_result.dart';
+import '../dropdown_tab_data.dart';
+import '../selector/selector_controller.dart';
 import 'selector_entry.dart';
 
 /// A set of selected [SelectorEntry] values.
 typedef SelectorEntries<T> = Set<SelectorEntry<T>>;
 
 /// Callback invoked when the selection changes or is applied.
-typedef DropdownSelectorResultCallback = void Function(DropdownSelectorResult result);
+typedef DropdownSelectorResultCallback = void Function(
+    DropdownSelectorResult result);
 
 /// Callback invoked with the currently selected entries.
 typedef SelectorCallback = void Function(SelectorEntries selected);

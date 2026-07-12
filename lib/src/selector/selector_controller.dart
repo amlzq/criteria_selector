@@ -1,8 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
-import '../constants.dart';
-import '../selector_entry.dart';
+import 'constants.dart';
+import 'selector_entry.dart';
 import 'state/selector_selection_rules.dart';
 import 'state/selector_state_snapshot.dart';
 import 'state/selector_state_tree.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../selector_entry.dart';
+import '../selector_entry.dart';
 import '../selector_theme.dart';
 import '../selector_theme_data.dart';
 import 'field_tile_theme.dart';

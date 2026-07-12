@@ -1,7 +1,7 @@
-import 'constants.dart';
+import 'selector/constants.dart';
 import 'dropdown_tab_data.dart';
-import 'selector_entry.dart';
-import 'selector_utils.dart';
+import 'selector/selector_entry.dart';
+import 'selector/selector_utils.dart';
 
 /// Selection result for a single tab in [DropdownSelectorBar].
 ///

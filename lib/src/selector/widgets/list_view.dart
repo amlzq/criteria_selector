@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
-import '../../constants.dart';
-import '../../selector_entry.dart';
+import '../constants.dart';
+import '../selector_entry.dart';
 import 'field_tile.dart';
 import 'list_tile.dart';
 import 'skeleton_box.dart';

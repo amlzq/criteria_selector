@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 
-import '../../constants.dart';
-import '../../selector_entry.dart';
+import '../constants.dart';
+import '../selector_entry.dart';
 import 'selector_state_tree.dart';
 
 class SelectorSelectionRules {

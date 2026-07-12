@@ -2,14 +2,14 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import 'constants.dart';
+import 'selector/constants.dart';
 import 'dropdown_overlay.dart';
 import 'dropdown_overlay_style.dart';
 import 'dropdown_selector_bar_theme.dart';
 import 'dropdown_selector_controller.dart';
 import 'dropdown_tab_data.dart';
 import 'i18n/localizations.dart';
-import 'selector_delegate.dart';
+import 'selector/selector_delegate.dart';
 import 'selector/selector_panel.dart';
 import 'selector/selector_theme_data.dart';
 

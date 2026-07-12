@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'constants.dart';
-import 'selector/cascading_selector.dart';
-import 'selector/flatten_selector.dart';
-import 'selector/grid_selector.dart';
-import 'selector/list_selector.dart';
-import 'selector/widgets/widgets.dart';
+import 'cascading_selector.dart';
+import 'flatten_selector.dart';
+import 'grid_selector.dart';
+import 'list_selector.dart';
+import 'widgets/widgets.dart';
 import 'selector_entry.dart';
 
 /// Builds the action bar shown at the bottom of the selector panel.

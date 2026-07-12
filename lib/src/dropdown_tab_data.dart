@@ -1,4 +1,4 @@
-import 'constants.dart';
+import 'selector/constants.dart';
 
 /// Aggregates tab label data for easy passing between widgets.
 class DropdownTabData {
