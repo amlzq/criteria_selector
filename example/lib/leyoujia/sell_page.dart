@@ -14,7 +14,7 @@ class SellPage extends StatefulWidget {
 }
 
 class _SellPageState extends State<SellPage> {
-  final _controller = DropselectTabController();
+  final _controller = DropdownSelectorController();
   late final HouseRepository _repo;
   late final HouseFiltersRepository _filtersRepo;
   HouseFilter? _filter;
@@ -50,7 +50,7 @@ class _SellPageState extends State<SellPage> {
     super.dispose();
   }
 
-  void _handleSelectorApply(DropselectResult result) {
+  void _handleSelectorApply(DropdownSelectorResult result) {
     _filter ??= HouseFilter(cityId: userCityId);
     if (result.tabIndex == 0) {
       // 区域筛选
@@ -155,8 +155,8 @@ class _SellPageState extends State<SellPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final DropselectTabBarTheme dropdownTabBarTheme =
-        DropselectTabBarTheme.maybeOf(context)!;
+    final DropdownSelectorBarTheme dropdownTabBarTheme =
+        DropdownSelectorBarTheme.maybeOf(context)!;
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)?.sell ?? ''),
@@ -181,7 +181,7 @@ class _SellPageState extends State<SellPage> {
                 ),
               ],
             ),
-            child: DropselectTabBar(
+            child: DropdownSelectorBar(
               controller: _controller,
               isScrollable: true,
               // labelColor: Colors.orange,
@@ -191,17 +191,17 @@ class _SellPageState extends State<SellPage> {
               //   backgroundColor: Colors.orange[100],
               // ),
               tabs: [
-                DropselectTab(
+                DropdownTab(
                   // tag: 'region',
                   label: l10n?.region ?? '',
-                  // labelGetter: (DropselectResult result) {
+                  // labelGetter: (DropdownSelectorResult result) {
                   //   // 可选：用户根据结果自定义标签
                   //   return '自定义标签';
                   // },
                 ),
-                DropselectTab(label: l10n?.price ?? ''),
-                DropselectTab(label: l10n?.floorPlan ?? ''),
-                DropselectTab(
+                DropdownTab(label: l10n?.price ?? ''),
+                DropdownTab(label: l10n?.floorPlan ?? ''),
+                DropdownTab(
                   child:
                       Image.asset('assets/sorting.png', width: 16, height: 16),
                 ),
@@ -258,13 +258,13 @@ class _SellPageState extends State<SellPage> {
                   },
                 ),
               ],
-              onSelectorShowed: (DropselectTabData tabData) {
+              onSelectorShowed: (DropdownTabData tabData) {
                 debugPrint('onShowed: ${tabData.label}');
               },
-              onSelectorHidden: (DropselectTabData tabData) {
+              onSelectorHidden: (DropdownTabData tabData) {
                 debugPrint('onHidden: ${tabData.label}');
               },
-              onChanged: (DropselectResult result) {
+              onChanged: (DropdownSelectorResult result) {
                 debugPrint('onChanged: $result');
                 final conditions = '${result.selected.flatten()}';
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -275,7 +275,7 @@ class _SellPageState extends State<SellPage> {
                   ),
                 );
               },
-              onApplied: (DropselectResult result) {
+              onApplied: (DropdownSelectorResult result) {
                 debugPrint('onApplied: $result');
                 _handleSelectorApply(result);
                 final conditions = '${result.selected.flatten()}';

@@ -27,7 +27,7 @@ class HouseFiltersRepository {
     if (noMaxHintText != null) this.noMaxHintText = noMaxHintText;
   }
 
-  DropselectResult? priceResult;
+  DropdownSelectorResult? priceResult;
 
   SelectorEntries? fetchPriceSelectedData() => priceResult?.selected;
 
@@ -76,7 +76,7 @@ class HouseFiltersRepository {
     return Future.value(entries);
   }
 
-  DropselectResult? roomsResult;
+  DropdownSelectorResult? roomsResult;
 
   final roomsIniteialSelected = {
     SelectorCategoryEntry(
@@ -132,7 +132,7 @@ class HouseFiltersRepository {
     return Future.value(entries);
   }
 
-  DropselectResult? moreResult;
+  DropdownSelectorResult? moreResult;
 
   final moreIniteialSelected = <SelectorCategoryEntry>{};
 
@@ -213,7 +213,7 @@ class HouseFiltersRepository {
     return Future.value(entries);
   }
 
-  DropselectResult? sortResult;
+  DropdownSelectorResult? sortResult;
 
   final sortIniteialSelected = <SelectorTextEntry>{
     SelectorTextEntry.id(id: 'comprehensive_sort')

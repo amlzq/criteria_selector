@@ -1,51 +1,51 @@
 import 'package:flutter/material.dart';
 
 import 'constants.dart';
-import 'dropselect_result.dart';
-import 'dropselect_tab_data.dart';
+import 'dropdown_selector_result.dart';
+import 'dropdown_tab_data.dart';
 import 'selector.dart';
 import 'selector/selector_controller.dart';
 import 'selector_entry.dart';
 import 'selector_utils.dart';
 
-/// Controller for [DropselectTabBar] and its selector overlay.
+/// Controller for [DropdownSelectorBar] and its selector overlay.
 ///
-/// This controller stores per-tab label data ([DropselectTabData]) and manages
+/// This controller stores per-tab label data ([DropdownTabData]) and manages
 /// the overlay visibility. It also forwards selection events through
 /// [onChanged], [onApplied], and [onReset].
-class DropselectTabController extends ChangeNotifier {
+class DropdownSelectorController extends ChangeNotifier {
   static const Duration _kOverlayAnimationDuration =
       Duration(milliseconds: 240);
 
   /// Fired whenever a selector reports a selection change.
-  DropselectResultCallback? onChanged;
+  DropdownSelectorResultCallback? onChanged;
 
   /// Fired when a selector is applied.
-  DropselectResultCallback? onApplied;
+  DropdownSelectorResultCallback? onApplied;
 
   /// Fired when reset is triggered.
   VoidCallback? onReset;
 
   /// Per-tab label and result data keyed by tab index.
-  final Map<int, DropselectTabData> tabDataMap = {};
+  final Map<int, DropdownTabData> tabDataMap = {};
   bool _isDisposed = false;
 
-  /// Returns the nearest controller provided by [DropselectTabControllerProvider]
+  /// Returns the nearest controller provided by [DropdownSelectorControllerProvider]
   /// or null if none is found.
-  static DropselectTabController? maybeOf(BuildContext context) {
+  static DropdownSelectorController? maybeOf(BuildContext context) {
     return context
-        .dependOnInheritedWidgetOfExactType<_DropselectTabControllerScope>()
+        .dependOnInheritedWidgetOfExactType<_DropdownSelectorControllerScope>()
         ?.controller;
   }
 
-  /// Returns the nearest controller provided by [DropselectTabControllerProvider].
-  static DropselectTabController of(BuildContext context) {
-    final DropselectTabController? controller = maybeOf(context);
+  /// Returns the nearest controller provided by [DropdownSelectorControllerProvider].
+  static DropdownSelectorController of(BuildContext context) {
+    final DropdownSelectorController? controller = maybeOf(context);
     assert(() {
       if (controller == null) {
         throw FlutterError(
-          'DropselectTabController.of() was called with a context that does not '
-          'contain a DropselectTabControllerProvider widget.\n'
+          'DropdownSelectorController.of() was called with a context that does not '
+          'contain a DropdownSelectorControllerProvider widget.\n'
           'The context used was:\n'
           '  $context',
         );
@@ -80,7 +80,7 @@ class DropselectTabController extends ChangeNotifier {
   int? currentIndex;
 
   /// Returns the current tab data for [currentIndex].
-  DropselectTabData get currentTabData => tabDataMap[currentIndex]!;
+  DropdownTabData get currentTabData => tabDataMap[currentIndex]!;
 
   /// The selector previously used for the overlay.
   Selector? previousSelector;
@@ -88,14 +88,14 @@ class DropselectTabController extends ChangeNotifier {
   /// The [SelectorController] for the currently active selector panel, if any.
   ///
   /// Created when a selector is shown (see [_showSelector]) and disposed when
-  /// the overlay is hidden. Exposed so that [DropselectTabBar] can pass it to
+  /// the overlay is hidden. Exposed so that [DropdownSelectorBar] can pass it to
   /// [SelectorPanel] via its `controller` parameter.
   SelectorController? get selectorController => _selectorController;
   SelectorController? _selectorController;
 
   /// Localized "Multiple" text used when building apply result labels.
   ///
-  /// Injected by [DropselectTabBar] from the active localizations before the
+  /// Injected by [DropdownSelectorBar] from the active localizations before the
   /// overlay is shown.
   String? applyMultipleText;
 
@@ -307,7 +307,7 @@ class DropselectTabController extends ChangeNotifier {
   void handleChange(SelectorEntries selected) {
     if (_isDisposed) return;
     final result =
-        DropselectResult(tabData: currentTabData, selected: selected);
+        DropdownSelectorResult(tabData: currentTabData, selected: selected);
     onChanged?.call(result);
   }
 
@@ -315,7 +315,7 @@ class DropselectTabController extends ChangeNotifier {
   void handleApply(SelectorEntries selected, String multipleText) {
     if (_isDisposed) return;
     final result =
-        DropselectResult(tabData: currentTabData, selected: selected);
+        DropdownSelectorResult(tabData: currentTabData, selected: selected);
     hideSelector();
     onApplied?.call(result);
     final customLabel = result.tabData.labelGetter?.call(result);
@@ -327,7 +327,7 @@ class DropselectTabController extends ChangeNotifier {
   /// Programmatically applies selection ids to the tab at [tabIndex].
   ///
   /// This method does not open the selector panel. Instead, it resolves
-  /// [selectedEntryIds] against the selector data, builds a [DropselectResult],
+  /// [selectedEntryIds] against the selector data, builds a [DropdownSelectorResult],
   /// fires [onApplied], updates the tab label, and notifies listeners.
   ///
   /// Matching rules:
@@ -369,12 +369,12 @@ class DropselectTabController extends ChangeNotifier {
       return false;
     }
 
-    final ctx = _DropselectApplyContext(selectedEntryIds);
+    final ctx = _DropdownSelectorApplyContext(selectedEntryIds);
     final selected = _buildAppliedSelection(entries.toList(), ctx);
     if (ctx.invalidCategoryHit) return false;
     if (ctx.invalidCustomHit) return false;
 
-    final result = DropselectResult(tabData: tabData, selected: selected);
+    final result = DropdownSelectorResult(tabData: tabData, selected: selected);
     onApplied?.call(result);
     final customLabel = tabData.labelGetter?.call(result);
     tabData.resultLabel = customLabel ??
@@ -405,7 +405,7 @@ class DropselectTabController extends ChangeNotifier {
       return false;
     }
 
-    final ctx = _DropselectApplyContext(selectedEntryIds);
+    final ctx = _DropdownSelectorApplyContext(selectedEntryIds);
     final selected = _buildAppliedSelection(entries.toList(), ctx);
     if (ctx.invalidCategoryHit) return false;
     if (ctx.invalidCustomHit) return false;
@@ -418,7 +418,7 @@ class DropselectTabController extends ChangeNotifier {
 
   static SelectorEntries _buildAppliedSelection(
     List<SelectorEntry> roots,
-    _DropselectApplyContext ctx,
+    _DropdownSelectorApplyContext ctx,
   ) {
     final SelectorEntries result = {};
     for (final root in roots) {
@@ -431,7 +431,7 @@ class DropselectTabController extends ChangeNotifier {
 
   static SelectorEntry? _cropEntry(
     SelectorEntry entry,
-    _DropselectApplyContext ctx,
+    _DropdownSelectorApplyContext ctx,
   ) {
     if (entry is SelectorCategoryEntry) {
       if (ctx.selectedEntryIds.contains(entry.id)) {
@@ -559,35 +559,36 @@ class DropselectTabController extends ChangeNotifier {
   }
 }
 
-class _DropselectApplyContext {
+class _DropdownSelectorApplyContext {
   final Set<String> selectedEntryIds;
   bool invalidCategoryHit = false;
   bool invalidCustomHit = false;
   int matchedCount = 0;
 
-  _DropselectApplyContext(this.selectedEntryIds);
+  _DropdownSelectorApplyContext(this.selectedEntryIds);
 }
 
-class _DropselectTabControllerScope extends InheritedWidget {
-  final DropselectTabController? controller;
+class _DropdownSelectorControllerScope extends InheritedWidget {
+  final DropdownSelectorController? controller;
 
-  const _DropselectTabControllerScope({
+  const _DropdownSelectorControllerScope({
     this.controller,
     required super.child,
   });
 
   @override
-  bool updateShouldNotify(covariant _DropselectTabControllerScope oldWidget) {
+  bool updateShouldNotify(
+      covariant _DropdownSelectorControllerScope oldWidget) {
     return controller != oldWidget.controller;
   }
 }
 
-/// Provides a [DropselectTabController] to descendants.
-class DropselectTabControllerProvider extends StatelessWidget {
-  final DropselectTabController? controller;
+/// Provides a [DropdownSelectorController] to descendants.
+class DropdownSelectorControllerProvider extends StatelessWidget {
+  final DropdownSelectorController? controller;
   final Widget child;
 
-  const DropselectTabControllerProvider({
+  const DropdownSelectorControllerProvider({
     super.key,
     this.controller,
     required this.child,
@@ -595,6 +596,7 @@ class DropselectTabControllerProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _DropselectTabControllerScope(controller: controller, child: child);
+    return _DropdownSelectorControllerScope(
+        controller: controller, child: child);
   }
 }

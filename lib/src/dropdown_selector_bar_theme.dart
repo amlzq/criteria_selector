@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-import 'dropselect_overlay_style.dart';
+import 'dropdown_overlay_style.dart';
 import 'selector/selector_theme_data.dart';
 
-/// Theme extension for [DropselectTabBar].
+/// Theme extension for [DropdownSelectorBar].
 ///
 /// Add this extension to your app theme to override default tab bar visuals
 /// and overlay styles.
 @immutable
-class DropselectTabBarTheme extends ThemeExtension<DropselectTabBarTheme> {
-  const DropselectTabBarTheme({
+class DropdownSelectorBarTheme extends ThemeExtension<DropdownSelectorBarTheme> {
+  const DropdownSelectorBarTheme({
     this.height,
     this.backgroundColor,
     this.labelColor,
@@ -22,10 +22,10 @@ class DropselectTabBarTheme extends ThemeExtension<DropselectTabBarTheme> {
     this.selectorTheme,
   });
 
-  /// Overrides the default value of [DropselectTabBar.height].
+  /// Overrides the default value of [DropdownSelectorBar.height].
   final double? height;
 
-  /// Overrides the default value of [DropselectTabBar.backgroundColor].
+  /// Overrides the default value of [DropdownSelectorBar.backgroundColor].
   final Color? backgroundColor;
 
   /// Overrides the default selected tab label color.
@@ -46,14 +46,14 @@ class DropselectTabBarTheme extends ThemeExtension<DropselectTabBarTheme> {
   /// Default indicator for the unselected state.
   final Widget? unselectedIndicator;
 
-  /// Default overlay style applied to [DropselectOverlay].
-  final DropselectOverlayStyle? overlayStyle;
+  /// Default overlay style applied to [DropdownOverlay].
+  final DropdownOverlayStyle? overlayStyle;
 
   /// Default theme overrides applied to selector widgets inside the overlay.
   final SelectorThemeData? selectorTheme;
 
   @override
-  DropselectTabBarTheme copyWith({
+  DropdownSelectorBarTheme copyWith({
     double? height,
     Color? backgroundColor,
     Color? labelColor,
@@ -62,10 +62,10 @@ class DropselectTabBarTheme extends ThemeExtension<DropselectTabBarTheme> {
     TextStyle? unselectedLabelStyle,
     Widget? indicator,
     Widget? unselectedIndicator,
-    DropselectOverlayStyle? overlayStyle,
+    DropdownOverlayStyle? overlayStyle,
     SelectorThemeData? selectorTheme,
   }) {
-    return DropselectTabBarTheme(
+    return DropdownSelectorBarTheme(
       height: height ?? this.height,
       backgroundColor: backgroundColor ?? this.backgroundColor,
       labelColor: labelColor ?? this.labelColor,
@@ -79,8 +79,8 @@ class DropselectTabBarTheme extends ThemeExtension<DropselectTabBarTheme> {
     );
   }
 
-  static DropselectTabBarTheme? maybeOf(BuildContext context) {
-    return Theme.of(context).extension<DropselectTabBarTheme>();
+  static DropdownSelectorBarTheme? maybeOf(BuildContext context) {
+    return Theme.of(context).extension<DropdownSelectorBarTheme>();
   }
 
   @override
@@ -105,7 +105,7 @@ class DropselectTabBarTheme extends ThemeExtension<DropselectTabBarTheme> {
     if (other.runtimeType != runtimeType) {
       return false;
     }
-    return other is DropselectTabBarTheme &&
+    return other is DropdownSelectorBarTheme &&
         other.height == height &&
         other.backgroundColor == backgroundColor &&
         other.labelColor == labelColor &&
@@ -119,12 +119,12 @@ class DropselectTabBarTheme extends ThemeExtension<DropselectTabBarTheme> {
   }
 
   @override
-  ThemeExtension<DropselectTabBarTheme> lerp(
-      covariant ThemeExtension<DropselectTabBarTheme>? other, double t) {
-    if (other is! DropselectTabBarTheme) {
+  ThemeExtension<DropdownSelectorBarTheme> lerp(
+      covariant ThemeExtension<DropdownSelectorBarTheme>? other, double t) {
+    if (other is! DropdownSelectorBarTheme) {
       return this;
     }
-    return DropselectTabBarTheme(
+    return DropdownSelectorBarTheme(
       height: height != null && other.height != null
           ? height! + (other.height! - height!) * t
           : t < 0.5

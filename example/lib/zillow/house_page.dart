@@ -17,7 +17,7 @@ class HousePage extends StatefulWidget {
 }
 
 class _HousePageState extends State<HousePage> {
-  final _controller = DropselectTabController();
+  final _controller = DropdownSelectorController();
   late final HouseRepository _repo;
   late final HouseFiltersRepository _filtersRepo;
   HouseFilter? _filter;
@@ -56,7 +56,7 @@ class _HousePageState extends State<HousePage> {
     super.dispose();
   }
 
-  void _showSelectedResult(DropselectResult result) {
+  void _showSelectedResult(DropdownSelectorResult result) {
     final l10n = AppLocalizations.of(context);
     final conditions = '${result.selected.flatten()}';
     ScaffoldMessenger.of(context).showSnackBar(
@@ -90,7 +90,7 @@ class _HousePageState extends State<HousePage> {
     );
   }
 
-  HouseFilter? _dropselectResultParser(DropselectResult result) {
+  HouseFilter? _dropdownSelectorResultParser(DropdownSelectorResult result) {
     final filter = HouseFilter(cityId: userCityId);
     if (result.tabIndex == 0) {
       // Price filter
@@ -186,9 +186,9 @@ class _HousePageState extends State<HousePage> {
     return filter;
   }
 
-  void _handleSelectorChange(DropselectResult result) async {
+  void _handleSelectorChange(DropdownSelectorResult result) async {
     final l10n = AppLocalizations.of(context);
-    _filter = _dropselectResultParser(result);
+    _filter = _dropdownSelectorResultParser(result);
     if (_filter == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n?.filterParseFailed ?? '')),
@@ -220,9 +220,9 @@ class _HousePageState extends State<HousePage> {
     }
   }
 
-  void _handleSelectorApply(DropselectResult result) {
+  void _handleSelectorApply(DropdownSelectorResult result) {
     final l10n = AppLocalizations.of(context);
-    _filter = _dropselectResultParser(result);
+    _filter = _dropdownSelectorResultParser(result);
     if (_filter == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n?.filterParseFailed ?? '')),
@@ -273,7 +273,7 @@ class _HousePageState extends State<HousePage> {
               ),
             ),
           ),
-          DropselectTabBar(
+          DropdownSelectorBar(
             controller: _controller,
             isScrollable: true,
             // labelColor: Colors.orange,
@@ -283,17 +283,17 @@ class _HousePageState extends State<HousePage> {
             //   backgroundColor: Colors.orange.withOpacity(0.54),
             // ),
             tabs: [
-              DropselectTab(
+              DropdownTab(
                 // tag: 'region',
                 label: l10n?.price ?? '',
-                // labelGetter: (DropselectResult result) {
+                // labelGetter: (DropdownSelectorResult result) {
                 //   // Optional: user-defined label based on the selection
                 //   return 'Custom label';
                 // },
               ),
-              DropselectTab(label: l10n?.rooms ?? ''),
-              DropselectTab(label: l10n?.more ?? ''),
-              DropselectTab(
+              DropdownTab(label: l10n?.rooms ?? ''),
+              DropdownTab(label: l10n?.more ?? ''),
+              DropdownTab(
                 child: Image.asset('assets/sorting.png', width: 16, height: 16),
               ),
             ],
@@ -345,18 +345,18 @@ class _HousePageState extends State<HousePage> {
                 selectionMode: SelectionMode.single,
               ),
             ],
-            onSelectorShowed: (DropselectTabData tabData) {
+            onSelectorShowed: (DropdownTabData tabData) {
               debugPrint('onShowed: ${tabData.label}');
             },
-            onSelectorHidden: (DropselectTabData tabData) {
+            onSelectorHidden: (DropdownTabData tabData) {
               debugPrint('onHidden: ${tabData.label}');
             },
-            onChanged: (DropselectResult result) {
+            onChanged: (DropdownSelectorResult result) {
               debugPrintLarge('onChanged: $result');
               _handleSelectorChange(result);
               _showSelectedResult(result);
             },
-            onApplied: (DropselectResult result) {
+            onApplied: (DropdownSelectorResult result) {
               debugPrintLarge('onApplied: $result');
               _handleSelectorApply(result);
               if (result.tabIndex == 2) {

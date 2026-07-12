@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'dropselect_overlay_style.dart';
+import 'dropdown_overlay_style.dart';
 
-const kDropselectOverlayMaxHeightFactor = 0.7;
+const kDropdownOverlayMaxHeightFactor = 0.7;
 
 /// Overlay container that hosts an arbitrary [child] widget (typically a
 /// [SelectorPanel]).
@@ -11,10 +11,10 @@ const kDropselectOverlayMaxHeightFactor = 0.7;
 /// animation, and max-height constraint. The content is supplied by the caller
 /// via [child], keeping this widget a pure container.
 ///
-/// It is typically displayed by [DropselectTabBar] via
-/// [DropselectTabController].
-class DropselectOverlay extends StatelessWidget {
-  const DropselectOverlay({
+/// It is typically displayed by [DropdownSelectorBar] via
+/// [DropdownSelectorController].
+class DropdownOverlay extends StatelessWidget {
+  const DropdownOverlay({
     super.key,
     required this.child,
     required this.availableHeight,
@@ -28,7 +28,7 @@ class DropselectOverlay extends StatelessWidget {
 
   final double availableHeight;
 
-  final DropselectOverlayStyle? style;
+  final DropdownOverlayStyle? style;
 
   final Animation<double>? animation;
 
@@ -36,7 +36,7 @@ class DropselectOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DropselectOverlayStyle defaults = _DropselectOverlayDefaults(context);
+    final DropdownOverlayStyle defaults = _DropdownOverlayDefaults(context);
 
     final maxHeightFactor = style?.maxHeightFactor ?? defaults.maxHeightFactor!;
     debugPrint('maxHeightFactor=$maxHeightFactor');
@@ -86,9 +86,9 @@ class DropselectOverlay extends StatelessWidget {
   }
 }
 
-class _DropselectOverlayDefaults extends DropselectOverlayStyle {
-  const _DropselectOverlayDefaults(this.context)
-      : super(maxHeightFactor: kDropselectOverlayMaxHeightFactor);
+class _DropdownOverlayDefaults extends DropdownOverlayStyle {
+  const _DropdownOverlayDefaults(this.context)
+      : super(maxHeightFactor: kDropdownOverlayMaxHeightFactor);
 
   final BuildContext context;
   // late final ColorScheme _colors = Theme.of(context).colorScheme;

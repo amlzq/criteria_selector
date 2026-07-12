@@ -3,18 +3,18 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import 'constants.dart';
-import 'dropselect_overlay.dart';
-import 'dropselect_overlay_style.dart';
-import 'dropselect_tab_bar_theme.dart';
-import 'dropselect_tab_controller.dart';
-import 'dropselect_tab_data.dart';
+import 'dropdown_overlay.dart';
+import 'dropdown_overlay_style.dart';
+import 'dropdown_selector_bar_theme.dart';
+import 'dropdown_selector_controller.dart';
+import 'dropdown_tab_data.dart';
 import 'i18n/localizations.dart';
 import 'selector.dart';
 import 'selector/selector_panel.dart';
 import 'selector/selector_theme_data.dart';
 
-/// Default height for [DropselectTabBar] when no theme override is provided.
-const kDropselectTabBarHeight = 44.0;
+/// Default height for [DropdownSelectorBar] when no theme override is provided.
+const kDropdownSelectorBarHeight = 44.0;
 
 /// A tab bar that shows an overlay selector panel when a tab is tapped.
 ///
@@ -22,10 +22,11 @@ const kDropselectTabBarHeight = 44.0;
 /// - [tabs] to render the bar UI.
 /// - [selectors] to define the selector configuration for each tab.
 ///
-/// The overlay content is driven by [DropselectTabController] and the selected
+/// The overlay content is driven by [DropdownSelectorController] and the selected
 /// results are delivered via [onChanged] and [onApplied].
-class DropselectTabBar extends StatefulWidget implements PreferredSizeWidget {
-  const DropselectTabBar({
+class DropdownSelectorBar extends StatefulWidget
+    implements PreferredSizeWidget {
+  const DropdownSelectorBar({
     super.key,
     required this.tabs,
     required this.selectors,
@@ -50,22 +51,22 @@ class DropselectTabBar extends StatefulWidget implements PreferredSizeWidget {
     this.selectorTheme,
   });
 
-  final List<DropselectTab> tabs;
+  final List<DropdownTab> tabs;
 
   /// Selector configuration for each tab.
   final List<Selector> selectors;
 
-  /// The height of the [DropselectTabBar] itself.
+  /// The height of the [DropdownSelectorBar] itself.
   ///
-  /// If null, [DropselectTabBarTheme.height] is used. If that
-  /// is also null, the default is [kDropselectTabBarHeight].
+  /// If null, [DropdownSelectorBarTheme.height] is used. If that
+  /// is also null, the default is [kDropdownSelectorBarHeight].
   final double? height;
 
   final bool isScrollable;
 
-  /// The color of the [DropselectTabBar] itself.
+  /// The color of the [DropdownSelectorBar] itself.
   ///
-  /// If null, [DropselectTabBarTheme.backgroundColor] is used. If that
+  /// If null, [DropdownSelectorBarTheme.backgroundColor] is used. If that
   /// is also null, the value is [ColorScheme.surfaceContainer].
   final Color? backgroundColor;
 
@@ -84,31 +85,31 @@ class DropselectTabBar extends StatefulWidget implements PreferredSizeWidget {
   final SelectorVisibilityCallback? onSelectorHidden;
 
   /// Fired whenever a selector reports a selection change.
-  final DropselectResultCallback? onChanged;
+  final DropdownSelectorResultCallback? onChanged;
 
   /// Fired when a selector is applied.
-  final DropselectResultCallback? onApplied;
+  final DropdownSelectorResultCallback? onApplied;
 
   /// Fired when reset is triggered.
   final VoidCallback? onReset;
 
   /// Controls selector overlay visibility and tab state.
-  final DropselectTabController? controller;
+  final DropdownSelectorController? controller;
 
   /// If not null, the initial index of the selected tab and show selector.
   final int? initialIndex;
 
-  final DropselectOverlayStyle? overlayStyle;
+  final DropdownOverlayStyle? overlayStyle;
 
   /// Theme overrides applied to selector widgets inside the overlay.
   final SelectorThemeData? selectorTheme;
 
   @override
-  State<DropselectTabBar> createState() => _DropselectTabBarState();
+  State<DropdownSelectorBar> createState() => _DropdownSelectorBarState();
 
   @override
   Size get preferredSize {
-    double maxHeight = kDropselectTabBarHeight;
+    double maxHeight = kDropdownSelectorBarHeight;
     for (final Widget item in tabs) {
       if (item is PreferredSizeWidget) {
         final double itemHeight = item.preferredSize.height;
@@ -119,9 +120,9 @@ class DropselectTabBar extends StatefulWidget implements PreferredSizeWidget {
   }
 }
 
-class _DropselectTabBarState extends State<DropselectTabBar>
+class _DropdownSelectorBarState extends State<DropdownSelectorBar>
     with SingleTickerProviderStateMixin {
-  DropselectTabController? _controller;
+  DropdownSelectorController? _controller;
   int? _previousIndex;
 
   // late List<SelectorController> _selectorControllers;
@@ -141,7 +142,7 @@ class _DropselectTabBarState extends State<DropselectTabBar>
     // _controller.detachBarContext();
     final controller = _controller;
     if (controller != null) {
-      controller.removeListener(_handleDropselectTabControllerTick);
+      controller.removeListener(_handleDropdownSelectorControllerTick);
       controller.hideSelector(immediate: true);
       controller.detachTickerProvider();
       controller.onChanged = null;
@@ -157,19 +158,19 @@ class _DropselectTabBarState extends State<DropselectTabBar>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _updateDropselectTabController(context);
+    _updateDropdownSelectorController(context);
   }
 
   @override
-  void didUpdateWidget(covariant DropselectTabBar oldWidget) {
+  void didUpdateWidget(covariant DropdownSelectorBar oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _updateDropselectTabController(context);
+    _updateDropdownSelectorController(context);
   }
 
-  void _updateDropselectTabController(BuildContext context) {
+  void _updateDropdownSelectorController(BuildContext context) {
     if (_controller == null) {
-      _controller = widget.controller ?? DropselectTabController();
-      _controller!.addListener(_handleDropselectTabControllerTick);
+      _controller = widget.controller ?? DropdownSelectorController();
+      _controller!.addListener(_handleDropdownSelectorControllerTick);
       _controller!.onChanged = widget.onChanged;
       _controller!.onApplied = widget.onApplied;
       _controller!.onReset = widget.onReset;
@@ -178,15 +179,15 @@ class _DropselectTabBarState extends State<DropselectTabBar>
     _controller!.attachTickerProvider(this);
   }
 
-  void _handleDropselectTabControllerTick() {
+  void _handleDropdownSelectorControllerTick() {
     if (_previousIndex != _controller?.currentIndex) {
       _previousIndex = _controller?.currentIndex;
     }
     setState(() {});
   }
 
-  void _handleTap(DropselectTabData tabData) {
-    debugPrint('DropselectTabBar _handleTap index: ${tabData.index}');
+  void _handleTap(DropdownTabData tabData) {
+    debugPrint('DropdownSelectorBar _handleTap index: ${tabData.index}');
 
     // final barHeight = _getBarHeight;
 
@@ -211,9 +212,9 @@ class _DropselectTabBarState extends State<DropselectTabBar>
   }
 
   // double get _barHeight {
-  //   final DropselectTabBarTheme defaults = _DropselectTabBarDefaults(context);
-  //   final DropselectTabBarTheme? inheritedTheme =
-  //       DropselectTabBarTheme.maybeOf(context);
+  //   final DropdownSelectorBarTheme defaults = _DropdownSelectorBarDefaults(context);
+  //   final DropdownSelectorBarTheme? inheritedTheme =
+  //       DropdownSelectorBarTheme.maybeOf(context);
   //   return widget.height ?? inheritedTheme?.height ?? defaults.height!;
   // }
 
@@ -245,13 +246,13 @@ class _DropselectTabBarState extends State<DropselectTabBar>
       assert(() {
         if (widget.tabs.length != widget.selectors.length) {
           throw FlutterError(
-            "The number of tabs (${widget.tabs.length}) in the DropselectTabBar does not match "
+            "The number of tabs (${widget.tabs.length}) in the DropdownSelectorBar does not match "
             "the number of selectors(${widget.selectors.length}).",
           );
         }
         return true;
       }());
-    }, debugLabel: 'DropselectTabBar.validSelectorCountCheck');
+    }, debugLabel: 'DropdownSelectorBar.validSelectorCountCheck');
     _debugHasScheduledValidSelectorCountCheck = true;
     return true;
   }
@@ -260,8 +261,10 @@ class _DropselectTabBarState extends State<DropselectTabBar>
   Widget build(BuildContext context) {
     assert(_debugScheduleCheckHasValidSelectorCount());
 
-    final DropselectTabBarTheme defaults = _DropselectTabBarDefaults(context);
-    final DropselectTabBarTheme? theme = DropselectTabBarTheme.maybeOf(context);
+    final DropdownSelectorBarTheme defaults =
+        _DropdownSelectorBarDefaults(context);
+    final DropdownSelectorBarTheme? theme =
+        DropdownSelectorBarTheme.maybeOf(context);
 
     final height = widget.height ?? theme?.height ?? defaults.height!;
 
@@ -275,7 +278,7 @@ class _DropselectTabBarState extends State<DropselectTabBar>
 
     _controller!.applyMultipleText = effectiveMultipleText;
 
-    return DropselectTabControllerProvider(
+    return DropdownSelectorControllerProvider(
       controller: _controller,
       child: CompositedTransformTarget(
         link: _controller!.layerLink,
@@ -286,7 +289,7 @@ class _DropselectTabBarState extends State<DropselectTabBar>
               link: _controller!.layerLink,
               showWhenUnlinked: false,
               offset: Offset(0, height),
-              child: DropselectOverlay(
+              child: DropdownOverlay(
                 availableHeight: _overlayAvailableHeight,
                 style: overlayStyle,
                 animation: _controller!.overlayAnimation,
@@ -314,12 +317,12 @@ class _DropselectTabBarState extends State<DropselectTabBar>
                 builder: (context) {
                   final tabs = <Widget>[
                     for (int i = 0; i < widget.tabs.length; i++)
-                      _DropselectTabInfo(
+                      _DropdownSelectorTabInfo(
                         index: i,
                         onTap: (tabData) => _handleTap(tabData),
                         indicator: widget.indicator,
                         unselectedIndicator: widget.unselectedIndicator,
-                        child: _DropselectTabStyle(
+                        child: _DropdownSelectorTabStyle(
                           isSelected: (_controller?.isSelectorShowing == true &&
                                   _controller!.currentIndex == i) ||
                               _controller?.tabDataMap[i]?.isResulted == true,
@@ -365,8 +368,8 @@ class _DropselectTabBarState extends State<DropselectTabBar>
   }
 }
 
-class _DropselectTabStyle extends StatelessWidget {
-  const _DropselectTabStyle({
+class _DropdownSelectorTabStyle extends StatelessWidget {
+  const _DropdownSelectorTabStyle({
     required this.isSelected,
     required this.labelColor,
     required this.unselectedLabelColor,
@@ -381,11 +384,12 @@ class _DropselectTabStyle extends StatelessWidget {
   final bool isSelected;
   final Color? labelColor;
   final Color? unselectedLabelColor;
-  final DropselectTabBarTheme defaults;
+  final DropdownSelectorBarTheme defaults;
   final Widget child;
 
   WidgetStateColor _resolveWithLabelColor(BuildContext context) {
-    final DropselectTabBarTheme? theme = DropselectTabBarTheme.maybeOf(context);
+    final DropdownSelectorBarTheme? theme =
+        DropdownSelectorBarTheme.maybeOf(context);
 
     Color selectedColor = labelColor ??
         theme?.labelColor ??
@@ -417,7 +421,8 @@ class _DropselectTabStyle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DropselectTabBarTheme? theme = DropselectTabBarTheme.maybeOf(context);
+    final DropdownSelectorBarTheme? theme =
+        DropdownSelectorBarTheme.maybeOf(context);
 
     final Set<WidgetState> states = isSelected
         ? const <WidgetState>{WidgetState.selected}
@@ -456,20 +461,20 @@ class _DropselectTabStyle extends StatelessWidget {
   }
 }
 
-/// A tab widget used inside [DropselectTabBar].
+/// A tab widget used inside [DropdownSelectorBar].
 ///
 /// Provide either [label] or [child]. Use [labelGetter] to compute a custom
 /// label from the applied selection result.
-class DropselectTab extends StatelessWidget {
+class DropdownTab extends StatelessWidget {
   final String? label;
 
-  final DropselectTabLabelGetter? labelGetter;
+  final DropdownTabLabelGetter? labelGetter;
 
   final Widget? child;
 
   final String? tag;
 
-  const DropselectTab({
+  const DropdownTab({
     super.key,
     this.label,
     this.labelGetter,
@@ -480,22 +485,24 @@ class DropselectTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DropselectTabBarTheme defaults = _DropselectTabBarDefaults(context);
-    final DropselectTabBarTheme? theme = DropselectTabBarTheme.maybeOf(context);
+    final DropdownSelectorBarTheme defaults =
+        _DropdownSelectorBarDefaults(context);
+    final DropdownSelectorBarTheme? theme =
+        DropdownSelectorBarTheme.maybeOf(context);
 
-    final DropselectTabController controller =
-        DropselectTabController.of(context);
-    final _DropselectTabInfo info = _DropselectTabInfo.of(context);
+    final DropdownSelectorController controller =
+        DropdownSelectorController.of(context);
+    final _DropdownSelectorTabInfo info = _DropdownSelectorTabInfo.of(context);
     final unselected = controller.currentIndex != info.index;
     final isSelectorShowing = controller.isSelectorShowing;
 
     debugPrint('label: $label, unselected: $unselected');
 
-    DropselectTabData? tabData = controller.tabDataMap.containsKey(info.index)
+    DropdownTabData? tabData = controller.tabDataMap.containsKey(info.index)
         ? controller.tabDataMap[info.index]
         : null;
     if (tabData == null) {
-      tabData = DropselectTabData(
+      tabData = DropdownTabData(
           index: info.index,
           originalLabel: label,
           tag: tag,
@@ -531,8 +538,8 @@ class DropselectTab extends StatelessWidget {
   }
 }
 
-class _DropselectTabInfo extends InheritedWidget {
-  const _DropselectTabInfo({
+class _DropdownSelectorTabInfo extends InheritedWidget {
+  const _DropdownSelectorTabInfo({
     required this.index,
     required this.onTap,
     required super.child,
@@ -545,28 +552,28 @@ class _DropselectTabInfo extends InheritedWidget {
   final Widget? indicator;
   final Widget? unselectedIndicator;
 
-  final void Function(DropselectTabData tabData) onTap;
+  final void Function(DropdownTabData tabData) onTap;
 
-  static _DropselectTabInfo of(BuildContext context) {
-    final _DropselectTabInfo? result =
-        context.dependOnInheritedWidgetOfExactType<_DropselectTabInfo>();
+  static _DropdownSelectorTabInfo of(BuildContext context) {
+    final _DropdownSelectorTabInfo? result =
+        context.dependOnInheritedWidgetOfExactType<_DropdownSelectorTabInfo>();
     assert(
       result != null,
-      'DropselectTab need a _DropselectTabInfo parent, '
-      'which is usually provided by DropselectTabBar.',
+      'DropdownTab need a _DropdownSelectorTabInfo parent, '
+      'which is usually provided by DropdownSelectorBar.',
     );
     return result!;
   }
 
   @override
-  bool updateShouldNotify(_DropselectTabInfo oldWidget) {
+  bool updateShouldNotify(_DropdownSelectorTabInfo oldWidget) {
     return index != oldWidget.index || onTap != oldWidget.onTap;
   }
 }
 
-class _DropselectTabBarDefaults extends DropselectTabBarTheme {
-  _DropselectTabBarDefaults(this.context)
-      : super(height: kDropselectTabBarHeight);
+class _DropdownSelectorBarDefaults extends DropdownSelectorBarTheme {
+  _DropdownSelectorBarDefaults(this.context)
+      : super(height: kDropdownSelectorBarHeight);
 
   final BuildContext context;
   late final ColorScheme _colors = Theme.of(context).colorScheme;

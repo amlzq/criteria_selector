@@ -36,7 +36,7 @@ class HouseFiltersRepository {
   }
 
   /// 区域的 初始选中项
-  DropselectResult? regionResult;
+  DropdownSelectorResult? regionResult;
 
   final regionIniteialSelected = {
     SelectorCategoryEntry(
@@ -135,7 +135,7 @@ class HouseFiltersRepository {
   }
 
   /// 排序 初始选中项
-  DropselectResult? buyPriceResult;
+  DropdownSelectorResult? buyPriceResult;
 
   /// 初始选中项
   final buyPriceIniteialSelected = {
@@ -211,7 +211,7 @@ class HouseFiltersRepository {
   }
 
   /// 价格的 初始选中项
-  DropselectResult? sellPriceResult;
+  DropdownSelectorResult? sellPriceResult;
 
   SelectorEntries get sellPriceIniteialSelected => {
         SelectorCategoryEntry(
@@ -284,7 +284,7 @@ class HouseFiltersRepository {
   }
 
   /// 租金的 初始选中项
-  DropselectResult? rentalResult;
+  DropdownSelectorResult? rentalResult;
 
   SelectorEntries get rentalIniteialSelected => {
         SelectorCategoryEntry(
@@ -351,7 +351,7 @@ class HouseFiltersRepository {
   }
 
   /// 户型的 初始选中项
-  DropselectResult? floorPlanBuyResult;
+  DropdownSelectorResult? floorPlanBuyResult;
 
   final floorPlanBuyIniteialSelected = <SelectorCategoryEntry>{};
 
@@ -408,7 +408,7 @@ class HouseFiltersRepository {
   }
 
   /// 户型的 初始选中项
-  DropselectResult? floorPlanSellResult;
+  DropdownSelectorResult? floorPlanSellResult;
 
   final floorPlanSellIniteialSelected = <SelectorCategoryEntry>{};
 
@@ -466,7 +466,7 @@ class HouseFiltersRepository {
   }
 
   /// 户型的 初始选中项
-  DropselectResult? floorPlanRentResult;
+  DropdownSelectorResult? floorPlanRentResult;
 
   final floorPlanRentIniteialSelected = <SelectorCategoryEntry>{};
 
@@ -514,7 +514,7 @@ class HouseFiltersRepository {
   }
 
   /// 更多的 初始选中项
-  DropselectResult? moreBuyResult;
+  DropdownSelectorResult? moreBuyResult;
 
   final moreBuyIniteialSelected = <SelectorTextEntry>{};
 
@@ -549,7 +549,7 @@ class HouseFiltersRepository {
   }
 
   /// 排序 初始选中项
-  DropselectResult? sortBuyResult;
+  DropdownSelectorResult? sortBuyResult;
 
   final sortBuyIniteialSelected = <SelectorTextEntry>{
     SelectorTextEntry.id(id: 'default_sort')
@@ -578,7 +578,7 @@ class HouseFiltersRepository {
   }
 
   /// 排序 初始选中项
-  DropselectResult? sortSellResult;
+  DropdownSelectorResult? sortSellResult;
 
   final sortSellIniteialSelected = <SelectorTextEntry>{
     SelectorTextEntry.id(id: 'comprehensive_sort')
@@ -607,7 +607,7 @@ class HouseFiltersRepository {
   }
 
   /// 排序 初始选中项
-  DropselectResult? sortRentResult;
+  DropdownSelectorResult? sortRentResult;
 
   final sortRentIniteialSelected = <SelectorTextEntry>{
     SelectorTextEntry.id(id: 'comprehensive_sort')

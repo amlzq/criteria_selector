@@ -1,25 +1,25 @@
 import 'constants.dart';
-import 'dropselect_tab_data.dart';
+import 'dropdown_tab_data.dart';
 import 'selector_entry.dart';
 import 'selector_utils.dart';
 
-/// Selection result for a single tab in [DropselectTabBar].
+/// Selection result for a single tab in [DropdownSelectorBar].
 ///
 /// This object bundles the tab metadata ([tabData]) and the selected entries
 /// ([selected]) for callback consumption.
-class DropselectResult {
+class DropdownSelectorResult {
   /// Selector
-  final DropselectTabData tabData;
+  final DropdownTabData tabData;
 
   /// Result value
   final SelectorEntries selected;
 
-  const DropselectResult({required this.tabData, required this.selected});
+  const DropdownSelectorResult({required this.tabData, required this.selected});
 
-  /// Convenience access to [DropselectTabData.index].
+  /// Convenience access to [DropdownTabData.index].
   get tabIndex => tabData.index;
 
-  /// Convenience access to [DropselectTabData.tag].
+  /// Convenience access to [DropdownTabData.tag].
   get tabTag => tabData.tag;
 
   /// Finds children at the given tree [level] under [entry].
@@ -36,5 +36,5 @@ class DropselectResult {
 
   @override
   String toString() =>
-      'DropselectResult(tabData: $tabData, selected: ${selected.flatten()})';
+      'DropdownSelectorResult(tabData: $tabData, selected: ${selected.flatten()})';
 }

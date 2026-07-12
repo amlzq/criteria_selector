@@ -31,18 +31,18 @@ SelectorCategoryEntry<dynamic> _category(
 }
 
 void main() {
-  group('DropselectTabBar', () {
+  group('DropdownSelectorBar', () {
     testWidgets('toggles overlay and indicator on tap', (tester) async {
       var showed = false;
       var hidden = false;
-      final controller = DropselectTabController();
+      final controller = DropdownSelectorController();
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            appBar: DropselectTabBar(
+            appBar: DropdownSelectorBar(
               tabs: const [
-                DropselectTab(label: 'Filter'),
+                DropdownTab(label: 'Filter'),
               ],
               selectors: [
                 ListSelector(
@@ -81,15 +81,15 @@ void main() {
     });
 
     testWidgets('applies selection and updates tab label', (tester) async {
-      DropselectResult? applied;
-      final controller = DropselectTabController();
+      DropdownSelectorResult? applied;
+      final controller = DropdownSelectorController();
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            appBar: DropselectTabBar(
+            appBar: DropdownSelectorBar(
               tabs: const [
-                DropselectTab(label: 'Sort'),
+                DropdownTab(label: 'Sort'),
               ],
               selectors: [
                 ListSelector(
@@ -125,15 +125,15 @@ void main() {
     });
 
     testWidgets('uses labelGetter when provided', (tester) async {
-      DropselectResult? applied;
-      final controller = DropselectTabController();
+      DropdownSelectorResult? applied;
+      final controller = DropdownSelectorController();
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            appBar: DropselectTabBar(
+            appBar: DropdownSelectorBar(
               tabs: [
-                DropselectTab(
+                DropdownTab(
                   label: 'Price',
                   labelGetter: (_) => 'Custom',
                 ),
@@ -169,16 +169,16 @@ void main() {
 
     testWidgets('fires onChanged and onReset in multiple selection',
         (tester) async {
-      DropselectResult? changed;
+      DropdownSelectorResult? changed;
       var resetCalled = false;
-      final controller = DropselectTabController();
+      final controller = DropdownSelectorController();
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            appBar: DropselectTabBar(
+            appBar: DropdownSelectorBar(
               tabs: const [
-                DropselectTab(label: 'Multi'),
+                DropdownTab(label: 'Multi'),
               ],
               selectors: [
                 ListSelector(

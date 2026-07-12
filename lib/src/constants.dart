@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'dropselect_result.dart';
-import 'dropselect_tab_data.dart';
+import 'dropdown_selector_result.dart';
+import 'dropdown_tab_data.dart';
 import 'selector/selector_controller.dart';
 import 'selector_entry.dart';
 
@@ -9,7 +9,7 @@ import 'selector_entry.dart';
 typedef SelectorEntries<T> = Set<SelectorEntry<T>>;
 
 /// Callback invoked when the selection changes or is applied.
-typedef DropselectResultCallback = void Function(DropselectResult result);
+typedef DropdownSelectorResultCallback = void Function(DropdownSelectorResult result);
 
 /// Callback invoked with the currently selected entries.
 typedef SelectorCallback = void Function(SelectorEntries selected);
@@ -18,10 +18,10 @@ typedef SelectorCallback = void Function(SelectorEntries selected);
 typedef ItemTapCallback<T extends SelectorEntry> = Function(int index, T entry);
 
 /// Callback parameter indicates which selector is being shown or hidden.
-typedef SelectorVisibilityCallback = void Function(DropselectTabData tabData);
+typedef SelectorVisibilityCallback = void Function(DropdownTabData tabData);
 
-/// Builds a custom label for a tab based on the current [DropselectResult].
-typedef DropselectTabLabelGetter = String Function(DropselectResult result);
+/// Builds a custom label for a tab based on the current [DropdownSelectorResult].
+typedef DropdownTabLabelGetter = String Function(DropdownSelectorResult result);
 
 /// Callback invoked when a custom range entry is tapped.
 typedef CustomRangeListener = void Function(

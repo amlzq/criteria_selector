@@ -17,7 +17,7 @@ class RentPage extends StatefulWidget {
 }
 
 class _RentPageState extends State<RentPage> {
-  final _controller = DropselectTabController();
+  final _controller = DropdownSelectorController();
   late final HouseRepository _repo;
   late final HouseFiltersRepository _filtersRepo;
   HouseFilter? _filter;
@@ -58,7 +58,7 @@ class _RentPageState extends State<RentPage> {
     super.dispose();
   }
 
-  void _showSelectedResult(DropselectResult result) {
+  void _showSelectedResult(DropdownSelectorResult result) {
     final l10n = AppLocalizations.of(context);
     final conditions = '${result.selected.flatten()}';
     ScaffoldMessenger.of(context).showSnackBar(
@@ -92,7 +92,7 @@ class _RentPageState extends State<RentPage> {
     );
   }
 
-  HouseFilter? _dropselectResultParser(DropselectResult result) {
+  HouseFilter? _dropdownSelectorResultParser(DropdownSelectorResult result) {
     final filter = HouseFilter(cityId: userCityId);
     if (result.tabIndex == 0) {
       // 区域
@@ -187,9 +187,9 @@ class _RentPageState extends State<RentPage> {
     return filter;
   }
 
-  void _handleSelectorChange(DropselectResult result) async {
+  void _handleSelectorChange(DropdownSelectorResult result) async {
     final l10n = AppLocalizations.of(context);
-    _filter = _dropselectResultParser(result);
+    _filter = _dropdownSelectorResultParser(result);
     if (_filter == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n?.filterParseFailed ?? '')),
@@ -222,9 +222,9 @@ class _RentPageState extends State<RentPage> {
     }
   }
 
-  void _handleSelectorApply(DropselectResult result) {
+  void _handleSelectorApply(DropdownSelectorResult result) {
     final l10n = AppLocalizations.of(context);
-    _filter = _dropselectResultParser(result);
+    _filter = _dropdownSelectorResultParser(result);
     if (_filter == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n?.filterParseFailed ?? '')),
@@ -251,7 +251,7 @@ class _RentPageState extends State<RentPage> {
             child: Image.asset('assets/realestate/banner_realestate.jpg',
                 fit: BoxFit.cover),
           ),
-          DropselectTabBar(
+          DropdownSelectorBar(
             controller: _controller,
             // labelColor: Colors.orange,
             // indicator: Icon(Icons.arrow_upward, size: 16),
@@ -260,17 +260,17 @@ class _RentPageState extends State<RentPage> {
             //   backgroundColor: Colors.orange.withOpacity(0.54),
             // ),
             tabs: [
-              DropselectTab(
+              DropdownTab(
                 // tag: 'region',
                 label: l10n?.region ?? '',
-                // labelGetter: (DropselectResult result) {
+                // labelGetter: (DropdownSelectorResult result) {
                 //   // 可选：用户根据结果自定义标签
                 //   return '自定义标签';
                 // },
               ),
-              DropselectTab(label: l10n?.price ?? ''),
-              DropselectTab(label: l10n?.floorPlan ?? ''),
-              DropselectTab(
+              DropdownTab(label: l10n?.price ?? ''),
+              DropdownTab(label: l10n?.floorPlan ?? ''),
+              DropdownTab(
                 child: Image.asset('assets/sorting.png', width: 16, height: 16),
               ),
             ],
@@ -340,18 +340,18 @@ class _RentPageState extends State<RentPage> {
                 },
               ),
             ],
-            onSelectorShowed: (DropselectTabData tabData) {
+            onSelectorShowed: (DropdownTabData tabData) {
               debugPrint('onShowed: ${tabData.label}');
             },
-            onSelectorHidden: (DropselectTabData tabData) {
+            onSelectorHidden: (DropdownTabData tabData) {
               debugPrint('onHidden: ${tabData.label}');
             },
-            onChanged: (DropselectResult result) {
+            onChanged: (DropdownSelectorResult result) {
               debugPrintLarge('onChanged: $result');
               _handleSelectorChange(result);
               _showSelectedResult(result);
             },
-            onApplied: (DropselectResult result) {
+            onApplied: (DropdownSelectorResult result) {
               debugPrintLarge('onApplied: $result');
               _handleSelectorApply(result);
               if (result.tabIndex == 2) {

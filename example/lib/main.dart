@@ -72,7 +72,7 @@ class _MyAppState extends State<MyApp> {
         final baseTheme = Theme.of(context);
         final theme = baseTheme.copyWith(
           extensions: <ThemeExtension<dynamic>>[
-            DropselectTabBarTheme(
+            DropdownSelectorBarTheme(
               selectorTheme: SelectorThemeData(baseTheme),
             ),
           ],

@@ -1,8 +1,8 @@
 import 'constants.dart';
 
 /// Aggregates tab label data for easy passing between widgets.
-class DropselectTabData {
-  /// Tab index in the [DropselectTabBar].
+class DropdownTabData {
+  /// Tab index in the [DropdownSelectorBar].
   final int index;
 
   /// Original label provided by the tab (before any result is applied).
@@ -12,12 +12,12 @@ class DropselectTabData {
   final String? tag;
 
   /// Optional custom label builder based on the current selection result.
-  final DropselectTabLabelGetter? labelGetter;
+  final DropdownTabLabelGetter? labelGetter;
 
   /// Applied result label, if any.
   String? resultLabel;
 
-  DropselectTabData({
+  DropdownTabData({
     required this.index,
     this.originalLabel,
     this.tag,
@@ -32,5 +32,5 @@ class DropselectTabData {
 
   @override
   String toString() =>
-      'DropselectTabData(index: $index, originalLabel: $originalLabel)';
+      'DropdownTabData(index: $index, originalLabel: $originalLabel)';
 }
