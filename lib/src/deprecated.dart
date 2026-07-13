@@ -8,15 +8,15 @@
 /// its new counterpart, so you can simply replace the name in your code.
 library;
 
-import 'dropdown_selector_bar.dart';
 import 'dropdown_overlay.dart';
 import 'dropdown_overlay_style.dart';
+import 'dropdown_selector_bar.dart';
+import 'dropdown_selector_bar_theme.dart';
+import 'dropdown_selector_controller.dart';
 import 'dropdown_selector_result.dart';
 import 'dropdown_tab_data.dart';
-import 'dropdown_selector_controller.dart';
-import 'dropdown_selector_bar_theme.dart';
-import 'selector/selector_delegate.dart';
 import 'selector/constants.dart';
+import 'selector/selector_delegate.dart';
 
 /// Use [DropdownSelectorBar] instead.
 @Deprecated(

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'constants.dart';
 import 'cascading_selector.dart';
+import 'constants.dart';
 import 'flatten_selector.dart';
 import 'grid_selector.dart';
 import 'list_selector.dart';
-import 'widgets/widgets.dart';
 import 'selector_entry.dart';
+import 'widgets/widgets.dart';
 
 /// Builds the action bar shown at the bottom of the selector panel.
 ///
@@ -33,11 +33,14 @@ abstract class SelectorDelegate {
     this.entriesLoader,
     this.selectedEntriesLoader,
     this.resetEntriesLoader,
-    @Deprecated('Use [entriesLoader] instead. Will be removed in the next major version.')
+    @Deprecated(
+        'Use [entriesLoader] instead. Will be removed in the next major version.')
     this.dataFetcher,
-    @Deprecated('Use [selectedEntriesLoader] instead. Will be removed in the next major version.')
+    @Deprecated(
+        'Use [selectedEntriesLoader] instead. Will be removed in the next major version.')
     this.selectedDataFetcher,
-    @Deprecated('Use [resetEntriesLoader] instead. Will be removed in the next major version.')
+    @Deprecated(
+        'Use [resetEntriesLoader] instead. Will be removed in the next major version.')
     this.resetDataFetcher,
     this.actionBarBuilder,
     this.selectedColor,
@@ -75,7 +78,8 @@ abstract class SelectorDelegate {
   ///
   /// @Deprecated Use [entriesLoader] instead. Will be removed in the next major
   /// version.
-  @Deprecated('Use [entriesLoader] instead. Will be removed in the next major version.')
+  @Deprecated(
+      'Use [entriesLoader] instead. Will be removed in the next major version.')
   final Future<SelectorEntries> Function()? dataFetcher;
 
   Future<SelectorEntries>? _data;
@@ -95,7 +99,8 @@ abstract class SelectorDelegate {
   ///
   /// @Deprecated Use [selectedEntriesLoader] instead. Will be removed in the
   /// next major version.
-  @Deprecated('Use [selectedEntriesLoader] instead. Will be removed in the next major version.')
+  @Deprecated(
+      'Use [selectedEntriesLoader] instead. Will be removed in the next major version.')
   final SelectorEntries? Function()? selectedDataFetcher;
 
   SelectorEntries? _selectedData;
@@ -117,7 +122,8 @@ abstract class SelectorDelegate {
   ///
   /// @Deprecated Use [resetEntriesLoader] instead. Will be removed in the next
   /// major version.
-  @Deprecated('Use [resetEntriesLoader] instead. Will be removed in the next major version.')
+  @Deprecated(
+      'Use [resetEntriesLoader] instead. Will be removed in the next major version.')
   final SelectorEntries? Function()? resetDataFetcher;
 
   SelectorEntries? _resetData;

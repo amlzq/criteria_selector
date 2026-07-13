@@ -1,5 +1,5 @@
-import 'selector/constants.dart';
 import 'dropdown_tab_data.dart';
+import 'selector/constants.dart';
 import 'selector/selector_entry.dart';
 import 'selector/selector_utils.dart';
 

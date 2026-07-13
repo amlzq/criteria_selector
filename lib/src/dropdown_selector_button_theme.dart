@@ -156,8 +156,7 @@ class DropdownSelectorButtonTheme
       foregroundColor: Color.lerp(foregroundColor, other.foregroundColor, t),
       overlayColor: Color.lerp(overlayColor, other.overlayColor, t),
       shadowColor: Color.lerp(shadowColor, other.shadowColor, t),
-      surfaceTintColor:
-          Color.lerp(surfaceTintColor, other.surfaceTintColor, t),
+      surfaceTintColor: Color.lerp(surfaceTintColor, other.surfaceTintColor, t),
       side: side != null && other.side != null
           ? BorderSide.lerp(side!, other.side!, t)
           : t < 0.5

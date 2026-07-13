@@ -135,8 +135,7 @@ class DropdownSelectorButton extends StatefulWidget {
   final VoidCallback? onReset;
 
   @override
-  State<DropdownSelectorButton> createState() =>
-      _DropdownSelectorButtonState();
+  State<DropdownSelectorButton> createState() => _DropdownSelectorButtonState();
 }
 
 class _DropdownSelectorButtonState extends State<DropdownSelectorButton>
