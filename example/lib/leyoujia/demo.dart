@@ -4,71 +4,21 @@ import 'package:criteria_selector/criteria_selector.dart';
 import 'package:flutter/material.dart';
 
 import 'house_filters_repository.dart';
-import 'my_widgets.dart';
 
-class DialogPage extends StatefulWidget {
-  const DialogPage({super.key});
+class DemoPage extends StatefulWidget {
+  const DemoPage({super.key});
 
   @override
-  State<DialogPage> createState() => _DialogPageState();
+  State<DemoPage> createState() => _DemoPageState();
 }
 
-class _DialogPageState extends State<DialogPage> {
+class _DemoPageState extends State<DemoPage> {
   late final HouseFiltersRepository _filtersRepo;
 
   @override
   void initState() {
     super.initState();
     _filtersRepo = HouseFiltersRepository();
-  }
-
-  void showSortSelector() async {
-    final delegate = ListSelectorDelegate(
-      entriesLoader: _filtersRepo.fetchSortBuyData,
-      selectedEntriesLoader: _filtersRepo.fetchSortBuySelectedData,
-      resetEntriesLoader: _filtersRepo.fetchSortBuyResetData,
-      selectionMode: SelectionMode.single,
-      radioBuilder: (context, selected) {
-        return MyRadio(value: selected);
-      },
-    );
-    final controller = SelectorController(
-      selectionMode: delegate.selectionMode,
-      previousSelected: delegate.selectedData,
-      resetSelected: delegate.resetData,
-    );
-    controller.addApplyListener((selected) {
-      print('addApplyListener: ☎️ $selected');
-    });
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.red,
-          alignment: Alignment.center,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextButton(
-                onPressed: () {
-                  controller.select('sale_time_asc');
-                },
-                child: Text('外部选中'),
-              ),
-              SelectorPanel(
-                controller: controller,
-                delegate: delegate,
-                onApplyTap: (selected) {
-                  print('onApplyTap ✅: $selected');
-                  Navigator.of(context).pop(selected);
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
   }
 
   void showFloorPlanBottomSelector() async {
@@ -136,12 +86,12 @@ class _DialogPageState extends State<DialogPage> {
           mainAxisSize: MainAxisSize.min,
           children: [
             ElevatedButton(
-              onPressed: showSortSelector,
-              child: const Text('Show SortSelector'),
+              onPressed: showFloorPlanBottomSelector,
+              child: const Text('Show Sort Selector'),
             ),
             ElevatedButton(
               onPressed: showFloorPlanBottomSelector,
-              child: const Text('Show FloorPlanBottomSelector'),
+              child: const Text('Show FloorPlan Selector'),
             ),
           ],
         ),

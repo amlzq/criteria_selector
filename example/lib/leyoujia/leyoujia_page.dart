@@ -1,8 +1,10 @@
-import 'package:example/leyoujia/dialog_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'button.dart';
 import 'buy_page.dart';
+import 'demo.dart';
+import 'dialog_bottom_sheet.dart';
 import 'map_page.dart';
 import 'rent_page.dart';
 import 'sell_page.dart';
@@ -23,10 +25,31 @@ class LeyoujiaPage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => DialogPage()),
+                  MaterialPageRoute(
+                    builder: (context) => const ButtonDemoPage(),
+                  ),
                 );
               },
-              child: Text('Dialog Sheet'),
+              child: const Text('DropdownSelectorButton'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => DemoPage()),
+                );
+              },
+              child: Text('Demo'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => DialogBottomSheetDemoPage()),
+                );
+              },
+              child: Text('Dialog & BottomSheet'),
             ),
             TextButton(
               onPressed: () {

@@ -12,6 +12,7 @@ export 'src/dropdown_selector_button.dart';
 export 'src/dropdown_selector_button_theme.dart';
 export 'src/dropdown_selector_controller.dart';
 export 'src/dropdown_tab_data.dart';
+export 'src/dialog.dart';
 export 'src/deprecated.dart';
 export 'src/i18n/localizations_delegate.dart';
 export 'src/selector/constants.dart';
