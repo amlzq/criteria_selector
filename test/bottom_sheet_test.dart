@@ -24,7 +24,7 @@ class _SheetTestDelegate extends SelectorDelegate {
 }
 
 void main() {
-  group('showModalBottomCriteriaSelector', () {
+  group('showModalBottomSelector', () {
     testWidgets('shows a bottom sheet and returns null when dismissed',
         (WidgetTester tester) async {
       final navigatorKey = GlobalKey<NavigatorState>();
@@ -35,7 +35,7 @@ void main() {
         ),
       );
 
-      final future = showModalBottomCriteriaSelector(
+      final future = showModalBottomSelector(
         context: navigatorKey.currentContext!,
         delegate: _SheetTestDelegate(),
       );
@@ -61,7 +61,7 @@ void main() {
         ),
       );
 
-      final future = showModalBottomCriteriaSelector(
+      final future = showModalBottomSelector(
         context: navigatorKey.currentContext!,
         delegate: _SheetTestDelegate(),
       );

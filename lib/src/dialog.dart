@@ -22,7 +22,7 @@ import 'selector/selector_theme_data.dart';
 ///   to confirm; "Reset" only clears the current selection without closing.
 ///
 /// The optional [title] is rendered above the selector panel.
-Future<SelectorEntries?> showCriteriaSelector({
+Future<SelectorEntries?> showSelector({
   required BuildContext context,
   required SelectorDelegate delegate,
   bool barrierDismissible = true,
@@ -56,7 +56,7 @@ Future<SelectorEntries?> showCriteriaSelector({
       .push<SelectorEntries?>(route);
 }
 
-/// Modal route used by [showCriteriaSelector].
+/// Modal route used by [showSelector].
 ///
 /// Mirrors the structure of Flutter's `_TimePickerDialogRoute`: it builds the
 /// page via [pageBuilder] and applies a fade + scale transition.

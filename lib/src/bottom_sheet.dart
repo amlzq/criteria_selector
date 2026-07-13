@@ -17,7 +17,7 @@ import 'selector/selector_theme_data.dart';
 /// entirely by the concrete [SelectorDelegate] passed via [delegate]. Any
 /// [SelectorDelegate] subclass works, so no separate functions are required.
 ///
-/// The interaction mirrors [showCriteriaSelector]:
+/// The interaction mirrors [showSelector]:
 /// - In single-selection mode, tapping an item applies the selection
 ///   immediately and closes the sheet.
 /// - In multi-selection mode, the action bar's "Apply" button must be tapped
@@ -35,7 +35,7 @@ import 'selector/selector_theme_data.dart';
 /// content. Because the selector body is shrink-wrapped (it has no outer
 /// scroll), a default max height of 90% of the screen is applied automatically
 /// and the body scrolls internally, unless [constraints] is provided.
-Future<SelectorEntries?> showModalBottomCriteriaSelector({
+Future<SelectorEntries?> showModalBottomSelector({
   required BuildContext context,
   required SelectorDelegate delegate,
   bool isScrollControlled = true,

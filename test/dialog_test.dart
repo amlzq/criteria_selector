@@ -23,7 +23,7 @@ class _DialogTestDelegate extends SelectorDelegate {
 }
 
 void main() {
-  group('showCriteriaSelector', () {
+  group('showSelector', () {
     testWidgets('shows a dialog and returns null when dismissed',
         (WidgetTester tester) async {
       final navigatorKey = GlobalKey<NavigatorState>();
@@ -34,7 +34,7 @@ void main() {
         ),
       );
 
-      final future = showCriteriaSelector(
+      final future = showSelector(
         context: navigatorKey.currentContext!,
         delegate: _DialogTestDelegate(),
       );
@@ -62,7 +62,7 @@ void main() {
         ),
       );
 
-      final future = showCriteriaSelector(
+      final future = showSelector(
         context: navigatorKey.currentContext!,
         delegate: _DialogTestDelegate(),
       );

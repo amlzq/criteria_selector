@@ -35,7 +35,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () async {
-              final result = await showCriteriaSelector(
+              final result = await showSelector(
                 context: context,
                 delegate: CascadingSelectorDelegate(
                   entriesLoader: _filtersRepo.fetchRegionData,
@@ -57,7 +57,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
           ),
           ElevatedButton(
             onPressed: () async {
-              final result = await showCriteriaSelector(
+              final result = await showSelector(
                 context: context,
                 delegate: GridSelectorDelegate(
                   entriesLoader: _filtersRepo.fetchBuyPriceData,
@@ -80,7 +80,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
           ),
           ElevatedButton(
             onPressed: () async {
-              final result = await showCriteriaSelector(
+              final result = await showSelector(
                 context: context,
                 delegate: FlattenSelectorDelegate(
                   entriesLoader: _filtersRepo.fetchFloorPlanBuyData,
@@ -102,7 +102,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
           ),
           ElevatedButton(
             onPressed: () async {
-              final result = await showCriteriaSelector(
+              final result = await showSelector(
                 context: context,
                 delegate: FlattenSelectorDelegate(
                   entriesLoader: _filtersRepo.fetchMoreBuyData,
@@ -123,7 +123,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
           ),
           ElevatedButton(
             onPressed: () async {
-              final result = await showCriteriaSelector(
+              final result = await showSelector(
                 context: context,
                 delegate: ListSelectorDelegate(
                   entriesLoader: _filtersRepo.fetchSortBuyData,
@@ -145,7 +145,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () async {
-              final result = await showModalBottomCriteriaSelector(
+              final result = await showModalBottomSelector(
                 context: context,
                 delegate: CascadingSelectorDelegate(
                   entriesLoader: _filtersRepo.fetchRegionData,
@@ -167,7 +167,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
           ),
           ElevatedButton(
             onPressed: () async {
-              final result = await showModalBottomCriteriaSelector(
+              final result = await showModalBottomSelector(
                 context: context,
                 delegate: GridSelectorDelegate(
                   entriesLoader: _filtersRepo.fetchBuyPriceData,
@@ -190,7 +190,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
           ),
           ElevatedButton(
             onPressed: () async {
-              final result = await showModalBottomCriteriaSelector(
+              final result = await showModalBottomSelector(
                 context: context,
                 delegate: FlattenSelectorDelegate(
                   entriesLoader: _filtersRepo.fetchFloorPlanBuyData,
@@ -212,7 +212,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
           ),
           ElevatedButton(
             onPressed: () async {
-              final result = await showModalBottomCriteriaSelector(
+              final result = await showModalBottomSelector(
                 context: context,
                 delegate: FlattenSelectorDelegate(
                   entriesLoader: _filtersRepo.fetchMoreBuyData,
@@ -233,7 +233,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
           ),
           ElevatedButton(
             onPressed: () async {
-              final result = await showModalBottomCriteriaSelector(
+              final result = await showModalBottomSelector(
                 context: context,
                 delegate: ListSelectorDelegate(
                   entriesLoader: _filtersRepo.fetchSortBuyData,
