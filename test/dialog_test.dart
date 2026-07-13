@@ -1,4 +1,5 @@
 import 'package:criteria_selector/criteria_selector.dart';
+import 'package:criteria_selector/src/selector/selector_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
