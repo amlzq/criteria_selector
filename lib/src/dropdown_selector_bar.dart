@@ -195,8 +195,6 @@ class _DropdownSelectorBarState extends State<DropdownSelectorBar>
   }
 
   void _handleTap(DropdownTabData tabData) {
-    debugPrint('DropdownSelectorBar _handleTap index: ${tabData.index}');
-
     // final barHeight = _getBarHeight;
 
     final selector = widget.selectorDelegates.elementAt(tabData.index);
@@ -504,8 +502,6 @@ class DropdownTab extends StatelessWidget {
     final unselected = controller.currentIndex != info.index;
     final isSelectorShowing = controller.isSelectorShowing;
 
-    debugPrint('label: $label, unselected: $unselected');
-
     DropdownTabData? tabData = controller.tabDataMap.containsKey(info.index)
         ? controller.tabDataMap[info.index]
         : null;
@@ -534,15 +530,55 @@ class DropdownTab extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                !unselected && isSelectorShowing
-                    ? info.indicator ?? theme?.indicator ?? defaults.indicator!
-                    : info.unselectedIndicator ??
-                        theme?.unselectedIndicator ??
-                        defaults.unselectedIndicator!,
+                _buildIndicator(
+                  controller,
+                  info,
+                  theme,
+                  defaults,
+                  unselected,
+                  isSelectorShowing,
+                ),
               ],
             ),
       ),
     );
+  }
+
+  Widget _buildIndicator(
+    DropdownSelectorController controller,
+    _DropdownSelectorTabInfo info,
+    DropdownSelectorBarTheme? theme,
+    DropdownSelectorBarTheme defaults,
+    bool unselected,
+    bool isSelectorShowing,
+  ) {
+    final effectiveIndicator =
+        info.indicator ?? theme?.indicator ?? defaults.indicator!;
+    final effectiveUnselected = info.unselectedIndicator ??
+        theme?.unselectedIndicator ??
+        defaults.unselectedIndicator;
+
+    // Non-active tab: show the unselected indicator (fallback to indicator).
+    if (unselected) {
+      return effectiveUnselected ?? effectiveIndicator;
+    }
+
+    // Only indicator provided: rotate 180° driven by the overlay animation
+    // (smooth for both opening and closing).
+    if (effectiveUnselected == null) {
+      return RotationTransition(
+        turns: Tween<double>(begin: 0.0, end: 0.5).animate(
+          CurvedAnimation(
+            parent: controller.overlayAnimation,
+            curve: Curves.easeOutCubic,
+          ),
+        ),
+        child: effectiveIndicator,
+      );
+    }
+
+    // Both indicators provided: switch statically based on the expanded state.
+    return isSelectorShowing ? effectiveIndicator : effectiveUnselected;
   }
 }
 
@@ -603,16 +639,7 @@ class _DropdownSelectorBarDefaults extends DropdownSelectorBarTheme {
   TextStyle? get unselectedLabelStyle => _textTheme.titleSmall;
 
   @override
-  Widget? get indicator => const Icon(
-        Icons.arrow_drop_up,
-        // color: labelColor,
-      );
-
-  @override
-  Widget? get unselectedIndicator => const Icon(
-        Icons.arrow_drop_down,
-        // color: unselectedLabelColor,
-      );
+  Widget? get indicator => const Icon(Icons.arrow_drop_down);
 
   // @override
   // WidgetStateProperty<TextStyle?>? get labelStyle {
