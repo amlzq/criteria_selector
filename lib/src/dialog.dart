@@ -29,7 +29,6 @@ Future<SelectorEntries?> showSelector({
   bool useRootNavigator = true,
   Widget? title,
   SelectorThemeData? selectorTheme,
-  Widget Function(Object error, StackTrace? stackTrace)? errorBuilder,
   TransitionBuilder? builder,
   Color? barrierColor,
   RouteSettings? routeSettings,
@@ -40,7 +39,6 @@ Future<SelectorEntries?> showSelector({
       delegate: delegate,
       title: title,
       selectorTheme: selectorTheme,
-      errorBuilder: errorBuilder,
     ),
     barrierDismissible: barrierDismissible,
     barrierColor: barrierColor ?? Colors.black54,
@@ -105,13 +103,11 @@ class _SelectorDialog extends StatefulWidget {
     required this.delegate,
     this.title,
     this.selectorTheme,
-    this.errorBuilder,
   });
 
   final SelectorDelegate delegate;
   final Widget? title;
   final SelectorThemeData? selectorTheme;
-  final Widget Function(Object error, StackTrace? stackTrace)? errorBuilder;
 
   @override
   State<_SelectorDialog> createState() => _SelectorDialogState();
@@ -133,7 +129,6 @@ class _SelectorDialogState extends State<_SelectorDialog> {
     final panel = SelectorPanel(
       delegate: widget.delegate,
       selectorTheme: widget.selectorTheme,
-      errorBuilder: widget.errorBuilder,
       onApplyTap: (selected) => _popWith(selected),
       // Reset is handled internally by the selector widget; the dialog stays
       // open so the user can keep adjusting the selection.

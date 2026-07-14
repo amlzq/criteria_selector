@@ -33,7 +33,6 @@ class SelectorPanel extends StatefulWidget {
     this.onApplyTap,
     this.onResetTap,
     this.selectorTheme,
-    this.errorBuilder,
   });
 
   final SelectorDelegate delegate;
@@ -66,11 +65,6 @@ class SelectorPanel extends StatefulWidget {
   final VoidCallback? onResetTap;
 
   final SelectorThemeData? selectorTheme;
-
-  /// Optional builder invoked when [SelectorDelegate.data] fails to load.
-  ///
-  /// When omitted, a simple [Text] widget showing the error is rendered.
-  final Widget Function(Object error, StackTrace? stackTrace)? errorBuilder;
 
   @override
   State<SelectorPanel> createState() => _SelectorPanelState();
@@ -163,12 +157,11 @@ class _SelectorPanelState extends State<SelectorPanel> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasError) {
-                  final error = snapshot.error!;
-                  final builder = widget.errorBuilder;
-                  if (builder != null) {
-                    return builder(error, snapshot.stackTrace);
-                  }
-                  return Center(child: Text('Error: $error'));
+                  return widget.delegate.buildError(
+                    context,
+                    snapshot.error!,
+                    snapshot.stackTrace,
+                  );
                 } else {
                   final entries = snapshot.data?.toList() ?? <SelectorEntry>[];
                   return GestureDetector(

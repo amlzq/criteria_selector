@@ -44,7 +44,6 @@ Future<SelectorEntries?> showModalBottomSelector({
   bool useSafeArea = true,
   Widget? title,
   SelectorThemeData? selectorTheme,
-  Widget Function(Object error, StackTrace? stackTrace)? errorBuilder,
   Color? backgroundColor,
   double? elevation,
   ShapeBorder? shape,
@@ -84,7 +83,6 @@ Future<SelectorEntries?> showModalBottomSelector({
       delegate: delegate,
       title: title,
       selectorTheme: selectorTheme,
-      errorBuilder: errorBuilder,
     ),
   );
 }
@@ -98,13 +96,11 @@ class _ModalBottomSheetContent extends StatefulWidget {
     required this.delegate,
     this.title,
     this.selectorTheme,
-    this.errorBuilder,
   });
 
   final SelectorDelegate delegate;
   final Widget? title;
   final SelectorThemeData? selectorTheme;
-  final Widget Function(Object error, StackTrace? stackTrace)? errorBuilder;
 
   @override
   State<_ModalBottomSheetContent> createState() =>
@@ -127,7 +123,6 @@ class _ModalBottomSheetContentState extends State<_ModalBottomSheetContent> {
     final panel = SelectorPanel(
       delegate: widget.delegate,
       selectorTheme: widget.selectorTheme,
-      errorBuilder: widget.errorBuilder,
       onApplyTap: (selected) => _popWith(selected),
       // Reset is handled internally by the selector widget; the sheet stays
       // open so the user can keep adjusting the selection.

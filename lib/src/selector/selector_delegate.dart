@@ -23,7 +23,7 @@ typedef SelectorActionBarBuilder = Widget Function(
 /// A [SelectorDelegate] is responsible for:
 /// - Defining how entries are fetched and restored (via loader callbacks).
 /// - Defining UI/theme overrides (colors and per-widget themes).
-/// - Building the selector body widget and a loading skeleton.
+/// - Building the selector body widget, a loading skeleton and an error widget.
 ///
 /// The actual selection state is managed by [SelectorController] and widgets
 /// under `src/selector/`.
@@ -63,6 +63,7 @@ abstract class SelectorDelegate {
     this.expansionTileTheme,
     this.chipBarTheme,
     this.skeletonBuilder,
+    this.errorBuilder,
   });
 
   /// Selection mode applied to category entries.
@@ -196,6 +197,11 @@ abstract class SelectorDelegate {
   /// Optional builder for the loading skeleton.
   final WidgetBuilder? skeletonBuilder;
 
+  /// Optional builder invoked when [data] fails to load.
+  ///
+  /// When omitted, a simple [Text] widget showing the error is rendered.
+  final Widget Function(Object error, StackTrace? stackTrace)? errorBuilder;
+
   /// Builds the selector body widget.
   ///
   /// [entries] are the full selectable entries. [previousSelected] represents
@@ -208,6 +214,19 @@ abstract class SelectorDelegate {
 
   /// Builds the loading skeleton.
   Widget buildSkeleton(BuildContext context);
+
+  /// Builds the error widget shown when [data] fails to load.
+  ///
+  /// Returns the result of [errorBuilder] when provided, otherwise a simple
+  /// [Text] widget showing the error.
+  Widget buildError(
+    BuildContext context,
+    Object error,
+    StackTrace? stackTrace,
+  ) {
+    return errorBuilder?.call(error, stackTrace) ??
+        Center(child: Text('Error: $error'));
+  }
 }
 
 /// A cascading selector for tree-structured data.
@@ -244,6 +263,7 @@ class CascadingSelectorDelegate extends SelectorDelegate {
     super.expansionTileTheme,
     super.chipBarTheme,
     super.skeletonBuilder,
+    super.errorBuilder,
     // ignore: deprecated_member_use_from_same_package
     super.dataFetcher,
     // ignore: deprecated_member_use_from_same_package
@@ -321,6 +341,7 @@ class ListSelectorDelegate extends SelectorDelegate {
     super.expansionTileTheme,
     super.chipBarTheme,
     super.skeletonBuilder,
+    super.errorBuilder,
   });
 
   /// Optional custom radio widget builder.
@@ -386,6 +407,7 @@ class GridSelectorDelegate extends SelectorDelegate {
     super.expansionTileTheme,
     super.chipBarTheme,
     super.skeletonBuilder,
+    super.errorBuilder,
   });
 
   /// Number of columns in the grid.
@@ -464,6 +486,7 @@ class FlattenSelectorDelegate extends SelectorDelegate {
     super.expansionTileTheme,
     super.chipBarTheme,
     super.skeletonBuilder,
+    super.errorBuilder,
   });
 
   /// Number of columns in the flattened grid.

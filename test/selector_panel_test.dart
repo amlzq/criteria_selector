@@ -15,6 +15,7 @@ class _TestDelegate extends SelectorDelegate {
     super.selectedEntriesLoader,
     super.resetEntriesLoader,
     super.selectionMode,
+    super.errorBuilder,
   });
 
   final Widget Function(
@@ -111,8 +112,8 @@ void main() {
               delegate: _TestDelegate(
                 entriesLoader: () async => throw Exception('boom'),
                 bodyBuilder: (_, __, ___) => const Text('body'),
+                errorBuilder: (error, _) => Text('custom: $error'),
               ),
-              errorBuilder: (error, _) => Text('custom: $error'),
             ),
           ),
         ),

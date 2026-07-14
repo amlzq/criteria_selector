@@ -33,7 +33,6 @@ class CriteriaSelector extends StatefulWidget {
     this.onChangeTap,
     this.onApplyTap,
     this.onResetTap,
-    this.errorBuilder,
     this.maxHeightFactor = 0.5,
   }) : assert(maxHeightFactor > 0 && maxHeightFactor <= 1);
 
@@ -64,11 +63,6 @@ class CriteriaSelector extends StatefulWidget {
 
   /// Fired when reset is triggered (e.g. via the action bar's "Reset").
   final VoidCallback? onResetTap;
-
-  /// Optional builder invoked when [SelectorDelegate.data] fails to load.
-  ///
-  /// When omitted, a simple [Text] widget showing the error is rendered.
-  final Widget Function(Object error, StackTrace? stackTrace)? errorBuilder;
 
   /// Caps the selector's height to this fraction of the screen height when it
   /// is embedded in an unbounded context (e.g. a [Column] with
@@ -154,7 +148,6 @@ class _CriteriaSelectorState extends State<CriteriaSelector> {
         onChangeTap: widget.onChangeTap,
         onApplyTap: widget.onApplyTap,
         onResetTap: widget.onResetTap,
-        errorBuilder: widget.errorBuilder,
       ),
     );
   }
