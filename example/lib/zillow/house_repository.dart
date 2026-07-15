@@ -67,6 +67,7 @@ class HouseRepository {
 
 class HouseFilter {
   String? cityId;
+  List<Map<String, dynamic>>? region;
   List<Map<String, dynamic>>? listPrice;
   List<Map<String, dynamic>>? monthlyPayment;
   List<String>? bedrooms;
@@ -82,6 +83,7 @@ class HouseFilter {
 
   HouseFilter({
     required this.cityId,
+    this.region,
     this.listPrice,
     this.monthlyPayment,
     this.bedrooms,
@@ -99,6 +101,7 @@ class HouseFilter {
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     data['city_id'] = cityId;
+    data['region'] = region;
     data['list_price'] = listPrice;
     data['monthly_payment'] = monthlyPayment;
     data['bedrooms'] = bedrooms;

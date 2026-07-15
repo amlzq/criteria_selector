@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:criteria_selector/criteria_selector.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'house_filters_repository.dart';
+import 'my_widgets.dart';
 
 class ButtonDemoPage extends StatefulWidget {
   const ButtonDemoPage({super.key});
@@ -13,21 +17,21 @@ class ButtonDemoPage extends StatefulWidget {
 class _ButtonDemoPageState extends State<ButtonDemoPage> {
   late final HouseFiltersRepository _filtersRepo;
 
-  static ListSelectorDelegate _delegate() {
-    return ListSelectorDelegate(
-      entriesLoader: () async => <SelectorEntry<dynamic>>{
-        SelectorTextEntry<dynamic>.name(id: 'all', name: 'All'),
-        SelectorTextEntry<dynamic>.name(id: 'sale', name: 'For sale'),
-        SelectorTextEntry<dynamic>.name(id: 'rent', name: 'For rent'),
-        SelectorTextEntry<dynamic>.name(id: 'sold', name: 'Sold'),
-      },
-    );
-  }
+  final ValueNotifier<String> _floorPlanApplyText = ValueNotifier<String>('');
+  Timer? _floorPlanApplyTextDebounce;
+  int _floorPlanApplyTextRequestId = 0;
 
   @override
   void initState() {
     super.initState();
     _filtersRepo = HouseFiltersRepository();
+  }
+
+  @override
+  void dispose() {
+    _floorPlanApplyTextDebounce?.cancel();
+    _floorPlanApplyText.dispose();
+    super.dispose();
   }
 
   @override
@@ -42,8 +46,19 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               DropdownSelectorButton(
-                label: 'Filled',
-                selectorDelegate: _delegate(),
+                label: '区域',
+                selectorDelegate: CascadingSelectorDelegate(
+                  entriesLoader: _filtersRepo.fetchRegionData,
+                  selectedEntriesLoader: _filtersRepo.fetchRegionSelectedData,
+                  resetEntriesLoader: _filtersRepo.fetchRegionResetData,
+                  selectionMode: SelectionMode.single,
+                  radioBuilder: (context, selected) {
+                    return MyRadio(value: selected);
+                  },
+                  checkboxBuilder: (context, selected) {
+                    return MyCheckbox(value: selected);
+                  },
+                ),
                 onChanged: (result) {
                   print('onChanged: $result');
                 },
@@ -55,17 +70,60 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                 },
               ),
               DropdownSelectorButton.elevated(
-                label: 'Elevated',
-                selectorDelegate: _delegate(),
+                label: '价格',
+                selectorDelegate: GridSelectorDelegate(
+                  entriesLoader: _filtersRepo.fetchBuyPriceData,
+                  selectedEntriesLoader: _filtersRepo.fetchBuyPriceSelectedData,
+                  resetEntriesLoader: _filtersRepo.fetchBuyPriceResetData,
+                  selectionMode: SelectionMode.multiple,
+                  crossAxisCount: 4,
+                  childAspectRatio: 2.5,
+                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 10,
+                  gridTileTheme: const SelectorGridTileTheme(
+                    variant: SelectorGridTileVariant.outlined,
+                  ),
+                  applyText: AppLocalizations.of(context)?.apply ?? '',
+                ),
               ),
               DropdownSelectorButton.outlined(
-                label: 'Outlined',
-                selectorDelegate: _delegate(),
+                label: '户型',
+                selectorDelegate: FlattenSelectorDelegate(
+                  entriesLoader: _filtersRepo.fetchFloorPlanBuyData,
+                  selectedEntriesLoader:
+                      _filtersRepo.fetchFloorPlanBuySelectedData,
+                  resetEntriesLoader: _filtersRepo.fetchFloorPlanBuyResetData,
+                  selectionMode: SelectionMode.multiple,
+                  crossAxisCount: 3,
+                  childAspectRatio: 2.5,
+                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 8,
+                  sideBarTheme: const SelectorSideBarTheme(width: 98),
+                  actionBarBuilder: (
+                    context, {
+                    required onResetTap,
+                    required onApplyTap,
+                  }) {
+                    return MyActionBar(
+                      applyTextVN: _floorPlanApplyText,
+                      onResetTap: onResetTap,
+                      onApplyTap: onApplyTap,
+                    );
+                  },
+                ),
               ),
               DropdownSelectorButton(
-                label: 'With icon',
+                label: '更多',
                 icon: const Icon(Icons.filter_alt_outlined),
-                selectorDelegate: _delegate(),
+                selectorDelegate: ListSelectorDelegate(
+                  entriesLoader: _filtersRepo.fetchSortBuyData,
+                  selectedEntriesLoader: _filtersRepo.fetchSortBuySelectedData,
+                  resetEntriesLoader: _filtersRepo.fetchSortBuyResetData,
+                  selectionMode: SelectionMode.single,
+                  radioBuilder: (context, selected) {
+                    return MyRadio(value: selected);
+                  },
+                ),
               ),
             ],
           ),

@@ -27,6 +27,71 @@ class HouseFiltersRepository {
     if (noMaxHintText != null) this.noMaxHintText = noMaxHintText;
   }
 
+  DropdownSelectorResult? neighborhoodResult;
+
+  final neighborhoodIniteialSelected = {
+    SelectorCategoryEntry(
+      id: 'neighborhood',
+      name: '',
+      children: {SelectorTextEntry.any(parentId: 'neighborhood', name: '')},
+    )
+  };
+
+  SelectorEntries? fetchNeighborhoodSelectedData() =>
+      neighborhoodResult?.selected ?? neighborhoodIniteialSelected;
+
+  SelectorEntries? fetchNeighborhoodResetData() => neighborhoodIniteialSelected;
+
+  Future<SelectorEntries> fetchNeighborhoodData() async {
+    // simulate network delay
+    await Future.delayed(const Duration(milliseconds: 250));
+    final neighborhood =
+        neighborhoodFromJson(await loadJsonData('neighborhood.json'));
+    debugPrint('neighborhood length: ${neighborhood.length}');
+    SelectorEntries entries = neighborhood
+        .map(
+          (category) => SelectorCategoryEntry(
+            id: category.id!,
+            name: category.name!,
+            children: category.data
+                ?.map((l1) => SelectorTextEntry(
+                      parentId: category.id!,
+                      id: l1.id!,
+                      name: l1.name!,
+                      enabled: l1.enabled ?? true,
+                      children: l1.data
+                          ?.map((l2) => SelectorTextEntry(
+                                parentId: l1.id!,
+                                id: l2.id!,
+                                name: l2.name!,
+                                enabled: l2.enabled ?? true,
+                              ))
+                          .toSet(),
+                    ))
+                .toSet(),
+            selectionMode: SelectionMode.multiple,
+          ),
+        )
+        .toSet();
+
+    // Insert the "Any" entry
+    for (SelectorEntry category in entries) {
+      category.children?.insert(
+          0,
+          SelectorTextEntry.any(
+              parentId: category.id, name: anyEntryText, immediate: true));
+      for (SelectorEntry l1 in category.children ?? []) {
+        l1.children?.insert(
+          0,
+          SelectorTextEntry.any(parentId: l1.id, name: anyEntryText),
+        );
+      }
+    }
+
+    debugPrint('neighborhood length: ${entries.length}');
+    return Future.value(entries);
+  }
+
   DropdownSelectorResult? priceResult;
 
   SelectorEntries? fetchPriceSelectedData() => priceResult?.selected;
@@ -34,9 +99,7 @@ class HouseFiltersRepository {
   Future<SelectorEntries> fetchPriceData() async {
     // simulate network delay
     await Future.delayed(const Duration(milliseconds: 250));
-
     final prices = priceFromJson(await loadJsonData('price.json'));
-
     SelectorEntries entries = prices
         .map(
           (category) => SelectorCategoryEntry(
@@ -239,6 +302,45 @@ class HouseFiltersRepository {
 
     debugPrint('sort length: ${entries.length}');
     return Future.value(entries);
+  }
+}
+
+List<NeighborhoodData> neighborhoodFromJson(String str) =>
+    List<NeighborhoodData>.from(
+        json.decode(str).map((x) => NeighborhoodData.fromJson(x)));
+
+String neighborhoodToJson(List<NeighborhoodData> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
+class NeighborhoodData {
+  String? id;
+  String? name;
+  bool? enabled;
+  List<NeighborhoodData>? data;
+
+  NeighborhoodData({this.id, this.name, this.data});
+
+  NeighborhoodData.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    enabled = json['enabled'];
+    if (json['data'] != null) {
+      data = <NeighborhoodData>[];
+      json['data'].forEach((v) {
+        data!.add(NeighborhoodData.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final json = <String, dynamic>{};
+    json['id'] = id;
+    json['name'] = name;
+    json['enabled'] = enabled;
+    if (data != null) {
+      json['data'] = data!.map((v) => v.toJson()).toList();
+    }
+    return json;
   }
 }
 

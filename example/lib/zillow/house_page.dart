@@ -93,6 +93,21 @@ class _HousePageState extends State<HousePage> {
   HouseFilter? _dropdownSelectorResultParser(DropdownSelectorResult result) {
     final filter = HouseFilter(cityId: userCityId);
     if (result.tabIndex == 0) {
+      // Neighborhood filter
+      _filtersRepo.neighborhoodResult = result;
+      for (var category in result.selected) {
+        filter.region = <Map<String, dynamic>>[];
+        for (var d in category.children ?? {}) {
+          filter.region!.add({
+            "region_id": d.id,
+            "neighborhood_id": d.children
+                ?.map((s) => s.id)
+                .toList(growable: false)
+                .cast<String>(),
+          });
+        }
+      }
+    } else if (result.tabIndex == 1) {
       // Price filter
       _filtersRepo.priceResult = result;
       final category = result.selected.firstOrNull;
@@ -110,7 +125,7 @@ class _HousePageState extends State<HousePage> {
           filter.monthlyPayment!.add({"id": e.id, "min": e.min, "max": e.max});
         }
       }
-    } else if (result.tabIndex == 1) {
+    } else if (result.tabIndex == 2) {
       // Rooms filter
       _filtersRepo.roomsResult = result;
       final category = result.selected.firstOrNull;
@@ -128,7 +143,7 @@ class _HousePageState extends State<HousePage> {
           filter.bathrooms!.add(e.id);
         }
       }
-    } else if (result.tabIndex == 2) {
+    } else if (result.tabIndex == 3) {
       // More filter
       _filtersRepo.moreResult = result;
       final category = result.selected.firstOrNull;
@@ -176,7 +191,7 @@ class _HousePageState extends State<HousePage> {
           filter.expandedSearch!.add(e.id);
         }
       }
-    } else if (result.tabIndex == 3) {
+    } else if (result.tabIndex == 4) {
       // Sort filter
       _filtersRepo.sortResult = result;
       final entry = result.selected.firstOrNull;
@@ -195,7 +210,7 @@ class _HousePageState extends State<HousePage> {
       );
       return;
     }
-    if (result.tabIndex == 2) {
+    if (result.tabIndex == 3) {
       _moreApplyTextDebounce?.cancel();
 
       final requestId = ++_moreApplyTextRequestId;
@@ -283,8 +298,9 @@ class _HousePageState extends State<HousePage> {
             //   backgroundColor: Colors.orange.withOpacity(0.54),
             // ),
             tabs: [
+              DropdownTab(label: l10n?.neighborhood ?? ''),
               DropdownTab(
-                // tag: 'region',
+                // tag: 'price',
                 label: l10n?.price ?? '',
                 // labelGetter: (DropdownSelectorResult result) {
                 //   // Optional: user-defined label based on the selection
@@ -298,6 +314,15 @@ class _HousePageState extends State<HousePage> {
               ),
             ],
             selectorDelegates: [
+              CascadingSelectorDelegate(
+                entriesLoader: _filtersRepo.fetchNeighborhoodData,
+                selectedEntriesLoader:
+                    _filtersRepo.fetchNeighborhoodSelectedData,
+                resetEntriesLoader: _filtersRepo.fetchNeighborhoodResetData,
+                selectionMode: SelectionMode.multiple,
+                sideBarTheme: const SelectorSideBarTheme(width: 150),
+                isScrollable: true,
+              ),
               GridSelectorDelegate(
                 entriesLoader: _filtersRepo.fetchPriceData,
                 selectedEntriesLoader: _filtersRepo.fetchPriceSelectedData,
@@ -359,7 +384,7 @@ class _HousePageState extends State<HousePage> {
             onApplied: (DropdownSelectorResult result) {
               debugPrintLarge('onApplied: $result');
               _handleSelectorApply(result);
-              if (result.tabIndex == 2) {
+              if (result.tabIndex == 3) {
                 _moreApplyTextDebounce?.cancel();
                 _moreApplyTextRequestId++;
                 _moreApplyText.value = l10n?.apply ?? '';
@@ -368,7 +393,7 @@ class _HousePageState extends State<HousePage> {
             },
             onReset: () {
               debugPrint('onReset');
-              if (_controller.currentIndex == 2) {
+              if (_controller.currentIndex == 3) {
                 _moreApplyTextDebounce?.cancel();
                 _moreApplyTextRequestId++;
                 _moreApplyText.value = l10n?.apply ?? '';
