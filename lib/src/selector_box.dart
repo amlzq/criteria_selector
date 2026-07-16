@@ -7,7 +7,7 @@ import 'selector/selector_panel.dart';
 
 /// A high-level, ready-to-use criteria selector.
 ///
-/// [CriteriaSelector] is the public entry point for embedding a selector
+/// [SelectorBox] is the public entry point for embedding a selector
 /// directly in a page or dialog body. It wraps [SelectorPanel] — now an
 /// internal implementation detail that is no longer exported — and takes care
 /// of the controller lifecycle so callers get a complete, styled component
@@ -17,7 +17,7 @@ import 'selector/selector_panel.dart';
 /// multi-selection mode, is produced by the supplied [delegate]. The action
 /// bar's behavior is inherently delegate-specific (for example, resetting the
 /// focused category index), so it stays owned by the delegate rather than being
-/// re-created here. [CriteriaSelector] forwards the [onChangeTap], [onApplyTap]
+/// re-created here. [SelectorBox] forwards the [onChangeTap], [onApplyTap]
 /// and [onResetTap] callbacks fired by the selection.
 ///
 /// Styling is carried entirely by the [delegate] (colors, per-widget themes
@@ -25,11 +25,11 @@ import 'selector/selector_panel.dart';
 /// is the only one in its host, a separate `selectorTheme` parameter is
 /// unnecessary.
 ///
-/// If [controller] is omitted, [CriteriaSelector] creates and owns an internal
+/// If [controller] is omitted, [SelectorBox] creates and owns an internal
 /// [SelectorController]; otherwise the caller-provided controller is used and
 /// remains owned by the caller.
-class CriteriaSelector extends StatefulWidget {
-  const CriteriaSelector({
+class SelectorBox extends StatefulWidget {
+  const SelectorBox({
     super.key,
     required this.delegate,
     this.controller,
@@ -50,7 +50,7 @@ class CriteriaSelector extends StatefulWidget {
   /// When provided, callers can drive the selection programmatically (for
   /// example with [SelectorController.select]); the caller still owns it and is
   /// responsible for disposing it. When omitted, an internal controller is
-  /// created and disposed by [CriteriaSelector].
+  /// created and disposed by [SelectorBox].
   final SelectorController? controller;
 
   /// Fired when the selection changes.
@@ -77,10 +77,10 @@ class CriteriaSelector extends StatefulWidget {
   final double maxHeightFactor;
 
   @override
-  State<CriteriaSelector> createState() => _CriteriaSelectorState();
+  State<SelectorBox> createState() => _SelectorBoxState();
 }
 
-class _CriteriaSelectorState extends State<CriteriaSelector> {
+class _SelectorBoxState extends State<SelectorBox> {
   SelectorController? _internalController;
 
   SelectorController get _controller =>
@@ -103,7 +103,7 @@ class _CriteriaSelectorState extends State<CriteriaSelector> {
   }
 
   @override
-  void didUpdateWidget(covariant CriteriaSelector oldWidget) {
+  void didUpdateWidget(covariant SelectorBox oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.controller != oldWidget.controller) {
       if (oldWidget.controller == null) {

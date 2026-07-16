@@ -84,12 +84,12 @@ void main() {
       expect(lerped.panelTheme.elevation, 8);
     });
 
-    testWidgets('CriteriaSelector renders Material when decorated',
+    testWidgets('SelectorBox renders Material when decorated',
         (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: CriteriaSelector(
+            body: SelectorBox(
               delegate: _EmptyDelegate(
                 panelTheme: const SelectorPanelTheme(
                   elevation: 6,
@@ -114,12 +114,12 @@ void main() {
       );
     });
 
-    testWidgets('CriteriaSelector falls back to ColoredBox when undecorated',
+    testWidgets('SelectorBox falls back to ColoredBox when undecorated',
         (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: CriteriaSelector(
+            body: SelectorBox(
               delegate: _EmptyDelegate(),
             ),
           ),
@@ -139,7 +139,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: CriteriaSelector(
+            body: SelectorBox(
               delegate: _EmptyDelegate(
                 panelTheme: const SelectorPanelTheme(
                   elevation: 4,

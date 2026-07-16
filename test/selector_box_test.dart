@@ -2,7 +2,7 @@ import 'package:criteria_selector/criteria_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// A minimal [SelectorDelegate] used to drive [CriteriaSelector] rendering and
+/// A minimal [SelectorDelegate] used to drive [SelectorBox] rendering and
 /// to capture the active controller for assertions.
 class _TestDelegate extends SelectorDelegate {
   _TestDelegate({
@@ -30,12 +30,12 @@ class _TestDelegate extends SelectorDelegate {
 }
 
 void main() {
-  group('CriteriaSelector', () {
+  group('SelectorBox', () {
     testWidgets('renders the body once data is available', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: CriteriaSelector(
+            body: SelectorBox(
               delegate: _TestDelegate(
                 entriesLoader: () async => <SelectorEntry<dynamic>>{
                   SelectorTextEntry<dynamic>.name(id: 'a', name: 'A'),
@@ -62,7 +62,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: CriteriaSelector(
+            body: SelectorBox(
               delegate: _TestDelegate(
                 entriesLoader: () async => <SelectorEntry<dynamic>>{},
                 bodyBuilder: (context, _, __) {
@@ -95,7 +95,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: CriteriaSelector(
+            body: SelectorBox(
               delegate: _TestDelegate(
                 entriesLoader: () async => <SelectorEntry<dynamic>>{},
                 bodyBuilder: (context, _, __) {
@@ -116,11 +116,12 @@ void main() {
 
     testWidgets('does not dispose an externally-provided controller',
         (tester) async {
-      final controller = SelectorController(selectionMode: SelectionMode.single);
+      final controller =
+          SelectorController(selectionMode: SelectionMode.single);
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: CriteriaSelector(
+            body: SelectorBox(
               delegate: _TestDelegate(
                 entriesLoader: () async => <SelectorEntry<dynamic>>{},
                 bodyBuilder: (_, __, ___) => const SizedBox(),
@@ -144,7 +145,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: CriteriaSelector(
+            body: SelectorBox(
               delegate: _TestDelegate(
                 entriesLoader: () async => <SelectorEntry<dynamic>>{},
                 selectedEntriesLoader: () => previous,
@@ -169,7 +170,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: CriteriaSelector(
+            body: SelectorBox(
               delegate: _TestDelegate(
                 entriesLoader: () async => <SelectorEntry<dynamic>>{},
                 bodyBuilder: (_, __, ___) => const SizedBox(),
@@ -185,7 +186,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: CriteriaSelector(
+            body: SelectorBox(
               delegate: _TestDelegate(
                 entriesLoader: () async => <SelectorEntry<dynamic>>{},
                 bodyBuilder: (_, __, ___) => const SizedBox(),
@@ -201,7 +202,7 @@ void main() {
     testWidgets('renders inside an unbounded context without throwing',
         (tester) async {
       // Regression: a Column(min) + Expanded body (as the CascadingSelector
-      // uses) requires a bounded height. Embedding CriteriaSelector in an
+      // uses) requires a bounded height. Embedding SelectorBox in an
       // unbounded parent (Column with mainAxisSize.min) must not throw the
       // "non-zero flex but incoming height constraints are unbounded" error;
       // the internal ConstrainedBox caps the height so the Expanded can lay
@@ -214,7 +215,7 @@ void main() {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Text('header'),
-                  CriteriaSelector(
+                  SelectorBox(
                     delegate: _TestDelegate(
                       entriesLoader: () async => <SelectorEntry<dynamic>>{
                         SelectorTextEntry<dynamic>.name(id: 'a', name: 'A'),
@@ -255,7 +256,7 @@ void main() {
           data: mediaQuery,
           child: MaterialApp(
             home: Scaffold(
-              body: CriteriaSelector(
+              body: SelectorBox(
                 maxHeightFactor: 0.5,
                 delegate: _TestDelegate(
                   entriesLoader: () async => <SelectorEntry<dynamic>>{},
@@ -272,8 +273,7 @@ void main() {
       // The internal ConstrainedBox must cap the height at the expected factor.
       final hasCap = tester
           .widgetList(find.byType(ConstrainedBox))
-          .where((w) => w is ConstrainedBox &&
-              w.constraints.maxHeight == 400)
+          .where((w) => w is ConstrainedBox && w.constraints.maxHeight == 400)
           .isNotEmpty;
       expect(hasCap, isTrue);
     });

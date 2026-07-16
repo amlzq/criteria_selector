@@ -4,7 +4,7 @@ A multi-dimensional condition selector — a typical use case is a list filterin
 
 ## Features
 
-- **5 public entry points**: `CriteriaSelector` (embed in a page), `DropdownSelectorBar` (tab bar + overlay), `DropdownSelectorButton` (single trigger), `showSelector` (dialog), and `showModalBottomSelector` (bottom sheet).
+- **5 public entry points**: `SelectorBox` (embed in a page), `DropdownSelectorBar` (tab bar + overlay), `DropdownSelectorButton` (single trigger), `showSelector` (dialog), and `showModalBottomSelector` (bottom sheet).
 - **4 built-in layouts** via `SelectorDelegate`: `CascadingSelectorDelegate`, `GridSelectorDelegate`, `ListSelectorDelegate`, `FlattenSelectorDelegate`.
 - **Single & multiple selection** via `SelectionMode`.
 - **Async data loading** through `entriesLoader`.
@@ -29,9 +29,9 @@ import 'package:criteria_selector/criteria_selector.dart';
 
 ## Usage
 
-### CriteriaSelector
+### SelectorBox
 
-`CriteriaSelector` is the public entry point for embedding a selector directly in a
+`SelectorBox` is the public entry point for embedding a selector directly in a
 page or dialog body. It takes a single `delegate` that decides both how entries are
 loaded and how the selector body is rendered.
 
@@ -82,7 +82,7 @@ SelectorTextEntry.name(id: 'default', name: 'Default');
 ```
 
 Every example below loads its data through an `entriesLoader` and is rendered by a
-`CriteriaSelector`. The same delegates also drive the other entry points
+`SelectorBox`. The same delegates also drive the other entry points
 (`DropdownSelectorBar`, `DropdownSelectorButton`, `showSelector`,
 `showModalBottomSelector`) shown later.
 
@@ -112,7 +112,7 @@ Future<SelectorEntries> _fetchRegion() async {
   };
 }
 
-CriteriaSelector(delegate: CascadingSelectorDelegate(entriesLoader: _fetchRegion));
+SelectorBox(delegate: CascadingSelectorDelegate(entriesLoader: _fetchRegion));
 ```
 
 ![CascadingSelectorDelegate](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/sz/region.gif)
@@ -137,7 +137,7 @@ Future<SelectorEntries> _fetchPrice() async {
   };
 }
 
-CriteriaSelector(
+SelectorBox(
   delegate: GridSelectorDelegate(crossAxisCount: 3, entriesLoader: _fetchPrice),
 );
 ```
@@ -157,7 +157,7 @@ Future<SelectorEntries> _fetchSort() async {
   };
 }
 
-CriteriaSelector(delegate: ListSelectorDelegate(entriesLoader: _fetchSort));
+SelectorBox(delegate: ListSelectorDelegate(entriesLoader: _fetchSort));
 ```
 
 ![ListSelectorDelegate](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/sort.gif)
@@ -183,7 +183,7 @@ Future<SelectorEntries> _fetchMore() async {
   };
 }
 
-CriteriaSelector(
+SelectorBox(
   delegate: FlattenSelectorDelegate(
     crossAxisCount: 3,
     selectionMode: SelectionMode.multiple,
@@ -297,11 +297,11 @@ if (selected != null) {
 ### Theming
 
 **Per instance** — pass `selectorTheme` to any selector entry point
-(`CriteriaSelector`, `showSelector`, `showModalBottomSelector`,
+(`SelectorBox`, `showSelector`, `showModalBottomSelector`,
 `DropdownSelectorBar`, `DropdownSelectorButton`):
 
 ```dart
-CriteriaSelector(
+SelectorBox(
   delegate: ListSelectorDelegate(entriesLoader: _fetchSort),
   selectorTheme: SelectorThemeData(
     Theme.of(context),

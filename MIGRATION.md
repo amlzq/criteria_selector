@@ -43,7 +43,6 @@ renamed to `selectorDelegates`.
 | `GridSelector` | `GridSelectorDelegate` |
 | `FlattenSelector` | `FlattenSelectorDelegate` |
 | `DropdownSelectorBar(selectors: ...)` | `DropdownSelectorBar(selectorDelegates: ...)` |
-| `SelectorPanel(selector: ...)` | `CriteriaSelector(delegate: ...)` |
 | `DropdownSelectorController.previousSelector` | `DropdownSelectorController.previousSelectorDelegate` |
 | `DropdownSelectorController.attachSelectors(...)` | `DropdownSelectorController.attachSelectorDelegates(...)` |
 | `CascadingSelector.selector` / `ListSelector.selector` / `GridSelector.selector` / `FlattenSelector.selector` | `...View.delegate` |

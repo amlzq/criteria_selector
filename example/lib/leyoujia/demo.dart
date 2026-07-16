@@ -29,7 +29,7 @@ class _DemoPageState extends State<DemoPage> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text('区域选择器'),
-            CriteriaSelector(
+            SelectorBox(
               delegate: CascadingSelectorDelegate(
                 entriesLoader: _filtersRepo.fetchRegionData,
                 selectedEntriesLoader: _filtersRepo.fetchRegionSelectedData,

@@ -199,7 +199,7 @@ abstract class SelectorDelegate {
   /// Theme overrides for the panel's elevation, shadow and shape decoration.
   ///
   /// When provided, this is merged into the ambient [SelectorThemeData] used by
-  /// [SelectorPanel], so it applies to every host (inline [CriteriaSelector],
+  /// [SelectorPanel], so it applies to every host (inline [SelectorBox],
   /// [showSelector], [showModalBottomSelector] and the dropdown overlay). It is
   /// independent from the host-level decoration (e.g. [Dialog.elevation]).
   final SelectorPanelTheme? panelTheme;
