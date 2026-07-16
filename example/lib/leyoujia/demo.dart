@@ -28,7 +28,7 @@ class _DemoPageState extends State<DemoPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('区域选择器'),
+            const Text('区域选择器'),
             SelectorBox(
               delegate: CascadingSelectorDelegate(
                 entriesLoader: _filtersRepo.fetchRegionData,

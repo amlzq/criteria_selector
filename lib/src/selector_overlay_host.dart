@@ -16,7 +16,7 @@ import 'selector/selector_theme_data.dart';
 /// - [CompositedTransformTarget] + [OverlayPortal] + [CompositedTransformFollower]
 ///   to anchor the overlay to the trigger's actual painted position, which is
 ///   robust to scrolling and ancestor transforms ([DropdownOverlay] relies on
-///   this follower to make the Stack origin equal the trigger's top-left).
+///   this follower to make the Stack origin equal the screen's top-left).
 /// - [DropdownOverlay] to position, animate, and clip the [SelectorPanel].
 ///
 /// The trigger only supplies its own UI ([triggerChild]) plus the already
@@ -92,7 +92,12 @@ class SelectorOverlayHost extends StatelessWidget {
             return CompositedTransformFollower(
               link: controller.layerLink,
               showWhenUnlinked: false,
-              offset: Offset.zero,
+              // Shift the follower origin from the trigger's top-left to the
+              // screen's top-left. This ensures the Stack's hit-test bounds
+              // (size = screenSize, origin = (0,0)) cover the entire screen,
+              // so taps on panel areas that extend left of the trigger (when
+              // the panel is clamped on screen) are not silently dropped.
+              offset: Offset(-targetRect.left, -targetRect.top),
               child: DropdownOverlay(
                 targetRect: targetRect,
                 direction: direction,

@@ -144,13 +144,11 @@ class DropdownOverlay extends StatelessWidget {
                 effectiveBarrierColor;
 
         // Screen rect in Stack-local coordinates.
-        // Stack origin = trigger's top-left (from CompositedTransformFollower
-        // with offset: Offset.zero), so the screen's top-left corner is at
-        // (-targetRect.left, -targetRect.top) in Stack space.
-        final screenRect = targetRect != null
-            ? Rect.fromLTWH(-targetRect!.left, -targetRect!.top,
-                screenSize.width, screenSize.height)
-            : Rect.fromLTWH(0, 0, screenSize.width, screenSize.height);
+        // Stack origin = screen's top-left (from CompositedTransformFollower
+        // with offset: Offset(-targetRect.left, -targetRect.top)), so the
+        // screen's top-left corner is at (0, 0) in Stack space.
+        final screenRect =
+            Rect.fromLTWH(0, 0, screenSize.width, screenSize.height);
 
         return Stack(
           clipBehavior:
@@ -160,10 +158,11 @@ class DropdownOverlay extends StatelessWidget {
             // - direction=below (growUp=false): covers area below the trigger
             // - direction=above (growUp=true):  covers area above the trigger
             // The trigger (Bar/Button) itself is never covered, so no ClipPath needed.
+            // Coordinates are in screen space (Stack origin = screen top-left).
             if (targetRect != null)
               Positioned(
-                left: -targetRect!.left,
-                top: growUp ? -targetRect!.top : targetRect!.height,
+                left: 0,
+                top: growUp ? 0 : targetRect!.bottom,
                 width: screenSize.width,
                 height: growUp
                     ? targetRect!.top
@@ -183,9 +182,10 @@ class DropdownOverlay extends StatelessWidget {
                   barrierColor: barrierColor,
                 ),
               ),
-            // Panel layer: positioned by CustomSingleChildLayout, renders on top.
-            // below: panel y > 0 (within Stack)
-            // above: panel y < 0 (outside Stack, rendered via clipBehavior: Clip.none)
+            // Panel layer: positioned by CustomSingleChildLayout in screen
+            // coordinates, renders on top of the barrier.
+            // below: panel top = targetRect.bottom
+            // above: panel top = targetRect.top - childHeight
             CustomSingleChildLayout(
               delegate: _DropdownOverlayPositionDelegate(
                 targetRect: targetRect,
@@ -276,10 +276,10 @@ class _DropdownOverlayPositionDelegate extends SingleChildLayoutDelegate {
     if (left < margin) left = margin;
 
     // Vertical: below the trigger, or above it when [growUp] is set. The
-    // returned offset is relative to the trigger's top-left corner (the
-    // CompositedTransformFollower origin).
+    // returned offset is in screen coordinates (Stack origin = screen
+    // top-left via the CompositedTransformFollower offset).
     final double top = growUp ? rect.top - childSize.height : rect.bottom;
-    return Offset(left - rect.left, top - rect.top);
+    return Offset(left, top);
   }
 
   @override

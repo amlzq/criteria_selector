@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:criteria_selector/criteria_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -17,10 +15,6 @@ class ButtonDemoPage extends StatefulWidget {
 class _ButtonDemoPageState extends State<ButtonDemoPage> {
   late final HouseFiltersRepository _filtersRepo;
 
-  final ValueNotifier<String> _floorPlanApplyText = ValueNotifier<String>('');
-  Timer? _floorPlanApplyTextDebounce;
-  int _floorPlanApplyTextRequestId = 0;
-
   @override
   void initState() {
     super.initState();
@@ -29,8 +23,6 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
 
   @override
   void dispose() {
-    _floorPlanApplyTextDebounce?.cancel();
-    _floorPlanApplyText.dispose();
     super.dispose();
   }
 
@@ -107,17 +99,6 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                 crossAxisSpacing: 8,
                 mainAxisSpacing: 8,
                 sideBarTheme: const SelectorSideBarTheme(width: 98),
-                actionBarBuilder: (
-                  context, {
-                  required onResetTap,
-                  required onApplyTap,
-                }) {
-                  return MyActionBar(
-                    applyTextVN: _floorPlanApplyText,
-                    onResetTap: onResetTap,
-                    onApplyTap: onApplyTap,
-                  );
-                },
               ),
             ),
           ),
