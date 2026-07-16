@@ -5,7 +5,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'leyoujia/leyoujia_page.dart';
-import 'zillow/house_page.dart';
 
 void main() {
   if (kReleaseMode) {
@@ -73,6 +72,8 @@ class _MyAppState extends State<MyApp> {
         final theme = baseTheme.copyWith(
           extensions: <ThemeExtension<dynamic>>[
             DropdownSelectorBarTheme(
+              overlayStyle:
+                  const DropdownOverlayStyle(barrierColor: Colors.black54),
               selectorTheme: SelectorThemeData(baseTheme),
             ),
           ],
@@ -151,10 +152,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     locale.languageCode == 'zh' && locale.scriptCode == 'Hans';
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        isZhHans ? const LeyoujiaPage() : const HousePage(),
-                  ),
+                  MaterialPageRoute(builder: (context) => const LeyoujiaPage()
+                      // isZhHans ? const LeyoujiaPage() : const HousePage(),
+                      ),
                 );
               },
               child: Text(l10n?.realEstate ?? ''),

@@ -39,93 +39,103 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
     return Scaffold(
       appBar: AppBar(title: const Text('DropdownSelectorButton')),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Wrap(
-            spacing: 16.0,
-            runSpacing: 16.0,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              DropdownSelectorButton(
-                label: '区域',
-                selectorDelegate: CascadingSelectorDelegate(
-                  entriesLoader: _filtersRepo.fetchRegionData,
-                  selectedEntriesLoader: _filtersRepo.fetchRegionSelectedData,
-                  resetEntriesLoader: _filtersRepo.fetchRegionResetData,
-                  selectionMode: SelectionMode.single,
-                  radioBuilder: (context, selected) {
-                    return MyRadio(value: selected);
-                  },
-                  checkboxBuilder: (context, selected) {
-                    return MyCheckbox(value: selected);
-                  },
+          const SizedBox(height: 16),
+          DropdownSelectorButton(
+            label: '区域',
+            selectorDelegate: CascadingSelectorDelegate(
+              entriesLoader: _filtersRepo.fetchRegionData,
+              selectedEntriesLoader: _filtersRepo.fetchRegionSelectedData,
+              resetEntriesLoader: _filtersRepo.fetchRegionResetData,
+              selectionMode: SelectionMode.single,
+              radioBuilder: (context, selected) {
+                return MyRadio(value: selected);
+              },
+              checkboxBuilder: (context, selected) {
+                return MyCheckbox(value: selected);
+              },
+            ),
+            onChanged: (result) {
+              print('onChanged: $result');
+            },
+            onApplied: (result) {
+              print('onApplied: $result');
+            },
+            onReset: () {
+              print('onReset');
+            },
+          ),
+          Center(
+            child: DropdownSelectorButton.elevated(
+              label: '价格',
+              selectorDelegate: GridSelectorDelegate(
+                entriesLoader: _filtersRepo.fetchBuyPriceData,
+                selectedEntriesLoader: _filtersRepo.fetchBuyPriceSelectedData,
+                resetEntriesLoader: _filtersRepo.fetchBuyPriceResetData,
+                selectionMode: SelectionMode.multiple,
+                crossAxisCount: 4,
+                childAspectRatio: 2.5,
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10,
+                gridTileTheme: const SelectorGridTileTheme(
+                  variant: SelectorGridTileVariant.outlined,
                 ),
-                onChanged: (result) {
-                  print('onChanged: $result');
-                },
-                onApplied: (result) {
-                  print('onApplied: $result');
-                },
-                onReset: () {
-                  print('onReset');
-                },
-              ),
-              DropdownSelectorButton.elevated(
-                label: '价格',
-                selectorDelegate: GridSelectorDelegate(
-                  entriesLoader: _filtersRepo.fetchBuyPriceData,
-                  selectedEntriesLoader: _filtersRepo.fetchBuyPriceSelectedData,
-                  resetEntriesLoader: _filtersRepo.fetchBuyPriceResetData,
-                  selectionMode: SelectionMode.multiple,
-                  crossAxisCount: 4,
-                  childAspectRatio: 2.5,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
-                  gridTileTheme: const SelectorGridTileTheme(
-                    variant: SelectorGridTileVariant.outlined,
+                panelTheme: const SelectorPanelTheme(
+                  elevation: 8,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(16)),
                   ),
-                  applyText: AppLocalizations.of(context)?.apply ?? '',
+                  clipBehavior: Clip.antiAlias,
                 ),
+                applyText: AppLocalizations.of(context)?.apply ?? '',
               ),
-              DropdownSelectorButton.outlined(
-                label: '户型',
-                selectorDelegate: FlattenSelectorDelegate(
-                  entriesLoader: _filtersRepo.fetchFloorPlanBuyData,
-                  selectedEntriesLoader:
-                      _filtersRepo.fetchFloorPlanBuySelectedData,
-                  resetEntriesLoader: _filtersRepo.fetchFloorPlanBuyResetData,
-                  selectionMode: SelectionMode.multiple,
-                  crossAxisCount: 3,
-                  childAspectRatio: 2.5,
-                  crossAxisSpacing: 8,
-                  mainAxisSpacing: 8,
-                  sideBarTheme: const SelectorSideBarTheme(width: 98),
-                  actionBarBuilder: (
-                    context, {
-                    required onResetTap,
-                    required onApplyTap,
-                  }) {
-                    return MyActionBar(
-                      applyTextVN: _floorPlanApplyText,
-                      onResetTap: onResetTap,
-                      onApplyTap: onApplyTap,
-                    );
-                  },
-                ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: DropdownSelectorButton.outlined(
+              label: '户型',
+              selectorDelegate: FlattenSelectorDelegate(
+                entriesLoader: _filtersRepo.fetchFloorPlanBuyData,
+                selectedEntriesLoader:
+                    _filtersRepo.fetchFloorPlanBuySelectedData,
+                resetEntriesLoader: _filtersRepo.fetchFloorPlanBuyResetData,
+                selectionMode: SelectionMode.multiple,
+                crossAxisCount: 3,
+                childAspectRatio: 2.5,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+                sideBarTheme: const SelectorSideBarTheme(width: 98),
+                actionBarBuilder: (
+                  context, {
+                  required onResetTap,
+                  required onApplyTap,
+                }) {
+                  return MyActionBar(
+                    applyTextVN: _floorPlanApplyText,
+                    onResetTap: onResetTap,
+                    onApplyTap: onApplyTap,
+                  );
+                },
               ),
-              DropdownSelectorButton(
-                label: '更多',
-                icon: const Icon(Icons.filter_alt_outlined),
-                selectorDelegate: ListSelectorDelegate(
-                  entriesLoader: _filtersRepo.fetchSortBuyData,
-                  selectedEntriesLoader: _filtersRepo.fetchSortBuySelectedData,
-                  resetEntriesLoader: _filtersRepo.fetchSortBuyResetData,
-                  selectionMode: SelectionMode.single,
-                  radioBuilder: (context, selected) {
-                    return MyRadio(value: selected);
-                  },
-                ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 50),
+            child: DropdownSelectorButton(
+              label: '更多',
+              icon: const Icon(Icons.filter_alt_outlined),
+              selectorDelegate: ListSelectorDelegate(
+                entriesLoader: _filtersRepo.fetchSortBuyData,
+                selectedEntriesLoader: _filtersRepo.fetchSortBuySelectedData,
+                resetEntriesLoader: _filtersRepo.fetchSortBuyResetData,
+                selectionMode: SelectionMode.single,
+                radioBuilder: (context, selected) {
+                  return MyRadio(value: selected);
+                },
               ),
-            ],
+            ),
           ),
         ],
       ),

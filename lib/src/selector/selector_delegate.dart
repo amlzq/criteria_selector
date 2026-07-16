@@ -6,6 +6,7 @@ import 'flatten_selector.dart';
 import 'grid_selector.dart';
 import 'list_selector.dart';
 import 'selector_entry.dart';
+import 'selector_panel_theme.dart';
 import 'widgets/widgets.dart';
 
 /// Builds the action bar shown at the bottom of the selector panel.
@@ -62,6 +63,7 @@ abstract class SelectorDelegate {
     this.fieldTileTheme,
     this.expansionTileTheme,
     this.chipBarTheme,
+    this.panelTheme,
     this.skeletonBuilder,
     this.errorBuilder,
   });
@@ -194,6 +196,14 @@ abstract class SelectorDelegate {
   /// Theme overrides for the selected chips bar.
   final SelectorChipBarTheme? chipBarTheme;
 
+  /// Theme overrides for the panel's elevation, shadow and shape decoration.
+  ///
+  /// When provided, this is merged into the ambient [SelectorThemeData] used by
+  /// [SelectorPanel], so it applies to every host (inline [CriteriaSelector],
+  /// [showSelector], [showModalBottomSelector] and the dropdown overlay). It is
+  /// independent from the host-level decoration (e.g. [Dialog.elevation]).
+  final SelectorPanelTheme? panelTheme;
+
   /// Optional builder for the loading skeleton.
   final WidgetBuilder? skeletonBuilder;
 
@@ -262,6 +272,7 @@ class CascadingSelectorDelegate extends SelectorDelegate {
     super.fieldTileTheme,
     super.expansionTileTheme,
     super.chipBarTheme,
+    super.panelTheme,
     super.skeletonBuilder,
     super.errorBuilder,
     // ignore: deprecated_member_use_from_same_package
@@ -340,6 +351,7 @@ class ListSelectorDelegate extends SelectorDelegate {
     super.fieldTileTheme,
     super.expansionTileTheme,
     super.chipBarTheme,
+    super.panelTheme,
     super.skeletonBuilder,
     super.errorBuilder,
   });
@@ -406,6 +418,7 @@ class GridSelectorDelegate extends SelectorDelegate {
     super.fieldTileTheme,
     super.expansionTileTheme,
     super.chipBarTheme,
+    super.panelTheme,
     super.skeletonBuilder,
     super.errorBuilder,
   });
@@ -485,6 +498,7 @@ class FlattenSelectorDelegate extends SelectorDelegate {
     super.fieldTileTheme,
     super.expansionTileTheme,
     super.chipBarTheme,
+    super.panelTheme,
     super.skeletonBuilder,
     super.errorBuilder,
   });

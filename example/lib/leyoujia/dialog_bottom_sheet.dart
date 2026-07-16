@@ -93,6 +93,13 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                   crossAxisSpacing: 8,
                   mainAxisSpacing: 8,
                   sideBarTheme: const SelectorSideBarTheme(width: 90),
+                  panelTheme: const SelectorPanelTheme(
+                    elevation: 8,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(16)),
+                    ),
+                    clipBehavior: Clip.antiAlias,
+                  ),
                 ),
                 title: const Text('户型选择器'),
               );
@@ -115,6 +122,11 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                   mainAxisSpacing: 8,
                   sideBarTheme: const SelectorSideBarTheme(width: 98),
                 ),
+                elevation: 12,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(16)),
+                ),
+                clipBehavior: Clip.antiAlias,
                 title: const Text('更多选择器'),
               );
               print('result: $result');
@@ -133,7 +145,19 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                   radioBuilder: (context, selected) {
                     return MyRadio(value: selected);
                   },
+                  panelTheme: const SelectorPanelTheme(
+                    elevation: 8,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(16)),
+                    ),
+                    clipBehavior: Clip.antiAlias,
+                  ),
                 ),
+                elevation: 12,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(16)),
+                ),
+                clipBehavior: Clip.antiAlias,
                 title: const Text('排序选择器'),
               );
               print('result: $result');
@@ -204,6 +228,11 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                   mainAxisSpacing: 8,
                   sideBarTheme: const SelectorSideBarTheme(width: 90),
                 ),
+                elevation: 12,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(16)),
+                ),
+                clipBehavior: Clip.antiAlias,
                 title: const Text('户型选择器'),
               );
               print('result: $result');
@@ -224,6 +253,13 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                   crossAxisSpacing: 8,
                   mainAxisSpacing: 8,
                   sideBarTheme: const SelectorSideBarTheme(width: 98),
+                  panelTheme: const SelectorPanelTheme(
+                    elevation: 6,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(16)),
+                    ),
+                    clipBehavior: Clip.antiAlias,
+                  ),
                 ),
                 title: const Text('更多选择器'),
               );

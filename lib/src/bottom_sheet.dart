@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'selector/constants.dart';
 import 'selector/selector_delegate.dart';
 import 'selector/selector_panel.dart';
-import 'selector/selector_theme_data.dart';
 
 /// Shows a criteria selector in a modal bottom sheet built with Flutter's
 /// [showModalBottomSheet].
@@ -35,6 +34,9 @@ import 'selector/selector_theme_data.dart';
 /// content. Because the selector body is shrink-wrapped (it has no outer
 /// scroll), a default max height of 90% of the screen is applied automatically
 /// and the body scrolls internally, unless [constraints] is provided.
+///
+/// Styling (colors, per-widget themes and the panel decoration via
+/// [SelectorDelegate.panelTheme]) is carried entirely by [delegate].
 Future<SelectorEntries?> showModalBottomSelector({
   required BuildContext context,
   required SelectorDelegate delegate,
@@ -43,7 +45,6 @@ Future<SelectorEntries?> showModalBottomSelector({
   bool isDismissible = true,
   bool useSafeArea = true,
   Widget? title,
-  SelectorThemeData? selectorTheme,
   Color? backgroundColor,
   double? elevation,
   ShapeBorder? shape,
@@ -82,7 +83,6 @@ Future<SelectorEntries?> showModalBottomSelector({
     builder: (sheetContext) => _ModalBottomSheetContent(
       delegate: delegate,
       title: title,
-      selectorTheme: selectorTheme,
     ),
   );
 }
@@ -95,12 +95,10 @@ class _ModalBottomSheetContent extends StatefulWidget {
   const _ModalBottomSheetContent({
     required this.delegate,
     this.title,
-    this.selectorTheme,
   });
 
   final SelectorDelegate delegate;
   final Widget? title;
-  final SelectorThemeData? selectorTheme;
 
   @override
   State<_ModalBottomSheetContent> createState() =>
@@ -122,7 +120,6 @@ class _ModalBottomSheetContentState extends State<_ModalBottomSheetContent> {
   Widget build(BuildContext context) {
     final panel = SelectorPanel(
       delegate: widget.delegate,
-      selectorTheme: widget.selectorTheme,
       onApplyTap: (selected) => _popWith(selected),
       // Reset is handled internally by the selector widget; the sheet stays
       // open so the user can keep adjusting the selection.

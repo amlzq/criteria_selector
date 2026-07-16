@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'selector/constants.dart';
 import 'selector/selector_delegate.dart';
 import 'selector/selector_panel.dart';
-import 'selector/selector_theme_data.dart';
 
 /// Shows a criteria selector in a modal dialog.
 ///
@@ -22,13 +21,21 @@ import 'selector/selector_theme_data.dart';
 ///   to confirm; "Reset" only clears the current selection without closing.
 ///
 /// The optional [title] is rendered above the selector panel.
+///
+/// The [elevation], [shape] and [clipBehavior] parameters are forwarded to the
+/// outer [Dialog] decoration. These are independent of
+/// [SelectorDelegate.panelTheme] (which decorates the panel background itself);
+/// use either layer, or both, depending on the desired look. All other styling
+/// (colors, per-widget themes) is carried by [delegate].
 Future<SelectorEntries?> showSelector({
   required BuildContext context,
   required SelectorDelegate delegate,
   bool barrierDismissible = true,
   bool useRootNavigator = true,
   Widget? title,
-  SelectorThemeData? selectorTheme,
+  double? elevation,
+  ShapeBorder? shape,
+  Clip? clipBehavior,
   TransitionBuilder? builder,
   Color? barrierColor,
   RouteSettings? routeSettings,
@@ -38,7 +45,9 @@ Future<SelectorEntries?> showSelector({
     pageBuilder: (innerContext) => _SelectorDialog(
       delegate: delegate,
       title: title,
-      selectorTheme: selectorTheme,
+      elevation: elevation,
+      shape: shape,
+      clipBehavior: clipBehavior,
     ),
     barrierDismissible: barrierDismissible,
     barrierColor: barrierColor ?? Colors.black54,
@@ -102,12 +111,16 @@ class _SelectorDialog extends StatefulWidget {
   const _SelectorDialog({
     required this.delegate,
     this.title,
-    this.selectorTheme,
+    this.elevation,
+    this.shape,
+    this.clipBehavior,
   });
 
   final SelectorDelegate delegate;
   final Widget? title;
-  final SelectorThemeData? selectorTheme;
+  final double? elevation;
+  final ShapeBorder? shape;
+  final Clip? clipBehavior;
 
   @override
   State<_SelectorDialog> createState() => _SelectorDialogState();
@@ -128,7 +141,6 @@ class _SelectorDialogState extends State<_SelectorDialog> {
   Widget build(BuildContext context) {
     final panel = SelectorPanel(
       delegate: widget.delegate,
-      selectorTheme: widget.selectorTheme,
       onApplyTap: (selected) => _popWith(selected),
       // Reset is handled internally by the selector widget; the dialog stays
       // open so the user can keep adjusting the selection.
@@ -136,7 +148,9 @@ class _SelectorDialogState extends State<_SelectorDialog> {
     );
 
     return Dialog(
-      clipBehavior: Clip.antiAlias,
+      elevation: widget.elevation,
+      shape: widget.shape,
+      clipBehavior: widget.clipBehavior ?? Clip.antiAlias,
       insetPadding:
           const EdgeInsets.symmetric(horizontal: 40.0, vertical: 24.0),
       child: ConstrainedBox(

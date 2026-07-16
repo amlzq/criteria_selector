@@ -126,7 +126,8 @@ void main() {
 
     testWidgets('forwards callbacks with an external controller',
         (tester) async {
-      final controller = SelectorController(selectionMode: SelectionMode.single);
+      final controller =
+          SelectorController(selectionMode: SelectionMode.single);
       var changed = false;
       var applied = false;
       var reset = false;
@@ -188,7 +189,8 @@ void main() {
 
     testWidgets('does not dispose an externally-provided controller',
         (tester) async {
-      final controller = SelectorController(selectionMode: SelectionMode.single);
+      final controller =
+          SelectorController(selectionMode: SelectionMode.single);
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(

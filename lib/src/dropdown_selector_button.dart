@@ -8,7 +8,6 @@ import 'dropdown_tab_data.dart';
 import 'i18n/localizations.dart';
 import 'selector/constants.dart';
 import 'selector/selector_delegate.dart';
-import 'selector/selector_theme_data.dart';
 import 'selector_overlay_host.dart';
 
 /// Visual variants for [DropdownSelectorButton].
@@ -49,7 +48,6 @@ class DropdownSelectorButton extends StatefulWidget {
     this.child,
     this.icon,
     this.overlayStyle,
-    this.selectorTheme,
     this.onSelectorShowed,
     this.onSelectorHidden,
     this.onChanged,
@@ -68,7 +66,6 @@ class DropdownSelectorButton extends StatefulWidget {
     this.child,
     this.icon,
     this.overlayStyle,
-    this.selectorTheme,
     this.onSelectorShowed,
     this.onSelectorHidden,
     this.onChanged,
@@ -88,7 +85,6 @@ class DropdownSelectorButton extends StatefulWidget {
     this.child,
     this.icon,
     this.overlayStyle,
-    this.selectorTheme,
     this.onSelectorShowed,
     this.onSelectorHidden,
     this.onChanged,
@@ -118,9 +114,6 @@ class DropdownSelectorButton extends StatefulWidget {
 
   /// Overrides the default value of [DropdownOverlayStyle].
   final DropdownOverlayStyle? overlayStyle;
-
-  /// Theme overrides applied to selector widgets inside the overlay.
-  final SelectorThemeData? selectorTheme;
 
   /// Fired when the selector overlay is shown.
   final SelectorVisibilityCallback? onSelectorShowed;
@@ -244,8 +237,7 @@ class _DropdownSelectorButtonState extends State<DropdownSelectorButton>
     );
 
     final overlayStyle = widget.overlayStyle ?? resolved.overlayStyle;
-    final effectiveSelectorTheme =
-        widget.selectorTheme ?? resolved.selectorTheme;
+    final effectiveSelectorTheme = resolved.selectorTheme;
 
     final localizations = CriteriaSelectorLocalizations.of(context);
     _controller.applyMultipleText = localizations?.multiple ?? 'Multiple';

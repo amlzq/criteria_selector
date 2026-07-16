@@ -45,13 +45,21 @@ class SelectorTheme extends InheritedTheme {
           onBackgroundColorHighest: data.onBackgroundColorHighest,
           actionBarTheme: data.actionBarTheme,
           categoryBarTheme: data.categoryBarTheme,
+          tabBarTheme: data.tabBarTheme,
+          sideBarTheme: data.sideBarTheme,
           gridTileTheme: data.gridTileTheme,
           listTileTheme: data.listTileTheme,
           fieldTileTheme: data.fieldTileTheme,
+          expansionTileTheme: data.expansionTileTheme,
           radioTheme: data.radioTheme,
           checkboxTheme: data.checkboxTheme,
+          chipBarThemeData: data.chipBarThemeData,
         );
-        return SelectorTheme(key: key, data: merged, child: child);
+        return SelectorTheme(
+          key: key,
+          data: merged.copyWith(panelTheme: data.panelTheme),
+          child: child,
+        );
       },
     );
   }

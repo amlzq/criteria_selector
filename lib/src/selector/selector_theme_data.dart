@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import 'selector_panel_theme.dart';
 import 'widgets/action_bar_theme.dart';
 import 'widgets/category_bar_theme.dart';
 import 'widgets/chip_bar_theme.dart';
@@ -40,6 +41,7 @@ class SelectorThemeData with Diagnosticable {
     RadioThemeData? radioTheme,
     CheckboxThemeData? checkboxTheme,
     SelectorChipBarTheme? chipBarThemeData,
+    SelectorPanelTheme? panelTheme,
   }) {
     return SelectorThemeData.raw(
       selectedColor: selectedColor ?? theme.colorScheme.primary,
@@ -64,6 +66,7 @@ class SelectorThemeData with Diagnosticable {
       radioTheme: radioTheme ?? const RadioThemeData(),
       checkboxTheme: checkboxTheme ?? const CheckboxThemeData(),
       chipBarThemeData: chipBarThemeData ?? const SelectorChipBarTheme(),
+      panelTheme: panelTheme ?? const SelectorPanelTheme(),
     );
   }
 
@@ -88,6 +91,7 @@ class SelectorThemeData with Diagnosticable {
     required this.radioTheme,
     required this.checkboxTheme,
     required this.chipBarThemeData,
+    required this.panelTheme,
   });
 
   /// Convenience factory that uses [theme] defaults without any overrides.
@@ -152,6 +156,9 @@ class SelectorThemeData with Diagnosticable {
   /// Theme overrides for the selected chips bar.
   final SelectorChipBarTheme chipBarThemeData;
 
+  /// Theme overrides for the panel's elevation, shadow and shape decoration.
+  final SelectorPanelTheme panelTheme;
+
   /// Creates a copy of this theme data with the given fields replaced.
   SelectorThemeData copyWith({
     Color? selectedColor,
@@ -173,6 +180,7 @@ class SelectorThemeData with Diagnosticable {
     RadioThemeData? radioTheme,
     CheckboxThemeData? checkboxTheme,
     SelectorChipBarTheme? chipBarThemeData,
+    SelectorPanelTheme? panelTheme,
   }) {
     return SelectorThemeData.raw(
       selectedColor: selectedColor ?? this.selectedColor,
@@ -195,6 +203,7 @@ class SelectorThemeData with Diagnosticable {
       radioTheme: radioTheme ?? this.radioTheme,
       checkboxTheme: checkboxTheme ?? this.checkboxTheme,
       chipBarThemeData: chipBarThemeData ?? this.chipBarThemeData,
+      panelTheme: panelTheme ?? this.panelTheme,
     );
   }
 
@@ -236,6 +245,7 @@ class SelectorThemeData with Diagnosticable {
           CheckboxThemeData.lerp(a?.checkboxTheme, b?.checkboxTheme, t),
       chipBarThemeData: SelectorChipBarTheme.lerp(
           a?.chipBarThemeData, b?.chipBarThemeData, t),
+      panelTheme: SelectorPanelTheme.lerp(a?.panelTheme, b?.panelTheme, t),
     );
   }
 
@@ -259,6 +269,7 @@ class SelectorThemeData with Diagnosticable {
         radioTheme,
         checkboxTheme,
         chipBarThemeData,
+        panelTheme,
       );
 
   @override
@@ -287,6 +298,7 @@ class SelectorThemeData with Diagnosticable {
         other.expansionTileTheme == expansionTileTheme &&
         other.radioTheme == radioTheme &&
         other.checkboxTheme == checkboxTheme &&
-        other.chipBarThemeData == chipBarThemeData;
+        other.chipBarThemeData == chipBarThemeData &&
+        other.panelTheme == panelTheme;
   }
 }

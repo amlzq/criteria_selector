@@ -145,11 +145,17 @@ class _SelectorPanelState extends State<SelectorPanel> {
 
   @override
   Widget build(BuildContext context) {
+    // Merge the delegate-level [SelectorPanelTheme] override (if any) into the
+    // ambient theme so that [_PanelDecoratedBox] picks it up. `copyWith` keeps
+    // the existing `panelTheme` when the delegate does not supply one.
+    final baseTheme =
+        widget.selectorTheme ?? SelectorThemeData.fallback(Theme.of(context));
+    final effectiveTheme = widget.delegate.panelTheme == null
+        ? baseTheme
+        : baseTheme.copyWith(panelTheme: widget.delegate.panelTheme);
     return SelectorTheme(
-      data:
-          widget.selectorTheme ?? SelectorThemeData.fallback(Theme.of(context)),
-      child: ColoredBox(
-        color: SelectorTheme.of(context).backgroundColor,
+      data: effectiveTheme,
+      child: _PanelDecoratedBox(
         child: SelectorControllerProvider(
           controller: _controller,
           child: FutureBuilder<SelectorEntries>(
@@ -181,6 +187,43 @@ class _SelectorPanelState extends State<SelectorPanel> {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Wraps the panel content, applying the [SelectorPanelTheme] elevation and
+/// shape when configured.
+///
+/// When either [SelectorPanelTheme.elevation] or [SelectorPanelTheme.shape] is
+/// set, the background is rendered as a [Material] so that it casts a shadow and
+/// consumes the [ShapeBorder]. Otherwise, a plain [ColoredBox] is used, which
+/// preserves the previous flat appearance and keeps hosts that supply their own
+/// outer decoration (e.g. [Dialog] / [showModalBottomSheet]) free of a double
+/// background.
+class _PanelDecoratedBox extends StatelessWidget {
+  const _PanelDecoratedBox({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = SelectorTheme.of(context);
+    final panel = theme.panelTheme;
+    final hasDecoration = panel.elevation != null || panel.shape != null;
+    if (!hasDecoration) {
+      return ColoredBox(
+        color: theme.backgroundColor,
+        child: child,
+      );
+    }
+    return Material(
+      color: theme.backgroundColor,
+      elevation: panel.elevation ?? 0,
+      shadowColor: panel.shadowColor,
+      surfaceTintColor: panel.surfaceTintColor,
+      shape: panel.shape,
+      clipBehavior: panel.clipBehavior ?? Clip.none,
+      child: child,
     );
   }
 }

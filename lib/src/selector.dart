@@ -4,15 +4,14 @@ import 'selector/constants.dart';
 import 'selector/selector_controller.dart';
 import 'selector/selector_delegate.dart';
 import 'selector/selector_panel.dart';
-import 'selector/selector_theme_data.dart';
 
 /// A high-level, ready-to-use criteria selector.
 ///
 /// [CriteriaSelector] is the public entry point for embedding a selector
 /// directly in a page or dialog body. It wraps [SelectorPanel] — now an
 /// internal implementation detail that is no longer exported — and takes care
-/// of the surrounding concerns (theme and controller lifecycle) so callers get
-/// a complete, styled component without extra wiring.
+/// of the controller lifecycle so callers get a complete, styled component
+/// without extra wiring.
 ///
 /// The actual selection UI, including the apply/reset action bar in
 /// multi-selection mode, is produced by the supplied [delegate]. The action
@@ -20,6 +19,11 @@ import 'selector/selector_theme_data.dart';
 /// focused category index), so it stays owned by the delegate rather than being
 /// re-created here. [CriteriaSelector] forwards the [onChangeTap], [onApplyTap]
 /// and [onResetTap] callbacks fired by the selection.
+///
+/// Styling is carried entirely by the [delegate] (colors, per-widget themes
+/// and the panel decoration via [SelectorDelegate.panelTheme]). When a selector
+/// is the only one in its host, a separate `selectorTheme` parameter is
+/// unnecessary.
 ///
 /// If [controller] is omitted, [CriteriaSelector] creates and owns an internal
 /// [SelectorController]; otherwise the caller-provided controller is used and
@@ -29,7 +33,6 @@ class CriteriaSelector extends StatefulWidget {
     super.key,
     required this.delegate,
     this.controller,
-    this.selectorTheme,
     this.onChangeTap,
     this.onApplyTap,
     this.onResetTap,
@@ -38,7 +41,8 @@ class CriteriaSelector extends StatefulWidget {
 
   /// Configuration describing how entries are loaded and how the selector body
   /// is rendered. Determines the concrete selector type (Cascading, List, Grid
-  /// or Flatten).
+  /// or Flatten). Also carries all theme overrides (colors, per-widget themes
+  /// and the panel decoration via [SelectorDelegate.panelTheme]).
   final SelectorDelegate delegate;
 
   /// Optional controller that drives the selection state.
@@ -48,12 +52,6 @@ class CriteriaSelector extends StatefulWidget {
   /// responsible for disposing it. When omitted, an internal controller is
   /// created and disposed by [CriteriaSelector].
   final SelectorController? controller;
-
-  /// Theme overrides applied to the selector and its action bar.
-  ///
-  /// When omitted, a fallback theme derived from the ambient [ThemeData] is
-  /// used, so the component is styled out of the box.
-  final SelectorThemeData? selectorTheme;
 
   /// Fired when the selection changes.
   final SelectorCallback? onChangeTap;
@@ -144,7 +142,6 @@ class _CriteriaSelectorState extends State<CriteriaSelector> {
       child: SelectorPanel(
         delegate: widget.delegate,
         controller: _controller,
-        selectorTheme: widget.selectorTheme,
         onChangeTap: widget.onChangeTap,
         onApplyTap: widget.onApplyTap,
         onResetTap: widget.onResetTap,
