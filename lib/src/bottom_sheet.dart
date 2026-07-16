@@ -40,10 +40,10 @@ import 'selector/selector_panel.dart';
 Future<SelectorEntries?> showModalBottomSelector({
   required BuildContext context,
   required SelectorDelegate delegate,
-  bool isScrollControlled = true,
+  bool isScrollControlled = false,
   bool useRootNavigator = false,
   bool isDismissible = true,
-  bool useSafeArea = true,
+  bool useSafeArea = false,
   Widget? title,
   Color? backgroundColor,
   double? elevation,
@@ -131,16 +131,25 @@ class _ModalBottomSheetContentState extends State<_ModalBottomSheetContent> {
     // at the bottom sheet's own max height (0.9 of the screen when
     // [isScrollControlled] is false) when content is large. The selector then
     // scrolls internally and its action bar stays pinned to the bottom.
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        if (widget.title != null) _BottomSheetHeader(title: widget.title!),
-        Flexible(
-          fit: FlexFit.loose,
-          child: panel,
-        ),
-      ],
+    //
+    // SafeArea with bottom:true is required here because Flutter's
+    // useSafeArea parameter on showModalBottomSheet uses SafeArea(bottom: false),
+    // meaning it only handles top/left/right safe areas. The bottom safe area
+    // (e.g., iPhone home indicator) must be handled by the content itself.
+    return SafeArea(
+      top: false,
+      bottom: true,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (widget.title != null) _BottomSheetHeader(title: widget.title!),
+          Flexible(
+            fit: FlexFit.loose,
+            child: panel,
+          ),
+        ],
+      ),
     );
   }
 }
