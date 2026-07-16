@@ -8,8 +8,8 @@ import 'dropdown_tab_data.dart';
 import 'i18n/localizations.dart';
 import 'selector/constants.dart';
 import 'selector/selector_delegate.dart';
-import 'selector/selector_panel.dart';
 import 'selector/selector_theme_data.dart';
+import 'selector_overlay_host.dart';
 
 /// Visual variants for [DropdownSelectorButton].
 enum DropdownSelectorButtonVariant {
@@ -55,6 +55,7 @@ class DropdownSelectorButton extends StatefulWidget {
     this.onChanged,
     this.onApplied,
     this.onReset,
+    this.direction = DropdownSelectorDirection.below,
   }) : assert(label == null || child == null,
             'Provide either label or child, not both.');
 
@@ -73,6 +74,7 @@ class DropdownSelectorButton extends StatefulWidget {
     this.onChanged,
     this.onApplied,
     this.onReset,
+    this.direction = DropdownSelectorDirection.below,
   })  : variant = DropdownSelectorButtonVariant.elevated,
         assert(label == null || child == null,
             'Provide either label or child, not both.');
@@ -92,6 +94,7 @@ class DropdownSelectorButton extends StatefulWidget {
     this.onChanged,
     this.onApplied,
     this.onReset,
+    this.direction = DropdownSelectorDirection.below,
   })  : variant = DropdownSelectorButtonVariant.outlined,
         assert(label == null || child == null,
             'Provide either label or child, not both.');
@@ -133,6 +136,15 @@ class DropdownSelectorButton extends StatefulWidget {
 
   /// Fired when reset is triggered.
   final VoidCallback? onReset;
+
+  /// Vertical placement of the selector panel relative to the trigger.
+  ///
+  /// Defaults to [DropdownSelectorDirection.below], which always shows the
+  /// panel under the trigger. Use [DropdownSelectorDirection.adaptive] to let
+  /// it flip above when there is more room there, or
+  /// [DropdownSelectorDirection.above] to force the panel above. Regardless of
+  /// the value, the panel is always kept fully on screen horizontally.
+  final DropdownSelectorDirection direction;
 
   @override
   State<DropdownSelectorButton> createState() => _DropdownSelectorButtonState();
@@ -208,26 +220,6 @@ class _DropdownSelectorButtonState extends State<DropdownSelectorButton>
     }
   }
 
-  Size get _buttonSize {
-    final renderBox = context.findRenderObject() as RenderBox?;
-    if (renderBox == null || !renderBox.attached) {
-      return const Size(0, kDropdownSelectorButtonHeight);
-    }
-    return renderBox.size;
-  }
-
-  double get _overlayAvailableHeight {
-    final renderBox = context.findRenderObject() as RenderBox?;
-    if (renderBox == null || !renderBox.attached) {
-      return 400.0;
-    }
-    final size = renderBox.size;
-    final offset = renderBox.localToGlobal(Offset.zero);
-    final barBottom = offset.dy + size.height;
-    final screenHeight = MediaQuery.sizeOf(context).height;
-    return (screenHeight - barBottom).clamp(0.0, screenHeight);
-  }
-
   @override
   Widget build(BuildContext context) {
     final DropdownSelectorButtonTheme defaults =
@@ -258,39 +250,13 @@ class _DropdownSelectorButtonState extends State<DropdownSelectorButton>
     final localizations = CriteriaSelectorLocalizations.of(context);
     _controller.applyMultipleText = localizations?.multiple ?? 'Multiple';
 
-    final buttonSize = _buttonSize;
-
-    return DropdownSelectorControllerProvider(
+    return SelectorOverlayHost(
       controller: _controller,
-      child: CompositedTransformTarget(
-        link: _controller.layerLink,
-        child: OverlayPortal(
-          controller: _controller.portalCtrl,
-          overlayChildBuilder: (context) {
-            return CompositedTransformFollower(
-              link: _controller.layerLink,
-              showWhenUnlinked: false,
-              offset: Offset(0, buttonSize.height),
-              child: DropdownOverlay(
-                availableHeight: _overlayAvailableHeight,
-                style: overlayStyle,
-                alignment: Alignment.topLeft,
-                animation: _controller.overlayAnimation,
-                onOverlayTap: () => _controller.hideSelector(),
-                child: SizedBox(
-                  width: buttonSize.width > 0 ? buttonSize.width : null,
-                  child: SelectorPanel(
-                    controller: _controller.selectorController,
-                    delegate: _controller.previousSelectorDelegate!,
-                    selectorTheme: effectiveSelectorTheme,
-                  ),
-                ),
-              ),
-            );
-          },
-          child: _buildButton(context, resolved),
-        ),
-      ),
+      direction: widget.direction,
+      style: overlayStyle,
+      selectorTheme: effectiveSelectorTheme,
+      minWidthFromTrigger: true,
+      triggerChild: _buildButton(context, resolved),
     );
   }
 

@@ -10,8 +10,8 @@ import 'dropdown_tab_data.dart';
 import 'i18n/localizations.dart';
 import 'selector/constants.dart';
 import 'selector/selector_delegate.dart';
-import 'selector/selector_panel.dart';
 import 'selector/selector_theme_data.dart';
+import 'selector_overlay_host.dart';
 
 /// Default height for [DropdownSelectorBar] when no theme override is provided.
 const kDropdownSelectorBarHeight = 44.0;
@@ -55,6 +55,7 @@ class DropdownSelectorBar extends StatefulWidget
     this.controller,
     this.initialIndex,
     this.selectorTheme,
+    this.direction = DropdownSelectorDirection.below,
   })  : assert(selectorDelegates != null || selectors != null,
             'Either selectorDelegates or selectors must be provided.'),
         selectorDelegates = selectorDelegates ?? selectors ?? const [];
@@ -111,6 +112,15 @@ class DropdownSelectorBar extends StatefulWidget
 
   /// Theme overrides applied to selector widgets inside the overlay.
   final SelectorThemeData? selectorTheme;
+
+  /// Vertical placement of the selector panel relative to the bar.
+  ///
+  /// Defaults to [DropdownSelectorDirection.below], which always shows the
+  /// panel under the trigger. Use [DropdownSelectorDirection.adaptive] to let
+  /// it flip above when there is more room there, or
+  /// [DropdownSelectorDirection.above] to force the panel above. Regardless of
+  /// the value, the panel is always kept fully on screen horizontally.
+  final DropdownSelectorDirection direction;
 
   @override
   State<DropdownSelectorBar> createState() => _DropdownSelectorBarState();
@@ -224,22 +234,6 @@ class _DropdownSelectorBarState extends State<DropdownSelectorBar>
   //   return widget.height ?? inheritedTheme?.height ?? defaults.height!;
   // }
 
-  double get _overlayAvailableHeight {
-    var availableHeight = 400.0;
-    final renderBox = context.findRenderObject() as RenderBox?;
-    if (renderBox == null || !renderBox.attached) return availableHeight;
-
-    final size = renderBox.size;
-    final offset = renderBox.localToGlobal(Offset.zero);
-
-    final barBottom = offset.dy + size.height;
-
-    final screenHeight = MediaQuery.sizeOf(context).height;
-
-    availableHeight = screenHeight - barBottom;
-    return availableHeight;
-  }
-
   bool _debugScheduleCheckHasValidSelectorCount() {
     if (_debugHasScheduledValidSelectorCountCheck) {
       return true;
@@ -284,89 +278,64 @@ class _DropdownSelectorBarState extends State<DropdownSelectorBar>
 
     _controller!.applyMultipleText = effectiveMultipleText;
 
-    return DropdownSelectorControllerProvider(
-      controller: _controller,
-      child: CompositedTransformTarget(
-        link: _controller!.layerLink,
-        child: OverlayPortal(
-          controller: _controller!.portalCtrl,
-          overlayChildBuilder: (context) {
-            return CompositedTransformFollower(
-              link: _controller!.layerLink,
-              showWhenUnlinked: false,
-              offset: Offset(0, height),
-              child: DropdownOverlay(
-                availableHeight: _overlayAvailableHeight,
-                style: overlayStyle,
-                animation: _controller!.overlayAnimation,
-                onOverlayTap: () {
-                  // FocusScope.of(context).unfocus();
-                  _controller!.hideSelector();
-                },
-                child: SelectorPanel(
-                  controller: _controller!.selectorController,
-                  delegate: _controller!.previousSelectorDelegate!,
-                  selectorTheme: effectiveSelectorTheme,
-                ),
-              ),
-            );
-          },
-          child: Material(
-            color: widget.backgroundColor ??
-                theme?.backgroundColor ??
-                defaults.backgroundColor!,
-            elevation: widget.elevation,
-            child: SizedBox(
-              width: double.infinity,
-              height: height,
-              child: Builder(
-                builder: (context) {
-                  final tabs = <Widget>[
-                    for (int i = 0; i < widget.tabs.length; i++)
-                      _DropdownSelectorTabInfo(
-                        index: i,
-                        onTap: (tabData) => _handleTap(tabData),
-                        indicator: widget.indicator,
-                        unselectedIndicator: widget.unselectedIndicator,
-                        child: _DropdownSelectorTabStyle(
-                          isSelected: (_controller?.isSelectorShowing == true &&
-                                  _controller!.currentIndex == i) ||
-                              _controller?.tabDataMap[i]?.isResulted == true,
-                          labelColor: widget.labelColor,
-                          unselectedLabelColor: widget.unselectedLabelColor,
-                          labelStyle: widget.labelStyle,
-                          unselectedLabelStyle: widget.unselectedLabelStyle,
-                          defaults: defaults,
-                          child: widget.tabs[i],
-                        ),
-                      ),
-                  ];
-
-                  final row = Row(
-                    mainAxisSize: widget.isScrollable
-                        ? MainAxisSize.min
-                        : MainAxisSize.max,
-                    children: widget.isScrollable
-                        ? tabs
-                        : tabs.map((t) => Expanded(child: t)).toList(),
-                  );
-
-                  if (!widget.isScrollable) {
-                    return row;
-                  }
-
-                  return ScrollConfiguration(
-                    behavior: ScrollConfiguration.of(context)
-                        .copyWith(overscroll: false),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      physics: const ClampingScrollPhysics(),
-                      child: row,
+    return SelectorOverlayHost(
+      controller: _controller!,
+      direction: widget.direction,
+      style: overlayStyle,
+      selectorTheme: effectiveSelectorTheme,
+      triggerChild: Material(
+        color: widget.backgroundColor ??
+            theme?.backgroundColor ??
+            defaults.backgroundColor!,
+        elevation: widget.elevation,
+        child: SizedBox(
+          width: double.infinity,
+          height: height,
+          child: Builder(
+            builder: (context) {
+              final tabs = <Widget>[
+                for (int i = 0; i < widget.tabs.length; i++)
+                  _DropdownSelectorTabInfo(
+                    index: i,
+                    onTap: (tabData) => _handleTap(tabData),
+                    indicator: widget.indicator,
+                    unselectedIndicator: widget.unselectedIndicator,
+                    child: _DropdownSelectorTabStyle(
+                      isSelected: (_controller?.isSelectorShowing == true &&
+                              _controller!.currentIndex == i) ||
+                          _controller?.tabDataMap[i]?.isResulted == true,
+                      labelColor: widget.labelColor,
+                      unselectedLabelColor: widget.unselectedLabelColor,
+                      labelStyle: widget.labelStyle,
+                      unselectedLabelStyle: widget.unselectedLabelStyle,
+                      defaults: defaults,
+                      child: widget.tabs[i],
                     ),
-                  );
-                },
-              ),
-            ),
+                  ),
+              ];
+
+              final row = Row(
+                mainAxisSize:
+                    widget.isScrollable ? MainAxisSize.min : MainAxisSize.max,
+                children: widget.isScrollable
+                    ? tabs
+                    : tabs.map((t) => Expanded(child: t)).toList(),
+              );
+
+              if (!widget.isScrollable) {
+                return row;
+              }
+
+              return ScrollConfiguration(
+                behavior:
+                    ScrollConfiguration.of(context).copyWith(overscroll: false),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  physics: const ClampingScrollPhysics(),
+                  child: row,
+                ),
+              );
+            },
           ),
         ),
       ),

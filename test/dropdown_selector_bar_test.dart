@@ -41,7 +41,18 @@ void main() {
 
       expect(showed, isTrue);
       expect(controller.isSelectorShowing, isTrue);
-      expect(find.byIcon(Icons.arrow_drop_up), findsOneWidget);
+      // The default indicator (Icons.arrow_drop_down) rotates 180° to point up
+      // while expanded; the icon data is unchanged, so assert on the rotation
+      // rather than on a swapped Icons.arrow_drop_up widget.
+      expect(find.byIcon(Icons.arrow_drop_down), findsOneWidget);
+      expect(find.byIcon(Icons.arrow_drop_up), findsNothing);
+      final expandedRotation = tester.widget<RotationTransition>(
+        find.descendant(
+          of: find.byType(DropdownTab),
+          matching: find.byType(RotationTransition),
+        ),
+      );
+      expect(expandedRotation.turns.value, 0.5);
       expect(find.text('A'), findsOneWidget);
 
       await tester.tap(find.text('Filter'));
@@ -50,6 +61,13 @@ void main() {
       expect(hidden, isTrue);
       expect(controller.isSelectorShowing, isFalse);
       expect(find.byIcon(Icons.arrow_drop_down), findsOneWidget);
+      final collapsedRotation = tester.widget<RotationTransition>(
+        find.descendant(
+          of: find.byType(DropdownTab),
+          matching: find.byType(RotationTransition),
+        ),
+      );
+      expect(collapsedRotation.turns.value, 0.0);
     });
 
     testWidgets('applies selection and updates tab label', (tester) async {
