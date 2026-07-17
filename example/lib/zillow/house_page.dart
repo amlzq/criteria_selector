@@ -95,108 +95,56 @@ class _HousePageState extends State<HousePage> {
     if (result.tabIndex == 0) {
       // Neighborhood filter
       _filtersRepo.neighborhoodResult = result;
-      for (var category in result.selected) {
-        filter.region = <Map<String, dynamic>>[];
-        for (var d in category.children ?? {}) {
-          filter.region!.add({
-            "region_id": d.id,
-            "neighborhood_id": d.children
-                ?.map((s) => s.id)
-                .toList(growable: false)
-                .cast<String>(),
-          });
-        }
-      }
+      filter.region = result
+          .cascadingPairsOf('neighborhood')
+          .map((p) => {
+                "region_id": p.id,
+                "neighborhood_id": p.childIds,
+              })
+          .toList(growable: false);
     } else if (result.tabIndex == 1) {
       // Price filter
       _filtersRepo.priceResult = result;
       final category = result.selected.firstOrNull;
       if (category == null) return null;
       if (category.id == 'list_price') {
-        filter.listPrice = <Map<String, dynamic>>[];
-        for (var e in category.children ?? {}) {
-          e as SelectorIntEntry;
-          filter.listPrice!.add({"id": e.id, "min": e.min, "max": e.max});
-        }
+        filter.listPrice = result
+            .childRangesOf('list_price')
+            .map((e) => {
+                  "id": e.id,
+                  "min": e.min,
+                  "max": e.max,
+                })
+            .toList(growable: false);
       } else if (category.id == 'monthly_price') {
-        filter.monthlyPayment = <Map<String, dynamic>>[];
-        for (var e in category.children ?? {}) {
-          e as SelectorIntEntry;
-          filter.monthlyPayment!.add({"id": e.id, "min": e.min, "max": e.max});
-        }
+        filter.monthlyPayment = result
+            .childRangesOf('monthly_price')
+            .map((e) => {
+                  "id": e.id,
+                  "min": e.min,
+                  "max": e.max,
+                })
+            .toList(growable: false);
       }
     } else if (result.tabIndex == 2) {
       // Rooms filter
       _filtersRepo.roomsResult = result;
-      final category = result.selected.firstOrNull;
-      if (category == null) return null;
-      if (category.id == 'bedrooms') {
-        filter.bedrooms = <String>[];
-        for (var e in category.children ?? {}) {
-          e as SelectorIntEntry;
-          filter.bedrooms!.add(e.id);
-        }
-      } else if (category.id == 'bathrooms') {
-        filter.bathrooms = <String>[];
-        for (var e in category.children ?? {}) {
-          e as SelectorIntEntry;
-          filter.bathrooms!.add(e.id);
-        }
-      }
+      filter.bedrooms = result.childIdsOf('bedrooms');
+      filter.bathrooms = result.childIdsOf('bathrooms');
     } else if (result.tabIndex == 3) {
       // More filter
       _filtersRepo.moreResult = result;
-      final category = result.selected.firstOrNull;
-      if (category == null) return null;
-      if (category.id == 'home_type') {
-        filter.homeType = <String>[];
-        for (var e in category.children ?? {}) {
-          e as SelectorTextEntry;
-          filter.homeType!.add(e.id);
-        }
-      } else if (category.id == 'lists_details') {
-        filter.listsDetails = <String>[];
-        for (var e in category.children ?? {}) {
-          e as SelectorTextEntry;
-          filter.listsDetails!.add(e.id);
-        }
-      } else if (category.id == 'square_feet') {
-        filter.squareFeet = <String>[];
-        for (var e in category.children ?? {}) {
-          e as SelectorTextEntry;
-          filter.squareFeet!.add(e.id);
-        }
-      } else if (category.id == 'lot_size') {
-        filter.lotSize = <String>[];
-        for (var e in category.children ?? {}) {
-          e as SelectorTextEntry;
-          filter.lotSize!.add(e.id);
-        }
-      } else if (category.id == 'home_features') {
-        filter.homeFeatures = <String>[];
-        for (var e in category.children ?? {}) {
-          e as SelectorTextEntry;
-          filter.homeFeatures!.add(e.id);
-        }
-      } else if (category.id == 'commute') {
-        filter.commute = <String>[];
-        for (var e in category.children ?? {}) {
-          e as SelectorTextEntry;
-          filter.commute!.add(e.id);
-        }
-      } else if (category.id == 'expanded_search') {
-        filter.expandedSearch = <String>[];
-        for (var e in category.children ?? {}) {
-          e as SelectorTextEntry;
-          filter.expandedSearch!.add(e.id);
-        }
-      }
+      filter.homeType = result.childIdsOf('home_type');
+      filter.listsDetails = result.childIdsOf('lists_details');
+      filter.squareFeet = result.childIdsOf('square_feet');
+      filter.lotSize = result.childIdsOf('lot_size');
+      filter.homeFeatures = result.childIdsOf('home_features');
+      filter.commute = result.childIdsOf('commute');
+      filter.expandedSearch = result.childIdsOf('expanded_search');
     } else if (result.tabIndex == 4) {
       // Sort filter
       _filtersRepo.sortResult = result;
-      final entry = result.selected.firstOrNull;
-      if (entry == null) return null;
-      filter.sort = entry.id;
+      filter.sort = result.firstSelectedId;
     }
     return filter;
   }

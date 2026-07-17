@@ -51,7 +51,16 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 ),
                 title: const Text('区域选择器'),
               );
-              print('result: $result');
+              // `result` is a bare `SelectorEntries?` (the return type of
+              // showSelector). The query helpers now live on
+              // `SelectorEntriesExtension`, so they can be called directly.
+              if (result == null) return;
+              print('region first: ${result.firstSelectedId}');
+              final regionFirst = result.firstSelectedId;
+              if (regionFirst != null) {
+                print(
+                    'region cascading: ${result.cascadingPairsOf(regionFirst)}');
+              }
             },
             child: const Text('Show Region Selector'),
           ),
@@ -74,7 +83,10 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 ),
                 title: const Text('价格选择器'),
               );
-              print('result: $result');
+              if (result == null) return;
+              print('price first: ${result.firstSelectedId}');
+              print('price total ranges: ${result.childRangesOf('total')}');
+              print('price unit ranges: ${result.childRangesOf('unit')}');
             },
             child: const Text('Show Price Selector'),
           ),
@@ -160,7 +172,8 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 clipBehavior: Clip.antiAlias,
                 title: const Text('排序选择器'),
               );
-              print('result: $result');
+              if (result == null) return;
+              print('sort id: ${result.firstSelectedId}');
             },
             child: const Text('Show Sort Selector'),
           ),
@@ -185,7 +198,13 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 ),
                 title: const Text('区域选择器'),
               );
-              print('result: $result');
+              if (result == null) return;
+              print('region first: ${result.firstSelectedId}');
+              final regionFirst = result.firstSelectedId;
+              if (regionFirst != null) {
+                print(
+                    'region cascading: ${result.cascadingPairsOf(regionFirst)}');
+              }
             },
             child: const Text('Show Region Selector'),
           ),
@@ -208,7 +227,10 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 ),
                 title: const Text('价格选择器'),
               );
-              print('result: $result');
+              if (result == null) return;
+              print('price first: ${result.firstSelectedId}');
+              print('price total ranges: ${result.childRangesOf('total')}');
+              print('price unit ranges: ${result.childRangesOf('unit')}');
             },
             child: const Text('Show Price Selector'),
           ),
@@ -282,7 +304,8 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 ),
                 title: const Text('排序选择器'),
               );
-              print('result: $result');
+              if (result == null) return;
+              print('sort id: ${result.firstSelectedId}');
             },
             child: const Text('Show Sort Selector'),
           ),

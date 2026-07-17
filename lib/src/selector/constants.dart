@@ -30,11 +30,13 @@ typedef SelectorVisibilityCallback = void Function(DropdownTabData tabData);
 /// [SliverPersistentHeader] to the top of the list — and have the overlay
 /// anchored to the final layout. Returning `false` cancels the show, leaving
 /// the overlay hidden.
-typedef SelectorWillShowCallback = FutureOr<bool> Function(DropdownTabData tabData);
+typedef SelectorWillShowCallback = FutureOr<bool> Function(
+    DropdownTabData tabData);
 
 /// Callback invoked just before the selector overlay is hidden for [tabData].
 /// Returning `false` cancels the hide, leaving the overlay visible.
-typedef SelectorWillHideCallback = FutureOr<bool> Function(DropdownTabData tabData);
+typedef SelectorWillHideCallback = FutureOr<bool> Function(
+    DropdownTabData tabData);
 
 /// Builds a custom label for a tab based on the current [DropdownSelectorResult].
 typedef DropdownTabLabelGetter = String Function(DropdownSelectorResult result);
@@ -145,6 +147,65 @@ extension SelectorEntriesExtension on SelectorEntries {
     traverse(this, 0);
     return result;
   }
+
+  /// Finds the first selected top-level entry (category) whose [id] matches
+  /// [categoryId], or `null` if no such category is selected.
+  ///
+  /// This is the entry point for most of the convenience query helpers below.
+  /// Because it lives on this extension it is available on a bare
+  /// [SelectorEntries] — e.g. the return value of `showSelector` /
+  /// `showModalBottomSelector` — not only on [DropdownSelectorResult].
+  SelectorEntry? findCategory(String categoryId) =>
+      where((e) => e.id == categoryId).firstOrNull;
+
+  /// Returns the ids of all direct children of the category with [categoryId].
+  ///
+  /// Returns an empty list when the category is not selected or has no
+  /// children. Equivalent to iterating `category.children` and collecting
+  /// each `e.id`.
+  List<String> childIdsOf(String categoryId) {
+    final category = findCategory(categoryId);
+    if (category?.children == null) return const [];
+    return category!.children!.map((e) => e.id).toList(growable: false);
+  }
+
+  /// Returns all direct children of the category with [categoryId] that are
+  /// [SelectorRangeEntry] values (e.g. price/area ranges carrying `min`/`max`).
+  ///
+  /// Returns an empty list when the category is not selected or has no range
+  /// children. The returned entries expose `min`/`max` as `dynamic`, so
+  /// callers can cast them to the expected numeric type as needed.
+  List<SelectorRangeEntry> childRangesOf(String categoryId) {
+    final category = findCategory(categoryId);
+    if (category?.children == null) return const [];
+    return category!.children!
+        .whereType<SelectorRangeEntry>()
+        .toList(growable: false);
+  }
+
+  /// Returns parent → child-id pairs for a cascading category
+  /// (e.g. region/metro with districts and sub-districts).
+  ///
+  /// Each record carries the parent's [id] and a [childIds] list of the ids of
+  /// its direct children. Returns an empty list when the category is not
+  /// selected or has no children.
+  List<({String id, List<String> childIds})> cascadingPairsOf(
+    String categoryId,
+  ) {
+    final category = findCategory(categoryId);
+    if (category?.children == null) return const [];
+    return category!.children!.map((parent) {
+      final childIds = (parent.children ?? const <SelectorEntry>[])
+          .map((c) => c.id)
+          .toList(growable: false);
+      return (id: parent.id, childIds: childIds);
+    }).toList(growable: false);
+  }
+
+  /// Returns the id of the first selected entry, or `null` when nothing is
+  /// selected. Convenience accessor for single-selection tabs such as sort
+  /// order.
+  String? get firstSelectedId => firstOrNull?.id;
 }
 
 extension IterableExtension<SelectorEntry> on Iterable<SelectorEntry> {

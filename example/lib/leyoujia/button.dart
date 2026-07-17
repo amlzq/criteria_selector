@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'house_filters_repository.dart';
+import 'house_repository.dart';
 import 'my_widgets.dart';
+import 'utils.dart';
 
 class ButtonDemoPage extends StatefulWidget {
   const ButtonDemoPage({super.key});
@@ -14,6 +16,7 @@ class ButtonDemoPage extends StatefulWidget {
 
 class _ButtonDemoPageState extends State<ButtonDemoPage> {
   late final HouseFiltersRepository _filtersRepo;
+  final filter = HouseFilter(cityId: userCityId);
 
   @override
   void initState() {
@@ -82,6 +85,15 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                 ),
                 applyText: AppLocalizations.of(context)?.apply ?? '',
               ),
+              onChanged: (result) {
+                print('onChanged: $result');
+              },
+              onReset: () {
+                print('onReset');
+              },
+              onApplied: (result) {
+                print('onApplied: $result');
+              },
             ),
           ),
           Align(
@@ -100,6 +112,15 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                 mainAxisSpacing: 8,
                 sideBarTheme: const SelectorSideBarTheme(width: 98),
               ),
+              onChanged: (result) {
+                print('onChanged: $result');
+              },
+              onReset: () {
+                print('onReset');
+              },
+              onApplied: (result) {
+                print('onApplied: $result');
+              },
             ),
           ),
           Padding(
@@ -116,6 +137,15 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                   return MyRadio(value: selected);
                 },
               ),
+              onChanged: (result) {
+                print('onChanged: $result');
+              },
+              onReset: () {
+                print('onReset');
+              },
+              onApplied: (result) {
+                print('onApplied: $result');
+              },
             ),
           ),
         ],

@@ -101,28 +101,22 @@ class _RentPageState extends State<RentPage> {
       if (category == null) return null;
       if (category.id == 'region') {
         // 行政区
-        filter.district = <Map<String, dynamic>>[];
-        for (var d in category.children ?? {}) {
-          filter.district!.add({
-            "district_id": d.id,
-            "subdistrict_id": d.children
-                ?.map((s) => s.id)
-                .toList(growable: false)
-                .cast<String>(),
-          });
-        }
+        filter.district = result
+            .cascadingPairsOf('region')
+            .map((p) => {
+                  "district_id": p.id,
+                  "subdistrict_id": p.childIds,
+                })
+            .toList(growable: false);
       } else if (category.id == 'metro') {
         // 地铁
-        filter.metro = <Map<String, dynamic>>[];
-        for (var l in category.children ?? {}) {
-          filter.metro?.add({
-            "line_id": l.id,
-            "station_id": l.children
-                ?.map((s) => s.id)
-                .toList(growable: false)
-                .cast<String>(),
-          });
-        }
+        filter.metro = result
+            .cascadingPairsOf('metro')
+            .map((p) => {
+                  "line_id": p.id,
+                  "station_id": p.childIds,
+                })
+            .toList(growable: false);
       } else if (category.id == 'nearby') {
         // 附近
         final nearbyRadiusMeters =
@@ -137,52 +131,33 @@ class _RentPageState extends State<RentPage> {
       if (category == null) return null;
       if (category.id == 'rent') {
         // 租金
-        filter.rent = <Map<String, dynamic>>[];
-        for (var e in category.children ?? {}) {
-          e as SelectorIntEntry;
-          filter.rent!.add({"id": e.id, "min": e.min, "max": e.max});
-        }
+        filter.rent = result
+            .childRangesOf('rent')
+            .map((e) => {
+                  "id": e.id,
+                  "min": e.min,
+                  "max": e.max,
+                })
+            .toList(growable: false);
       }
     } else if (result.tabIndex == 2) {
       // 户型筛选
       _filtersRepo.floorPlanRentResult = result;
-      final category = result.selected.firstOrNull;
-      if (category == null) return null;
-      if (category.id == 'living_room') {
-        // 居室
-        filter.livingRoom = <String>[];
-        for (var e in category.children ?? {}) {
-          e as SelectorTextEntry;
-          filter.livingRoom!.add(e.id);
-        }
-      } else if (category.id == 'bathroom') {
-        // 卫生间
-        filter.bathroom = <String>[];
-        for (var e in category.children ?? {}) {
-          e as SelectorTextEntry;
-          filter.bathroom!.add(e.id);
-        }
-      } else if (category.id == 'balcony') {
-        // 阳台
-        filter.balcony = <String>[];
-        for (var e in category.children ?? {}) {
-          e as SelectorTextEntry;
-          filter.balcony!.add(e.id);
-        }
-      } else if (category.id == 'area') {
-        // 面积
-        filter.area = <Map<String, dynamic>>[];
-        for (var e in category.children ?? {}) {
-          e as SelectorRangeEntry;
-          filter.area!.add({"id": e.id, "min": e.min, "max": e.max});
-        }
-      }
+      filter.livingRoom = result.childIdsOf('living_room');
+      filter.bathroom = result.childIdsOf('bathroom');
+      filter.balcony = result.childIdsOf('balcony');
+      filter.area = result
+          .childRangesOf('area')
+          .map((e) => {
+                "id": e.id,
+                "min": e.min,
+                "max": e.max,
+              })
+          .toList(growable: false);
     } else if (result.tabIndex == 3) {
       // 排序筛选
       _filtersRepo.sortRentResult = result;
-      final entry = result.selected.firstOrNull;
-      if (entry == null) return null;
-      filter.sort = entry.id;
+      filter.sort = result.firstSelectedId;
     }
     return filter;
   }
@@ -251,124 +226,128 @@ class _RentPageState extends State<RentPage> {
             child: Image.asset('assets/realestate/banner_realestate.jpg',
                 fit: BoxFit.cover),
           ),
-          DropdownSelectorBar(
-            controller: _controller,
-            // labelColor: Colors.orange,
-            // indicator: Icon(Icons.arrow_upward, size: 16),
-            // unselectedIndicator: Icon(Icons.arrow_downward, size: 16),
-            // overlayStyle: DropdownOverlayStyle(
-            //   backgroundColor: Colors.orange.withOpacity(0.54),
-            // ),
-            tabs: [
-              DropdownTab(
-                // tag: 'region',
-                label: l10n?.region ?? '',
-                // labelGetter: (DropdownSelectorResult result) {
-                //   // 可选：用户根据结果自定义标签
-                //   return '自定义标签';
-                // },
-              ),
-              DropdownTab(label: l10n?.price ?? ''),
-              DropdownTab(label: l10n?.floorPlan ?? ''),
-              DropdownTab(
-                child: Image.asset('assets/sorting.png', width: 16, height: 16),
-              ),
-            ],
-            selectorDelegates: [
-              CascadingSelectorDelegate(
-                entriesLoader: () =>
-                    _filtersRepo.fetchRegionData(singleAll: true),
-                selectedEntriesLoader: _filtersRepo.fetchRegionSelectedData,
-                resetEntriesLoader: _filtersRepo.fetchRegionResetData,
-                selectionMode: SelectionMode.single,
-                // skeletonBuilder: (_) => const Center(
-                //     child: CircularProgressIndicator(
-                //   color: Colors.black,
-                // )),
-                // categoryBackgroundColor: Colors.grey[200]!,
-                // terminalBackgroundColor: Colors.white,
-                radioBuilder: (context, selected) {
-                  return MyRadio(value: selected);
-                },
-                checkboxBuilder: (context, selected) {
-                  return MyCheckbox(value: selected);
-                },
-              ),
-              GridSelectorDelegate(
-                entriesLoader: _filtersRepo.fetchRentalData,
-                selectedEntriesLoader: _filtersRepo.fetchRentalSelectedData,
-                resetEntriesLoader: _filtersRepo.fetchRentalResetData,
-                selectionMode: SelectionMode.single,
-                crossAxisCount: 4,
-                childAspectRatio: 2.5,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-                gridTileTheme: const SelectorGridTileTheme(
-                  variant: SelectorGridTileVariant.outlined,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: DropdownSelectorBar(
+              controller: _controller,
+              // labelColor: Colors.orange,
+              // indicator: Icon(Icons.arrow_upward, size: 16),
+              // unselectedIndicator: Icon(Icons.arrow_downward, size: 16),
+              // overlayStyle: DropdownOverlayStyle(
+              //   backgroundColor: Colors.orange.withOpacity(0.54),
+              // ),
+              tabs: [
+                DropdownTab(
+                  // tag: 'region',
+                  label: l10n?.region ?? '',
+                  // labelGetter: (DropdownSelectorResult result) {
+                  //   // 可选：用户根据结果自定义标签
+                  //   return '自定义标签';
+                  // },
                 ),
-              ),
-              FlattenSelectorDelegate(
-                entriesLoader: () =>
-                    _filtersRepo.fetchFloorPlanRentData(singleAll: true),
-                selectedEntriesLoader:
-                    _filtersRepo.fetchFloorPlanRentSelectedData,
-                resetEntriesLoader: _filtersRepo.fetchFloorPlanRentResetData,
-                selectionMode: SelectionMode.single,
-                crossAxisCount: 3,
-                childAspectRatio: 2.5,
-                crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
-                actionBarBuilder: (
-                  context, {
-                  required onResetTap,
-                  required onApplyTap,
-                }) {
-                  return MyActionBar(
-                    applyTextVN: _floorPlanApplyText,
-                    onResetTap: onResetTap,
-                    onApplyTap: onApplyTap,
-                  );
-                },
-              ),
-              ListSelectorDelegate(
-                entriesLoader: _filtersRepo.fetchSortRentData,
-                selectedEntriesLoader: _filtersRepo.fetchSortRentSelectedData,
-                resetEntriesLoader: _filtersRepo.fetchSortRentResetData,
-                selectionMode: SelectionMode.single,
-                radioBuilder: (context, selected) {
-                  return MyRadio(value: selected);
-                },
-              ),
-            ],
-            onSelectorShowed: (DropdownTabData tabData) {
-              debugPrint('onShowed: ${tabData.label}');
-            },
-            onSelectorHidden: (DropdownTabData tabData) {
-              debugPrint('onHidden: ${tabData.label}');
-            },
-            onChanged: (DropdownSelectorResult result) {
-              debugPrintLarge('onChanged: $result');
-              _handleSelectorChange(result);
-              _showSelectedResult(result);
-            },
-            onApplied: (DropdownSelectorResult result) {
-              debugPrintLarge('onApplied: $result');
-              _handleSelectorApply(result);
-              if (result.tabIndex == 2) {
-                _floorPlanApplyTextDebounce?.cancel();
-                _floorPlanApplyTextRequestId++;
-                _floorPlanApplyText.value = l10n?.apply ?? '';
-              }
-              _showSelectedResult(result);
-            },
-            onReset: () {
-              debugPrint('onReset');
-              if (_controller.currentIndex == 2) {
-                _floorPlanApplyTextDebounce?.cancel();
-                _floorPlanApplyTextRequestId++;
-                _floorPlanApplyText.value = l10n?.apply ?? '';
-              }
-            },
+                DropdownTab(label: l10n?.price ?? ''),
+                DropdownTab(label: l10n?.floorPlan ?? ''),
+                DropdownTab(
+                  child:
+                      Image.asset('assets/sorting.png', width: 16, height: 16),
+                ),
+              ],
+              selectorDelegates: [
+                CascadingSelectorDelegate(
+                  entriesLoader: () =>
+                      _filtersRepo.fetchRegionData(singleAll: true),
+                  selectedEntriesLoader: _filtersRepo.fetchRegionSelectedData,
+                  resetEntriesLoader: _filtersRepo.fetchRegionResetData,
+                  selectionMode: SelectionMode.single,
+                  // skeletonBuilder: (_) => const Center(
+                  //     child: CircularProgressIndicator(
+                  //   color: Colors.black,
+                  // )),
+                  // categoryBackgroundColor: Colors.grey[200]!,
+                  // terminalBackgroundColor: Colors.white,
+                  radioBuilder: (context, selected) {
+                    return MyRadio(value: selected);
+                  },
+                  checkboxBuilder: (context, selected) {
+                    return MyCheckbox(value: selected);
+                  },
+                ),
+                GridSelectorDelegate(
+                  entriesLoader: _filtersRepo.fetchRentalData,
+                  selectedEntriesLoader: _filtersRepo.fetchRentalSelectedData,
+                  resetEntriesLoader: _filtersRepo.fetchRentalResetData,
+                  selectionMode: SelectionMode.single,
+                  crossAxisCount: 4,
+                  childAspectRatio: 2.5,
+                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 10,
+                  gridTileTheme: const SelectorGridTileTheme(
+                    variant: SelectorGridTileVariant.outlined,
+                  ),
+                ),
+                FlattenSelectorDelegate(
+                  entriesLoader: () =>
+                      _filtersRepo.fetchFloorPlanRentData(singleAll: true),
+                  selectedEntriesLoader:
+                      _filtersRepo.fetchFloorPlanRentSelectedData,
+                  resetEntriesLoader: _filtersRepo.fetchFloorPlanRentResetData,
+                  selectionMode: SelectionMode.single,
+                  crossAxisCount: 3,
+                  childAspectRatio: 2.5,
+                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 8,
+                  actionBarBuilder: (
+                    context, {
+                    required onResetTap,
+                    required onApplyTap,
+                  }) {
+                    return MyActionBar(
+                      applyTextVN: _floorPlanApplyText,
+                      onResetTap: onResetTap,
+                      onApplyTap: onApplyTap,
+                    );
+                  },
+                ),
+                ListSelectorDelegate(
+                  entriesLoader: _filtersRepo.fetchSortRentData,
+                  selectedEntriesLoader: _filtersRepo.fetchSortRentSelectedData,
+                  resetEntriesLoader: _filtersRepo.fetchSortRentResetData,
+                  selectionMode: SelectionMode.single,
+                  radioBuilder: (context, selected) {
+                    return MyRadio(value: selected);
+                  },
+                ),
+              ],
+              onSelectorShowed: (DropdownTabData tabData) {
+                debugPrint('onShowed: ${tabData.label}');
+              },
+              onSelectorHidden: (DropdownTabData tabData) {
+                debugPrint('onHidden: ${tabData.label}');
+              },
+              onChanged: (DropdownSelectorResult result) {
+                debugPrintLarge('onChanged: $result');
+                _handleSelectorChange(result);
+                _showSelectedResult(result);
+              },
+              onApplied: (DropdownSelectorResult result) {
+                debugPrintLarge('onApplied: $result');
+                _handleSelectorApply(result);
+                if (result.tabIndex == 2) {
+                  _floorPlanApplyTextDebounce?.cancel();
+                  _floorPlanApplyTextRequestId++;
+                  _floorPlanApplyText.value = l10n?.apply ?? '';
+                }
+                _showSelectedResult(result);
+              },
+              onReset: () {
+                debugPrint('onReset');
+                if (_controller.currentIndex == 2) {
+                  _floorPlanApplyTextDebounce?.cancel();
+                  _floorPlanApplyTextRequestId++;
+                  _floorPlanApplyText.value = l10n?.apply ?? '';
+                }
+              },
+            ),
           ),
           Expanded(
             child: StreamBuilder<List<House>>(

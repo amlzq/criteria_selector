@@ -59,28 +59,22 @@ class _SellPageState extends State<SellPage> {
       if (category == null) return;
       if (category.id == 'region') {
         // 行政区
-        _filter?.district = <Map<String, dynamic>>[];
-        for (var d in category.children ?? {}) {
-          _filter?.district!.add({
-            "district_id": d.id,
-            "subdistrict_id": d.children
-                ?.map((s) => s.id)
-                .toList(growable: false)
-                .cast<String>(),
-          });
-        }
+        _filter?.district = result
+            .cascadingPairsOf('region')
+            .map((p) => {
+                  "district_id": p.id,
+                  "subdistrict_id": p.childIds,
+                })
+            .toList(growable: false);
       } else if (category.id == 'metro') {
         // 地铁
-        _filter?.metro = <Map<String, dynamic>>[];
-        for (var l in category.children ?? {}) {
-          _filter?.metro?.add({
-            "line_id": l.id,
-            "station_id": l.children
-                ?.map((s) => s.id)
-                .toList(growable: false)
-                .cast<String>(),
-          });
-        }
+        _filter?.metro = result
+            .cascadingPairsOf('metro')
+            .map((p) => {
+                  "line_id": p.id,
+                  "station_id": p.childIds,
+                })
+            .toList(growable: false);
       } else if (category.id == 'nearby') {
         // 附近
         final nearbyRadiusMeters =
@@ -91,63 +85,47 @@ class _SellPageState extends State<SellPage> {
     } else if (result.tabIndex == 1) {
       // 价格筛选
       _filtersRepo.sellPriceResult = result;
-      for (var category in result.selected) {
-        if (category.id == 'total') {
-          // 总价
-          _filter?.totalPrice = <Map<String, dynamic>>[];
-          for (var e in category.children ?? {}) {
-            e as SelectorIntEntry;
-            _filter?.totalPrice!.add({"id": e.id, "min": e.min, "max": e.max});
-          }
-        } else if (category.id == 'downpay') {
-          // 首付
-          _filter?.unitPrice = <Map<String, dynamic>>[];
-          for (var e in category.children ?? {}) {
-            e as SelectorIntEntry;
-            _filter?.unitPrice!.add({"id": e.id, "min": e.min, "max": e.max});
-          }
-        }
+      final category = result.selected.firstOrNull;
+      if (category == null) return;
+      if (category.id == 'total') {
+        // 总价
+        _filter?.totalPrice = result
+            .childRangesOf('total')
+            .map((e) => {
+                  "id": e.id,
+                  "min": e.min,
+                  "max": e.max,
+                })
+            .toList(growable: false);
+      } else if (category.id == 'downpay') {
+        // 首付
+        _filter?.unitPrice = result
+            .childRangesOf('downpay')
+            .map((e) => {
+                  "id": e.id,
+                  "min": e.min,
+                  "max": e.max,
+                })
+            .toList(growable: false);
       }
     } else if (result.tabIndex == 2) {
       // 户型筛选
       _filtersRepo.floorPlanSellResult = result;
-      for (var category in result.selected) {
-        if (category.id == 'living_room') {
-          // 居室
-          _filter?.livingRoom = <String>[];
-          for (var e in category.children ?? {}) {
-            e as SelectorTextEntry;
-            _filter?.livingRoom!.add(e.id);
-          }
-        } else if (category.id == 'bathroom') {
-          // 卫生间
-          _filter?.bathroom = <String>[];
-          for (var e in category.children ?? {}) {
-            e as SelectorTextEntry;
-            _filter?.bathroom!.add(e.id);
-          }
-        } else if (category.id == 'balcony') {
-          // 阳台
-          _filter?.balcony = <String>[];
-          for (var e in category.children ?? {}) {
-            e as SelectorTextEntry;
-            _filter?.balcony!.add(e.id);
-          }
-        } else if (category.id == 'area') {
-          // 面积
-          _filter?.area = <Map<String, dynamic>>[];
-          for (var e in category.children ?? {}) {
-            e as SelectorIntEntry;
-            _filter?.area!.add({"id": e.id, "min": e.min, "max": e.max});
-          }
-        }
-      }
+      _filter?.livingRoom = result.childIdsOf('living_room');
+      _filter?.bathroom = result.childIdsOf('bathroom');
+      _filter?.balcony = result.childIdsOf('balcony');
+      _filter?.area = result
+          .childRangesOf('area')
+          .map((e) => {
+                "id": e.id,
+                "min": e.min,
+                "max": e.max,
+              })
+          .toList(growable: false);
     } else if (result.tabIndex == 3) {
       // 排序筛选
       _filtersRepo.sortSellResult = result;
-      final entry = result.selected.firstOrNull;
-      if (entry == null) return;
-      _filter?.sort = entry.id;
+      _filter?.sort = result.firstSelectedId;
     }
     _repo.refreshData(_filter!);
   }
@@ -225,7 +203,8 @@ class _SellPageState extends State<SellPage> {
                 ),
                 GridSelectorDelegate(
                   entriesLoader: _filtersRepo.fetchSellPriceData,
-                  selectedEntriesLoader: _filtersRepo.fetchSellPriceSelectedData,
+                  selectedEntriesLoader:
+                      _filtersRepo.fetchSellPriceSelectedData,
                   resetEntriesLoader: _filtersRepo.fetchSellPriceResetData,
                   selectionMode: SelectionMode.multiple,
                   crossAxisCount: 4,

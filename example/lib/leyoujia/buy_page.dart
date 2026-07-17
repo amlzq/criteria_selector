@@ -153,28 +153,22 @@ class _BuyPageState extends State<BuyPage> {
       if (category == null) return null;
       if (category.id == 'region') {
         // 行政区
-        filter.district = <Map<String, dynamic>>[];
-        for (var d in category.children ?? {}) {
-          filter.district!.add({
-            "district_id": d.id,
-            "subdistrict_id": d.children
-                ?.map((s) => s.id)
-                .toList(growable: false)
-                .cast<String>(),
-          });
-        }
+        filter.district = result
+            .cascadingPairsOf('region')
+            .map((p) => {
+                  "district_id": p.id,
+                  "subdistrict_id": p.childIds,
+                })
+            .toList(growable: false);
       } else if (category.id == 'metro') {
         // 地铁
-        filter.metro = <Map<String, dynamic>>[];
-        for (var l in category.children ?? {}) {
-          filter.metro?.add({
-            "line_id": l.id,
-            "station_id": l.children
-                ?.map((s) => s.id)
-                .toList(growable: false)
-                .cast<String>(),
-          });
-        }
+        filter.metro = result
+            .cascadingPairsOf('metro')
+            .map((p) => {
+                  "line_id": p.id,
+                  "station_id": p.childIds,
+                })
+            .toList(growable: false);
       } else if (category.id == 'nearby') {
         // 附近
         final nearbyRadiusMeters =
@@ -189,115 +183,54 @@ class _BuyPageState extends State<BuyPage> {
       if (category == null) return null;
       if (category.id == 'total') {
         // 总价
-        filter.totalPrice = <Map<String, dynamic>>[];
-        for (var e in category.children ?? {}) {
-          e as SelectorIntEntry;
-          filter.totalPrice!.add({"id": e.id, "min": e.min, "max": e.max});
-        }
+        filter.totalPrice = result
+            .childRangesOf('total')
+            .map((e) => {
+                  "id": e.id,
+                  "min": e.min,
+                  "max": e.max,
+                })
+            .toList(growable: false);
       }
       if (category.id == 'unit') {
         // 单价
-        filter.unitPrice = <Map<String, dynamic>>[];
-        for (var e in category.children ?? {}) {
-          e as SelectorIntEntry;
-          filter.unitPrice!.add({"id": e.id, "min": e.min, "max": e.max});
-        }
+        filter.unitPrice = result
+            .childRangesOf('unit')
+            .map((e) => {
+                  "id": e.id,
+                  "min": e.min,
+                  "max": e.max,
+                })
+            .toList(growable: false);
       }
     } else if (result.tabIndex == 2) {
       // 户型筛选
       _filtersRepo.floorPlanBuyResult = result;
-      for (var category in result.selected) {
-        if (category.id == 'living_room') {
-          // 居室
-          filter.livingRoom = <String>[];
-          for (var e in category.children ?? {}) {
-            e as SelectorTextEntry;
-            filter.livingRoom!.add(e.id);
-          }
-        } else if (category.id == 'bathroom') {
-          // 卫生间
-          filter.bathroom = <String>[];
-          for (var e in category.children ?? {}) {
-            e as SelectorTextEntry;
-            filter.bathroom!.add(e.id);
-          }
-        } else if (category.id == 'balcony') {
-          // 阳台
-          filter.balcony = <String>[];
-          for (var e in category.children ?? {}) {
-            e as SelectorTextEntry;
-            filter.balcony!.add(e.id);
-          }
-        } else if (category.id == 'area') {
-          // 面积
-          filter.area = <Map<String, dynamic>>[];
-          for (var e in category.children ?? {}) {
-            e as SelectorIntEntry;
-            filter.area!.add({"id": e.id, "min": e.min, "max": e.max});
-          }
-        }
-      }
+      filter.livingRoom = result.childIdsOf('living_room');
+      filter.bathroom = result.childIdsOf('bathroom');
+      filter.balcony = result.childIdsOf('balcony');
+      filter.area = result
+          .childRangesOf('area')
+          .map((e) => {
+                "id": e.id,
+                "min": e.min,
+                "max": e.max,
+              })
+          .toList(growable: false);
     } else if (result.tabIndex == 3) {
       // 更多筛选
       _filtersRepo.moreBuyResult = result;
-      for (var category in result.selected) {
-        if (category.id == 'home_type') {
-          // 类型
-          filter.homeType = <String>[];
-          for (var e in category.children ?? {}) {
-            e as SelectorTextEntry;
-            filter.homeType!.add(e.id);
-          }
-        } else if (category.id == 'sale_status') {
-          // 销售状态
-          filter.saleStatus = <String>[];
-          for (var e in category.children ?? {}) {
-            e as SelectorTextEntry;
-            filter.saleStatus!.add(e.id);
-          }
-        } else if (category.id == 'open_time') {
-          // 开盘时间
-          filter.openTime = <String>[];
-          for (var e in category.children ?? {}) {
-            e as SelectorTextEntry;
-            filter.openTime!.add(e.id);
-          }
-        } else if (category.id == 'delivery_time') {
-          // 交房时间
-          filter.deliveryTime = <String>[];
-          for (var e in category.children ?? {}) {
-            e as SelectorTextEntry;
-            filter.deliveryTime!.add(e.id);
-          }
-        } else if (category.id == 'decoration_status') {
-          // 装修状况
-          filter.decorationStatus = <String>[];
-          for (var e in category.children ?? {}) {
-            e as SelectorTextEntry;
-            filter.decorationStatus!.add(e.id);
-          }
-        } else if (category.id == 'building_features') {
-          // 楼盘特色
-          filter.buildingFeatures = <String>[];
-          for (var e in category.children ?? {}) {
-            e as SelectorTextEntry;
-            filter.buildingFeatures!.add(e.id);
-          }
-        } else if (category.id == 'house_view_service') {
-          // 看房服务
-          filter.houseViewService = <String>[];
-          for (var e in category.children ?? {}) {
-            e as SelectorTextEntry;
-            filter.houseViewService!.add(e.id);
-          }
-        }
-      }
+      filter.homeType = result.childIdsOf('home_type');
+      filter.saleStatus = result.childIdsOf('sale_status');
+      filter.openTime = result.childIdsOf('open_time');
+      filter.deliveryTime = result.childIdsOf('delivery_time');
+      filter.decorationStatus = result.childIdsOf('decoration_status');
+      filter.buildingFeatures = result.childIdsOf('building_features');
+      filter.houseViewService = result.childIdsOf('house_view_service');
     } else if (result.tabIndex == 4) {
       // 排序筛选
       _filtersRepo.sortBuyResult = result;
-      final entry = result.selected.firstOrNull;
-      if (entry == null) return null;
-      filter.sort = entry.id;
+      filter.sort = result.firstSelectedId;
     }
     return filter;
   }
