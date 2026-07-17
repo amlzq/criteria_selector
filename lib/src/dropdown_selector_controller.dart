@@ -11,20 +11,89 @@ import 'selector/selector_utils.dart';
 /// Controller for [DropdownSelectorBar] and its selector overlay.
 ///
 /// This controller stores per-tab label data ([DropdownTabData]) and manages
-/// the overlay visibility. It also forwards selection events through
-/// [onChanged], [onApplied], and [onReset].
+/// the overlay visibility. It forwards selection events to listeners
+/// registered via [addChangeListener], [addApplyListener], and
+/// [addResetListener].
 class DropdownSelectorController extends ChangeNotifier {
   static const Duration _kOverlayAnimationDuration =
       Duration(milliseconds: 240);
 
   /// Fired whenever a selector reports a selection change.
+  ///
+  /// Deprecated: register a listener via [addChangeListener] instead. This
+  /// field is kept for backwards compatibility and will be removed in a future
+  /// major version. When set, it is invoked alongside any registered
+  /// [addChangeListener] listeners.
+  @Deprecated(
+    'Use addChangeListener instead. This field will be removed in a future major version.',
+  )
   DropdownSelectorResultCallback? onChanged;
 
   /// Fired when a selector is applied.
+  ///
+  /// Deprecated: register a listener via [addApplyListener] instead. This
+  /// field is kept for backwards compatibility and will be removed in a future
+  /// major version. When set, it is invoked alongside any registered
+  /// [addApplyListener] listeners.
+  @Deprecated(
+    'Use addApplyListener instead. This field will be removed in a future major version.',
+  )
   DropdownSelectorResultCallback? onApplied;
 
   /// Fired when reset is triggered.
+  ///
+  /// Deprecated: register a listener via [addResetListener] instead. This
+  /// field is kept for backwards compatibility and will be removed in a future
+  /// major version. When set, it is invoked alongside any registered
+  /// [addResetListener] listeners.
+  @Deprecated(
+    'Use addResetListener instead. This field will be removed in a future major version.',
+  )
   VoidCallback? onReset;
+
+  final List<DropdownSelectorResultCallback> _changeListeners = [];
+  final List<DropdownSelectorResultCallback> _applyListeners = [];
+  final List<VoidCallback> _resetListeners = [];
+
+  /// Registers a listener to be called when a selector reports a selection
+  /// change.
+  ///
+  /// Returns a [VoidCallback] that unregisters the listener when called.
+  VoidCallback addChangeListener(DropdownSelectorResultCallback listener) {
+    _changeListeners.add(listener);
+    return () => removeChangeListener(listener);
+  }
+
+  /// Unregisters a previously registered change listener.
+  void removeChangeListener(DropdownSelectorResultCallback listener) {
+    _changeListeners.remove(listener);
+  }
+
+  /// Registers a listener to be called when a selector is applied.
+  ///
+  /// Returns a [VoidCallback] that unregisters the listener when called.
+  VoidCallback addApplyListener(DropdownSelectorResultCallback listener) {
+    _applyListeners.add(listener);
+    return () => removeApplyListener(listener);
+  }
+
+  /// Unregisters a previously registered apply listener.
+  void removeApplyListener(DropdownSelectorResultCallback listener) {
+    _applyListeners.remove(listener);
+  }
+
+  /// Registers a listener to be called when reset is triggered.
+  ///
+  /// Returns a [VoidCallback] that unregisters the listener when called.
+  VoidCallback addResetListener(VoidCallback listener) {
+    _resetListeners.add(listener);
+    return () => removeResetListener(listener);
+  }
+
+  /// Unregisters a previously registered reset listener.
+  void removeResetListener(VoidCallback listener) {
+    _resetListeners.remove(listener);
+  }
 
   /// Per-tab label and result data keyed by tab index.
   final Map<int, DropdownTabData> tabDataMap = {};
@@ -170,6 +239,9 @@ class DropdownSelectorController extends ChangeNotifier {
     _isDisposed = true;
     detachTickerProvider();
     tabDataMap.clear();
+    _changeListeners.clear();
+    _applyListeners.clear();
+    _resetListeners.clear();
     // removeOverlay();
     super.dispose();
   }
@@ -308,7 +380,11 @@ class DropdownSelectorController extends ChangeNotifier {
     if (_isDisposed) return;
     final result =
         DropdownSelectorResult(tabData: currentTabData, selected: selected);
+    // ignore: deprecated_member_use_from_same_package
     onChanged?.call(result);
+    for (final listener in List.of(_changeListeners)) {
+      listener(result);
+    }
   }
 
   /// Dispatches an apply event and updates the tab result label.
@@ -317,7 +393,11 @@ class DropdownSelectorController extends ChangeNotifier {
     final result =
         DropdownSelectorResult(tabData: currentTabData, selected: selected);
     hideSelector();
+    // ignore: deprecated_member_use_from_same_package
     onApplied?.call(result);
+    for (final listener in List.of(_applyListeners)) {
+      listener(result);
+    }
     final customLabel = result.tabData.labelGetter?.call(result);
     result.tabData.resultLabel = customLabel ??
         SelectorUtils.getResultLabel(result.selected, multipleText);
@@ -375,7 +455,11 @@ class DropdownSelectorController extends ChangeNotifier {
     if (ctx.invalidCustomHit) return false;
 
     final result = DropdownSelectorResult(tabData: tabData, selected: selected);
+    // ignore: deprecated_member_use_from_same_package
     onApplied?.call(result);
+    for (final listener in List.of(_applyListeners)) {
+      listener(result);
+    }
     final customLabel = tabData.labelGetter?.call(result);
     tabData.resultLabel = customLabel ??
         SelectorUtils.getResultLabel(result.selected, multipleText);
@@ -555,7 +639,11 @@ class DropdownSelectorController extends ChangeNotifier {
   void handleReset() {
     if (_isDisposed) return;
     // hideSelector();
+    // ignore: deprecated_member_use_from_same_package
     onReset?.call();
+    for (final listener in List.of(_resetListeners)) {
+      listener();
+    }
   }
 }
 

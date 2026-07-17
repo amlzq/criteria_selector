@@ -4,6 +4,7 @@ import 'dropdown_overlay.dart';
 import 'dropdown_overlay_style.dart';
 import 'dropdown_selector_button_theme.dart';
 import 'dropdown_selector_controller.dart';
+import 'dropdown_selector_result.dart';
 import 'dropdown_tab_data.dart';
 import 'i18n/localizations.dart';
 import 'selector/constants.dart';
@@ -122,19 +123,19 @@ class DropdownSelectorButton extends StatefulWidget {
   final DropdownOverlayStyle? overlayStyle;
 
   /// Fired when the selector overlay is shown.
-  final SelectorVisibilityCallback? onSelectorShowed;
+  final SelectorToggleCallback? onSelectorShowed;
 
   /// Fired when the selector overlay is hidden.
-  final SelectorVisibilityCallback? onSelectorHidden;
+  final SelectorToggleCallback? onSelectorHidden;
 
   /// Invoked just before the overlay is shown. The returned [Future] (if any)
   /// is awaited before the overlay appears, e.g. to scroll a header into place.
   /// Returning `false` cancels the show, leaving the overlay hidden.
-  final SelectorWillShowCallback? onSelectorWillShow;
+  final SelectorWillToggleCallback? onSelectorWillShow;
 
   /// Invoked just before the overlay is hidden. Returning `false` cancels the
   /// hide, leaving the overlay visible.
-  final SelectorWillHideCallback? onSelectorWillHide;
+  final SelectorWillToggleCallback? onSelectorWillHide;
 
   /// Fired whenever a selector reports a selection change.
   final DropdownSelectorResultCallback? onChanged;
@@ -162,14 +163,18 @@ class _DropdownSelectorButtonState extends State<DropdownSelectorButton>
     with SingleTickerProviderStateMixin {
   late final DropdownSelectorController _controller;
 
+  VoidCallback? _removeChangeListener;
+  VoidCallback? _removeApplyListener;
+  VoidCallback? _removeResetListener;
+
   @override
   void initState() {
     super.initState();
     _controller = DropdownSelectorController();
     _controller.addListener(_handleControllerTick);
-    _controller.onChanged = widget.onChanged;
-    _controller.onApplied = widget.onApplied;
-    _controller.onReset = widget.onReset;
+    _removeChangeListener = _controller.addChangeListener(_handleWidgetChange);
+    _removeApplyListener = _controller.addApplyListener(_handleWidgetApply);
+    _removeResetListener = _controller.addResetListener(_handleWidgetReset);
     _controller.attachSelectorDelegates([widget.selectorDelegate]);
     _controller.attachTickerProvider(this);
     _controller.tabDataMap[0] = DropdownTabData(
@@ -181,9 +186,6 @@ class _DropdownSelectorButtonState extends State<DropdownSelectorButton>
   @override
   void didUpdateWidget(covariant DropdownSelectorButton oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _controller.onChanged = widget.onChanged;
-    _controller.onApplied = widget.onApplied;
-    _controller.onReset = widget.onReset;
     _controller.attachSelectorDelegates([widget.selectorDelegate]);
     _controller.attachTickerProvider(this);
     if (oldWidget.label != widget.label) {
@@ -203,16 +205,24 @@ class _DropdownSelectorButtonState extends State<DropdownSelectorButton>
   @override
   void dispose() {
     _controller.removeListener(_handleControllerTick);
+    _removeChangeListener?.call();
+    _removeApplyListener?.call();
+    _removeResetListener?.call();
     _controller.hideSelector(immediate: true);
     _controller.detachTickerProvider();
-    _controller.onChanged = null;
-    _controller.onApplied = null;
-    _controller.onReset = null;
     _controller.dispose();
     super.dispose();
   }
 
   void _handleControllerTick() => setState(() {});
+
+  void _handleWidgetChange(DropdownSelectorResult result) =>
+      widget.onChanged?.call(result);
+
+  void _handleWidgetApply(DropdownSelectorResult result) =>
+      widget.onApplied?.call(result);
+
+  void _handleWidgetReset() => widget.onReset?.call();
 
   Future<void> _handleTap() async {
     final tabData = _controller.tabDataMap[0];

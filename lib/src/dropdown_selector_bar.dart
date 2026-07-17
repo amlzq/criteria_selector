@@ -6,6 +6,7 @@ import 'dropdown_overlay.dart';
 import 'dropdown_overlay_style.dart';
 import 'dropdown_selector_bar_theme.dart';
 import 'dropdown_selector_controller.dart';
+import 'dropdown_selector_result.dart';
 import 'dropdown_tab_data.dart';
 import 'i18n/localizations.dart';
 import 'selector/constants.dart';
@@ -84,16 +85,20 @@ class DropdownSelectorBar extends StatefulWidget
   final double elevation;
 
   final Color? labelColor;
+
   final Color? unselectedLabelColor;
 
   final TextStyle? labelStyle;
+
   final TextStyle? unselectedLabelStyle;
 
   final Widget? indicator;
+
   final Widget? unselectedIndicator;
 
-  final SelectorVisibilityCallback? onSelectorShowed;
-  final SelectorVisibilityCallback? onSelectorHidden;
+  final SelectorToggleCallback? onSelectorShowed;
+
+  final SelectorToggleCallback? onSelectorHidden;
 
   /// Invoked just before the overlay is shown for a tab.
   ///
@@ -101,11 +106,11 @@ class DropdownSelectorBar extends StatefulWidget
   /// async work such as scrolling a [SliverPersistentHeader] to the top can
   /// finish first and the overlay is positioned against the final layout.
   /// Returning `false` cancels the show, leaving the overlay hidden.
-  final SelectorWillShowCallback? onSelectorWillShow;
+  final SelectorWillToggleCallback? onSelectorWillShow;
 
   /// Invoked just before the overlay is hidden for a tab. Returning `false`
   /// cancels the hide, leaving the overlay visible.
-  final SelectorWillHideCallback? onSelectorWillHide;
+  final SelectorWillToggleCallback? onSelectorWillHide;
 
   /// Fired whenever a selector reports a selection change.
   final DropdownSelectorResultCallback? onChanged;
@@ -157,6 +162,10 @@ class _DropdownSelectorBarState extends State<DropdownSelectorBar>
   DropdownSelectorController? _controller;
   int? _previousIndex;
 
+  VoidCallback? _removeChangeListener;
+  VoidCallback? _removeApplyListener;
+  VoidCallback? _removeResetListener;
+
   // late List<SelectorController> _selectorControllers;
 
   bool _debugHasScheduledValidSelectorCountCheck = false;
@@ -175,11 +184,11 @@ class _DropdownSelectorBarState extends State<DropdownSelectorBar>
     final controller = _controller;
     if (controller != null) {
       controller.removeListener(_handleDropdownSelectorControllerTick);
+      _removeChangeListener?.call();
+      _removeApplyListener?.call();
+      _removeResetListener?.call();
       controller.hideSelector(immediate: true);
       controller.detachTickerProvider();
-      controller.onChanged = null;
-      controller.onApplied = null;
-      controller.onReset = null;
       if (widget.controller == null) {
         controller.dispose();
       }
@@ -203,9 +212,10 @@ class _DropdownSelectorBarState extends State<DropdownSelectorBar>
     if (_controller == null) {
       _controller = widget.controller ?? DropdownSelectorController();
       _controller!.addListener(_handleDropdownSelectorControllerTick);
-      _controller!.onChanged = widget.onChanged;
-      _controller!.onApplied = widget.onApplied;
-      _controller!.onReset = widget.onReset;
+      _removeChangeListener =
+          _controller!.addChangeListener(_handleWidgetChange);
+      _removeApplyListener = _controller!.addApplyListener(_handleWidgetApply);
+      _removeResetListener = _controller!.addResetListener(_handleWidgetReset);
     }
     _controller!.attachSelectorDelegates(widget.selectorDelegates);
     _controller!.attachTickerProvider(this);
@@ -217,6 +227,14 @@ class _DropdownSelectorBarState extends State<DropdownSelectorBar>
     }
     setState(() {});
   }
+
+  void _handleWidgetChange(DropdownSelectorResult result) =>
+      widget.onChanged?.call(result);
+
+  void _handleWidgetApply(DropdownSelectorResult result) =>
+      widget.onApplied?.call(result);
+
+  void _handleWidgetReset() => widget.onReset?.call();
 
   Future<void> _handleTap(DropdownTabData tabData) async {
     // final barHeight = _getBarHeight;

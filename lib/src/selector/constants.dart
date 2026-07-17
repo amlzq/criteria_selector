@@ -21,21 +21,18 @@ typedef SelectorCallback = void Function(SelectorEntries selected);
 typedef ItemTapCallback<T extends SelectorEntry> = Function(int index, T entry);
 
 /// Callback parameter indicates which selector is being shown or hidden.
-typedef SelectorVisibilityCallback = void Function(DropdownTabData tabData);
+typedef SelectorToggleCallback = void Function(DropdownTabData tabData);
 
-/// Callback invoked just before the selector overlay is shown for [tabData].
+/// Callback invoked just before the selector overlay is shown or hidden for
+/// [tabData].
 ///
 /// The returned [Future] (if any) is awaited *before* the overlay is actually
-/// displayed, so callers can run an async task first — for example, animating a
-/// [SliverPersistentHeader] to the top of the list — and have the overlay
-/// anchored to the final layout. Returning `false` cancels the show, leaving
-/// the overlay hidden.
-typedef SelectorWillShowCallback = FutureOr<bool> Function(
-    DropdownTabData tabData);
-
-/// Callback invoked just before the selector overlay is hidden for [tabData].
-/// Returning `false` cancels the hide, leaving the overlay visible.
-typedef SelectorWillHideCallback = FutureOr<bool> Function(
+/// displayed or hidden, so callers can run an async task first — for example,
+/// animating a [SliverPersistentHeader] to the top of the list — and have the
+/// overlay anchored to the final layout. Returning `false` cancels the
+/// operation: for a show it leaves the overlay hidden, for a hide it leaves the
+/// overlay visible.
+typedef SelectorWillToggleCallback = FutureOr<bool> Function(
     DropdownTabData tabData);
 
 /// Builds a custom label for a tab based on the current [DropdownSelectorResult].
