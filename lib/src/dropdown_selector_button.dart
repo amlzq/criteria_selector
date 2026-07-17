@@ -50,6 +50,8 @@ class DropdownSelectorButton extends StatefulWidget {
     this.overlayStyle,
     this.onSelectorShowed,
     this.onSelectorHidden,
+    this.onSelectorWillShow,
+    this.onSelectorWillHide,
     this.onChanged,
     this.onApplied,
     this.onReset,
@@ -68,6 +70,8 @@ class DropdownSelectorButton extends StatefulWidget {
     this.overlayStyle,
     this.onSelectorShowed,
     this.onSelectorHidden,
+    this.onSelectorWillShow,
+    this.onSelectorWillHide,
     this.onChanged,
     this.onApplied,
     this.onReset,
@@ -87,6 +91,8 @@ class DropdownSelectorButton extends StatefulWidget {
     this.overlayStyle,
     this.onSelectorShowed,
     this.onSelectorHidden,
+    this.onSelectorWillShow,
+    this.onSelectorWillHide,
     this.onChanged,
     this.onApplied,
     this.onReset,
@@ -120,6 +126,15 @@ class DropdownSelectorButton extends StatefulWidget {
 
   /// Fired when the selector overlay is hidden.
   final SelectorVisibilityCallback? onSelectorHidden;
+
+  /// Invoked just before the overlay is shown. The returned [Future] (if any)
+  /// is awaited before the overlay appears, e.g. to scroll a header into place.
+  /// Returning `false` cancels the show, leaving the overlay hidden.
+  final SelectorWillShowCallback? onSelectorWillShow;
+
+  /// Invoked just before the overlay is hidden. Returning `false` cancels the
+  /// hide, leaving the overlay visible.
+  final SelectorWillHideCallback? onSelectorWillHide;
 
   /// Fired whenever a selector reports a selection change.
   final DropdownSelectorResultCallback? onChanged;
@@ -199,10 +214,18 @@ class _DropdownSelectorButtonState extends State<DropdownSelectorButton>
 
   void _handleControllerTick() => setState(() {});
 
-  void _handleTap() {
+  Future<void> _handleTap() async {
+    final tabData = _controller.tabDataMap[0];
+    final willShow = !_controller.isSelectorShowing;
+    bool proceed = true;
+    if (tabData != null) {
+      proceed = willShow
+          ? await widget.onSelectorWillShow?.call(tabData) ?? true
+          : await widget.onSelectorWillHide?.call(tabData) ?? true;
+    }
+    if (!proceed) return;
     _controller.previousSelectorDelegate = widget.selectorDelegate;
     _controller.toggleSelector(index: 0);
-    final tabData = _controller.tabDataMap[0];
     if (tabData == null) {
       return;
     }

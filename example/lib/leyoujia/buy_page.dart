@@ -371,6 +371,10 @@ class _BuyPageState extends State<BuyPage> {
   final ScrollController _scrollController = ScrollController();
   final ValueNotifier<double> _scrollOffsetVN = ValueNotifier<double>(0);
 
+  /// Identifies the filter bar content so [onSelectorWillShow] can measure its
+  /// current on-screen position and scroll it to a pinned (sticky) position.
+  final GlobalKey _filterHeaderKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -529,6 +533,7 @@ class _BuyPageState extends State<BuyPage> {
       delegate: _FilterHeaderDelegate(
         height: _filterHeaderHeight,
         child: Column(
+          key: _filterHeaderKey,
           mainAxisSize: MainAxisSize.min,
           children: [
             DropdownSelectorBar(
@@ -625,8 +630,36 @@ class _BuyPageState extends State<BuyPage> {
                   },
                 ),
               ],
+              onSelectorWillShow: (DropdownTabData tabData) async {
+                // Programmatic sticky: scroll exactly enough so the filter bar
+                // (SliverPersistentHeader) pins just below the collapsed app
+                // bar, then let the overlay anchor to that final layout.
+                // Returning `true` proceeds with showing the overlay.
+                final ctx = _filterHeaderKey.currentContext;
+                if (ctx != null) {
+                  final RenderBox? box = ctx.findRenderObject() as RenderBox?;
+                  if (box != null) {
+                    final double headerTop = box.localToGlobal(Offset.zero).dy;
+                    final double stickyTop =
+                        kToolbarHeight + MediaQuery.of(context).padding.top;
+                    final double delta = headerTop - stickyTop;
+                    if (delta > 0) {
+                      await _scrollController.animateTo(
+                        _scrollController.offset + delta,
+                        duration: const Duration(milliseconds: 250),
+                        curve: Curves.easeOut,
+                      );
+                    }
+                  }
+                }
+                return true;
+              },
               onSelectorShowed: (DropdownTabData tabData) {
                 debugPrint('onShowed: ${tabData.label}');
+              },
+              onSelectorWillHide: (DropdownTabData tabData) {
+                debugPrint('onWillHide: ${tabData.label}');
+                return true;
               },
               onSelectorHidden: (DropdownTabData tabData) {
                 debugPrint('onHidden: ${tabData.label}');

@@ -49,6 +49,8 @@ class DropdownSelectorBar extends StatefulWidget
     this.overlayStyle,
     this.onSelectorShowed,
     this.onSelectorHidden,
+    this.onSelectorWillShow,
+    this.onSelectorWillHide,
     this.onChanged,
     this.onApplied,
     this.onReset,
@@ -92,6 +94,18 @@ class DropdownSelectorBar extends StatefulWidget
 
   final SelectorVisibilityCallback? onSelectorShowed;
   final SelectorVisibilityCallback? onSelectorHidden;
+
+  /// Invoked just before the overlay is shown for a tab.
+  ///
+  /// The returned [Future] (if any) is awaited before the overlay appears, so
+  /// async work such as scrolling a [SliverPersistentHeader] to the top can
+  /// finish first and the overlay is positioned against the final layout.
+  /// Returning `false` cancels the show, leaving the overlay hidden.
+  final SelectorWillShowCallback? onSelectorWillShow;
+
+  /// Invoked just before the overlay is hidden for a tab. Returning `false`
+  /// cancels the hide, leaving the overlay visible.
+  final SelectorWillHideCallback? onSelectorWillHide;
 
   /// Fired whenever a selector reports a selection change.
   final DropdownSelectorResultCallback? onChanged;
@@ -204,8 +218,19 @@ class _DropdownSelectorBarState extends State<DropdownSelectorBar>
     setState(() {});
   }
 
-  void _handleTap(DropdownTabData tabData) {
+  Future<void> _handleTap(DropdownTabData tabData) async {
     // final barHeight = _getBarHeight;
+
+    // Tapping a collapsed tab (or switching to a different one) will show the
+    // overlay; tapping the already-expanded tab will hide it. Resolve the
+    // intent before toggling so the matching pre-hook can run first.
+    final willShow = !_controller!.isSelectorShowing ||
+        _controller!.currentIndex != tabData.index;
+
+    final proceed = willShow
+        ? await widget.onSelectorWillShow?.call(tabData) ?? true
+        : await widget.onSelectorWillHide?.call(tabData) ?? true;
+    if (!proceed) return;
 
     final selector = widget.selectorDelegates.elementAt(tabData.index);
     _controller!.previousSelectorDelegate = selector;
