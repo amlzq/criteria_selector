@@ -22,6 +22,9 @@ class _RentPageState extends State<RentPage> {
   late final HouseFiltersRepository _filtersRepo;
   HouseFilter? _filter;
 
+  final ScrollController _scrollController = ScrollController();
+  bool _isLoadingMore = false;
+
   final ValueNotifier<String> _floorPlanApplyText = ValueNotifier<String>('');
   Timer? _floorPlanApplyTextDebounce;
   int _floorPlanApplyTextRequestId = 0;
@@ -31,6 +34,27 @@ class _RentPageState extends State<RentPage> {
     super.initState();
     _repo = HouseRepository();
     _filtersRepo = HouseFiltersRepository();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final current = _scrollController.offset;
+    if (maxScroll - current < 200 && _repo.hasMore && !_isLoadingMore) {
+      _loadMore();
+    }
+  }
+
+  void _loadMore() async {
+    if (_isLoadingMore || !_repo.hasMore) return;
+    if (!mounted) return;
+    setState(() => _isLoadingMore = true);
+    try {
+      await _repo.loadNextPage();
+    } finally {
+      if (mounted) setState(() => _isLoadingMore = false);
+    }
   }
 
   @override
@@ -53,6 +77,7 @@ class _RentPageState extends State<RentPage> {
   void dispose() {
     _repo.dispose();
     _controller.dispose();
+    _scrollController.dispose();
     _floorPlanApplyTextDebounce?.cancel();
     _floorPlanApplyText.dispose();
     super.dispose();
@@ -367,8 +392,18 @@ class _RentPageState extends State<RentPage> {
                 }
                 final houses = snapshot.data!;
                 return ListView.builder(
-                  itemCount: houses.length,
+                  controller: _scrollController,
+                  itemCount: houses.length + 1,
                   itemBuilder: (context, index) {
+                    if (index == houses.length) {
+                      return HouseListFooter(
+                        isLoadingMore: _isLoadingMore,
+                        hasMore: _repo.hasMore,
+                        pageInfo:
+                            '第 ${_repo.loadedPages} / ${_repo.totalPages} 页',
+                        noMoreText: l10n?.noMore,
+                      );
+                    }
                     final house = houses[index];
                     return Card(
                       margin: const EdgeInsets.symmetric(

@@ -71,3 +71,64 @@ class MyActionBar extends StatelessWidget {
     );
   }
 }
+
+/// 房源列表底部的分页状态提示：加载中 / "没有更多了" + 页码 / 仅页码。
+class HouseListFooter extends StatelessWidget {
+  final bool isLoadingMore;
+  final bool hasMore;
+  final String pageInfo;
+  final String? noMoreText;
+  final String loadingText;
+
+  const HouseListFooter({
+    super.key,
+    required this.isLoadingMore,
+    required this.hasMore,
+    required this.pageInfo,
+    this.noMoreText,
+    this.loadingText = '加载中…',
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (isLoadingMore) {
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 16),
+        child: Center(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
+              SizedBox(width: 8),
+              Text('加载中…'),
+            ],
+          ),
+        ),
+      );
+    }
+    if (!hasMore) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        child: Center(
+          child: Text(
+            '${noMoreText ?? '没有更多了'} · $pageInfo',
+            style: const TextStyle(color: Colors.grey, fontSize: 13),
+          ),
+        ),
+      );
+    }
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Center(
+        child: Text(
+          pageInfo,
+          style: const TextStyle(color: Colors.grey, fontSize: 13),
+        ),
+      ),
+    );
+  }
+}

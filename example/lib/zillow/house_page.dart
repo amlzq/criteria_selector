@@ -7,6 +7,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'house_filters_repository.dart';
 import 'house_repository.dart';
+import '../leyoujia/my_widgets.dart';
 import 'utils.dart';
 
 /// For sale
@@ -22,6 +23,9 @@ class _HousePageState extends State<HousePage> {
   late final HouseFiltersRepository _filtersRepo;
   HouseFilter? _filter;
 
+  final ScrollController _scrollController = ScrollController();
+  bool _isLoadingMore = false;
+
   final ValueNotifier<String> _moreApplyText = ValueNotifier<String>('');
   Timer? _moreApplyTextDebounce;
   int _moreApplyTextRequestId = 0;
@@ -31,6 +35,27 @@ class _HousePageState extends State<HousePage> {
     super.initState();
     _repo = HouseRepository();
     _filtersRepo = HouseFiltersRepository();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final current = _scrollController.offset;
+    if (maxScroll - current < 200 && _repo.hasMore && !_isLoadingMore) {
+      _loadMore();
+    }
+  }
+
+  void _loadMore() async {
+    if (_isLoadingMore || !_repo.hasMore) return;
+    if (!mounted) return;
+    setState(() => _isLoadingMore = true);
+    try {
+      await _repo.loadNextPage();
+    } finally {
+      if (mounted) setState(() => _isLoadingMore = false);
+    }
   }
 
   @override
@@ -51,6 +76,7 @@ class _HousePageState extends State<HousePage> {
   void dispose() {
     _repo.dispose();
     _controller.dispose();
+    _scrollController.dispose();
     _moreApplyTextDebounce?.cancel();
     _moreApplyText.dispose();
     super.dispose();
@@ -366,8 +392,18 @@ class _HousePageState extends State<HousePage> {
                 }
                 final houses = snapshot.data!;
                 return ListView.builder(
-                  itemCount: houses.length,
+                  controller: _scrollController,
+                  itemCount: houses.length + 1,
                   itemBuilder: (context, index) {
+                    if (index == houses.length) {
+                      return HouseListFooter(
+                        isLoadingMore: _isLoadingMore,
+                        hasMore: _repo.hasMore,
+                        pageInfo:
+                            '第 ${_repo.loadedPages} / ${_repo.totalPages} 页',
+                        noMoreText: l10n?.noMore,
+                      );
+                    }
                     final house = houses[index];
                     final broker = (house.price ?? '').split('\n').lastOrNull;
                     final tag = house.tag?.trim();

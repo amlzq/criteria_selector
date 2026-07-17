@@ -47,6 +47,7 @@ class _BuyPageState extends State<BuyPage> {
   List<House>? _houses;
   bool _isLoading = true;
   Object? _error;
+  bool _isLoadingMore = false;
 
   @override
   void initState() {
@@ -60,6 +61,14 @@ class _BuyPageState extends State<BuyPage> {
           : 0.0;
       if ((offset - _scrollOffsetVN.value).abs() > 0.5) {
         _scrollOffsetVN.value = offset;
+      }
+      // 触底自动加载下一页
+      if (_scrollController.hasClients) {
+        final maxScroll = _scrollController.position.maxScrollExtent;
+        final current = _scrollController.offset;
+        if (maxScroll - current < 200 && _repo.hasMore && !_isLoadingMore) {
+          _loadMore();
+        }
       }
     });
 
@@ -108,6 +117,17 @@ class _BuyPageState extends State<BuyPage> {
     _floorPlanApplyTextDebounce?.cancel();
     _floorPlanApplyText.dispose();
     super.dispose();
+  }
+
+  void _loadMore() async {
+    if (_isLoadingMore || !_repo.hasMore) return;
+    if (!mounted) return;
+    setState(() => _isLoadingMore = true);
+    try {
+      await _repo.loadNextPage();
+    } finally {
+      if (mounted) setState(() => _isLoadingMore = false);
+    }
   }
 
   void _showSelectedResult(DropdownSelectorResult result) {
@@ -692,6 +712,9 @@ class _BuyPageState extends State<BuyPage> {
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(
           (context, index) {
+            if (index == houses.length) {
+              return _buildListFooter(l10n);
+            }
             final house = houses[index];
             return Card(
               margin: const EdgeInsets.symmetric(vertical: 6),
@@ -713,7 +736,50 @@ class _BuyPageState extends State<BuyPage> {
               ),
             );
           },
-          childCount: houses.length,
+          childCount: houses.length + 1,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildListFooter(AppLocalizations? l10n) {
+    if (_isLoadingMore) {
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 16),
+        child: Center(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
+              SizedBox(width: 8),
+              Text('加载中…'),
+            ],
+          ),
+        ),
+      );
+    }
+    final pageInfo = '第 ${_repo.loadedPages} / ${_repo.totalPages} 页';
+    if (!_repo.hasMore) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        child: Center(
+          child: Text(
+            '${l10n?.noMore ?? '没有更多了'} · $pageInfo',
+            style: const TextStyle(color: Colors.grey, fontSize: 13),
+          ),
+        ),
+      );
+    }
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Center(
+        child: Text(
+          pageInfo,
+          style: const TextStyle(color: Colors.grey, fontSize: 13),
         ),
       ),
     );

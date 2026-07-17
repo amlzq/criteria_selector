@@ -19,15 +19,40 @@ class _SellPageState extends State<SellPage> {
   late final HouseFiltersRepository _filtersRepo;
   HouseFilter? _filter;
 
+  final ScrollController _scrollController = ScrollController();
+  bool _isLoadingMore = false;
+
   @override
   void initState() {
     super.initState();
     _repo = HouseRepository();
     _filtersRepo = HouseFiltersRepository();
 
+    _scrollController.addListener(_onScroll);
+
     WidgetsBinding.instance.addPostFrameCallback((Duration duration) {
       _controller.select(1, {'203', '403'});
     });
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final current = _scrollController.offset;
+    if (maxScroll - current < 200 && _repo.hasMore && !_isLoadingMore) {
+      _loadMore();
+    }
+  }
+
+  void _loadMore() async {
+    if (_isLoadingMore || !_repo.hasMore) return;
+    if (!mounted) return;
+    setState(() => _isLoadingMore = true);
+    try {
+      await _repo.loadNextPage();
+    } finally {
+      if (mounted) setState(() => _isLoadingMore = false);
+    }
   }
 
   @override
@@ -47,6 +72,7 @@ class _SellPageState extends State<SellPage> {
   void dispose() {
     _repo.dispose();
     _controller.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -293,8 +319,18 @@ class _SellPageState extends State<SellPage> {
                 }
                 final houses = snapshot.data!;
                 return ListView.builder(
-                  itemCount: houses.length,
+                  controller: _scrollController,
+                  itemCount: houses.length + 1,
                   itemBuilder: (context, index) {
+                    if (index == houses.length) {
+                      return HouseListFooter(
+                        isLoadingMore: _isLoadingMore,
+                        hasMore: _repo.hasMore,
+                        pageInfo:
+                            '第 ${_repo.loadedPages} / ${_repo.totalPages} 页',
+                        noMoreText: l10n?.noMore,
+                      );
+                    }
                     final house = houses[index];
                     return Card(
                       margin: const EdgeInsets.symmetric(

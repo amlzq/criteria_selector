@@ -1,66 +1,189 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 
 import 'utils.dart';
 
+/// A house paging data source (decoupled from the concrete House type;
+/// private implementation within this file).
+///
+/// It "fakes" a large dataset on top of limited real mock data:
+/// 1. Uses the [clone] callback to copy-expand the base list returned by
+///    [baseLoader] into a pool of at most [maxPages] * [pageSize] houses;
+/// 2. Each [applyFilter] randomly trims S entries, constrained so
+///    [minPages] * [pageSize] <= S <= [maxPages] * [pageSize],
+///    i.e. guarantees the filtered result is at least [minPages] pages
+///    and at most [maxPages] pages;
+/// 3. [loadNextPage] appends one more page ([pageSize] entries) to
+///    [displayed], used by the page's "scroll to bottom to load more".
+class _HousePager<H> {
+  final int pageSize;
+  final int minPages;
+  final int maxPages;
+
+  /// Returns the base (real) house list; the source copies-expands on top of it.
+  final List<H> Function() baseLoader;
+
+  /// Clones a single house and assigns a new unique [newId] (for faking paging).
+  final H Function(H base, String newId) clone;
+
+  _HousePager({
+    required this.baseLoader,
+    required this.clone,
+    this.pageSize = 20,
+    this.minPages = 3,
+    this.maxPages = 9,
+  })  : assert(minPages <= maxPages),
+        assert(pageSize > 0);
+
+  List<H>? _pool;
+  List<H> _displayed = const [];
+  int _totalCount = 0;
+
+  /// The cumulative loaded list.
+  List<H> get displayed => _displayed;
+
+  /// Whether there are more pages to load.
+  bool get hasMore => _displayed.length < _totalCount;
+
+  /// The total count of the current filter result
+  /// (constrained to [minPages, maxPages] * [pageSize]).
+  int get totalCount => _totalCount;
+
+  /// Total page count (3~9).
+  int get totalPages =>
+      _totalCount == 0 ? 0 : (_totalCount / pageSize).ceil();
+
+  /// Number of loaded entries.
+  int get loadedCount => _displayed.length;
+
+  /// Number of loaded pages.
+  int get loadedPages =>
+      _displayed.isEmpty ? 0 : (_displayed.length / pageSize).ceil();
+
+  /// For preview: estimates a total count (in the 3~9 pages range) without
+  /// changing the current loading progress.
+  int estimateTotal() =>
+      minPages * pageSize +
+      Random().nextInt((maxPages - minPages) * pageSize + 1);
+
+  /// Applies the filter: rebuilds the pool, resets progress, and returns the
+  /// first page ([pageSize] entries).
+  List<H> applyFilter({Object? filter}) {
+    final base = baseLoader();
+    final poolSize = maxPages * pageSize;
+
+    if (base.isEmpty) {
+      _pool = const [];
+      _totalCount = 0;
+      _displayed = const [];
+      return _displayed;
+    }
+
+    // Fake it: copy-expand the few base entries into a pool of poolSize.
+    final baseShuffled = [...base]..shuffle();
+    final pool = <H>[];
+    for (var i = 0; i < poolSize; i++) {
+      final baseItem = baseShuffled[i % baseShuffled.length];
+      pool.add(clone(baseItem, 'gen_$i'));
+    }
+    _pool = pool;
+
+    // Constrain the total to [minPages, maxPages] * pageSize, i.e. 3~9 pages.
+    final minCount = minPages * pageSize;
+    final maxCount = maxPages * pageSize;
+    _totalCount = minCount + Random().nextInt(maxCount - minCount + 1);
+
+    // Reset progress and take the first page.
+    _displayed = pool.take(pageSize).toList();
+    return _displayed;
+  }
+
+  /// Loads the next page ([pageSize] entries), appends to [displayed],
+  /// and returns the cumulative list.
+  List<H> loadNextPage() {
+    if (!hasMore || _pool == null) return _displayed;
+    final next = _pool!.skip(_displayed.length).take(pageSize).toList();
+    _displayed = [..._displayed, ...next];
+    if (_displayed.length > _totalCount) {
+      _displayed = _displayed.take(_totalCount).toList();
+    }
+    return _displayed;
+  }
+}
+
 class HouseRepository {
-  // A realtime data stream
+  // A realtime data stream, pushing the "loaded cumulative list"
   final StreamController<List<House>> _controller =
       StreamController.broadcast();
 
+  late final _HousePager<House> _paging;
+  List<House> _baseHouses = const [];
+
   HouseRepository() {
-    // Load initial data
+    _paging = _HousePager<House>(
+      baseLoader: () => _baseHouses,
+      clone: (base, newId) => base.copyWith(id: newId),
+    );
     _loadInitialData();
   }
 
   Stream<List<House>> get housesStream => _controller.stream;
 
   void _loadInitialData() async {
-    final data = houseFromJson(await loadJsonData('house.json'));
-    _controller.add(data);
+    try {
+      _baseHouses = houseFromJson(await loadJsonData('house.json'));
+      final firstPage = _paging.applyFilter();
+      debugPrint('initial houses.length: ${firstPage.length}, '
+          'totalCount: ${_paging.totalCount}');
+      _controller.add(firstPage);
+    } catch (e, st) {
+      _controller.addError(e, st);
+    }
   }
 
+  /// Preview count: estimate total under the current "illusion" (3~9 pages).
   Future<int> previewCount(HouseFilter filterParams) async {
-    debugPrint('refreshData filterParams: ${filterParams.toJson()}');
-
+    debugPrint('previewCount filterParams: ${filterParams.toJson()}');
     await Future.delayed(const Duration(milliseconds: 250));
-    final houses = houseFromJson(await loadJsonData('house.json'));
-    debugPrint('refreshData initial houses.length: ${houses.length}');
-
-    // final apiPayload = filterParams.toJson();
-
-    // Simulate filtering
-    houses.shuffle();
-    final random = Random().nextInt(houses.length + 1);
-    final result = houses.sublist(0, random);
-
-    debugPrint('refreshData filtered houses.length: ${result.length}');
-
-    return result.length;
+    return _paging.estimateTotal();
   }
 
   // Refresh
   void refreshData(HouseFilter filterParams) async {
     debugPrint('refreshData filterParams: ${filterParams.toJson()}');
-
     await Future.delayed(const Duration(milliseconds: 250));
-    final houses = houseFromJson(await loadJsonData('house.json'));
-    debugPrint('refreshData initial houses.length: ${houses.length}');
-
-    // final apiPayload = filterParams.toJson();
-
-    // Simulate filtering
-    houses.shuffle();
-    final random = Random().nextInt(houses.length + 1);
-    final result = houses.sublist(0, random);
-
-    debugPrint('refreshData filtered houses.length: ${result.length}');
-
-    _controller.add(result);
+    try {
+      final firstPage = _paging.applyFilter(filter: filterParams);
+      debugPrint('refreshData totalCount: ${_paging.totalCount}, '
+          'firstPage: ${firstPage.length}');
+      _controller.add(firstPage);
+    } catch (e, st) {
+      _controller.addError(e, st);
+    }
   }
+
+  /// Load the next page (simulated network delay) and push cumulative list.
+  Future<void> loadNextPage() async {
+    if (!_paging.hasMore) return;
+    await Future.delayed(const Duration(milliseconds: 300));
+    try {
+      final next = _paging.loadNextPage();
+      debugPrint('loadNextPage loaded: ${_paging.loadedCount}/'
+          '${_paging.totalCount}');
+      _controller.add(next);
+    } catch (e, st) {
+      _controller.addError(e, st);
+    }
+  }
+
+  bool get hasMore => _paging.hasMore;
+  int get totalPages => _paging.totalPages;
+  int get totalCount => _paging.totalCount;
+  int get loadedPages => _paging.loadedPages;
 
   void dispose() => _controller.close();
 }
@@ -203,4 +326,24 @@ class House {
     data['builtYear'] = builtYear;
     return data;
   }
+
+  House copyWith({String? id}) => House(
+        id: id ?? this.id,
+        picture: picture,
+        tag: tag,
+        title: title,
+        second: second,
+        price: price,
+        unitPrice: unitPrice,
+        address: address,
+        city: city,
+        cityId: cityId,
+        district: district,
+        districtId: districtId,
+        lat: lat,
+        lon: lon,
+        area: area,
+        type: type,
+        builtYear: builtYear,
+      );
 }
