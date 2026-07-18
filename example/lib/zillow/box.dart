@@ -71,8 +71,8 @@ class _BoxPageState extends State<BoxPage> {
                     entriesLoader: _filtersRepo.fetchPriceData,
                     selectedEntriesLoader: _filtersRepo.fetchPriceSelectedData,
                     selectionMode: SelectionMode.multiple,
-                    crossAxisCount: 4,
-                    childAspectRatio: 2.5,
+                    crossAxisCount: 3,
+                    childAspectRatio: 3,
                     mainAxisSpacing: 10,
                     crossAxisSpacing: 10,
                     gridTileTheme: const SelectorGridTileTheme(
@@ -99,11 +99,11 @@ class _BoxPageState extends State<BoxPage> {
                     entriesLoader: _filtersRepo.fetchRoomsData,
                     selectedEntriesLoader: _filtersRepo.fetchRoomsSelectedData,
                     selectionMode: SelectionMode.multiple,
-                    crossAxisCount: 3,
-                    childAspectRatio: 2.5,
+                    crossAxisCount: 2,
+                    childAspectRatio: 3,
                     crossAxisSpacing: 8,
                     mainAxisSpacing: 8,
-                    sideBarTheme: const SelectorSideBarTheme(width: 98),
+                    sideBarTheme: const SelectorSideBarTheme(width: 110),
                   ),
                   onChangeTap: (selected) {
                     print('onChangeTap: $selected');
@@ -130,6 +130,7 @@ class _BoxPageState extends State<BoxPage> {
                     print('onChangeTap: $selected');
                   },
                 ),
+                const SizedBox(height: 250),
               ],
             ),
           ),

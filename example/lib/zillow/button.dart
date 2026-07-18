@@ -77,13 +77,6 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                 fieldTileTheme: const SelectorFieldTileTheme(
                   variant: SelectorFieldTileVariant.outlined,
                 ),
-                panelTheme: const SelectorPanelTheme(
-                  elevation: 8,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(16)),
-                  ),
-                  clipBehavior: Clip.antiAlias,
-                ),
                 applyText: AppLocalizations.of(context)?.apply ?? '',
               ),
               onChanged: (result) {
@@ -110,6 +103,13 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                 crossAxisSpacing: 8,
                 mainAxisSpacing: 8,
                 sideBarTheme: const SelectorSideBarTheme(width: 98),
+                panelTheme: const SelectorPanelTheme(
+                  elevation: 8,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(16)),
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                ),
               ),
               onChanged: (result) {
                 print('onChanged: $result');

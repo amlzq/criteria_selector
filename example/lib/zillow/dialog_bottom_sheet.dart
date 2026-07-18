@@ -289,13 +289,6 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                     chipBarTheme: const SelectorChipBarTheme(
                       variant: SelectorChipVariant.outlined,
                     ),
-                    panelTheme: const SelectorPanelTheme(
-                      elevation: 6,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(16)),
-                      ),
-                      clipBehavior: Clip.antiAlias,
-                    ),
                   ),
                   title: const Text('More'),
                 );
