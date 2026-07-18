@@ -99,16 +99,17 @@ class SelectorListViewState<T extends SelectorEntry>
       _restoreCustomSelectionToInputs();
     }
 
-    // Only unfocus when the custom range was actually removed by an *external*
-    // state change (e.g. tapping a preset or reset) while the field still had
-    // focus, mirroring [SelectorGridViewState.didUpdateWidget]. Avoids silently
-    // stealing focus whenever the parent rebuilds (e.g. keyboard inset change)
-    // right after the user focused an empty field.
+    // When the custom range was selected and is now removed (e.g. tapping a
+    // preset or clicking reset), clear the input fields so stale values are not
+    // left behind, mirroring [SelectorGridViewState.didUpdateWidget]. We only
+    // react to this transition (not every rebuild) to avoid clobbering text the
+    // user is actively typing.
     final oldHadCustom = (oldWidget.selectedEntries ?? {})
         .any((e) => e is SelectorRangeEntry && e.isCustom);
     final newHasCustom =
         _selectedEntries.any((e) => e is SelectorRangeEntry && e.isCustom);
-    if (oldHadCustom && !newHasCustom && inputHasFocus) {
+    if (oldHadCustom && !newHasCustom) {
+      _clearAllInput();
       _unfocusAllInput();
     }
   }

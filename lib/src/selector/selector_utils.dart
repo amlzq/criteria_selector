@@ -551,6 +551,16 @@ class SelectorUtils {
       List<SelectorEntry>? items, Set<SelectorEntry>? selectedEntries) {
     final result = <SelectorEntries>[];
     _initializeSelectedEntriesPerLevel(items, selectedEntries, 0, result);
+    // Drop any stale min/max on custom range entries that were not part of the
+    // restored selection, so previously entered values don't linger after a
+    // reset (which would otherwise re-populate the input fields).
+    final restored = result.expand((e) => e).toSet();
+    items?.whereType<SelectorRangeEntry>().forEach((entry) {
+      if (entry.isCustom && !restored.contains(entry)) {
+        entry.min = null;
+        entry.max = null;
+      }
+    });
     return result;
   }
 

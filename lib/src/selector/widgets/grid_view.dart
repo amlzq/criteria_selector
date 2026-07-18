@@ -135,16 +135,16 @@ class SelectorGridViewState<T extends SelectorEntry>
     _categoryId = widget.category?.id ??
         (widget.entries.first as SelectorChildEntry).parentId;
 
-    // Only unfocus when the custom range was actually removed by an *external*
-    // state change (e.g. tapping a preset or reset) while the field still had
-    // focus. Previously we unfocused on every rebuild while the input was
-    // empty, silently stealing focus whenever the parent rebuilt (e.g. because
-    // the keyboard inset changed) right after the user focused an empty field.
+    // When the custom range was selected and is now removed (e.g. tapping a
+    // preset or clicking reset), clear the input fields so stale values are not
+    // left behind. We only react to this transition (not every rebuild) to
+    // avoid clobbering text the user is actively typing.
     final oldHadCustom = (oldWidget.selectedEntries ?? {})
         .any((e) => e is SelectorRangeEntry && e.isCustom);
     final newHasCustom =
         _selectedEntries.any((e) => e is SelectorRangeEntry && e.isCustom);
-    if (oldHadCustom && !newHasCustom && inputHasFocus) {
+    if (oldHadCustom && !newHasCustom) {
+      _clearAllInput();
       _unfocusAllInput();
     }
   }
