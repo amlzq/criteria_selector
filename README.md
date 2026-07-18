@@ -1,17 +1,24 @@
 # CriteriaSelector
 
-A multi-dimensional condition selector — a typical use case is a list filtering selector.
+A highly customizable Flutter selector library. Supports SelectorBox, DropdownSelectorBar, DropdownSelectorButton, dialog, and bottom-sheet selectors.
 
 ## Features
 
-- **5 public entry points**: `SelectorBox` (embed in a page), `DropdownSelectorBar` (tab bar + overlay), `DropdownSelectorButton` (single trigger), `showSelector` (dialog), and `showModalBottomSelector` (bottom sheet).
-- **4 built-in layouts** via `SelectorDelegate`: `CascadingSelectorDelegate`, `GridSelectorDelegate`, `ListSelectorDelegate`, `FlattenSelectorDelegate`.
-- **Single & multiple selection** via `SelectionMode`.
-- **Async data loading** through `entriesLoader`.
-- **Any / Custom / immediate-apply entries** — an "Any" entry clears a category, `SelectorRangeEntry.custom` accepts user min/max input, and `immediate` entries apply without the action bar.
-- **`skeletonBuilder` & `errorBuilder`** for custom loading and error states.
-- **Theming** via `SelectorThemeData` and the `DropdownSelectorBarTheme` / `DropdownSelectorButtonTheme` theme extensions.
-- **Built-in i18n** (10 languages) via `CriteriaSelectorLocalizationsDelegate`.
+**Entry points**
+- `SelectorBox`, `DropdownSelectorBar`, `DropdownSelectorButton`, `showSelector` (dialog), and `showModalBottomSelector` (bottom sheet) — all built on the same `SelectorDelegate`, so any layout works on any surface.
+
+**Layouts** (via `SelectorDelegate`)
+- `CascadingSelectorDelegate`, `GridSelectorDelegate`, `ListSelectorDelegate`, `FlattenSelectorDelegate`.
+
+**Selection & data**
+- Single & multiple selection via `SelectionMode` (per category or as a delegate fallback).
+- Async data loading through `entriesLoader`.
+- Flexible entries: an "Any" entry clears a category, `SelectorRangeEntry.custom` accepts min/max input, and `immediate` entries apply without the action bar.
+
+**Customization**
+- `skeletonBuilder` & `errorBuilder` for loading/error states.
+- Theming via `SelectorThemeData` and the `DropdownSelectorBarTheme` / `DropdownSelectorButtonTheme` extensions.
+- Built-in i18n (10 languages) via `CriteriaSelectorLocalizationsDelegate`.
 
 ## Getting started
 
@@ -29,18 +36,13 @@ import 'package:criteria_selector/criteria_selector.dart';
 
 ## Usage
 
-### SelectorBox
+### Delegates
 
-`SelectorBox` is the public entry point for embedding a selector directly in a
-page or dialog body. It takes a single `delegate` that decides both how entries are
-loaded and how the selector body is rendered.
-
-Before the per-delegate examples, here are the shared concepts every delegate builds on.
+The building blocks below are shared by every entry point. Each delegate decides how entries are loaded and how the selector body is rendered.
 
 #### Common concepts
 
-Entries form a tree. `SelectorCategoryEntry` is the root (a category) and
-`SelectorChildEntry` is any non-root node, identified by its `parentId`.
+Entries form a tree. `SelectorCategoryEntry` is the root (a category) and `SelectorChildEntry` is any non-root node, identified by its `parentId`.
 
 | Entry | Purpose |
 | --- | --- |
@@ -48,11 +50,9 @@ Entries form a tree. `SelectorCategoryEntry` is the root (a category) and
 | `SelectorTextEntry` | A plain text leaf. Use `.any(...)` for the "Any" (clear) entry. `.name(...)` creates a parentless leaf for flat lists. |
 | `SelectorRangeEntry<N, E>` | A numeric range leaf (`min`/`max`). Use `.any(...)` for "Any" and `.custom(...)` for a user-input range. `SelectorIntEntry<E>` is a handy alias for `SelectorRangeEntry<int, E>`. |
 
-Selection is controlled by `SelectionMode` (`single`, the default, or `multiple`), set
-either on a `SelectorCategoryEntry` (per category) or on the delegate (fallback).
+Selection is controlled by `SelectionMode` (`single` by default, or `multiple`), set on a `SelectorCategoryEntry` (per category) or on the delegate (fallback).
 
-Entries are loaded asynchronously via `entriesLoader`, which returns a
-`Future<SelectorEntries>` where `SelectorEntries` is `Set<SelectorEntry>`.
+Entries load asynchronously via `entriesLoader`, which returns a `Future<SelectorEntries>` where `SelectorEntries` is `Set<SelectorEntry>`.
 
 ```dart
 // A category with single-selection children
@@ -81,14 +81,11 @@ SelectorCategoryEntry(
 SelectorTextEntry.name(id: 'default', name: 'Default');
 ```
 
-Every example below loads its data through an `entriesLoader` and is rendered by a
-`SelectorBox`. The same delegates also drive the other entry points
-(`DropdownSelectorBar`, `DropdownSelectorButton`, `showSelector`,
-`showModalBottomSelector`) shown later.
+Every delegate below is rendered by any entry point — `SelectorBox` (shown next) is the simplest.
 
 #### CascadingSelectorDelegate
 
-A tree-structured selector: categories on the left, a cascading list to the right.
+A tree selector: categories on the left, a cascading list on the right.
 
 ```dart
 Future<SelectorEntries> _fetchRegion() async {
@@ -115,7 +112,7 @@ Future<SelectorEntries> _fetchRegion() async {
 SelectorBox(delegate: CascadingSelectorDelegate(entriesLoader: _fetchRegion));
 ```
 
-![CascadingSelectorDelegate](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/sz/region.gif)
+![CascadingSelectorDelegate](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/cascading.jpg)
 
 #### GridSelectorDelegate
 
@@ -142,7 +139,7 @@ SelectorBox(
 );
 ```
 
-![GridSelectorDelegate](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/price.gif)
+![GridSelectorDelegate](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/grid.jpg)
 
 #### ListSelectorDelegate
 
@@ -160,12 +157,11 @@ Future<SelectorEntries> _fetchSort() async {
 SelectorBox(delegate: ListSelectorDelegate(entriesLoader: _fetchSort));
 ```
 
-![ListSelectorDelegate](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/sort.gif)
+![ListSelectorDelegate](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/list.jpg)
 
 #### FlattenSelectorDelegate
 
-Renders children in a grid while keeping the category hierarchy. Pairs well with
-`SelectionMode.multiple` and an "Any" entry.
+Renders children in a grid while keeping the category hierarchy. Best with `SelectionMode.multiple` and an "Any" entry.
 
 ```dart
 Future<SelectorEntries> _fetchMore() async {
@@ -192,14 +188,15 @@ SelectorBox(
 );
 ```
 
-![FlattenSelectorDelegate](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/rooms.gif)
+![FlattenSelectorDelegate](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/flatten.jpg)
+
+### SelectorBox
+
+`SelectorBox` embeds a selector directly in a page or dialog body. Pass any `delegate` from the [Delegates](#delegates) section above — it controls both loading and rendering.
 
 ### DropdownSelectorBar
 
-A tab bar (`PreferredSizeWidget`) that shows an overlay selector panel when a tab is
-tapped. Provide `tabs` for the bar UI and a matching `selectorDelegates` list (one
-delegate per tab). Selected results are delivered via `onChanged` / `onApplied` /
-`onReset`.
+A tab bar (`PreferredSizeWidget`) that opens an overlay selector when a tab is tapped. Provide `tabs` for the bar and a matching `selectorDelegates` list (one per tab). Results arrive via `onChanged` / `onApplied` / `onReset`.
 
 ```dart
 DropdownSelectorBar(
@@ -219,14 +216,11 @@ DropdownSelectorBar(
 );
 ```
 
-![DropdownSelectorBar](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/more.gif)
+![DropdownSelectorBar](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/bar.gif)
 
 ### DropdownSelectorButton
 
-A single-trigger alternative to `DropdownSelectorBar` — opens a selector overlay on
-tap, like `PopupMenuButton`. It takes one `selectorDelegate` and a `label`/`child`.
-Three variants are available via named constructors: filled (the default),
-`.elevated(...)`, and `.outlined(...)`.
+A single-trigger alternative to `DropdownSelectorBar` — opens a selector overlay on tap, like `PopupMenuButton`. It takes one `selectorDelegate` and a `label`/`child`. Three variants: filled (default), `.elevated(...)`, and `.outlined(...)`.
 
 ```dart
 DropdownSelectorButton(
@@ -247,13 +241,11 @@ DropdownSelectorButton.outlined(
 );
 ```
 
-![DropdownSelectorButton](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/sz/floor_plan.gif)
+![DropdownSelectorButton](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/button.gif)
 
 ### showSelector
 
-Shows a selector in a modal dialog. Returns the selected `SelectorEntries` when
-applied, or `null` when dismissed. In single-selection mode tapping an item applies
-immediately; in multi-selection mode the action bar's "Apply" confirms.
+Shows a selector in a modal dialog. Returns the selected `SelectorEntries` when applied, or `null` when dismissed. In single-selection mode, tapping an item applies immediately; in multi-selection mode, "Apply" in the action bar confirms.
 
 ```dart
 final SelectorEntries? selected = await showSelector(
@@ -267,14 +259,11 @@ if (selected != null) {
 }
 ```
 
-![showSelector](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/sz/sort.gif)
+![showSelector](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/dialog.gif)
 
 ### showModalBottomSelector
 
-Shows a selector in a modal bottom sheet built on Flutter's `showModalBottomSheet`.
-Same interaction model as `showSelector`. Standard sheet parameters
-(`isScrollControlled`, `isDismissible`, `enableDrag`, `showDragHandle`,
-`constraints`, etc.) are forwarded.
+Shows a selector in a modal bottom sheet built on Flutter's `showModalBottomSheet`. Same interaction as `showSelector`. Standard sheet parameters (`isScrollControlled`, `isDismissible`, `enableDrag`, `showDragHandle`, `constraints`, etc.) are forwarded.
 
 ```dart
 final SelectorEntries? selected = await showModalBottomSelector(
@@ -292,13 +281,11 @@ if (selected != null) {
 }
 ```
 
-![showModalBottomSelector](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/sz/price.gif)
+![showModalBottomSelector](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/bottom_sheet.gif)
 
 ### Theming
 
-**Per instance** — pass `selectorTheme` to any selector entry point
-(`SelectorBox`, `showSelector`, `showModalBottomSelector`,
-`DropdownSelectorBar`, `DropdownSelectorButton`):
+**Per instance** — pass `selectorTheme` to any selector entry point (`SelectorBox`, `showSelector`, `showModalBottomSelector`, `DropdownSelectorBar`, `DropdownSelectorButton`):
 
 ```dart
 SelectorBox(
@@ -311,9 +298,7 @@ SelectorBox(
 );
 ```
 
-**Globally** — register `DropdownSelectorBarTheme` and
-`DropdownSelectorButtonTheme` as `ThemeData` extensions so every bar/button picks
-them up automatically:
+**Globally** — register `DropdownSelectorBarTheme` and `DropdownSelectorButtonTheme` as `ThemeData` extensions so every bar/button picks them up automatically:
 
 ```dart
 MaterialApp(
@@ -335,9 +320,7 @@ MaterialApp(
 
 ### Internationalization
 
-Add `CriteriaSelectorLocalizationsDelegate()` to your `MaterialApp`. It ships
-translations for `en`, `zh` (Hans/Hant), `es`, `pt`, `id`, `vi`, `fr`, `de`, `ja`,
-and `ko`, localizing the "Apply" / "Reset" / "Multiple" labels automatically.
+Add `CriteriaSelectorLocalizationsDelegate()` to your `MaterialApp`. It ships translations for `en`, `zh` (Hans/Hant), `es`, `pt`, `id`, `vi`, `fr`, `de`, `ja`, and `ko`, localizing the "Apply" / "Reset" / "Multiple" labels automatically.
 
 ```dart
 const localizationsDelegates = <LocalizationsDelegate>[
@@ -355,5 +338,4 @@ MaterialApp(
 );
 ```
 
-To override the labels for a single delegate, set `applyText` / `resetText` on it
-directly.
+To override the labels for a single delegate, set `applyText` / `resetText` on it directly.
