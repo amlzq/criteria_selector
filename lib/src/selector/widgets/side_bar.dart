@@ -4,6 +4,7 @@ import '../constants.dart';
 import '../selector_entry.dart';
 import '../selector_theme.dart';
 import '../selector_theme_data.dart';
+import 'badge.dart';
 import 'list_tile.dart';
 import 'side_bar_theme.dart';
 import 'skeleton_box.dart';
@@ -80,20 +81,10 @@ class SelectorSideBar<T extends SelectorEntry> extends StatelessWidget {
         labelStyle: effectiveLabelStyle,
         selectedColor: effectiveSelectedColor,
         selectedTileColor: effectiveSelectedTileColor,
-        leading: Container(
-          width: 12,
-          alignment: Alignment.centerLeft,
-          child: Container(
-            width: 6,
-            height: 6,
-            decoration: BoxDecoration(
-              color: entry.hasChildren && selected
-                  ? selectedColor
-                  : Colors.transparent,
-              shape: BoxShape.circle,
-            ),
-          ),
-        ),
+        leading: SelectorBadge(
+            color: entry.hasChildren && selected
+                ? selectedColor
+                : Colors.transparent),
         onTap: () => onTap(index, entry),
       );
     });
