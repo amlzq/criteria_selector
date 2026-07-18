@@ -152,9 +152,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     locale.languageCode == 'zh' && locale.scriptCode == 'Hans';
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const LeyoujiaPage()
-                      // isZhHans ? const LeyoujiaPage() : const HousePage(),
-                      ),
+                  MaterialPageRoute(
+                    builder: (context) => LeyoujiaPage(),
+                    // isZhHans ? const LeyoujiaPage() : const HousePage(),
+                  ),
                 );
               },
               child: Text(l10n?.realEstate ?? ''),

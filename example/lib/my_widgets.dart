@@ -1,5 +1,6 @@
 import 'package:criteria_selector/criteria_selector.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MyRadio extends StatelessWidget {
   final bool value;
@@ -72,13 +73,14 @@ class MyActionBar extends StatelessWidget {
   }
 }
 
-/// 房源列表底部的分页状态提示：加载中 / "没有更多了" + 页码 / 仅页码。
+/// Pagination status footer for a house list: a loading spinner,
+/// "No more" + page info, or page info only.
 class HouseListFooter extends StatelessWidget {
   final bool isLoadingMore;
   final bool hasMore;
   final String pageInfo;
   final String? noMoreText;
-  final String loadingText;
+  final String? loadingText;
 
   const HouseListFooter({
     super.key,
@@ -86,25 +88,28 @@ class HouseListFooter extends StatelessWidget {
     required this.hasMore,
     required this.pageInfo,
     this.noMoreText,
-    this.loadingText = '加载中…',
+    this.loadingText,
   });
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final loading = loadingText ?? l10n?.loading ?? 'Loading...';
+    final noMore = noMoreText ?? l10n?.noMore ?? 'No more';
     if (isLoadingMore) {
-      return const Padding(
-        padding: EdgeInsets.symmetric(vertical: 16),
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16),
         child: Center(
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(
+              const SizedBox(
                 width: 16,
                 height: 16,
                 child: CircularProgressIndicator(strokeWidth: 2),
               ),
-              SizedBox(width: 8),
-              Text('加载中…'),
+              const SizedBox(width: 8),
+              Text(loading),
             ],
           ),
         ),
@@ -115,7 +120,7 @@ class HouseListFooter extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 16),
         child: Center(
           child: Text(
-            '${noMoreText ?? '没有更多了'} · $pageInfo',
+            '$noMore · $pageInfo',
             style: const TextStyle(color: Colors.grey, fontSize: 13),
           ),
         ),

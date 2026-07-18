@@ -34,6 +34,7 @@
   "viewhomes": "View {count} homes",
   "nohomes": "No homes",
   "noMore": "No more",
+  "loading": "Loading...",
   "themeMode": "Theme",
   "themeSystem": "System",
   "themeLight": "Light",

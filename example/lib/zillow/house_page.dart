@@ -2,10 +2,11 @@ import 'dart:async';
 
 import 'package:criteria_selector/criteria_selector.dart';
 import 'package:example/log.dart';
+import 'package:example/my_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../leyoujia/my_widgets.dart';
 import 'house_filters_repository.dart';
 import 'house_repository.dart';
 import 'utils.dart';
@@ -17,6 +18,11 @@ class HousePage extends StatefulWidget {
   State<HousePage> createState() => _HousePageState();
 }
 
+const _bannerHeight = 150.0;
+const _filterBarHeight = 44.0;
+const _chipBarHeight = 48.0;
+const _filterHeaderHeight = _filterBarHeight + _chipBarHeight;
+
 class _HousePageState extends State<HousePage> {
   final _controller = DropdownSelectorController();
   late final HouseRepository _repo;
@@ -24,38 +30,73 @@ class _HousePageState extends State<HousePage> {
   HouseFilter? _filter;
 
   final ScrollController _scrollController = ScrollController();
+  final ValueNotifier<double> _scrollOffsetVN = ValueNotifier<double>(0);
+
   bool _isLoadingMore = false;
 
   final ValueNotifier<String> _moreApplyText = ValueNotifier<String>('');
   Timer? _moreApplyTextDebounce;
   int _moreApplyTextRequestId = 0;
 
+  /// Identifies the filter bar content so [onSelectorWillShow] can measure its
+  /// current on-screen position and scroll it to a pinned (sticky) position.
+  final GlobalKey _filterHeaderKey = GlobalKey();
+
+  StreamSubscription<List<House>>? _housesSubscription;
+  List<House>? _houses;
+  bool _isLoading = true;
+  Object? _error;
+
+  final moreShortcut = [
+    MoreItem(id: 'price_reduced', name: 'Price reduced'),
+    MoreItem(id: 'open_house', name: 'Open house'),
+    MoreItem(id: 'new_listing', name: 'New listing'),
+    MoreItem(id: 'new_construction', name: 'New construction'),
+    MoreItem(id: 'pool', name: 'Pool'),
+  ];
+
+  final _moreShortcutSelected = <String>{};
+
   @override
   void initState() {
     super.initState();
     _repo = HouseRepository();
     _filtersRepo = HouseFiltersRepository();
-    _scrollController.addListener(_onScroll);
-  }
 
-  void _onScroll() {
-    if (!_scrollController.hasClients) return;
-    final maxScroll = _scrollController.position.maxScrollExtent;
-    final current = _scrollController.offset;
-    if (maxScroll - current < 200 && _repo.hasMore && !_isLoadingMore) {
-      _loadMore();
-    }
-  }
+    _scrollController.addListener(() {
+      final offset = _scrollController.hasClients
+          ? _scrollController.offset.clamp(0.0, _bannerHeight)
+          : 0.0;
+      if ((offset - _scrollOffsetVN.value).abs() > 0.5) {
+        _scrollOffsetVN.value = offset;
+      }
+      // Auto-load the next page when scrolled to the bottom.
+      if (_scrollController.hasClients) {
+        final maxScroll = _scrollController.position.maxScrollExtent;
+        final current = _scrollController.offset;
+        if (maxScroll - current < 200 && _repo.hasMore && !_isLoadingMore) {
+          _loadMore();
+        }
+      }
+    });
 
-  void _loadMore() async {
-    if (_isLoadingMore || !_repo.hasMore) return;
-    if (!mounted) return;
-    setState(() => _isLoadingMore = true);
-    try {
-      await _repo.loadNextPage();
-    } finally {
-      if (mounted) setState(() => _isLoadingMore = false);
-    }
+    _housesSubscription = _repo.housesStream.listen(
+      (data) {
+        if (!mounted) return;
+        setState(() {
+          _houses = data;
+          _isLoading = false;
+          _error = null;
+        });
+      },
+      onError: (Object e, StackTrace st) {
+        if (!mounted) return;
+        setState(() {
+          _error = e;
+          _isLoading = false;
+        });
+      },
+    );
   }
 
   @override
@@ -74,12 +115,25 @@ class _HousePageState extends State<HousePage> {
 
   @override
   void dispose() {
+    _housesSubscription?.cancel();
     _repo.dispose();
     _controller.dispose();
     _scrollController.dispose();
+    _scrollOffsetVN.dispose();
     _moreApplyTextDebounce?.cancel();
     _moreApplyText.dispose();
     super.dispose();
+  }
+
+  void _loadMore() async {
+    if (_isLoadingMore || !_repo.hasMore) return;
+    if (!mounted) return;
+    setState(() => _isLoadingMore = true);
+    try {
+      await _repo.loadNextPage();
+    } finally {
+      if (mounted) setState(() => _isLoadingMore = false);
+    }
   }
 
   void _showSelectedResult(DropdownSelectorResult result) {
@@ -218,352 +272,722 @@ class _HousePageState extends State<HousePage> {
       );
       return;
     }
-
+    if (result.tabIndex == 3) {
+      final latestMoreFilterSelected = <String>[];
+      if (_filter!.homeType != null) {
+        latestMoreFilterSelected.addAll(_filter!.homeType!);
+      }
+      if (_filter!.listsDetails != null) {
+        latestMoreFilterSelected.addAll(_filter!.listsDetails!);
+      }
+      if (_filter!.homeFeatures != null) {
+        latestMoreFilterSelected.addAll(_filter!.homeFeatures!);
+      }
+      if (_filter!.squareFeet != null) {
+        latestMoreFilterSelected.addAll(_filter!.squareFeet!);
+      }
+      if (_filter!.lotSize != null) {
+        latestMoreFilterSelected.addAll(_filter!.lotSize!);
+      }
+      if (_filter!.commute != null) {
+        latestMoreFilterSelected.addAll(_filter!.commute!);
+      }
+      if (_filter!.expandedSearch != null) {
+        latestMoreFilterSelected.addAll(_filter!.expandedSearch!);
+      }
+      _moreShortcutSelected.clear();
+      _moreShortcutSelected.addAll(latestMoreFilterSelected);
+      setState(() {});
+    }
     _repo.refreshData(_filter!);
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final topPadding = MediaQuery.of(context).padding.top;
+    final searchRowHeight = kToolbarHeight + topPadding;
+    const expandedHeight = kToolbarHeight + _bannerHeight;
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)?.sell ?? ''),
-      ),
-      body: Column(
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Container(
-                  height: 40,
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surfaceContainer,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  alignment: Alignment.centerLeft,
-                  child: const Text(userCityId),
-                ),
-              ),
-              IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.asset(
-                'assets/realestate/banner_sale.jpg',
-                width: double.infinity,
-                height: 120.0,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          DropdownSelectorBar(
-            controller: _controller,
-            isScrollable: true,
-            // labelColor: Colors.orange,
-            // indicator: Icon(Icons.arrow_upward, size: 16),
-            // unselectedIndicator: Icon(Icons.arrow_downward, size: 16),
-            // overlayStyle: DropdownOverlayStyle(
-            //   backgroundColor: Colors.orange.withOpacity(0.54),
-            // ),
-            tabs: [
-              DropdownTab(label: l10n?.neighborhood ?? ''),
-              DropdownTab(
-                // tag: 'price',
-                label: l10n?.price ?? '',
-                // labelGetter: (DropdownSelectorResult result) {
-                //   // Optional: user-defined label based on the selection
-                //   return 'Custom label';
-                // },
-              ),
-              DropdownTab(label: l10n?.rooms ?? ''),
-              DropdownTab(label: l10n?.more ?? ''),
-              DropdownTab(
-                child: Image.asset('assets/sorting.png', width: 16, height: 16),
-              ),
-            ],
-            selectorDelegates: [
-              CascadingSelectorDelegate(
-                entriesLoader: _filtersRepo.fetchNeighborhoodData,
-                selectedEntriesLoader:
-                    _filtersRepo.fetchNeighborhoodSelectedData,
-                resetEntriesLoader: _filtersRepo.fetchNeighborhoodResetData,
-                selectionMode: SelectionMode.multiple,
-                sideBarTheme: const SelectorSideBarTheme(width: 150),
-                isScrollable: true,
-              ),
-              GridSelectorDelegate(
-                entriesLoader: _filtersRepo.fetchPriceData,
-                selectedEntriesLoader: _filtersRepo.fetchPriceSelectedData,
-                // resetEntriesLoader: _filtersRepo.fetchPriceResetData,
-                selectionMode: SelectionMode.multiple,
-                crossAxisCount: 1,
-                childAspectRatio: 10,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-                gridTileTheme: const SelectorGridTileTheme(
-                  variant: SelectorGridTileVariant.outlined,
-                ),
-                fieldTileTheme: const SelectorFieldTileTheme(
-                  variant: SelectorFieldTileVariant.outlined,
-                ),
-              ),
-              GridSelectorDelegate(
-                entriesLoader: _filtersRepo.fetchRoomsData,
-                selectedEntriesLoader: _filtersRepo.fetchRoomsSelectedData,
-                // resetEntriesLoader: _filtersRepo.fetchRoomsResetData,
-                selectionMode: SelectionMode.multiple,
-                crossAxisCount: 4,
-                childAspectRatio: 2.5,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-                gridTileTheme: const SelectorGridTileTheme(
-                  variant: SelectorGridTileVariant.outlined,
-                ),
-                fieldTileTheme: const SelectorFieldTileTheme(
-                  variant: SelectorFieldTileVariant.outlined,
-                ),
-              ),
-              ListSelectorDelegate(
-                entriesLoader: _filtersRepo.fetchMoreData,
-                selectedEntriesLoader: _filtersRepo.fetchMoreSelectedData,
-                resetEntriesLoader: _filtersRepo.fetchMoreResetData,
-                selectionMode: SelectionMode.multiple,
-                resetText: AppLocalizations.of(context)?.reset ?? '',
-                applyText: AppLocalizations.of(context)?.apply ?? '',
-                gridTileTheme: const SelectorGridTileTheme(
-                  variant: SelectorGridTileVariant.outlined,
-                ),
-                fieldTileTheme: const SelectorFieldTileTheme(
-                  variant: SelectorFieldTileVariant.outlined,
-                ),
-                chipBarTheme: const SelectorChipBarTheme(
-                  variant: SelectorChipVariant.outlined,
-                ),
-              ),
-              ListSelectorDelegate(
-                entriesLoader: _filtersRepo.fetchSortData,
-                selectedEntriesLoader: _filtersRepo.fetchSortSelectedData,
-                resetEntriesLoader: _filtersRepo.fetchSortResetData,
-                selectionMode: SelectionMode.single,
-              ),
-            ],
-            onSelectorShowed: (DropdownTabData tabData) {
-              debugPrint('onShowed: ${tabData.label}');
-            },
-            onSelectorHidden: (DropdownTabData tabData) {
-              debugPrint('onHidden: ${tabData.label}');
-            },
-            onChanged: (DropdownSelectorResult result) {
-              debugPrintLarge('onChanged: $result');
-              _handleSelectorChange(result);
-              _showSelectedResult(result);
-            },
-            onApplied: (DropdownSelectorResult result) {
-              debugPrintLarge('onApplied: $result');
-              _handleSelectorApply(result);
-              if (result.tabIndex == 3) {
-                _moreApplyTextDebounce?.cancel();
-                _moreApplyTextRequestId++;
-                _moreApplyText.value = l10n?.apply ?? '';
-              }
-              _showSelectedResult(result);
-            },
-            onReset: () {
-              debugPrint('onReset');
-              if (_controller.currentIndex == 3) {
-                _moreApplyTextDebounce?.cancel();
-                _moreApplyTextRequestId++;
-                _moreApplyText.value = l10n?.apply ?? '';
-              }
+      body: CustomScrollView(
+        controller: _scrollController,
+        slivers: [
+          ValueListenableBuilder<double>(
+            valueListenable: _scrollOffsetVN,
+            builder: (context, offset, child) {
+              final isCollapsed = offset >= _bannerHeight;
+              final foregroundColor =
+                  isCollapsed ? Colors.black87 : Colors.white;
+              final searchFillColor =
+                  isCollapsed ? const Color(0xFFF2F2F2) : Colors.white;
+              final searchHintColor =
+                  isCollapsed ? Colors.grey[600]! : Colors.grey;
+              final systemOverlayStyle = isCollapsed
+                  ? SystemUiOverlayStyle.dark
+                  : SystemUiOverlayStyle.light;
+              return _buildAppBar(
+                l10n,
+                searchRowHeight: searchRowHeight,
+                expandedHeight: expandedHeight,
+                foregroundColor: foregroundColor,
+                searchFillColor: searchFillColor,
+                searchHintColor: searchHintColor,
+                systemOverlayStyle: systemOverlayStyle,
+              );
             },
           ),
-          Expanded(
-            child: StreamBuilder<List<House>>(
-              stream: _repo.housesStream,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text(
-                      l10n?.loadError('${snapshot.error}') ??
-                          '${snapshot.error}',
-                    ),
-                  );
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text(l10n?.nohomes ?? ''));
-                }
-                final houses = snapshot.data!;
-                return ListView.builder(
-                  controller: _scrollController,
-                  itemCount: houses.length + 1,
-                  itemBuilder: (context, index) {
-                    if (index == houses.length) {
-                      return HouseListFooter(
-                        isLoadingMore: _isLoadingMore,
-                        hasMore: _repo.hasMore,
-                        pageInfo:
-                            '第 ${_repo.loadedPages} / ${_repo.totalPages} 页',
-                        noMoreText: l10n?.noMore,
-                      );
-                    }
-                    final house = houses[index];
-                    final broker = (house.price ?? '').split('\n').lastOrNull;
-                    final tag = house.tag?.trim();
-                    return Card(
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                      clipBehavior: Clip.antiAlias,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Stack(
-                            children: [
-                              AspectRatio(
-                                aspectRatio: 16 / 9,
-                                child: Image.asset(
-                                  house.picture ?? '',
-                                  width: double.infinity,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              if ((tag ?? '').isNotEmpty)
-                                Positioned(
-                                  top: 12,
-                                  left: 12,
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 10,
-                                      vertical: 6,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.black54,
-                                      borderRadius: BorderRadius.circular(16),
-                                    ),
-                                    child: Text(
-                                      tag!,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              const Positioned(
-                                top: 10,
-                                right: 10,
-                                child: Icon(
-                                  Icons.favorite_border,
-                                  color: Colors.white,
-                                  size: 34,
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 14,
-                                left: 0,
-                                right: 0,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: List.generate(
-                                    4,
-                                    (i) => Container(
-                                      width: 10,
-                                      height: 10,
-                                      margin: const EdgeInsets.symmetric(
-                                          horizontal: 4),
-                                      decoration: BoxDecoration(
-                                        color: i == 0
-                                            ? Colors.white
-                                            : Colors.white70,
-                                        shape: BoxShape.circle,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        house.title ?? '',
-                                        style: TextStyle(
-                                          fontSize: 26,
-                                          fontWeight: FontWeight.w700,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary,
-                                        ),
-                                      ),
-                                    ),
-                                    Text(
-                                      '•••',
-                                      style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .secondary,
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  house.second ?? '',
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    height: 1.1,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  house.address ?? '',
-                                  style: const TextStyle(
-                                    fontSize: 22,
-                                    height: 1.15,
-                                  ),
-                                ),
-                                if ((broker ?? '').isNotEmpty) ...[
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    broker!,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      letterSpacing: 0.3,
-                                    ),
-                                  ),
-                                ],
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
+          const _NavigationGrid(),
+          _buildSectionHeader(l10n?.sell ?? 'Homes for sale'),
+          _buildStickyFilter(l10n),
+          _buildHouseList(l10n),
         ],
       ),
     );
   }
+
+  Widget _buildAppBar(
+    AppLocalizations? l10n, {
+    required double searchRowHeight,
+    required double expandedHeight,
+    required Color foregroundColor,
+    required Color searchFillColor,
+    required Color searchHintColor,
+    required SystemUiOverlayStyle systemOverlayStyle,
+  }) {
+    return SliverAppBar(
+      pinned: true,
+      automaticallyImplyLeading: false,
+      centerTitle: false,
+      titleSpacing: 0,
+      systemOverlayStyle: systemOverlayStyle,
+      title: Row(
+        children: [
+          BackButton(color: foregroundColor),
+          const SizedBox(width: 4),
+          Text(
+            l10n?.sell ?? '',
+            style: TextStyle(
+              color: foregroundColor,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: GestureDetector(
+              onTap: () {},
+              child: Container(
+                height: 36,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  color: searchFillColor,
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.search, size: 18, color: searchHintColor),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text(
+                        '${userCityId.replaceAll('_', ', ')} homes for sale',
+                        style: TextStyle(
+                          color: searchHintColor,
+                          fontSize: 13,
+                          fontWeight: FontWeight.normal,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.favorite_border, color: foregroundColor),
+          ),
+        ],
+      ),
+      surfaceTintColor: Colors.transparent,
+      shadowColor: Colors.transparent,
+      elevation: 0,
+      expandedHeight: expandedHeight,
+      flexibleSpace: FlexibleSpaceBar(
+        collapseMode: CollapseMode.pin,
+        background: _buildBannerBackground(),
+      ),
+    );
+  }
+
+  Widget _buildBannerBackground() {
+    return SizedBox.expand(
+      child: Image.asset(
+        'assets/realestate/banner.jpg',
+        fit: BoxFit.cover,
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(String title) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(15, 16, 15, 12),
+        child: Text(
+          title,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStickyFilter(AppLocalizations? l10n) {
+    return SliverPersistentHeader(
+      pinned: true,
+      delegate: _FilterHeaderDelegate(
+        height: _filterHeaderHeight,
+        child: Column(
+          key: _filterHeaderKey,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            DropdownSelectorBar(
+              controller: _controller,
+              isScrollable: true,
+              tabs: [
+                DropdownTab(label: l10n?.neighborhood ?? ''),
+                DropdownTab(
+                  label: l10n?.price ?? '',
+                ),
+                DropdownTab(label: l10n?.rooms ?? ''),
+                DropdownTab(label: l10n?.more ?? ''),
+                DropdownTab(
+                  child:
+                      Image.asset('assets/sorting.png', width: 16, height: 16),
+                ),
+              ],
+              selectorDelegates: [
+                CascadingSelectorDelegate(
+                  entriesLoader: _filtersRepo.fetchNeighborhoodData,
+                  selectedEntriesLoader:
+                      _filtersRepo.fetchNeighborhoodSelectedData,
+                  resetEntriesLoader: _filtersRepo.fetchNeighborhoodResetData,
+                  selectionMode: SelectionMode.multiple,
+                  sideBarTheme: const SelectorSideBarTheme(width: 150),
+                  isScrollable: true,
+                ),
+                GridSelectorDelegate(
+                  entriesLoader: _filtersRepo.fetchPriceData,
+                  selectedEntriesLoader: _filtersRepo.fetchPriceSelectedData,
+                  // resetEntriesLoader: _filtersRepo.fetchPriceResetData,
+                  selectionMode: SelectionMode.multiple,
+                  crossAxisCount: 1,
+                  childAspectRatio: 10,
+                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 10,
+                  gridTileTheme: const SelectorGridTileTheme(
+                    variant: SelectorGridTileVariant.outlined,
+                  ),
+                  fieldTileTheme: const SelectorFieldTileTheme(
+                    variant: SelectorFieldTileVariant.outlined,
+                  ),
+                ),
+                GridSelectorDelegate(
+                  entriesLoader: _filtersRepo.fetchRoomsData,
+                  selectedEntriesLoader: _filtersRepo.fetchRoomsSelectedData,
+                  // resetEntriesLoader: _filtersRepo.fetchRoomsResetData,
+                  selectionMode: SelectionMode.multiple,
+                  crossAxisCount: 4,
+                  childAspectRatio: 2.5,
+                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 10,
+                  gridTileTheme: const SelectorGridTileTheme(
+                    variant: SelectorGridTileVariant.outlined,
+                  ),
+                  fieldTileTheme: const SelectorFieldTileTheme(
+                    variant: SelectorFieldTileVariant.outlined,
+                  ),
+                ),
+                ListSelectorDelegate(
+                  entriesLoader: _filtersRepo.fetchMoreData,
+                  selectedEntriesLoader: _filtersRepo.fetchMoreSelectedData,
+                  resetEntriesLoader: _filtersRepo.fetchMoreResetData,
+                  selectionMode: SelectionMode.multiple,
+                  resetText: AppLocalizations.of(context)?.reset ?? '',
+                  applyText: AppLocalizations.of(context)?.apply ?? '',
+                  gridTileTheme: const SelectorGridTileTheme(
+                    variant: SelectorGridTileVariant.outlined,
+                  ),
+                  fieldTileTheme: const SelectorFieldTileTheme(
+                    variant: SelectorFieldTileVariant.outlined,
+                  ),
+                  chipBarTheme: const SelectorChipBarTheme(
+                    variant: SelectorChipVariant.outlined,
+                  ),
+                ),
+                ListSelectorDelegate(
+                  entriesLoader: _filtersRepo.fetchSortData,
+                  selectedEntriesLoader: _filtersRepo.fetchSortSelectedData,
+                  resetEntriesLoader: _filtersRepo.fetchSortResetData,
+                  selectionMode: SelectionMode.single,
+                ),
+              ],
+              onSelectorWillShow: (DropdownTabData tabData) async {
+                // Programmatic sticky: scroll exactly enough so the filter bar
+                // (SliverPersistentHeader) pins just below the collapsed app
+                // bar, then let the overlay anchor to that final layout.
+                // Returning `true` proceeds with showing the overlay.
+                final ctx = _filterHeaderKey.currentContext;
+                if (ctx != null) {
+                  final RenderBox? box = ctx.findRenderObject() as RenderBox?;
+                  if (box != null) {
+                    final double headerTop = box.localToGlobal(Offset.zero).dy;
+                    final double stickyTop =
+                        kToolbarHeight + MediaQuery.of(context).padding.top;
+                    final double delta = headerTop - stickyTop;
+                    if (delta > 0) {
+                      await _scrollController.animateTo(
+                        _scrollController.offset + delta,
+                        duration: const Duration(milliseconds: 250),
+                        curve: Curves.easeOut,
+                      );
+                    }
+                  }
+                }
+                return true;
+              },
+              onSelectorShowed: (DropdownTabData tabData) {
+                debugPrint('onShowed: ${tabData.label}');
+              },
+              onSelectorWillHide: (DropdownTabData tabData) {
+                debugPrint('onWillHide: ${tabData.label}');
+                return true;
+              },
+              onSelectorHidden: (DropdownTabData tabData) {
+                debugPrint('onHidden: ${tabData.label}');
+              },
+              onChanged: (DropdownSelectorResult result) {
+                debugPrintLarge('onChanged: $result');
+                _handleSelectorChange(result);
+                _showSelectedResult(result);
+              },
+              onApplied: (DropdownSelectorResult result) {
+                debugPrintLarge('onApplied: $result');
+                _handleSelectorApply(result);
+                if (result.tabIndex == 3) {
+                  _moreApplyTextDebounce?.cancel();
+                  _moreApplyTextRequestId++;
+                  _moreApplyText.value = l10n?.apply ?? '';
+                }
+                _showSelectedResult(result);
+              },
+              onReset: () {
+                debugPrint('onReset');
+                if (_controller.currentIndex == 3) {
+                  _moreApplyTextDebounce?.cancel();
+                  _moreApplyTextRequestId++;
+                  _moreApplyText.value = l10n?.apply ?? '';
+                }
+              },
+            ),
+            Container(
+              height: _chipBarHeight,
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
+              child: ListView.separated(
+                padding: EdgeInsets.zero,
+                physics: const ClampingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                itemCount: moreShortcut.length,
+                itemBuilder: (context, int index) {
+                  final item = moreShortcut[index];
+                  return ChoiceChip(
+                    padding: EdgeInsets.zero,
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    showCheckmark: false,
+                    label: Text(item.name ?? ''),
+                    selected: _moreShortcutSelected.contains(item.id ?? ''),
+                    onSelected: (bool selected) async {
+                      setState(() {
+                        if (selected) {
+                          _moreShortcutSelected.add(item.id ?? '');
+                        } else {
+                          _moreShortcutSelected.remove(item.id ?? '');
+                        }
+                      });
+                      final ok = await _controller.apply(
+                          tabIndex: 3, selectedEntryIds: _moreShortcutSelected);
+                      if (!ok) {
+                        debugPrint('apply failed');
+                      }
+                    },
+                  );
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return const SizedBox(width: 10);
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHouseList(AppLocalizations? l10n) {
+    if (_isLoading) {
+      return const SliverFillRemaining(
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+    if (_error != null) {
+      return SliverFillRemaining(
+        child: Center(
+          child: Text(
+            l10n?.loadError('$_error') ?? '$_error',
+          ),
+        ),
+      );
+    }
+    final houses = _houses;
+    if (houses == null || houses.isEmpty) {
+      return SliverFillRemaining(
+        child: Center(child: Text(l10n?.nohomes ?? '')),
+      );
+    }
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      sliver: SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
+            if (index == houses.length) {
+              return HouseListFooter(
+                isLoadingMore: _isLoadingMore,
+                hasMore: _repo.hasMore,
+                pageInfo: 'Page ${_repo.loadedPages} / ${_repo.totalPages}',
+                noMoreText: l10n?.noMore,
+              );
+            }
+            final house = houses[index];
+            final broker = (house.price ?? '').split('\n').lastOrNull;
+            final tag = house.tag?.trim();
+            return Card(
+              margin: const EdgeInsets.symmetric(vertical: 8),
+              clipBehavior: Clip.antiAlias,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Stack(
+                    children: [
+                      AspectRatio(
+                        aspectRatio: 16 / 9,
+                        child: Image.asset(
+                          house.picture ?? '',
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      if ((tag ?? '').isNotEmpty)
+                        Positioned(
+                          top: 12,
+                          left: 12,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.black54,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Text(
+                              tag!,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      const Positioned(
+                        top: 10,
+                        right: 10,
+                        child: Icon(
+                          Icons.favorite_border,
+                          color: Colors.white,
+                          size: 34,
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 14,
+                        left: 0,
+                        right: 0,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(
+                            4,
+                            (i) => Container(
+                              width: 10,
+                              height: 10,
+                              margin: const EdgeInsets.symmetric(horizontal: 4),
+                              decoration: BoxDecoration(
+                                color: i == 0 ? Colors.white : Colors.white70,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                house.title ?? '',
+                                style: TextStyle(
+                                  fontSize: 26,
+                                  fontWeight: FontWeight.w700,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              '•••',
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.secondary,
+                                fontSize: 22,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          house.second ?? '',
+                          style: const TextStyle(
+                            fontSize: 20,
+                            height: 1.1,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          house.address ?? '',
+                          style: const TextStyle(
+                            fontSize: 22,
+                            height: 1.15,
+                          ),
+                        ),
+                        if ((broker ?? '').isNotEmpty) ...[
+                          const SizedBox(height: 8),
+                          Text(
+                            broker!,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              letterSpacing: 0.3,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+          childCount: houses.length + 1,
+        ),
+      ),
+    );
+  }
+}
+
+class _NavData {
+  const _NavData(this.value, this.label, this.color, {this.hot = false});
+  final String value;
+  final String label;
+  final Color color;
+  final bool hot;
+}
+
+class _NavItem {
+  const _NavItem(this.icon, this.label);
+  final IconData icon;
+  final String label;
+}
+
+class _NavigationGrid extends StatelessWidget {
+  const _NavigationGrid();
+
+  @override
+  Widget build(BuildContext context) {
+    const data = [
+      _NavData('1.2k', 'For sale', Color(0xFF4CAF50)),
+      _NavData('320', 'New', Color(0xFF2196F3)),
+      _NavData('85', 'Reduced', Color(0xFFFF7043)),
+      _NavData('12', 'Open house', Color(0xFFAB47BC), hot: true),
+      _NavData('40', 'Coming soon', Color(0xFF26A69A)),
+    ];
+    const items = [
+      _NavItem(Icons.map_outlined, 'Map'),
+      _NavItem(Icons.favorite_border, 'Saved'),
+      _NavItem(Icons.draw_outlined, 'Draw'),
+      _NavItem(Icons.train_outlined, 'Near transit'),
+      _NavItem(Icons.school_outlined, 'Schools'),
+    ];
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+        child: Card(
+          elevation: 0,
+          color: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: data
+                      .map((item) => Expanded(
+                            child: InkWell(
+                              onTap: () {},
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Stack(
+                                    clipBehavior: Clip.none,
+                                    children: [
+                                      Container(
+                                        width: 36,
+                                        height: 36,
+                                        decoration: BoxDecoration(
+                                          color: item.color,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            item.value,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      if (item.hot)
+                                        Positioned(
+                                          top: -4,
+                                          right: -10,
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 4, vertical: 1),
+                                            decoration: BoxDecoration(
+                                              color: Colors.red,
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                            ),
+                                            child: const Text(
+                                              'HOT',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 8),
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    item.label,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                        fontSize: 12, color: Colors.black87),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ))
+                      .toList(),
+                ),
+                const SizedBox(height: 16.0),
+                Row(
+                  children: items
+                      .map((item) => Expanded(
+                            child: InkWell(
+                              onTap: () {},
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(item.icon,
+                                      size: 28, color: Colors.black87),
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    item.label,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                        fontSize: 12, color: Colors.black87),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ))
+                      .toList(),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _FilterHeaderDelegate extends SliverPersistentHeaderDelegate {
+  const _FilterHeaderDelegate({
+    required this.height,
+    required this.child,
+  });
+
+  final double height;
+  final Widget child;
+
+  @override
+  double get minExtent => height;
+
+  @override
+  double get maxExtent => height;
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Material(
+      color: Theme.of(context).colorScheme.surface,
+      elevation: 0,
+      child: child,
+    );
+  }
+
+  @override
+  bool shouldRebuild(covariant _FilterHeaderDelegate oldDelegate) => true;
 }

@@ -34,6 +34,7 @@
     "viewhomes": "查看 {count} 間",
     "nohomes": "暫無房源",
     "noMore": "暫無更多",
+    "loading": "載入中…",
     "themeMode": "主題模式",
     "themeSystem": "跟隨系統",
     "themeLight": "淺色",

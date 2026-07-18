@@ -5,11 +5,10 @@ import 'package:example/leyoujia/house_filters_repository.dart';
 import 'package:example/leyoujia/house_repository.dart';
 import 'package:example/leyoujia/utils.dart';
 import 'package:example/log.dart';
+import 'package:example/my_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-import 'my_widgets.dart';
 
 const _bannerHeight = 150.0;
 const _filterBarHeight = 44.0;
@@ -458,7 +457,7 @@ class _BuyPageState extends State<BuyPage> {
   Widget _buildBannerBackground() {
     return SizedBox.expand(
       child: Image.asset(
-        'assets/realestate/banner_buy.jpg',
+        'assets/realestate/banner.jpg',
         fit: BoxFit.cover,
       ),
     );

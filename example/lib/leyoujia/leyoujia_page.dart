@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'box.dart';
 import 'button.dart';
 import 'buy_page.dart';
-import 'demo.dart';
 import 'dialog_bottom_sheet.dart';
 import 'map_page.dart';
 import 'rent_page.dart';
@@ -36,10 +36,10 @@ class LeyoujiaPage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const DemoPage()),
+                  MaterialPageRoute(builder: (context) => const BoxPage()),
                 );
               },
-              child: Text('Demo'),
+              child: Text('Box'),
             ),
             TextButton(
               onPressed: () {

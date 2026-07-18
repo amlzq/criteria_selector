@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:criteria_selector/criteria_selector.dart';
 import 'package:example/leyoujia/house_filters_repository.dart';
+import 'package:example/my_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../log.dart';
 import 'house_repository.dart';
-import 'my_widgets.dart';
 import 'utils.dart';
 
 class RentPage extends StatefulWidget {
@@ -248,8 +248,8 @@ class _RentPageState extends State<RentPage> {
             width: double.infinity,
             height: 120,
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-            child: Image.asset('assets/realestate/banner_realestate.jpg',
-                fit: BoxFit.cover),
+            child:
+                Image.asset('assets/realestate/banner.jpg', fit: BoxFit.cover),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),

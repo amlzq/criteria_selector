@@ -74,20 +74,6 @@ class HouseFiltersRepository {
         )
         .toSet();
 
-    // Insert the "Any" entry
-    for (SelectorEntry category in entries) {
-      category.children?.insert(
-          0,
-          SelectorTextEntry.any(
-              parentId: category.id, name: anyEntryText, immediate: true));
-      for (SelectorEntry l1 in category.children ?? []) {
-        l1.children?.insert(
-          0,
-          SelectorTextEntry.any(parentId: l1.id, name: anyEntryText),
-        );
-      }
-    }
-
     debugPrint('neighborhood length: ${entries.length}');
     return Future.value(entries);
   }

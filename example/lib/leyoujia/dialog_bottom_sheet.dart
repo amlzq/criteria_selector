@@ -1,10 +1,10 @@
 // ignore_for_file: avoid_print
 
 import 'package:criteria_selector/criteria_selector.dart';
+import 'package:example/my_widgets.dart';
 import 'package:flutter/material.dart';
 
 import 'house_filters_repository.dart';
-import 'my_widgets.dart';
 
 class DialogBottomSheetDemoPage extends StatefulWidget {
   const DialogBottomSheetDemoPage({super.key});
