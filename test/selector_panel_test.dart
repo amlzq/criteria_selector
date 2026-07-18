@@ -10,11 +10,8 @@ import 'package:flutter_test/flutter_test.dart';
 class _TestDelegate extends SelectorDelegate {
   _TestDelegate({
     required this.bodyBuilder,
-    this.skeletonBuilder,
     super.entriesLoader,
     super.selectedEntriesLoader,
-    super.resetEntriesLoader,
-    super.selectionMode,
     super.errorBuilder,
   });
 
@@ -23,7 +20,6 @@ class _TestDelegate extends SelectorDelegate {
     List<SelectorEntry> entries,
     Set<SelectorEntry>? previousSelected,
   ) bodyBuilder;
-  final WidgetBuilder? skeletonBuilder;
 
   @override
   Widget buildBody(

@@ -7,10 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 /// wrapper can be exercised without relying on a concrete selector's data
 /// handling.
 class _SheetTestDelegate extends SelectorDelegate {
-  _SheetTestDelegate({this.entriesLoader});
-
-  @override
-  final Future<SelectorEntries> Function()? entriesLoader;
+  _SheetTestDelegate();
 
   @override
   Widget buildBody(

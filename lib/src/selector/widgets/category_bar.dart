@@ -213,6 +213,7 @@ class _HorizontalBar<T extends SelectorEntry> extends StatelessWidget {
   final Color indicatorColor;
   final double indicatorHeight;
   final EdgeInsetsGeometry indicatorPadding;
+  // ignore: deprecated_member_use_from_same_package
   final SelectorCategoryBarIndicatorSize indicatorSize;
   final Duration indicatorAnimationDuration;
 
@@ -254,6 +255,7 @@ class _HorizontalBar<T extends SelectorEntry> extends StatelessWidget {
               textStyle,
             ).clamp(0.0, maxIndicatorWidth).toDouble();
             final double indicatorWidth =
+                // ignore: deprecated_member_use_from_same_package
                 indicatorSize == SelectorCategoryBarIndicatorSize.label
                     ? labelIndicatorWidth
                     : maxIndicatorWidth;
@@ -517,6 +519,7 @@ class SelectorCategoryBarSkeleton extends StatelessWidget {
   }
 }
 
+// ignore: deprecated_member_use_from_same_package
 class _SelectorCategoryBarDefaults extends SelectorCategoryBarTheme {
   _SelectorCategoryBarDefaults(this.context) : super();
 
@@ -558,6 +561,7 @@ class _SelectorCategoryBarDefaults extends SelectorCategoryBarTheme {
   EdgeInsetsGeometry? get indicatorPadding => EdgeInsets.zero;
 
   @override
+  // ignore: deprecated_member_use_from_same_package
   SelectorCategoryBarIndicatorSize? get indicatorSize =>
       SelectorCategoryBarIndicatorSize.tab;
 

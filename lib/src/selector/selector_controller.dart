@@ -378,9 +378,7 @@ class SelectorController extends ChangeNotifier {
           ?.whereType<SelectorChildEntry>()
           .singleWhereOrNull(testAnyElement);
       if (any != null && any != leaf) {
-        select(any.id,
-            parentId: (any as SelectorChildEntry).parentId,
-            emitChange: emitChange);
+        select(any.id, parentId: any.parentId, emitChange: emitChange);
         return true;
       }
       return false;

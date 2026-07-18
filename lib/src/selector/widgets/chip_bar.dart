@@ -214,11 +214,10 @@ class _Chip extends StatelessWidget {
 class _SelectorChipBarDefaults extends SelectorChipBarTheme {
   _SelectorChipBarDefaults(
     this.context, [
-    this.variant,
-  ]) : super();
+    SelectorChipVariant? variant,
+  ]) : super(variant: variant);
 
   final BuildContext context;
-  final SelectorChipVariant? variant;
 
   late final SelectorThemeData _theme = SelectorTheme.of(context);
   late final TextTheme _textTheme = Theme.of(context).textTheme;

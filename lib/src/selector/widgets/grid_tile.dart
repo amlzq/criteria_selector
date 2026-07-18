@@ -145,13 +145,12 @@ class _SelectorGridTileDefaults extends SelectorGridTileTheme {
     this.context,
     this.isEnabled,
     this.isSelected, [
-    this.variant,
-  ]) : super();
+    SelectorGridTileVariant? variant,
+  ]) : super(variant: variant);
 
   final BuildContext context;
   final bool isEnabled;
   final bool isSelected;
-  final SelectorGridTileVariant? variant;
 
   late final SelectorThemeData _theme = SelectorTheme.of(context);
   late final TextTheme _textTheme = Theme.of(context).textTheme;

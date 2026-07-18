@@ -53,7 +53,7 @@ class _BoxPageState extends State<BoxPage> {
                     },
                   ),
                   onChangeTap: (selected) {
-                    print('onChangeTap: $selected');
+                    debugPrint('onChangeTap: $selected');
                   },
                 ),
                 const SizedBox(height: 24),
@@ -83,7 +83,7 @@ class _BoxPageState extends State<BoxPage> {
                     applyText: AppLocalizations.of(context)?.apply ?? '',
                   ),
                   onChangeTap: (selected) {
-                    print('onChangeTap: $selected');
+                    debugPrint('onChangeTap: $selected');
                   },
                 ),
                 const SizedBox(height: 24),
@@ -107,7 +107,7 @@ class _BoxPageState extends State<BoxPage> {
                     sideBarTheme: const SelectorSideBarTheme(width: 98),
                   ),
                   onChangeTap: (selected) {
-                    print('onChangeTap: $selected');
+                    debugPrint('onChangeTap: $selected');
                   },
                 ),
                 const SizedBox(height: 24),
@@ -129,7 +129,7 @@ class _BoxPageState extends State<BoxPage> {
                     },
                   ),
                   onChangeTap: (selected) {
-                    print('onChangeTap: $selected');
+                    debugPrint('onChangeTap: $selected');
                   },
                 ),
               ],

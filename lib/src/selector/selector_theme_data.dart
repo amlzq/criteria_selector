@@ -55,6 +55,7 @@ class SelectorThemeData with Diagnosticable {
       onBackgroundColorHighest:
           onBackgroundColorHighest ?? theme.colorScheme.onSurfaceVariant,
       actionBarTheme: actionBarTheme ?? const SelectorActionBarTheme(),
+      // ignore: deprecated_member_use_from_same_package
       categoryBarTheme: categoryBarTheme ?? const SelectorCategoryBarTheme(),
       tabBarTheme: tabBarTheme ?? const SelectorTabBarTheme(),
       sideBarTheme: sideBarTheme ?? const SelectorSideBarTheme(),
@@ -193,6 +194,7 @@ class SelectorThemeData with Diagnosticable {
       onBackgroundColorHighest:
           onBackgroundColorHighest ?? this.onBackgroundColorHighest,
       actionBarTheme: actionBarTheme ?? this.actionBarTheme,
+      // ignore: deprecated_member_use_from_same_package
       categoryBarTheme: categoryBarTheme ?? this.categoryBarTheme,
       tabBarTheme: tabBarTheme ?? this.tabBarTheme,
       sideBarTheme: sideBarTheme ?? this.sideBarTheme,
@@ -227,6 +229,7 @@ class SelectorThemeData with Diagnosticable {
           a?.onBackgroundColorHighest, b?.onBackgroundColorHighest, t)!,
       actionBarTheme:
           SelectorActionBarTheme.lerp(a?.actionBarTheme, b?.actionBarTheme, t),
+      // ignore: deprecated_member_use_from_same_package
       categoryBarTheme: SelectorCategoryBarTheme.lerp(
           a?.categoryBarTheme, b?.categoryBarTheme, t),
       tabBarTheme: SelectorTabBarTheme.lerp(a?.tabBarTheme, b?.tabBarTheme, t),
@@ -259,6 +262,7 @@ class SelectorThemeData with Diagnosticable {
         backgroundColorHighest,
         onBackgroundColorHighest,
         actionBarTheme,
+        // ignore: deprecated_member_use_from_same_package
         categoryBarTheme,
         tabBarTheme,
         sideBarTheme,
@@ -289,6 +293,7 @@ class SelectorThemeData with Diagnosticable {
         other.backgroundColorHighest == backgroundColorHighest &&
         other.onBackgroundColorHighest == onBackgroundColorHighest &&
         other.actionBarTheme == actionBarTheme &&
+        // ignore: deprecated_member_use_from_same_package
         other.categoryBarTheme == categoryBarTheme &&
         other.tabBarTheme == tabBarTheme &&
         other.sideBarTheme == sideBarTheme &&

@@ -39,7 +39,7 @@ class LeyoujiaPage extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => const BoxPage()),
                 );
               },
-              child: Text('Box'),
+              child: const Text('Box'),
             ),
             TextButton(
               onPressed: () {
@@ -49,7 +49,7 @@ class LeyoujiaPage extends StatelessWidget {
                       builder: (context) => const DialogBottomSheetDemoPage()),
                 );
               },
-              child: Text('Dialog & BottomSheet'),
+              child: const Text('Dialog & BottomSheet'),
             ),
             TextButton(
               onPressed: () {

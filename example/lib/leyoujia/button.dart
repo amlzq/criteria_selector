@@ -52,13 +52,13 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
               },
             ),
             onChanged: (result) {
-              print('onChanged: $result');
+              debugPrint('onChanged: $result');
             },
             onApplied: (result) {
-              print('onApplied: $result');
+              debugPrint('onApplied: $result');
             },
             onReset: () {
-              print('onReset');
+              debugPrint('onReset');
             },
           ),
           Center(
@@ -89,13 +89,13 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                 applyText: AppLocalizations.of(context)?.apply ?? '',
               ),
               onChanged: (result) {
-                print('onChanged: $result');
+                debugPrint('onChanged: $result');
               },
               onReset: () {
-                print('onReset');
+                debugPrint('onReset');
               },
               onApplied: (result) {
-                print('onApplied: $result');
+                debugPrint('onApplied: $result');
               },
             ),
           ),
@@ -116,13 +116,13 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                 sideBarTheme: const SelectorSideBarTheme(width: 98),
               ),
               onChanged: (result) {
-                print('onChanged: $result');
+                debugPrint('onChanged: $result');
               },
               onReset: () {
-                print('onReset');
+                debugPrint('onReset');
               },
               onApplied: (result) {
-                print('onApplied: $result');
+                debugPrint('onApplied: $result');
               },
             ),
           ),
@@ -141,13 +141,13 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                 },
               ),
               onChanged: (result) {
-                print('onChanged: $result');
+                debugPrint('onChanged: $result');
               },
               onReset: () {
-                print('onReset');
+                debugPrint('onReset');
               },
               onApplied: (result) {
-                print('onApplied: $result');
+                debugPrint('onApplied: $result');
               },
             ),
           ),

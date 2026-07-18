@@ -188,9 +188,7 @@ class SelectorSelectionRules {
       final parent = focusedPath[i];
       final sameParentSelected = tree
           .mutableSelectedEntriesAtLevel(i + 1)
-          .where((e) =>
-              e is SelectorChildEntry &&
-              (e as SelectorChildEntry).parentId == parent.id);
+          .where((e) => e is SelectorChildEntry && e.parentId == parent.id);
       if (sameParentSelected.isEmpty) {
         tree.mutableSelectedEntriesAtLevel(i).remove(parent);
       }

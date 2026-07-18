@@ -242,7 +242,7 @@ void main() {
 
     testWidgets('caps height to maxHeightFactor of the screen height',
         (tester) async {
-      final mediaQuery = MediaQueryData(size: const Size(400, 800));
+      const mediaQuery = MediaQueryData(size: Size(400, 800));
       await tester.pumpWidget(
         MediaQuery(
           data: mediaQuery,

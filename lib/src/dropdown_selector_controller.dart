@@ -408,7 +408,7 @@ class DropdownSelectorController extends ChangeNotifier {
   ///
   /// This method does not open the selector panel. Instead, it resolves
   /// [selectedEntryIds] against the selector data, builds a [DropdownSelectorResult],
-  /// fires [onApplied], updates the tab label, and notifies listeners.
+  /// fires `onApplied`, updates the tab label, and notifies listeners.
   ///
   /// Matching rules:
   /// - Matching is performed by entry id only.

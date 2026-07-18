@@ -44,6 +44,7 @@ class SelectorTheme extends InheritedTheme {
           backgroundColorHighest: data.backgroundColorHighest,
           onBackgroundColorHighest: data.onBackgroundColorHighest,
           actionBarTheme: data.actionBarTheme,
+          // ignore: deprecated_member_use_from_same_package
           categoryBarTheme: data.categoryBarTheme,
           tabBarTheme: data.tabBarTheme,
           sideBarTheme: data.sideBarTheme,

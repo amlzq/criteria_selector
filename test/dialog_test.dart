@@ -6,10 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 /// A [SelectorDelegate] whose body is a simple widget, so the dialog wrapper
 /// can be exercised without relying on a concrete selector's data handling.
 class _DialogTestDelegate extends SelectorDelegate {
-  _DialogTestDelegate({this.entriesLoader});
-
-  @override
-  final Future<SelectorEntries> Function()? entriesLoader;
+  _DialogTestDelegate();
 
   @override
   Widget buildBody(

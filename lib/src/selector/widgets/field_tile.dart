@@ -225,11 +225,10 @@ class _TextField extends StatelessWidget {
 class _SelectorFieldTileDefaults extends SelectorFieldTileTheme {
   _SelectorFieldTileDefaults(
     this.context, [
-    this.variant,
-  ]) : super();
+    SelectorFieldTileVariant? variant,
+  ]) : super(variant: variant);
 
   final BuildContext context;
-  final SelectorFieldTileVariant? variant;
 
   late final SelectorThemeData _theme = SelectorTheme.of(context);
   late final TextTheme _textTheme = Theme.of(context).textTheme;
