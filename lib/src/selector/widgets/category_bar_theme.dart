@@ -8,7 +8,6 @@ import '../selector_theme.dart';
 /// Indicator sizing mode for [SelectorCategoryBarTheme].
 ///
 /// Deprecated: use SelectorTabBarIndicatorSize for horizontal bars.
-@immutable
 @Deprecated('Use SelectorTabBarIndicatorSize (horizontal).')
 enum SelectorCategoryBarIndicatorSize {
   tab,

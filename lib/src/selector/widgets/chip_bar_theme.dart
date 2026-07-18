@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../selector_theme.dart';
 
 /// Visual variant for chips rendered by [SelectorChipBar].
-@immutable
 enum SelectorChipVariant {
   filled,
 

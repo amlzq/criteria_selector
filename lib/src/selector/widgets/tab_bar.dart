@@ -7,7 +7,6 @@ import '../selector_theme_data.dart';
 import 'skeleton_box.dart';
 import 'tab_bar_theme.dart';
 
-@immutable
 enum SelectorTabBarIndicatorSize {
   tab,
   label,
