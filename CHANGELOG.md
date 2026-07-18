@@ -1,3 +1,20 @@
+## 0.2.0
+
+* **FEATURE** add new components: `SelectorBox`, `DropdownSelectorButton`, `showSelector`, `showModalBottomSelector`.
+* **FEATURE** add new APIs to `DropdownSelectorBar`: `onSelectorWillShow` / `onSelectorWillHide` and `direction`.
+* **FEATURE** add new APIs to `DropdownSelectorController`: a listener API (`addChangeListener` / `addApplyListener` / `addResetListener`), `apply` for programmatic apply, and `select` to open the panel and preselect entries.
+* **FEATURE** add convenience query helpers on `SelectorEntries` / `DropdownSelectorResult` (`findCategory`, `childIdsOf`, `childRangesOf`, `cascadingPairsOf`, `firstSelectedId`).
+* **FEATURE** extend i18n support with `es`, `pt`, `id`, `vi`, `fr`, `de`, `ja`, and `ko` (reset / apply / multiple labels).
+
+* **IMPROVEMENT** deprecate the `SelectorCategoryBar*` APIs and the `categoryBarTheme` properties in favor of the `TabBar` / `SideBar` equivalents and `tabBarTheme` / `sideBarTheme`.
+* **IMPROVEMENT** adjust the theme defaults to better match the Material 3 visual style.
+
+* **DEPRECATION** rename the `Dropselect*` public API to `Dropdown*` (old names kept as deprecated aliases).
+* **DEPRECATION** rename the selector configuration types with a `Delegate` suffix and `DropdownSelectorBar.selectors` to `selectorDelegates` (old names kept as deprecated aliases).
+* **DEPRECATION** deprecate `SelectorDelegate.dataFetcher` / `selectedDataFetcher` / `resetDataFetcher` in favor of `entriesLoader` / `selectedEntriesLoader` / `resetEntriesLoader`.
+
+For step-by-step rename tables, see [MIGRATION.md](MIGRATION.md).
+
 ## 0.1.1
 
 * **FEATURE** add i18n for labels

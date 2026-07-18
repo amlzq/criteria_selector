@@ -1,6 +1,6 @@
 name: criteria_selector
 description: "A Flutter package for creating a criteria selector widget."
-version: 0.1.1
+version: 0.2.0
 repository: https://github.com/amlzq/criteria_selector
 
 environment:
