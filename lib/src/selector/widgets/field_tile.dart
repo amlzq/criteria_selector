@@ -53,44 +53,46 @@ class SelectorFieldTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // final theme = SelectorFieldTileTheme.of(context);
-    return Padding(
-      padding: padding ?? EdgeInsets.zero,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          if (entry.inputLabel?.isNotEmpty ?? false)
-            Padding(
-              padding: const EdgeInsets.only(right: 10.0),
-              child: Text(
-                entry.inputLabel ?? '',
-                style: const TextStyle(fontSize: 14),
+    return TextFieldTapRegion(
+      child: Padding(
+        padding: padding ?? EdgeInsets.zero,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            if (entry.inputLabel?.isNotEmpty ?? false)
+              Padding(
+                padding: const EdgeInsets.only(right: 10.0),
+                child: Text(
+                  entry.inputLabel ?? '',
+                  style: const TextStyle(fontSize: 14),
+                ),
+              ),
+            Expanded(
+              child: _TextField(
+                controller: minController,
+                focusNode: minFocusNode,
+                hintText: entry.minHintText,
+                tileColor: tileColor,
+                selectedTileColor: selectedTileColor,
+                variant: variant,
               ),
             ),
-          Expanded(
-            child: _TextField(
-              controller: minController,
-              focusNode: minFocusNode,
-              hintText: entry.minHintText,
-              tileColor: tileColor,
-              selectedTileColor: selectedTileColor,
-              variant: variant,
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: Text("-", style: TextStyle(color: Colors.grey)),
             ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            child: Text("-", style: TextStyle(color: Colors.grey)),
-          ),
-          Expanded(
-            child: _TextField(
-              controller: maxController,
-              focusNode: maxFocusNode,
-              hintText: entry.maxHintText,
-              tileColor: tileColor,
-              selectedTileColor: selectedTileColor,
-              variant: variant,
+            Expanded(
+              child: _TextField(
+                controller: maxController,
+                focusNode: maxFocusNode,
+                hintText: entry.maxHintText,
+                tileColor: tileColor,
+                selectedTileColor: selectedTileColor,
+                variant: variant,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -163,6 +165,10 @@ class _TextField extends StatelessWidget {
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         textAlign: TextAlign.center,
         style: const TextStyle(fontSize: 13),
+        // [SelectorFieldTile] wraps the whole row in a [TextFieldTapRegion], so
+        // taps on the sibling field / "-" separator are treated as inside and
+        // do not trigger this. Only genuine outside taps (grid cells, scrim)
+        // unfocus and dismiss the keyboard.
         onTapOutside: (event) {
           FocusScope.of(context).unfocus();
         },
