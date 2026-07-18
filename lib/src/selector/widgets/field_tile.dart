@@ -226,7 +226,6 @@ class _SelectorFieldTileDefaults extends SelectorFieldTileTheme {
   final SelectorFieldTileVariant? variant;
 
   late final SelectorThemeData _theme = SelectorTheme.of(context);
-  late final ColorScheme _colorScheme = Theme.of(context).colorScheme;
   late final TextTheme _textTheme = Theme.of(context).textTheme;
 
   @override
@@ -243,27 +242,21 @@ class _SelectorFieldTileDefaults extends SelectorFieldTileTheme {
 
   /// Default [tileColor] based on [variant].
   ///
-  /// - **outlined**: uses `outline` for visible borders (deeper than `outlineVariant`).
-  /// - **filled**: uses a very light surface container color for subtle backgrounds.
+  /// Mirrors [_SelectorGridTileDefaults.tileColor]: a light tint derived from
+  /// [SelectorThemeData.onBackgroundColorHighest] toward white, slightly deeper
+  /// for the outlined variant to keep borders visible.
   @override
   Color? get tileColor {
     if (variant == SelectorFieldTileVariant.outlined) {
-      return _colorScheme.outline; // Deeper border color for clarity
+      return Color.lerp(_theme.onBackgroundColorHighest, Colors.white, 0.55);
     }
-    return _colorScheme.surfaceContainerLow; // Light, unobtrusive background
+    return Color.lerp(_theme.onBackgroundColorHighest, Colors.white, 0.8);
   }
 
-  /// Default [selectedTileColor] based on [variant].
+  /// Default [selectedTileColor].
   ///
-  /// - **outlined**: subtle tint for selected border emphasis.
-  /// - **filled**: very light tint for selected background indication.
+  /// Mirrors [_SelectorGridTileDefaults.selectedTileColor]: uses
+  /// [SelectorThemeData.selectedColor] directly.
   @override
-  Color? get selectedTileColor {
-    if (variant == SelectorFieldTileVariant.outlined) {
-      return _theme.selectedColor
-          .withOpacity(0.20); // Moderate emphasis for borders
-    }
-    return _theme.selectedColor
-        .withOpacity(0.12); // Subtle tint for backgrounds
-  }
+  Color? get selectedTileColor => _theme.selectedColor;
 }

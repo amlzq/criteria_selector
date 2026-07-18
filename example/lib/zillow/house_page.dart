@@ -521,15 +521,6 @@ class _HousePageState extends State<HousePage> {
                   selectionMode: SelectionMode.multiple,
                   resetText: AppLocalizations.of(context)?.reset ?? '',
                   applyText: AppLocalizations.of(context)?.apply ?? '',
-                  gridTileTheme: const SelectorGridTileTheme(
-                    variant: SelectorGridTileVariant.outlined,
-                  ),
-                  fieldTileTheme: const SelectorFieldTileTheme(
-                    variant: SelectorFieldTileVariant.outlined,
-                  ),
-                  chipBarTheme: const SelectorChipBarTheme(
-                    variant: SelectorChipVariant.outlined,
-                  ),
                 ),
                 ListSelectorDelegate(
                   entriesLoader: _filtersRepo.fetchSortData,

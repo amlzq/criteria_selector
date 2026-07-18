@@ -66,10 +66,12 @@ class SelectorChipBar<T extends SelectorEntry> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _SelectorChipBarDefaults defaults = _SelectorChipBarDefaults(context);
     final theme = SelectorChipBarTheme.of(context);
 
-    final effectiveVariant = variant ?? theme.variant ?? defaults.variant!;
+    final effectiveVariant =
+        variant ?? theme.variant ?? SelectorChipVariant.filled;
+
+    final defaults = _SelectorChipBarDefaults(context, effectiveVariant);
 
     final effectiveBackgroundColor =
         backgroundColor ?? theme.backgroundColor ?? defaults.backgroundColor!;
@@ -210,9 +212,14 @@ class _Chip extends StatelessWidget {
 }
 
 class _SelectorChipBarDefaults extends SelectorChipBarTheme {
-  _SelectorChipBarDefaults(this.context) : super();
+  _SelectorChipBarDefaults(
+    this.context, [
+    this.variant,
+  ]) : super();
 
   final BuildContext context;
+  final SelectorChipVariant? variant;
+
   late final SelectorThemeData _theme = SelectorTheme.of(context);
   late final TextTheme _textTheme = Theme.of(context).textTheme;
 
@@ -222,12 +229,23 @@ class _SelectorChipBarDefaults extends SelectorChipBarTheme {
   @override
   EdgeInsetsGeometry? get padding => EdgeInsets.zero;
 
+  /// Default [chipColor] based on [variant].
+  ///
+  /// Mirrors [_SelectorGridTileDefaults.tileColor]: a light tint derived from
+  /// [SelectorThemeData.onBackgroundColorHighest] toward white, slightly deeper
+  /// for the outlined variant to keep borders visible.
   @override
-  SelectorChipVariant? get variant => SelectorChipVariant.filled;
+  Color? get chipColor {
+    if (variant == SelectorChipVariant.outlined) {
+      return Color.lerp(_theme.onBackgroundColorHighest, Colors.white, 0.55);
+    }
+    return Color.lerp(_theme.onBackgroundColorHighest, Colors.white, 0.8);
+  }
 
-  @override
-  Color? get chipColor => _theme.backgroundColorHighest;
-
+  /// Default [selectedChipColor].
+  ///
+  /// Mirrors [_SelectorGridTileDefaults.selectedTileColor]: uses
+  /// [SelectorThemeData.selectedColor] directly.
   @override
   Color? get selectedChipColor => _theme.selectedColor;
 
