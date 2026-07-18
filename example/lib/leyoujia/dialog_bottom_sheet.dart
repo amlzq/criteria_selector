@@ -80,6 +80,9 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                   gridTileTheme: const SelectorGridTileTheme(
                     variant: SelectorGridTileVariant.outlined,
                   ),
+                  fieldTileTheme: const SelectorFieldTileTheme(
+                    variant: SelectorFieldTileVariant.outlined,
+                  ),
                 ),
                 title: const Text('价格选择器'),
               );
@@ -223,6 +226,9 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                   crossAxisSpacing: 10,
                   gridTileTheme: const SelectorGridTileTheme(
                     variant: SelectorGridTileVariant.outlined,
+                  ),
+                  fieldTileTheme: const SelectorFieldTileTheme(
+                    variant: SelectorFieldTileVariant.outlined,
                   ),
                 ),
                 title: const Text('价格选择器'),

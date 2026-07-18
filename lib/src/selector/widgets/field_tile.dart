@@ -19,6 +19,9 @@ class SelectorFieldTile extends StatelessWidget {
     this.minFocusNode,
     this.maxFocusNode,
     this.selectedColor,
+    this.tileColor,
+    this.selectedTileColor,
+    this.variant,
   });
 
   final SelectorRangeEntry entry;
@@ -34,6 +37,18 @@ class SelectorFieldTile extends StatelessWidget {
   final FocusNode? maxFocusNode;
 
   final Color? selectedColor;
+
+  /// Defines the background color of `SelectorFieldTile` when not focused.
+  final Color? tileColor;
+
+  /// Defines the background color of `SelectorFieldTile` when focused.
+  final Color? selectedTileColor;
+
+  /// The visual variant of this tile.
+  ///
+  /// When null, [SelectorFieldTileTheme.variant] is used. Defaults to
+  /// [SelectorFieldTileVariant.filled], matching [SelectorGridTile].
+  final SelectorFieldTileVariant? variant;
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +71,9 @@ class SelectorFieldTile extends StatelessWidget {
               controller: minController,
               focusNode: minFocusNode,
               hintText: entry.minHintText,
-              selectedColor: selectedColor,
+              tileColor: tileColor,
+              selectedTileColor: selectedTileColor,
+              variant: variant,
             ),
           ),
           const Padding(
@@ -68,7 +85,9 @@ class SelectorFieldTile extends StatelessWidget {
               controller: maxController,
               focusNode: maxFocusNode,
               hintText: entry.maxHintText,
-              selectedColor: selectedColor,
+              tileColor: tileColor,
+              selectedTileColor: selectedTileColor,
+              variant: variant,
             ),
           ),
         ],
@@ -82,59 +101,80 @@ class _TextField extends StatelessWidget {
   final FocusNode? focusNode;
   final String? hintText;
 
-  final Color? selectedColor;
+  final Color? tileColor;
+  final Color? selectedTileColor;
+  final SelectorFieldTileVariant? variant;
 
   const _TextField({
     this.controller,
     this.focusNode,
     this.hintText,
-    this.selectedColor,
+    this.tileColor,
+    this.selectedTileColor,
+    this.variant,
   });
 
   @override
   Widget build(BuildContext context) {
-    final _SelectorFieldTileDefaults defaults =
-        _SelectorFieldTileDefaults(context);
-
     final theme = SelectorFieldTileTheme.of(context);
 
-    final effectiveSelectedColor =
-        selectedColor ?? theme.selectedColor ?? defaults.selectedColor!;
+    final effectiveVariant =
+        variant ?? theme.variant ?? SelectorFieldTileVariant.filled;
+
+    final defaults = _SelectorFieldTileDefaults(context, effectiveVariant);
+
+    final effectiveTileColor =
+        tileColor ?? theme.tileColor ?? defaults.tileColor!;
+
+    final effectiveSelectedTileColor = selectedTileColor ??
+        theme.selectedTileColor ??
+        defaults.selectedTileColor!;
 
     final selected = (focusNode?.hasFocus ?? false) ||
         (controller?.text.isNotEmpty ?? false);
 
-    final borderColor = selected ? effectiveSelectedColor : Colors.grey[500]!;
+    final isFilled = effectiveVariant == SelectorFieldTileVariant.filled;
 
-    return TextField(
-      controller: controller,
-      focusNode: focusNode,
-      keyboardType: TextInputType.number,
-      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-      textAlign: TextAlign.center,
-      style: const TextStyle(fontSize: 13),
-      // onChanged: ,
-      // onSubmitted: ,
-      // onEditingComplete: ,
-      // onTap: ,
-      onTapOutside: (event) {
-        FocusScope.of(context).unfocus();
-      },
-      textAlignVertical: TextAlignVertical.center,
-      decoration: InputDecoration(
-        hintText: hintText,
-        hintStyle: const TextStyle(fontSize: 13),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(4.0),
-          borderSide: BorderSide(color: borderColor),
+    // Unified tile styling matching [SelectorGridTile]:
+    // - filled:   tileColor / selectedTileColor as background, no border
+    // - outlined: transparent background, tileColor / selectedTileColor as border
+    final tileBackgroundColor = isFilled
+        ? (selected ? effectiveSelectedTileColor : effectiveTileColor)
+        : null;
+
+    final borderColor =
+        selected ? effectiveSelectedTileColor : effectiveTileColor;
+
+    final effectiveBorder =
+        isFilled ? null : Border.all(color: borderColor, width: 1.2);
+
+    return Container(
+      height: 34,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: tileBackgroundColor,
+        border: effectiveBorder,
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: TextField(
+        controller: controller,
+        focusNode: focusNode,
+        keyboardType: TextInputType.number,
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+        textAlign: TextAlign.center,
+        style: const TextStyle(fontSize: 13),
+        onTapOutside: (event) {
+          FocusScope.of(context).unfocus();
+        },
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: const TextStyle(fontSize: 13),
+          border: InputBorder.none,
+          enabledBorder: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          isDense: true,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 8),
         ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(4.0),
-          borderSide: BorderSide(color: borderColor, width: 1.2),
-        ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-        // isDense: true,
-        constraints: const BoxConstraints(maxHeight: 36, minHeight: 36),
       ),
     );
 
@@ -177,10 +217,16 @@ class _TextField extends StatelessWidget {
 }
 
 class _SelectorFieldTileDefaults extends SelectorFieldTileTheme {
-  _SelectorFieldTileDefaults(this.context) : super();
+  _SelectorFieldTileDefaults(
+    this.context, [
+    this.variant,
+  ]) : super();
 
   final BuildContext context;
+  final SelectorFieldTileVariant? variant;
+
   late final SelectorThemeData _theme = SelectorTheme.of(context);
+  late final ColorScheme _colorScheme = Theme.of(context).colorScheme;
   late final TextTheme _textTheme = Theme.of(context).textTheme;
 
   @override
@@ -194,4 +240,30 @@ class _SelectorFieldTileDefaults extends SelectorFieldTileTheme {
 
   @override
   Color? get selectedColor => _theme.selectedColor;
+
+  /// Default [tileColor] based on [variant].
+  ///
+  /// - **outlined**: uses `outline` for visible borders (deeper than `outlineVariant`).
+  /// - **filled**: uses a very light surface container color for subtle backgrounds.
+  @override
+  Color? get tileColor {
+    if (variant == SelectorFieldTileVariant.outlined) {
+      return _colorScheme.outline; // Deeper border color for clarity
+    }
+    return _colorScheme.surfaceContainerLow; // Light, unobtrusive background
+  }
+
+  /// Default [selectedTileColor] based on [variant].
+  ///
+  /// - **outlined**: subtle tint for selected border emphasis.
+  /// - **filled**: very light tint for selected background indication.
+  @override
+  Color? get selectedTileColor {
+    if (variant == SelectorFieldTileVariant.outlined) {
+      return _theme.selectedColor
+          .withOpacity(0.20); // Moderate emphasis for borders
+    }
+    return _theme.selectedColor
+        .withOpacity(0.12); // Subtle tint for backgrounds
+  }
 }

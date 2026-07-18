@@ -155,7 +155,18 @@ class HouseFiltersRepository {
       buyPriceResult?.selected; // ?? buyPriceIniteialSelected;
 
   /// 重置按钮的选中项
-  SelectorEntries? fetchBuyPriceResetData() => buyPriceIniteialSelected;
+  SelectorEntries? fetchBuyPriceResetData() => {
+        SelectorCategoryEntry(
+          id: 'total',
+          name: '',
+          children: {SelectorIntEntry.any(parentId: 'total', name: '')},
+        ),
+        SelectorCategoryEntry(
+          id: 'unit',
+          name: '',
+          children: {SelectorIntEntry.any(parentId: 'total', name: '')},
+        ),
+      };
 
   Future<SelectorEntries> fetchBuyPriceData() async {
     // 模拟网络延迟

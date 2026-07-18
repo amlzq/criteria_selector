@@ -526,6 +526,9 @@ class _BuyPageState extends State<BuyPage> {
                   gridTileTheme: const SelectorGridTileTheme(
                     variant: SelectorGridTileVariant.outlined,
                   ),
+                  fieldTileTheme: const SelectorFieldTileTheme(
+                    variant: SelectorFieldTileVariant.outlined,
+                  ),
                   applyText: AppLocalizations.of(context)?.apply ?? '',
                 ),
                 FlattenSelectorDelegate(

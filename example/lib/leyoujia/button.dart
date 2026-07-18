@@ -76,6 +76,9 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                 gridTileTheme: const SelectorGridTileTheme(
                   variant: SelectorGridTileVariant.outlined,
                 ),
+                fieldTileTheme: const SelectorFieldTileTheme(
+                  variant: SelectorFieldTileVariant.outlined,
+                ),
                 panelTheme: const SelectorPanelTheme(
                   elevation: 8,
                   shape: RoundedRectangleBorder(

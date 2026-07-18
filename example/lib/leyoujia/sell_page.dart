@@ -237,9 +237,6 @@ class _SellPageState extends State<SellPage> {
                   childAspectRatio: 2.5,
                   mainAxisSpacing: 10,
                   crossAxisSpacing: 10,
-                  gridTileTheme: const SelectorGridTileTheme(
-                    variant: SelectorGridTileVariant.outlined,
-                  ),
                 ),
                 FlattenSelectorDelegate(
                   entriesLoader: _filtersRepo.fetchFloorPlanSellData,

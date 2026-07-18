@@ -3,6 +3,14 @@ import 'package:flutter/material.dart';
 
 import '../selector_theme.dart';
 
+/// Visual variant for [SelectorFieldTile].
+@immutable
+enum SelectorFieldTileVariant {
+  filled,
+
+  outlined,
+}
+
 /// Theme configuration for [SelectorFieldTile].
 @immutable
 class SelectorFieldTileTheme with Diagnosticable {
@@ -11,6 +19,9 @@ class SelectorFieldTileTheme with Diagnosticable {
     this.textColor,
     this.labelStyle,
     this.sublabelStyle,
+    this.variant,
+    this.tileColor,
+    this.selectedTileColor,
   });
 
   /// Overrides the default value of [SelectorFieldTile.selectedColor].
@@ -25,18 +36,33 @@ class SelectorFieldTileTheme with Diagnosticable {
   /// Overrides the default value of [SelectorFieldTile.sublabelStyle].
   final TextStyle? sublabelStyle;
 
+  /// Overrides the default value of [SelectorFieldTile.variant].
+  final SelectorFieldTileVariant? variant;
+
+  /// Overrides the default value of [SelectorFieldTile.tileColor].
+  final Color? tileColor;
+
+  /// Overrides the default value of [SelectorFieldTile.selectedTileColor].
+  final Color? selectedTileColor;
+
   /// Returns a copy of this theme with the given fields replaced.
   SelectorFieldTileTheme copyWith({
     Color? textColor,
     TextStyle? labelStyle,
     TextStyle? sublabelStyle,
     Color? selectedColor,
+    SelectorFieldTileVariant? variant,
+    Color? tileColor,
+    Color? selectedTileColor,
   }) {
     return SelectorFieldTileTheme(
       textColor: textColor ?? this.textColor,
       labelStyle: labelStyle ?? this.labelStyle,
       sublabelStyle: sublabelStyle ?? this.sublabelStyle,
       selectedColor: selectedColor ?? this.selectedColor,
+      variant: variant ?? this.variant,
+      tileColor: tileColor ?? this.tileColor,
+      selectedTileColor: selectedTileColor ?? this.selectedTileColor,
     );
   }
 
@@ -71,6 +97,17 @@ class SelectorFieldTileTheme with Diagnosticable {
         b?.sublabelStyle,
         t,
       ),
+      variant: t < 0.5 ? a?.variant : b?.variant,
+      tileColor: Color.lerp(
+        a?.tileColor,
+        b?.tileColor,
+        t,
+      ),
+      selectedTileColor: Color.lerp(
+        a?.selectedTileColor,
+        b?.selectedTileColor,
+        t,
+      ),
     );
   }
 
@@ -80,6 +117,9 @@ class SelectorFieldTileTheme with Diagnosticable {
         labelStyle,
         sublabelStyle,
         selectedColor,
+        variant,
+        tileColor,
+        selectedTileColor,
       );
 
   @override
@@ -94,6 +134,9 @@ class SelectorFieldTileTheme with Diagnosticable {
         other.textColor == textColor &&
         other.labelStyle == labelStyle &&
         other.sublabelStyle == sublabelStyle &&
-        other.selectedColor == selectedColor;
+        other.selectedColor == selectedColor &&
+        other.variant == variant &&
+        other.tileColor == tileColor &&
+        other.selectedTileColor == selectedTileColor;
   }
 }

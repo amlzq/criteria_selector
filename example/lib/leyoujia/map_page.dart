@@ -274,6 +274,9 @@ class _MapPageState extends State<MapPage> {
                 gridTileTheme: const SelectorGridTileTheme(
                   variant: SelectorGridTileVariant.outlined,
                 ),
+                fieldTileTheme: const SelectorFieldTileTheme(
+                  variant: SelectorFieldTileVariant.outlined,
+                ),
               ),
               FlattenSelectorDelegate(
                 entriesLoader: _filtersRepo.fetchFloorPlanBuyData,

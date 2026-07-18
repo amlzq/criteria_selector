@@ -197,6 +197,7 @@ class GridSelectorState extends State<GridSelector> {
         mainAxisSpacing: delegate.mainAxisSpacing,
         crossAxisSpacing: delegate.crossAxisSpacing,
         tileVariant: delegate.gridTileTheme?.variant,
+        fieldVariant: delegate.fieldTileTheme?.variant,
         entries: entries,
         selectedEntries: selectedEntries,
         // inputListener: _inputListener,

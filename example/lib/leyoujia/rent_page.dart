@@ -309,6 +309,9 @@ class _RentPageState extends State<RentPage> {
                   gridTileTheme: const SelectorGridTileTheme(
                     variant: SelectorGridTileVariant.outlined,
                   ),
+                  fieldTileTheme: const SelectorFieldTileTheme(
+                    variant: SelectorFieldTileVariant.outlined,
+                  ),
                 ),
                 FlattenSelectorDelegate(
                   entriesLoader: () =>

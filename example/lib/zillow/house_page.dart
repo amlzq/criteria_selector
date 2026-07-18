@@ -5,9 +5,9 @@ import 'package:example/log.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../leyoujia/my_widgets.dart';
 import 'house_filters_repository.dart';
 import 'house_repository.dart';
-import '../leyoujia/my_widgets.dart';
 import 'utils.dart';
 
 /// For sale
@@ -309,6 +309,9 @@ class _HousePageState extends State<HousePage> {
                 gridTileTheme: const SelectorGridTileTheme(
                   variant: SelectorGridTileVariant.outlined,
                 ),
+                fieldTileTheme: const SelectorFieldTileTheme(
+                  variant: SelectorFieldTileVariant.outlined,
+                ),
               ),
               GridSelectorDelegate(
                 entriesLoader: _filtersRepo.fetchRoomsData,
@@ -322,6 +325,9 @@ class _HousePageState extends State<HousePage> {
                 gridTileTheme: const SelectorGridTileTheme(
                   variant: SelectorGridTileVariant.outlined,
                 ),
+                fieldTileTheme: const SelectorFieldTileTheme(
+                  variant: SelectorFieldTileVariant.outlined,
+                ),
               ),
               ListSelectorDelegate(
                 entriesLoader: _filtersRepo.fetchMoreData,
@@ -332,6 +338,9 @@ class _HousePageState extends State<HousePage> {
                 applyText: AppLocalizations.of(context)?.apply ?? '',
                 gridTileTheme: const SelectorGridTileTheme(
                   variant: SelectorGridTileVariant.outlined,
+                ),
+                fieldTileTheme: const SelectorFieldTileTheme(
+                  variant: SelectorFieldTileVariant.outlined,
                 ),
                 chipBarTheme: const SelectorChipBarTheme(
                   variant: SelectorChipVariant.outlined,

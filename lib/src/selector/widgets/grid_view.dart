@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 import '../selector_entry.dart';
 import 'field_tile.dart';
+import 'field_tile_theme.dart';
 import 'grid_tile.dart';
 import 'grid_tile_theme.dart';
 import 'skeleton_box.dart';
@@ -26,6 +27,7 @@ class SelectorGridView<T extends SelectorEntry> extends StatefulWidget {
     this.focusListener,
     this.padding,
     this.tileVariant,
+    this.fieldVariant,
     this.showTitle = true,
   });
 
@@ -51,6 +53,8 @@ class SelectorGridView<T extends SelectorEntry> extends StatefulWidget {
   final double childAspectRatio;
 
   final SelectorGridTileVariant? tileVariant;
+
+  final SelectorFieldTileVariant? fieldVariant;
 
   final bool showTitle;
 
@@ -216,6 +220,7 @@ class SelectorGridViewState<T extends SelectorEntry>
               maxController: _maxController,
               minFocusNode: _minFocusNode,
               maxFocusNode: _maxFocusNode,
+              variant: widget.fieldVariant,
             ),
           // Grid of items (3 columns)
           GridView.builder(
@@ -250,6 +255,7 @@ class SelectorGridViewState<T extends SelectorEntry>
               maxController: _maxController,
               minFocusNode: _minFocusNode,
               maxFocusNode: _maxFocusNode,
+              variant: widget.fieldVariant,
             ),
         ],
       ),

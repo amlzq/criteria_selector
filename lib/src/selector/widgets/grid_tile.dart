@@ -72,14 +72,15 @@ class SelectorGridTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final SelectorGridTileTheme defaults =
-        _SelectorGridTileDefaults(context, enabled, selected);
     final theme = SelectorGridTileTheme.of(context);
 
-    final effectiveSelectedColor =
-        selectedColor ?? theme.selectedColor ?? defaults.selectedColor!;
+    final effectiveSelectedColor = selectedColor ?? theme.selectedColor;
 
-    final effectiveVariant = variant ?? theme.variant ?? defaults.variant!;
+    final effectiveVariant =
+        variant ?? theme.variant ?? SelectorGridTileVariant.filled;
+
+    final defaults =
+        _SelectorGridTileDefaults(context, enabled, selected, effectiveVariant);
 
     final effectiveTileColor =
         tileColor ?? theme.tileColor ?? defaults.tileColor!;
@@ -106,10 +107,13 @@ class SelectorGridTile extends StatelessWidget {
             : textColor ?? theme.textColor ?? defaults.textColor!
         : Colors.grey[500]!;
 
+    // For the outlined variant the border reuses the tile colors: the normal
+    // border uses [tileColor] and the selected border uses [selectedTileColor],
+    // keeping the styling consistent with [SelectorFieldTile].
     final effectiveBorder = effectiveVariant == SelectorGridTileVariant.filled
         ? null
         : Border.all(
-            color: selected ? effectiveSelectedColor : effectiveTextColor,
+            color: selected ? effectiveSelectedTileColor : effectiveTileColor,
             width: 1.2);
 
     return InkWell(
@@ -140,13 +144,17 @@ class _SelectorGridTileDefaults extends SelectorGridTileTheme {
   _SelectorGridTileDefaults(
     this.context,
     this.isEnabled,
-    this.isSelected,
-  ) : super();
+    this.isSelected, [
+    this.variant,
+  ]) : super();
 
   final BuildContext context;
   final bool isEnabled;
   final bool isSelected;
+  final SelectorGridTileVariant? variant;
+
   late final SelectorThemeData _theme = SelectorTheme.of(context);
+  late final ColorScheme _colorScheme = Theme.of(context).colorScheme;
   late final TextTheme _textTheme = Theme.of(context).textTheme;
 
   @override
@@ -161,12 +169,29 @@ class _SelectorGridTileDefaults extends SelectorGridTileTheme {
   @override
   TextStyle? get sublabelStyle => _textTheme.bodyMedium;
 
+  /// Default [tileColor] based on [variant].
+  ///
+  /// - **outlined**: uses `outline` for visible borders (deeper than `outlineVariant`).
+  /// - **filled**: uses a very light surface container color for subtle backgrounds.
   @override
-  SelectorGridTileVariant? get variant => SelectorGridTileVariant.filled;
+  Color? get tileColor {
+    if (variant == SelectorGridTileVariant.outlined) {
+      return _colorScheme.outline; // Deeper border color for clarity
+    }
+    return _colorScheme.surfaceContainerLow; // Light, unobtrusive background
+  }
 
+  /// Default [selectedTileColor] based on [variant].
+  ///
+  /// - **outlined**: subtle tint for selected border emphasis.
+  /// - **filled**: very light tint for selected background indication.
   @override
-  Color? get tileColor => _theme.backgroundColorHigh;
-
-  @override
-  Color? get selectedTileColor => _theme.selectedColor.withOpacity(0.12);
+  Color? get selectedTileColor {
+    if (variant == SelectorGridTileVariant.outlined) {
+      return _theme.selectedColor
+          .withOpacity(0.20); // Moderate emphasis for borders
+    }
+    return _theme.selectedColor
+        .withOpacity(0.12); // Subtle tint for backgrounds
+  }
 }

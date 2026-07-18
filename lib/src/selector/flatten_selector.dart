@@ -359,6 +359,7 @@ class FlattenSelectorState extends State<FlattenSelector> {
                           mainAxisSpacing: widget.mainAxisSpacing,
                           crossAxisSpacing: widget.crossAxisSpacing,
                           tileVariant: delegate.gridTileTheme?.variant,
+                          fieldVariant: delegate.fieldTileTheme?.variant,
                           category: category,
                           entries: entries,
                           selectedEntries: selectedEntries,
