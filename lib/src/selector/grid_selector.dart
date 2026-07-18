@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
+import 'action_bar_visibility.dart';
 import 'constants.dart';
 import 'selector_controller.dart';
 import 'selector_delegate.dart';
@@ -231,7 +232,8 @@ class GridSelectorState extends State<GridSelector> {
             child: gridviews[tempSelectedCategoryIndex],
           ),
         ),
-        if (SelectionMode.multiple == selectorSelectionMode)
+        if (SelectionMode.multiple == selectorSelectionMode &&
+            !SelectorActionBarVisibility.isHidden(context))
           delegate.actionBarBuilder?.call(
                 context,
                 onResetTap: _onResetTap,

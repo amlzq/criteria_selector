@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'selector/action_bar_visibility.dart';
 import 'selector/constants.dart';
 import 'selector/selector_controller.dart';
 import 'selector/selector_delegate.dart';
@@ -13,13 +14,13 @@ import 'selector/selector_panel.dart';
 /// of the controller lifecycle so callers get a complete, styled component
 /// without extra wiring.
 ///
-/// The actual selection UI, including the apply/reset action bar in
-/// multi-selection mode, is produced by the supplied [delegate]. The action
-/// bar's behavior is inherently delegate-specific (for example, resetting the
-/// focused category index), so it stays owned by the delegate rather than being
-/// re-created here. [SelectorBox] forwards the [onChangeTap] callback fired by
-/// the selection; the apply/reset action bar is driven entirely by the
-/// [delegate].
+/// Inline selectors do not show the apply/reset action bar: [SelectorBox]
+/// wraps its panel in a [SelectorActionBarVisibility] scope that hides it, so
+/// selections apply immediately through [onChangeTap]. The action bar is still
+/// shown by the modal hosts ([showSelector] / [showModalBottomSelector]), which
+/// do not provide that scope. The [delegate]'s
+/// [SelectorDelegate.actionBarBuilder] only customizes the bar's UI and has no
+/// effect inside a [SelectorBox].
 ///
 /// Styling is carried entirely by the [delegate] (colors, per-widget themes
 /// and the panel decoration via [SelectorDelegate.panelTheme]). When a selector
@@ -217,10 +218,16 @@ class _SelectorBoxState extends State<SelectorBox> {
     // finally the [margin] surrounds everything. The cascading selector lays
     // out its body/skeleton with a Column(min) + Expanded, which requires a
     // bounded height; the constraints guarantee that.
-    Widget current = SelectorPanel(
-      delegate: widget.delegate,
-      controller: _controller,
-      onChangeTap: widget.onChangeTap,
+    Widget current = SelectorActionBarVisibility(
+      hidden: true,
+      child: SelectorPanel(
+        delegate: widget.delegate,
+        controller: _controller,
+        onChangeTap: widget.onChangeTap,
+        // 框内无应用栏（hidden: true），选择即生效：单选/immediate 走 apply 路径，
+        // 复用 onChangeTap 以同时覆盖 change 与 apply 两路回调（二者互斥）。
+        onApplyTap: widget.onChangeTap,
+      ),
     );
 
     final EdgeInsetsGeometry? effectivePadding =

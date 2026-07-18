@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
+import 'action_bar_visibility.dart';
 import 'constants.dart';
 import 'selector_controller.dart';
 import 'selector_delegate.dart';
@@ -265,7 +266,8 @@ class ListSelectorState extends State<ListSelector> {
                   checkboxBuilder: delegate.checkboxBuilder,
                 ),
         ),
-        if (SelectionMode.multiple == selectionMode)
+        if (SelectionMode.multiple == selectionMode &&
+            !SelectorActionBarVisibility.isHidden(context))
           delegate.actionBarBuilder?.call(
                 context,
                 onResetTap: _onResetTap,
