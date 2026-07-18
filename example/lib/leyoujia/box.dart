@@ -32,8 +32,13 @@ class _BoxPageState extends State<BoxPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(),
-              const Text('选择区域'),
+              const Text(
+                '选择区域',
+                style: TextStyle(fontSize: 20),
+              ),
               SelectorBox(
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 delegate: CascadingSelectorDelegate(
                   entriesLoader: _filtersRepo.fetchRegionData,
                   selectedEntriesLoader: _filtersRepo.fetchRegionSelectedData,
@@ -48,8 +53,13 @@ class _BoxPageState extends State<BoxPage> {
                 ),
               ),
               const SizedBox(height: 24),
-              const Text('选择价格'),
+              const Text(
+                '选择价格',
+                style: TextStyle(fontSize: 20),
+              ),
               SelectorBox(
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 delegate: GridSelectorDelegate(
                   entriesLoader: _filtersRepo.fetchBuyPriceData,
                   selectedEntriesLoader: _filtersRepo.fetchBuyPriceSelectedData,
@@ -69,8 +79,13 @@ class _BoxPageState extends State<BoxPage> {
                 ),
               ),
               const SizedBox(height: 24),
-              const Text('选择户型'),
+              const Text(
+                '选择户型',
+                style: TextStyle(fontSize: 20),
+              ),
               SelectorBox(
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 delegate: FlattenSelectorDelegate(
                   entriesLoader: _filtersRepo.fetchFloorPlanBuyData,
                   selectedEntriesLoader:
@@ -85,8 +100,13 @@ class _BoxPageState extends State<BoxPage> {
                 ),
               ),
               const SizedBox(height: 24),
-              const Text('选择排序'),
+              const Text(
+                '选择排序',
+                style: TextStyle(fontSize: 20),
+              ),
               SelectorBox(
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 delegate: ListSelectorDelegate(
                   entriesLoader: _filtersRepo.fetchSortBuyData,
                   selectedEntriesLoader: _filtersRepo.fetchSortBuySelectedData,

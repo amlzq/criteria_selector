@@ -175,8 +175,8 @@ class _SelectorExpansionTileState extends State<SelectorExpansionTile>
     final effectiveTitleStyle =
         (widget.titleStyle ?? theme.titleStyle ?? defaults.titleStyle!);
 
-    final effectiveSelectedColor =
-        widget.selectedColor ?? theme.selectedColor ?? defaults.selectedColor!;
+    // final effectiveSelectedColor =
+    //     widget.selectedColor ?? theme.selectedColor ?? defaults.selectedColor!;
 
     final trailingIcon = widget.showTrailingIcon
         ? RotationTransition(

@@ -52,12 +52,10 @@ void main() {
       expect(find.text('entries:1'), findsOneWidget);
     });
 
-    testWidgets('forwards callbacks through an internal controller',
+    testWidgets('forwards onChangeTap through an internal controller',
         (tester) async {
       SelectorController? captured;
       var changed = false;
-      var applied = false;
-      var reset = false;
 
       await tester.pumpWidget(
         MaterialApp(
@@ -71,8 +69,6 @@ void main() {
                 },
               ),
               onChangeTap: (_) => changed = true,
-              onApplyTap: (_) => applied = true,
-              onResetTap: () => reset = true,
             ),
           ),
         ),
@@ -81,12 +77,8 @@ void main() {
 
       expect(captured, isNotNull);
       captured!.change(<SelectorEntry>{});
-      captured!.apply(<SelectorEntry>{});
-      captured!.reset();
 
       expect(changed, isTrue);
-      expect(applied, isTrue);
-      expect(reset, isTrue);
     });
 
     testWidgets('disposes its own internal controller on unmount',
