@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'leyoujia/leyoujia_page.dart';
+import 'zillow/zillow.dart';
 
 void main() {
   if (kReleaseMode) {
@@ -153,8 +154,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => LeyoujiaPage(),
-                    // isZhHans ? const LeyoujiaPage() : const HousePage(),
+                    builder: (context) =>
+                        isZhHans ? const LeyoujiaPage() : const ZillowPage(),
                   ),
                 );
               },
