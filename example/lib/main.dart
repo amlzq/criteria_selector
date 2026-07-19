@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'leyoujia/leyoujia_page.dart';
+import 'playground/playground_page.dart';
 import 'zillow/zillow.dart';
 
 void main() {
@@ -146,6 +147,19 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            FilledButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const PlaygroundPage(),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.tune),
+              label: const Text('Playground'),
+            ),
+            const SizedBox(height: 12),
             TextButton(
               onPressed: () {
                 final locale = Localizations.localeOf(context);
