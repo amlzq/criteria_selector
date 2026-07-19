@@ -49,11 +49,21 @@ class SelectorOverlayHost extends StatelessWidget {
   /// The trigger UI (the bar or the button) that toggles the overlay.
   final Widget triggerChild;
 
-  /// Global rect of this host (= the trigger), used by [DropdownOverlay] to
-  /// position the panel relative to the trigger and keep it on screen.
-  Rect _targetRect(RenderBox? renderBox) {
+  /// Rect of this host (= the trigger) expressed in the coordinate system of
+  /// the [overlay] it is inserted into, used by [DropdownOverlay] to position
+  /// the panel relative to the trigger and keep it on screen.
+  ///
+  /// Measuring relative to the overlay (rather than the global root) lets the
+  /// overlay render correctly inside a scoped overlay — for example a phone
+  /// preview that wraps the selector in its own [Navigator]/[Overlay], possibly
+  /// behind a [FittedBox] transform. When [overlay] is `null` (no scoped
+  /// overlay, i.e. the default root overlay) the result is identical to the
+  /// previous root-global measurement, so behavior is unchanged for normal use.
+  Rect _targetRect(RenderBox? renderBox, RenderBox? overlayBox) {
     if (renderBox == null) return Rect.zero;
-    final offset = renderBox.localToGlobal(Offset.zero);
+    final offset = overlayBox == null
+        ? renderBox.localToGlobal(Offset.zero)
+        : renderBox.localToGlobal(Offset.zero, ancestor: overlayBox);
     return Rect.fromLTWH(
       offset.dx,
       offset.dy,
@@ -67,7 +77,11 @@ class SelectorOverlayHost extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final renderBox = context.findRenderObject() as RenderBox?;
-    final targetRect = _targetRect(renderBox);
+    // Resolve the overlay the portal is inserted into so the trigger rect can
+    // be measured relative to it (see [_targetRect]).
+    final overlayBox =
+        Overlay.maybeOf(context)?.context.findRenderObject() as RenderBox?;
+    final targetRect = _targetRect(renderBox, overlayBox);
 
     // Keep the panel at least as wide as the trigger when requested (button).
     // An explicit style.minWidth always wins; any style maxWidth still applies

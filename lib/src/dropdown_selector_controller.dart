@@ -173,6 +173,26 @@ class DropdownSelectorController extends ChangeNotifier {
   void attachSelectorDelegates(List<SelectorDelegate> selectorDelegates) {
     if (_isDisposed) return;
     _selectorDelegates = selectorDelegates;
+
+    // If the selector overlay is currently open, refresh it so that live
+    // changes to the delegate (selection mode, tile variant, layout, spacing,
+    // etc.) are reflected immediately in the open panel. The open animation is
+    // not replayed — only the panel content is rebuilt against a fresh
+    // [SelectorController] bound to the new delegate. The surrounding rebuild
+    // (driven by the bar/button widget's own `didUpdateWidget`) already re-runs
+    // the overlay entry builder, which reads [previousSelectorDelegate] and
+    // [selectorController], so no extra notify is required here.
+    //
+    // Stable apps that reuse the same delegate instances are unaffected: when
+    // the new delegate is identical (`==`) to the one already shown, nothing
+    // is rebuilt.
+    if (_isExpanded && currentIndex != null) {
+      final newDelegate = _selectorAt(currentIndex!);
+      if (newDelegate != null && newDelegate != previousSelectorDelegate) {
+        previousSelectorDelegate = newDelegate;
+        _createSelectorController();
+      }
+    }
   }
 
   SelectorDelegate? _selectorAt(int tabIndex) {
