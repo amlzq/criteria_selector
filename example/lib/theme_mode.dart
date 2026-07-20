@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../generated/l10n/app_localizations.dart';
 
 /// Shares an application-wide [ThemeMode] [ValueNotifier] through the widget
 /// tree so any page can read and update the current theme mode.

@@ -1,10 +1,10 @@
 import 'package:criteria_selector/criteria_selector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 
+import '../generated/l10n/app_localizations.dart';
 import 'leyoujia/leyoujia_page.dart';
 import 'playground/playground_page.dart';
 import 'theme_mode.dart';

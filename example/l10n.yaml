@@ -5,3 +5,5 @@ template-arb-file-zh-Hans: app_zh-Hans.arb
 template-arb-file-zh-Hant-TW: app_zh-Hant-TW.arb
 template-arb-file-zh-Hant-HK: app_zh-Hant-HK.arb
 output-localization-file: app_localizations.dart
+synthetic-package: false
+output-dir: lib/generated/l10n
