@@ -2,6 +2,7 @@ import 'package:criteria_selector/criteria_selector.dart';
 import 'package:flutter/material.dart';
 
 import '../leyoujia/house_filters_repository.dart' as leyoujia;
+import '../theme_mode.dart';
 import '../zillow/house_filters_repository.dart' as zillow;
 import 'controls_panel.dart';
 import 'phone_frame.dart' show PhoneFrame, kPhoneContentSize;
@@ -31,6 +32,17 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
 
   PlaygroundLanguage _language = PlaygroundLanguage.english;
 
+  /// Cache of reusable delegates. See [buildDelegate] for why reusing the same
+  /// instance across rebuilds is required (selection restoration).
+  final Map<String, SelectorDelegate> _delegateCache =
+      <String, SelectorDelegate>{};
+
+  /// Keeps the most recent delegate per selection-identity so [buildDelegate]
+  /// can carry the applied selection over when the column count / aspect ratio
+  /// / spacing changes (those recreate the delegate).
+  final Map<String, SelectorDelegate> _selectionCache =
+      <String, SelectorDelegate>{};
+
   var _params = const PlaygroundParams(
     entryPoint: EntryPoint.box,
     layout: Layout.grid,
@@ -41,6 +53,7 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
     tileVariant: TileVariant.filled,
     seedColor: Colors.deepPurple,
     useMaterial3: true,
+    brightness: null,
   );
 
   PlaygroundDataSource get _dataSource {
@@ -56,14 +69,27 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
   Widget build(BuildContext context) {
     final l10n = PlaygroundL10n(_language);
 
+    // When the brightness parameter is null, follow the app's resolved
+    // brightness (the ThemeMode chosen by the top-right button, including
+    // `system`); otherwise use the explicitly selected one. Read from the
+    // outer context *before* the preview's own Theme override below.
+    final effectiveBrightness =
+        _params.brightness ?? Theme.of(context).brightness;
+
     final paramTheme = ThemeData(
       useMaterial3: _params.useMaterial3,
       colorScheme: ColorScheme.fromSeed(
         seedColor: _params.seedColor,
-        brightness: Brightness.light,
+        brightness: effectiveBrightness,
       ),
     );
-    final delegate = buildDelegate(_params, _dataSource);
+    final delegate = buildDelegate(
+      _params,
+      _dataSource,
+      _language,
+      delegateCache: _delegateCache,
+      selectionCache: _selectionCache,
+    );
 
     // Wrap the phone screen with a theme that is driven entirely by the
     // playground parameters, including the dropdown overlay selector theme.
@@ -78,7 +104,14 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
           ),
         ],
       ),
-      child: buildPhoneScreen(_params, delegate, l10n),
+      child: buildPhoneScreen(
+        _params,
+        delegate,
+        l10n,
+        data: _dataSource,
+        delegateCache: _delegateCache,
+        selectionCache: _selectionCache,
+      ),
     );
 
     // Scope the dropdown overlay, dialog and bottom sheet to the phone: a
@@ -126,7 +159,6 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: const BackButton(),
         title: Text(l10n.title),
         actions: <Widget>[
           _LanguageSwitch(
@@ -134,6 +166,8 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
             tooltip: l10n.languageTooltip,
             onChanged: (lang) => setState(() => _language = lang),
           ),
+          const SizedBox(width: 8),
+          const ThemeModeButton(),
           const SizedBox(width: 8),
         ],
       ),
@@ -156,7 +190,10 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
                   // available area while preserving aspect ratio.
                   child: FittedBox(
                     fit: BoxFit.contain,
-                    child: PhoneFrame(screen: localizedPhone),
+                    child: PhoneFrame(
+                      screen: localizedPhone,
+                      brightness: effectiveBrightness,
+                    ),
                   ),
                 ),
               ],
@@ -172,7 +209,10 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
                 ),
                 FittedBox(
                   fit: BoxFit.contain,
-                  child: PhoneFrame(screen: localizedPhone),
+                  child: PhoneFrame(
+                    screen: localizedPhone,
+                    brightness: effectiveBrightness,
+                  ),
                 ),
               ],
             ),

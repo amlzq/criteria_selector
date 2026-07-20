@@ -316,15 +316,22 @@ class _HousePageState extends State<HousePage> {
           ValueListenableBuilder<double>(
             valueListenable: _scrollOffsetVN,
             builder: (context, offset, child) {
+              final colorScheme = Theme.of(context).colorScheme;
+              final isDark = colorScheme.brightness == Brightness.dark;
               final isCollapsed = offset >= _bannerHeight;
+              // Expanded: over the banner image, keep light-on-image colors.
+              // Collapsed: over the surface, follow the current theme.
               final foregroundColor =
-                  isCollapsed ? Colors.black87 : Colors.white;
-              final searchFillColor =
-                  isCollapsed ? const Color(0xFFF2F2F2) : Colors.white;
+                  isCollapsed ? colorScheme.onSurface : Colors.white;
+              final searchFillColor = isCollapsed
+                  ? colorScheme.surfaceContainerHighest
+                  : Colors.white;
               final searchHintColor =
-                  isCollapsed ? Colors.grey[600]! : Colors.grey;
+                  isCollapsed ? colorScheme.onSurfaceVariant : Colors.grey;
               final systemOverlayStyle = isCollapsed
-                  ? SystemUiOverlayStyle.dark
+                  ? (isDark
+                      ? SystemUiOverlayStyle.light
+                      : SystemUiOverlayStyle.dark)
                   : SystemUiOverlayStyle.light;
               return _buildAppBar(
                 l10n,
@@ -338,7 +345,7 @@ class _HousePageState extends State<HousePage> {
             },
           ),
           const _NavigationGrid(),
-          _buildSectionHeader(l10n?.sell ?? 'Homes for sale'),
+          _buildSectionHeader(context, l10n?.sell ?? 'Homes for sale'),
           _buildStickyFilter(l10n),
           _buildHouseList(l10n),
         ],
@@ -432,16 +439,16 @@ class _HousePageState extends State<HousePage> {
     );
   }
 
-  Widget _buildSectionHeader(String title) {
+  Widget _buildSectionHeader(BuildContext context, String title) {
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(15, 16, 15, 12),
         child: Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
       ),
@@ -825,6 +832,9 @@ class _NavigationGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final cardColor = Theme.of(context).cardColor;
+    final onSurface = colorScheme.onSurface;
     const data = [
       _NavData('1.2k', 'For sale', Color(0xFF4CAF50)),
       _NavData('320', 'New', Color(0xFF2196F3)),
@@ -844,7 +854,7 @@ class _NavigationGrid extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
         child: Card(
           elevation: 0,
-          color: Colors.white,
+          color: cardColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -911,8 +921,8 @@ class _NavigationGrid extends StatelessWidget {
                                     item.label,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                        fontSize: 12, color: Colors.black87),
+                                    style: TextStyle(
+                                        fontSize: 12, color: onSurface),
                                   ),
                                 ],
                               ),
@@ -929,15 +939,14 @@ class _NavigationGrid extends StatelessWidget {
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Icon(item.icon,
-                                      size: 28, color: Colors.black87),
+                                  Icon(item.icon, size: 28, color: onSurface),
                                   const SizedBox(height: 6),
                                   Text(
                                     item.label,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                        fontSize: 12, color: Colors.black87),
+                                    style: TextStyle(
+                                        fontSize: 12, color: onSurface),
                                   ),
                                 ],
                               ),

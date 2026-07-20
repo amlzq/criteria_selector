@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../theme_mode.dart';
 import 'box.dart';
 import 'button.dart';
 import 'buy_page.dart';
@@ -16,7 +17,8 @@ class LeyoujiaPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)?.leyoujia ?? ''),
+        title: const Text('Example'),
+        actions: const [ThemeModeButton()],
       ),
       body: Center(
         child: Column(

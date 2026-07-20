@@ -341,15 +341,23 @@ class _BuyPageState extends State<BuyPage> {
           ValueListenableBuilder<double>(
             valueListenable: _scrollOffsetVN,
             builder: (context, offset, child) {
+              final colorScheme = Theme.of(context).colorScheme;
+              final isDark = colorScheme.brightness == Brightness.dark;
               final isCollapsed = offset >= _bannerHeight;
+              // Expanded: over the banner image, keep light-on-image colors.
+              // Collapsed: over the surface, follow the current theme.
               final foregroundColor =
-                  isCollapsed ? Colors.black87 : Colors.white;
-              final searchFillColor =
-                  isCollapsed ? const Color(0xFFF2F2F2) : Colors.white;
-              final searchHintColor =
-                  isCollapsed ? Colors.grey[600]! : Colors.grey;
+                  isCollapsed ? colorScheme.onSurface : Colors.white;
+              final searchFillColor = isCollapsed
+                  ? colorScheme.surfaceContainerHighest
+                  : Colors.white;
+              final searchHintColor = isCollapsed
+                  ? colorScheme.onSurfaceVariant
+                  : Colors.grey;
               final systemOverlayStyle = isCollapsed
-                  ? SystemUiOverlayStyle.dark
+                  ? (isDark
+                      ? SystemUiOverlayStyle.light
+                      : SystemUiOverlayStyle.dark)
                   : SystemUiOverlayStyle.light;
               return _buildAppBar(
                 l10n,
@@ -363,7 +371,7 @@ class _BuyPageState extends State<BuyPage> {
             },
           ),
           const _NavigationGrid(),
-          _buildSectionHeader('全部房源'),
+          _buildSectionHeader(context, '全部房源'),
           _buildStickyFilter(l10n),
           _buildHouseList(l10n),
         ],
@@ -463,16 +471,16 @@ class _BuyPageState extends State<BuyPage> {
     );
   }
 
-  Widget _buildSectionHeader(String title) {
+  Widget _buildSectionHeader(BuildContext context, String title) {
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(15, 16, 15, 12),
         child: Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
       ),
@@ -771,7 +779,10 @@ class _BuyPageState extends State<BuyPage> {
         child: Center(
           child: Text(
             '${l10n?.noMore ?? '没有更多了'} · $pageInfo',
-            style: const TextStyle(color: Colors.grey, fontSize: 13),
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              fontSize: 13,
+            ),
           ),
         ),
       );
@@ -781,7 +792,10 @@ class _BuyPageState extends State<BuyPage> {
       child: Center(
         child: Text(
           pageInfo,
-          style: const TextStyle(color: Colors.grey, fontSize: 13),
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+            fontSize: 13,
+          ),
         ),
       ),
     );
@@ -807,6 +821,9 @@ class _NavigationGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final cardColor = Theme.of(context).cardColor;
+    final onSurface = colorScheme.onSurface;
     const data = [
       _NavData('768', '全部楼盘', Color(0xFFFF6B6B)),
       _NavData('605', '在售楼盘', Color(0xFFFFA726)),
@@ -824,9 +841,9 @@ class _NavigationGrid extends StatelessWidget {
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
-        child: Card(
+        child:         Card(
           elevation: 0,
-          color: Colors.white,
+          color: cardColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -889,8 +906,8 @@ class _NavigationGrid extends StatelessWidget {
                                   const SizedBox(height: 8),
                                   Text(
                                     item.label,
-                                    style: const TextStyle(
-                                        fontSize: 12, color: Colors.black87),
+                                    style: TextStyle(
+                                        fontSize: 12, color: onSurface),
                                   ),
                                 ],
                               ),
@@ -907,13 +924,12 @@ class _NavigationGrid extends StatelessWidget {
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Icon(item.icon,
-                                      size: 28, color: Colors.black87),
+                                  Icon(item.icon, size: 28, color: onSurface),
                                   const SizedBox(height: 6),
                                   Text(
                                     item.label,
-                                    style: const TextStyle(
-                                        fontSize: 12, color: Colors.black87),
+                                    style: TextStyle(
+                                        fontSize: 12, color: onSurface),
                                   ),
                                 ],
                               ),

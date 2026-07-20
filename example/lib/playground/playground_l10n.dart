@@ -69,6 +69,12 @@ class PlaygroundL10n {
   // Material 3 switch.
   String get material3 => 'Material 3';
 
+  // Brightness segments.
+  String get brightness => _t('Brightness', '明暗');
+  String get follow => _t('Follow App', '跟随应用');
+  String get light => _t('Light', '浅色');
+  String get dark => _t('Dark', '深色');
+
   // Layout options.
   String get layoutCascading => _t('Cascading', '联动');
   String get layoutGrid => _t('Grid', '网格');
@@ -85,4 +91,9 @@ class PlaygroundL10n {
   String get filterLabel => _t('Filter', '筛选');
   String get tapBarHint => _t('Tap the bar to open the selector', '点击筛选栏打开选择器');
   String get openSelector => _t('Open Selector', '打开选择器');
+
+  // Callback result panel.
+  String get resultPanelTitle => _t('Callback results', '回调结果');
+  String get onChangedLabel => 'onChanged';
+  String get onAppliedLabel => 'onApplied';
 }

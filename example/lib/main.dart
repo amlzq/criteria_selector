@@ -6,7 +6,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'leyoujia/leyoujia_page.dart';
 import 'playground/playground_page.dart';
-import 'zillow/zillow.dart';
+import 'theme_mode.dart';
+import 'zillow/zillow_page.dart';
 
 void main() {
   if (kReleaseMode) {
@@ -23,7 +24,14 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  ThemeMode _themeMode = ThemeMode.system;
+  final ValueNotifier<ThemeMode> _themeModeController =
+      ValueNotifier<ThemeMode>(ThemeMode.system);
+
+  @override
+  void dispose() {
+    _themeModeController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,142 +50,77 @@ class _MyAppState extends State<MyApp> {
       ),
       useMaterial3: true,
     );
-    return MaterialApp(
-      onGenerateTitle: (context) => AppLocalizations.of(context)?.appName ?? '',
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      themeMode: _themeMode,
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        CriteriaSelectorLocalizationsDelegate(),
-      ],
-      supportedLocales: const [
-        Locale('en'),
-        Locale.fromSubtags(languageCode: 'zh'),
-        Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans'),
-        Locale.fromSubtags(
-          languageCode: 'zh',
-          scriptCode: 'Hant',
-          countryCode: 'TW',
-        ),
-        Locale.fromSubtags(
-          languageCode: 'zh',
-          scriptCode: 'Hant',
-          countryCode: 'HK',
-        ),
-      ],
-      builder: (context, child) {
-        final baseTheme = Theme.of(context);
-        final theme = baseTheme.copyWith(
-          extensions: <ThemeExtension<dynamic>>[
-            DropdownSelectorBarTheme(
-              overlayStyle:
-                  const DropdownOverlayStyle(barrierColor: Colors.black54),
-              selectorTheme: SelectorThemeData(baseTheme),
-            ),
-          ],
-        );
-        return Theme(
-          data: theme,
-          child: child ?? const SizedBox.shrink(),
-        );
-      },
-      home: MyHomePage(
-        themeMode: _themeMode,
-        onThemeModeChanged: (mode) {
-          setState(() {
-            _themeMode = mode;
-          });
+    return ThemeModeScope(
+      controller: _themeModeController,
+      child: ValueListenableBuilder<ThemeMode>(
+        valueListenable: _themeModeController,
+        builder: (context, themeMode, _) {
+          return MaterialApp(
+            onGenerateTitle: (context) =>
+                AppLocalizations.of(context)?.appName ?? '',
+            theme: lightTheme,
+            darkTheme: darkTheme,
+            themeMode: themeMode,
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+              CriteriaSelectorLocalizationsDelegate(),
+            ],
+            supportedLocales: const [
+              Locale('en'),
+              Locale.fromSubtags(languageCode: 'zh'),
+              Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans'),
+              Locale.fromSubtags(
+                languageCode: 'zh',
+                scriptCode: 'Hant',
+                countryCode: 'TW',
+              ),
+              Locale.fromSubtags(
+                languageCode: 'zh',
+                scriptCode: 'Hant',
+                countryCode: 'HK',
+              ),
+            ],
+            builder: (context, child) {
+              final baseTheme = Theme.of(context);
+              final theme = baseTheme.copyWith(
+                extensions: <ThemeExtension<dynamic>>[
+                  DropdownSelectorBarTheme(
+                    overlayStyle: const DropdownOverlayStyle(
+                        barrierColor: Colors.black54),
+                    selectorTheme: SelectorThemeData(baseTheme),
+                  ),
+                ],
+              );
+              return Theme(
+                data: theme,
+                child: child ?? const SizedBox.shrink(),
+              );
+            },
+            home: _resolveHomePage(),
+          );
         },
       ),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({
-    super.key,
-    required this.themeMode,
-    required this.onThemeModeChanged,
-  });
-
-  final ThemeMode themeMode;
-  final ValueChanged<ThemeMode> onThemeModeChanged;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(l10n?.appName ?? ''),
-        actions: [
-          PopupMenuButton<ThemeMode>(
-            initialValue: widget.themeMode,
-            onSelected: widget.onThemeModeChanged,
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: ThemeMode.system,
-                child: Text(l10n?.themeSystem ?? 'System'),
-              ),
-              PopupMenuItem(
-                value: ThemeMode.light,
-                child: Text(l10n?.themeLight ?? 'Light'),
-              ),
-              PopupMenuItem(
-                value: ThemeMode.dark,
-                child: Text(l10n?.themeDark ?? 'Dark'),
-              ),
-            ],
-            icon: const Icon(Icons.brightness_6_outlined),
-            tooltip: l10n?.themeMode ?? 'Theme',
-          ),
-        ],
-      ),
-      body: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            FilledButton.icon(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const PlaygroundPage(),
-                  ),
-                );
-              },
-              icon: const Icon(Icons.tune),
-              label: const Text('Playground'),
-            ),
-            const SizedBox(height: 12),
-            TextButton(
-              onPressed: () {
-                final locale = Localizations.localeOf(context);
-                final isZhHans =
-                    locale.languageCode == 'zh' && locale.scriptCode == 'Hans';
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        isZhHans ? const LeyoujiaPage() : const ZillowPage(),
-                  ),
-                );
-              },
-              child: Text(l10n?.realEstate ?? ''),
-            ),
-          ],
-        ),
-      ),
-    );
+/// Resolves the default landing page based on the current platform and locale.
+///
+/// - Web or desktop → [PlaygroundPage].
+/// - Mobile with a Chinese locale → [LeyoujiaPage].
+/// - Mobile with any other locale → [ZillowPage].
+Widget _resolveHomePage() {
+  final bool isDesktop = !kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.windows ||
+          defaultTargetPlatform == TargetPlatform.macOS ||
+          defaultTargetPlatform == TargetPlatform.linux);
+  if (kIsWeb || isDesktop) {
+    return const PlaygroundPage();
   }
+  final locale = WidgetsBinding.instance.platformDispatcher.locale;
+  final bool isChinese = locale.languageCode == 'zh';
+  return isChinese ? const LeyoujiaPage() : const ZillowPage();
 }

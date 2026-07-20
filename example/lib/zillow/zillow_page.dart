@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../theme_mode.dart';
 import 'box.dart';
 import 'button.dart';
 import 'dialog_bottom_sheet.dart';
@@ -14,7 +15,8 @@ class ZillowPage extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n?.zillow ?? 'Zillow'),
+        title: Text(l10n?.zillow ?? 'Example'),
+        actions: const [ThemeModeButton()],
       ),
       body: Center(
         child: Column(
@@ -26,7 +28,7 @@ class ZillowPage extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => const HousePage()),
                 );
               },
-              child: Text(l10n?.sell ?? 'Homes for sale'),
+              child: Text(l10n?.sell ?? 'DropdownSelectorBar'),
             ),
             TextButton(
               onPressed: () {

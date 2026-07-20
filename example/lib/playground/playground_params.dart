@@ -37,6 +37,12 @@ class PlaygroundParams {
   final Color seedColor;
   final bool useMaterial3;
 
+  /// Explicit brightness of the simulated phone preview. When `null`, the
+  /// preview follows the app's resolved brightness (the [ThemeMode] set by the
+  /// top-right button, including `system`). This keeps the independent-preview
+  /// ability while allowing a one-click "follow app" sync.
+  final Brightness? brightness;
+
   const PlaygroundParams({
     required this.entryPoint,
     required this.layout,
@@ -47,6 +53,7 @@ class PlaygroundParams {
     required this.tileVariant,
     required this.seedColor,
     required this.useMaterial3,
+    this.brightness,
   });
 
   PlaygroundParams copyWith({
@@ -59,6 +66,10 @@ class PlaygroundParams {
     TileVariant? tileVariant,
     Color? seedColor,
     bool? useMaterial3,
+    Brightness? brightness,
+    // Nullable fields need an explicit "clear" flag because `?? this.x` cannot
+    // tell "not provided" apart from "provided as null".
+    bool clearBrightness = false,
   }) {
     return PlaygroundParams(
       entryPoint: entryPoint ?? this.entryPoint,
@@ -70,6 +81,9 @@ class PlaygroundParams {
       tileVariant: tileVariant ?? this.tileVariant,
       seedColor: seedColor ?? this.seedColor,
       useMaterial3: useMaterial3 ?? this.useMaterial3,
+      brightness: clearBrightness
+          ? null
+          : (brightness ?? this.brightness),
     );
   }
 }

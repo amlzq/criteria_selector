@@ -21,6 +21,11 @@ class ControlsPanel extends StatelessWidget {
   bool get _gridRelevant =>
       params.layout == Layout.grid || params.layout == Layout.flatten;
 
+  // The dropdown bar demo owns 4 fixed tabs (one per layout family), so the
+  // global Layout selector no longer affects it and is disabled for that entry
+  // point.
+  bool get _layoutEnabled => params.entryPoint != EntryPoint.dropdownBar;
+
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -39,9 +44,10 @@ class ControlsPanel extends StatelessWidget {
           onChanged: (v) => onChanged(params.copyWith(entryPoint: v)),
         ),
         const SizedBox(height: 16),
-        _SectionTitle(l10n.layout),
+        _SectionTitle(l10n.layout, enabled: _layoutEnabled),
         _EnumDropdown<Layout>(
           value: params.layout,
+          enabled: _layoutEnabled,
           items: {
             Layout.cascading: l10n.layoutCascading,
             Layout.grid: l10n.layoutGrid,
@@ -110,6 +116,23 @@ class ControlsPanel extends StatelessWidget {
               ? (v) => onChanged(params.copyWith(spacing: v))
               : null,
         ),
+        const SizedBox(height: 16),
+        _SectionTitle(l10n.brightness),
+        SegmentedButton<Brightness?>(
+          selected: {params.brightness},
+          onSelectionChanged: (set) {
+            final brightness = set.first;
+            onChanged(params.copyWith(
+              brightness: brightness,
+              clearBrightness: brightness == null,
+            ));
+          },
+          segments: <ButtonSegment<Brightness?>>[
+            ButtonSegment(value: null, label: Text(l10n.follow)),
+            ButtonSegment(value: Brightness.light, label: Text(l10n.light)),
+            ButtonSegment(value: Brightness.dark, label: Text(l10n.dark)),
+          ],
+        ),
         const SizedBox(height: 8),
         _SectionTitle(l10n.seedColor),
         Wrap(
@@ -138,7 +161,8 @@ class ControlsPanel extends StatelessWidget {
 
 class _SectionTitle extends StatelessWidget {
   final String text;
-  const _SectionTitle(this.text);
+  final bool enabled;
+  const _SectionTitle(this.text, {this.enabled = true});
 
   @override
   Widget build(BuildContext context) {
@@ -148,7 +172,7 @@ class _SectionTitle extends StatelessWidget {
       child: Text(
         text,
         style: Theme.of(context).textTheme.labelMedium?.copyWith(
-              color: scheme.primary,
+              color: enabled ? scheme.primary : scheme.onSurfaceVariant,
               fontWeight: FontWeight.w600,
             ),
       ),
@@ -160,11 +184,13 @@ class _EnumDropdown<T> extends StatelessWidget {
   final T value;
   final Map<T, String> items;
   final ValueChanged<T> onChanged;
+  final bool enabled;
 
   const _EnumDropdown({
     required this.value,
     required this.items,
     required this.onChanged,
+    this.enabled = true,
   });
 
   @override
@@ -176,7 +202,7 @@ class _EnumDropdown<T> extends StatelessWidget {
         for (final entry in items.entries)
           DropdownMenuItem<T>(value: entry.key, child: Text(entry.value)),
       ],
-      onChanged: (v) => onChanged(v as T),
+      onChanged: enabled ? (v) => onChanged(v as T) : null,
     );
   }
 }
