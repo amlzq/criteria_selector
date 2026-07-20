@@ -31,7 +31,7 @@ jobs:
 
       - name: Build web
         working-directory: example
-        run: flutter build web --release --no-wasm
+        run: flutter build web --release
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/pages-action@v1
