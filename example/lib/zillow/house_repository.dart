@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
@@ -54,8 +53,7 @@ class _HousePager<H> {
   int get totalCount => _totalCount;
 
   /// Total page count (3~9).
-  int get totalPages =>
-      _totalCount == 0 ? 0 : (_totalCount / pageSize).ceil();
+  int get totalPages => _totalCount == 0 ? 0 : (_totalCount / pageSize).ceil();
 
   /// Number of loaded entries.
   int get loadedCount => _displayed.length;
@@ -190,7 +188,7 @@ class HouseRepository {
 
 class HouseFilter {
   String? cityId;
-  List<Map<String, dynamic>>? region;
+  List<Map<String, dynamic>>? neighborhood;
   List<Map<String, dynamic>>? listPrice;
   List<Map<String, dynamic>>? monthlyPayment;
   List<String>? bedrooms;
@@ -206,7 +204,7 @@ class HouseFilter {
 
   HouseFilter({
     required this.cityId,
-    this.region,
+    this.neighborhood,
     this.listPrice,
     this.monthlyPayment,
     this.bedrooms,
@@ -224,7 +222,7 @@ class HouseFilter {
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     data['city_id'] = cityId;
-    data['region'] = region;
+    data['neighborhood'] = neighborhood;
     data['list_price'] = listPrice;
     data['monthly_payment'] = monthlyPayment;
     data['bedrooms'] = bedrooms;

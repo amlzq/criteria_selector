@@ -167,7 +167,7 @@ class _BuyPageState extends State<BuyPage> {
     final filter = HouseFilter(cityId: userCityId);
     if (result.tabIndex == 0) {
       // 区域
-      _filtersRepo.regionResult = result;
+      _filtersRepo.regionResult = result.selected;
       final category = result.selected.firstOrNull;
       if (category == null) return null;
       if (category.id == 'region') {
@@ -197,7 +197,7 @@ class _BuyPageState extends State<BuyPage> {
       }
     } else if (result.tabIndex == 1) {
       // 价格筛选
-      _filtersRepo.buyPriceResult = result;
+      _filtersRepo.buyPriceResult = result.selected;
       final category = result.selected.firstOrNull;
       if (category == null) return null;
       if (category.id == 'total') {
@@ -224,7 +224,7 @@ class _BuyPageState extends State<BuyPage> {
       }
     } else if (result.tabIndex == 2) {
       // 户型筛选
-      _filtersRepo.floorPlanBuyResult = result;
+      _filtersRepo.floorPlanBuyResult = result.selected;
       filter.livingRoom = result.childIdsOf('living_room');
       filter.bathroom = result.childIdsOf('bathroom');
       filter.balcony = result.childIdsOf('balcony');
@@ -238,7 +238,7 @@ class _BuyPageState extends State<BuyPage> {
           .toList(growable: false);
     } else if (result.tabIndex == 3) {
       // 更多筛选
-      _filtersRepo.moreBuyResult = result;
+      _filtersRepo.moreBuyResult = result.selected;
       filter.homeType = result.childIdsOf('home_type');
       filter.saleStatus = result.childIdsOf('sale_status');
       filter.openTime = result.childIdsOf('open_time');
@@ -248,7 +248,7 @@ class _BuyPageState extends State<BuyPage> {
       filter.houseViewService = result.childIdsOf('house_view_service');
     } else if (result.tabIndex == 4) {
       // 排序筛选
-      _filtersRepo.sortBuyResult = result;
+      _filtersRepo.sortBuyResult = result.selected;
       filter.sort = result.firstSelectedId;
     }
     return filter;

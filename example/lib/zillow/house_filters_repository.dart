@@ -27,7 +27,7 @@ class HouseFiltersRepository {
     if (noMaxHintText != null) this.noMaxHintText = noMaxHintText;
   }
 
-  DropdownSelectorResult? neighborhoodResult;
+  SelectorEntries? neighborhoodResult;
 
   final neighborhoodIniteialSelected = {
     SelectorCategoryEntry(
@@ -38,7 +38,7 @@ class HouseFiltersRepository {
   };
 
   SelectorEntries? fetchNeighborhoodSelectedData() =>
-      neighborhoodResult?.selected ?? neighborhoodIniteialSelected;
+      neighborhoodResult ?? neighborhoodIniteialSelected;
 
   SelectorEntries? fetchNeighborhoodResetData() => neighborhoodIniteialSelected;
 
@@ -78,9 +78,9 @@ class HouseFiltersRepository {
     return Future.value(entries);
   }
 
-  DropdownSelectorResult? priceResult;
+  SelectorEntries? priceResult;
 
-  SelectorEntries? fetchPriceSelectedData() => priceResult?.selected;
+  SelectorEntries? fetchPriceSelectedData() => priceResult;
 
   Future<SelectorEntries> fetchPriceData() async {
     // simulate network delay
@@ -125,7 +125,7 @@ class HouseFiltersRepository {
     return Future.value(entries);
   }
 
-  DropdownSelectorResult? roomsResult;
+  SelectorEntries? roomsResult;
 
   final roomsIniteialSelected = {
     SelectorCategoryEntry(
@@ -141,7 +141,7 @@ class HouseFiltersRepository {
   };
 
   SelectorEntries? fetchRoomsSelectedData() =>
-      roomsResult?.selected; // ?? roomsIniteialSelected;
+      roomsResult; // ?? roomsIniteialSelected;
 
   SelectorEntries? fetchRoomsResetData() => roomsIniteialSelected;
 
@@ -181,12 +181,12 @@ class HouseFiltersRepository {
     return Future.value(entries);
   }
 
-  DropdownSelectorResult? moreResult;
+  SelectorEntries? moreResult;
 
   final moreIniteialSelected = <SelectorCategoryEntry>{};
 
   SelectorEntries? fetchMoreSelectedData() =>
-      moreResult?.selected ?? moreIniteialSelected;
+      moreResult ?? moreIniteialSelected;
 
   SelectorEntries? fetchMoreResetData() => moreIniteialSelected;
 
@@ -262,14 +262,14 @@ class HouseFiltersRepository {
     return Future.value(entries);
   }
 
-  DropdownSelectorResult? sortResult;
+  SelectorEntries? sortResult;
 
   final sortIniteialSelected = <SelectorTextEntry>{
     SelectorTextEntry.id(id: 'comprehensive_sort')
   };
 
   SelectorEntries? fetchSortSelectedData() =>
-      sortResult?.selected ?? sortIniteialSelected;
+      sortResult ?? sortIniteialSelected;
 
   SelectorEntries? fetchSortResetData() => sortIniteialSelected;
 

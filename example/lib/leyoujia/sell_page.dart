@@ -79,7 +79,7 @@ class _SellPageState extends State<SellPage> {
     _filter ??= HouseFilter(cityId: userCityId);
     if (result.tabIndex == 0) {
       // 区域筛选
-      _filtersRepo.regionResult = result;
+      _filtersRepo.regionResult = result.selected;
       final category = result.selected.firstOrNull;
       if (category == null) return;
       if (category.id == 'region') {
@@ -109,7 +109,7 @@ class _SellPageState extends State<SellPage> {
       }
     } else if (result.tabIndex == 1) {
       // 价格筛选
-      _filtersRepo.sellPriceResult = result;
+      _filtersRepo.sellPriceResult = result.selected;
       final category = result.selected.firstOrNull;
       if (category == null) return;
       if (category.id == 'total') {
@@ -135,7 +135,7 @@ class _SellPageState extends State<SellPage> {
       }
     } else if (result.tabIndex == 2) {
       // 户型筛选
-      _filtersRepo.floorPlanSellResult = result;
+      _filtersRepo.floorPlanSellResult = result.selected;
       _filter?.livingRoom = result.childIdsOf('living_room');
       _filter?.bathroom = result.childIdsOf('bathroom');
       _filter?.balcony = result.childIdsOf('balcony');
@@ -149,7 +149,7 @@ class _SellPageState extends State<SellPage> {
           .toList(growable: false);
     } else if (result.tabIndex == 3) {
       // 排序筛选
-      _filtersRepo.sortSellResult = result;
+      _filtersRepo.sortSellResult = result.selected;
       _filter?.sort = result.firstSelectedId;
     }
     _repo.refreshData(_filter!);

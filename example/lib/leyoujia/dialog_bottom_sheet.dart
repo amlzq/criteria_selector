@@ -3,6 +3,7 @@
 import 'package:criteria_selector/criteria_selector.dart';
 import 'package:example/my_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'house_filters_repository.dart';
 
@@ -21,6 +22,40 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
   void initState() {
     super.initState();
     _filtersRepo = HouseFiltersRepository();
+  }
+
+  void _showSelectedResult(SelectorEntries result) {
+    final l10n = AppLocalizations.of(context);
+    final conditions = '${result.flatten()}';
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(l10n?.filterUpdated ?? ''),
+        action: SnackBarAction(
+          label: l10n?.view ?? '',
+          onPressed: () {
+            showModalBottomSheet<void>(
+              context: context,
+              isScrollControlled: true,
+              builder: (context) {
+                return SafeArea(
+                  child: FractionallySizedBox(
+                    heightFactor: 0.8,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: SingleChildScrollView(
+                        child: SelectableText(
+                          l10n?.filterConditions(conditions) ?? conditions,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+        ),
+      ),
+    );
   }
 
   @override
@@ -56,10 +91,12 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 // showSelector). The query helpers now live on
                 // `SelectorEntriesExtension`, so they can be called directly.
                 if (result == null) return;
-                print('region first: ${result.firstSelectedId}');
+                _filtersRepo.regionResult = result;
+                _showSelectedResult(result);
+                debugPrint('region first: ${result.firstSelectedId}');
                 final regionFirst = result.firstSelectedId;
                 if (regionFirst != null) {
-                  print(
+                  debugPrint(
                       'region cascading: ${result.cascadingPairsOf(regionFirst)}');
                 }
               },
@@ -89,9 +126,13 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                   title: const Text('价格选择器'),
                 );
                 if (result == null) return;
-                print('price first: ${result.firstSelectedId}');
-                print('price total ranges: ${result.childRangesOf('total')}');
-                print('price unit ranges: ${result.childRangesOf('unit')}');
+                _filtersRepo.buyPriceResult = result;
+                _showSelectedResult(result);
+                debugPrint('price first: ${result.firstSelectedId}');
+                debugPrint(
+                    'price total ranges: ${result.childRangesOf('total')}');
+                debugPrint(
+                    'price unit ranges: ${result.childRangesOf('unit')}');
               },
               child: const Text('Show Price Selector'),
             ),
@@ -120,7 +161,10 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                   ),
                   title: const Text('户型选择器'),
                 );
-                print('result: $result');
+                if (result == null) return;
+                _filtersRepo.floorPlanBuyResult = result;
+                _showSelectedResult(result);
+                debugPrint('result: $result');
               },
               child: const Text('Show FloorPlan Selector'),
             ),
@@ -147,7 +191,10 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                   clipBehavior: Clip.antiAlias,
                   title: const Text('更多选择器'),
                 );
-                print('result: $result');
+                if (result == null) return;
+                _filtersRepo.moreBuyResult = result;
+                _showSelectedResult(result);
+                debugPrint('result: $result');
               },
               child: const Text('Show More Selector'),
             ),
@@ -180,7 +227,9 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                   title: const Text('排序选择器'),
                 );
                 if (result == null) return;
-                print('sort id: ${result.firstSelectedId}');
+                _filtersRepo.sortBuyResult = result;
+                _showSelectedResult(result);
+                debugPrint('sort id: ${result.firstSelectedId}');
               },
               child: const Text('Show Sort Selector'),
             ),
@@ -206,10 +255,12 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                   title: const Text('区域选择器'),
                 );
                 if (result == null) return;
-                print('region first: ${result.firstSelectedId}');
+                _filtersRepo.regionResult = result;
+                _showSelectedResult(result);
+                debugPrint('region first: ${result.firstSelectedId}');
                 final regionFirst = result.firstSelectedId;
                 if (regionFirst != null) {
-                  print(
+                  debugPrint(
                       'region cascading: ${result.cascadingPairsOf(regionFirst)}');
                 }
               },
@@ -239,9 +290,13 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                   title: const Text('价格选择器'),
                 );
                 if (result == null) return;
-                print('price first: ${result.firstSelectedId}');
-                print('price total ranges: ${result.childRangesOf('total')}');
-                print('price unit ranges: ${result.childRangesOf('unit')}');
+                _filtersRepo.buyPriceResult = result;
+                _showSelectedResult(result);
+                debugPrint('price first: ${result.firstSelectedId}');
+                debugPrint(
+                    'price total ranges: ${result.childRangesOf('total')}');
+                debugPrint(
+                    'price unit ranges: ${result.childRangesOf('unit')}');
               },
               child: const Text('Show Price Selector'),
             ),
@@ -268,7 +323,10 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                   clipBehavior: Clip.antiAlias,
                   title: const Text('户型选择器'),
                 );
-                print('result: $result');
+                if (result == null) return;
+                _filtersRepo.floorPlanBuyResult = result;
+                _showSelectedResult(result);
+                debugPrint('result: $result');
               },
               child: const Text('Show FloorPlan Selector'),
             ),
@@ -297,7 +355,10 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                   ),
                   title: const Text('更多选择器'),
                 );
-                print('result: $result');
+                if (result == null) return;
+                _filtersRepo.moreBuyResult = result;
+                _showSelectedResult(result);
+                debugPrint('result: $result');
               },
               child: const Text('Show More Selector'),
             ),
@@ -318,7 +379,9 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                   title: const Text('排序选择器'),
                 );
                 if (result == null) return;
-                print('sort id: ${result.firstSelectedId}');
+                _filtersRepo.sortBuyResult = result;
+                _showSelectedResult(result);
+                debugPrint('sort id: ${result.firstSelectedId}');
               },
               child: const Text('Show Sort Selector'),
             ),

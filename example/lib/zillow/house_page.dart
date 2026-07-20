@@ -174,8 +174,8 @@ class _HousePageState extends State<HousePage> {
     final filter = HouseFilter(cityId: userCityId);
     if (result.tabIndex == 0) {
       // Neighborhood filter
-      _filtersRepo.neighborhoodResult = result;
-      filter.region = result
+      _filtersRepo.neighborhoodResult = result.selected;
+      filter.neighborhood = result
           .cascadingPairsOf('neighborhood')
           .map((p) => {
                 "region_id": p.id,
@@ -184,7 +184,7 @@ class _HousePageState extends State<HousePage> {
           .toList(growable: false);
     } else if (result.tabIndex == 1) {
       // Price filter
-      _filtersRepo.priceResult = result;
+      _filtersRepo.priceResult = result.selected;
       final category = result.selected.firstOrNull;
       if (category == null) return null;
       if (category.id == 'list_price') {
@@ -208,12 +208,12 @@ class _HousePageState extends State<HousePage> {
       }
     } else if (result.tabIndex == 2) {
       // Rooms filter
-      _filtersRepo.roomsResult = result;
+      _filtersRepo.roomsResult = result.selected;
       filter.bedrooms = result.childIdsOf('bedrooms');
       filter.bathrooms = result.childIdsOf('bathrooms');
     } else if (result.tabIndex == 3) {
       // More filter
-      _filtersRepo.moreResult = result;
+      _filtersRepo.moreResult = result.selected;
       filter.homeType = result.childIdsOf('home_type');
       filter.listsDetails = result.childIdsOf('lists_details');
       filter.squareFeet = result.childIdsOf('square_feet');
@@ -223,7 +223,7 @@ class _HousePageState extends State<HousePage> {
       filter.expandedSearch = result.childIdsOf('expanded_search');
     } else if (result.tabIndex == 4) {
       // Sort filter
-      _filtersRepo.sortResult = result;
+      _filtersRepo.sortResult = result.selected;
       filter.sort = result.firstSelectedId;
     }
     return filter;

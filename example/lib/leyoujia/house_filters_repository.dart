@@ -36,7 +36,7 @@ class HouseFiltersRepository {
   }
 
   /// 区域的 初始选中项
-  DropdownSelectorResult? regionResult;
+  SelectorEntries? regionResult;
 
   final regionIniteialSelected = {
     SelectorCategoryEntry(
@@ -47,7 +47,7 @@ class HouseFiltersRepository {
   };
 
   SelectorEntries? fetchRegionSelectedData() =>
-      regionResult?.selected ?? regionIniteialSelected;
+      regionResult ?? regionIniteialSelected;
 
   SelectorEntries? fetchRegionResetData() => regionIniteialSelected;
 
@@ -135,7 +135,7 @@ class HouseFiltersRepository {
   }
 
   /// 排序 初始选中项
-  DropdownSelectorResult? buyPriceResult;
+  SelectorEntries? buyPriceResult;
 
   /// 初始选中项
   final buyPriceIniteialSelected = {
@@ -152,7 +152,7 @@ class HouseFiltersRepository {
   };
 
   SelectorEntries? fetchBuyPriceSelectedData() =>
-      buyPriceResult?.selected; // ?? buyPriceIniteialSelected;
+      buyPriceResult; // ?? buyPriceIniteialSelected;
 
   /// 重置按钮的选中项
   SelectorEntries? fetchBuyPriceResetData() => {
@@ -222,7 +222,7 @@ class HouseFiltersRepository {
   }
 
   /// 价格的 初始选中项
-  DropdownSelectorResult? sellPriceResult;
+  SelectorEntries? sellPriceResult;
 
   SelectorEntries get sellPriceIniteialSelected => {
         SelectorCategoryEntry(
@@ -235,7 +235,7 @@ class HouseFiltersRepository {
       };
 
   SelectorEntries? fetchSellPriceSelectedData() =>
-      sellPriceResult?.selected ?? sellPriceIniteialSelected;
+      sellPriceResult ?? sellPriceIniteialSelected;
 
   SelectorEntries? fetchSellPriceResetData() => sellPriceIniteialSelected;
 
@@ -295,7 +295,7 @@ class HouseFiltersRepository {
   }
 
   /// 租金的 初始选中项
-  DropdownSelectorResult? rentalResult;
+  SelectorEntries? rentalResult;
 
   SelectorEntries get rentalIniteialSelected => {
         SelectorCategoryEntry(
@@ -308,7 +308,7 @@ class HouseFiltersRepository {
       };
 
   SelectorEntries? fetchRentalSelectedData() =>
-      rentalResult?.selected ?? rentalIniteialSelected;
+      rentalResult ?? rentalIniteialSelected;
 
   SelectorEntries? fetchRentalResetData() => rentalIniteialSelected;
 
@@ -362,12 +362,12 @@ class HouseFiltersRepository {
   }
 
   /// 户型的 初始选中项
-  DropdownSelectorResult? floorPlanBuyResult;
+  SelectorEntries? floorPlanBuyResult;
 
   final floorPlanBuyIniteialSelected = <SelectorCategoryEntry>{};
 
   SelectorEntries? fetchFloorPlanBuySelectedData() =>
-      floorPlanBuyResult?.selected ?? floorPlanBuyIniteialSelected;
+      floorPlanBuyResult ?? floorPlanBuyIniteialSelected;
 
   SelectorEntries? fetchFloorPlanBuyResetData() => floorPlanBuyIniteialSelected;
 
@@ -419,12 +419,12 @@ class HouseFiltersRepository {
   }
 
   /// 户型的 初始选中项
-  DropdownSelectorResult? floorPlanSellResult;
+  SelectorEntries? floorPlanSellResult;
 
   final floorPlanSellIniteialSelected = <SelectorCategoryEntry>{};
 
   SelectorEntries? fetchFloorPlanSellSelectedData() =>
-      floorPlanSellResult?.selected ?? floorPlanSellIniteialSelected;
+      floorPlanSellResult ?? floorPlanSellIniteialSelected;
 
   SelectorEntries? fetchFloorPlanSellResetData() =>
       floorPlanSellIniteialSelected;
@@ -477,12 +477,12 @@ class HouseFiltersRepository {
   }
 
   /// 户型的 初始选中项
-  DropdownSelectorResult? floorPlanRentResult;
+  SelectorEntries? floorPlanRentResult;
 
   final floorPlanRentIniteialSelected = <SelectorCategoryEntry>{};
 
   SelectorEntries? fetchFloorPlanRentSelectedData() =>
-      floorPlanRentResult?.selected ?? floorPlanRentIniteialSelected;
+      floorPlanRentResult ?? floorPlanRentIniteialSelected;
 
   SelectorEntries? fetchFloorPlanRentResetData() =>
       floorPlanRentIniteialSelected;
@@ -525,12 +525,12 @@ class HouseFiltersRepository {
   }
 
   /// 更多的 初始选中项
-  DropdownSelectorResult? moreBuyResult;
+  SelectorEntries? moreBuyResult;
 
   final moreBuyIniteialSelected = <SelectorTextEntry>{};
 
   SelectorEntries? fetchMoreBuySelectedData() =>
-      moreBuyResult?.selected ?? moreBuyIniteialSelected;
+      moreBuyResult ?? moreBuyIniteialSelected;
 
   SelectorEntries? fetchMoreBuyResetData() => moreBuyIniteialSelected;
 
@@ -560,14 +560,14 @@ class HouseFiltersRepository {
   }
 
   /// 排序 初始选中项
-  DropdownSelectorResult? sortBuyResult;
+  SelectorEntries? sortBuyResult;
 
   final sortBuyIniteialSelected = <SelectorTextEntry>{
     SelectorTextEntry.id(id: 'default_sort')
   };
 
   SelectorEntries? fetchSortBuySelectedData() =>
-      sortBuyResult?.selected ?? sortBuyIniteialSelected;
+      sortBuyResult ?? sortBuyIniteialSelected;
 
   SelectorEntries? fetchSortBuyResetData() => sortBuyIniteialSelected;
 
@@ -589,14 +589,14 @@ class HouseFiltersRepository {
   }
 
   /// 排序 初始选中项
-  DropdownSelectorResult? sortSellResult;
+  SelectorEntries? sortSellResult;
 
   final sortSellIniteialSelected = <SelectorTextEntry>{
     SelectorTextEntry.id(id: 'comprehensive_sort')
   };
 
   SelectorEntries? fetchSortSellSelectedData() =>
-      sortSellResult?.selected ?? sortSellIniteialSelected;
+      sortSellResult ?? sortSellIniteialSelected;
 
   SelectorEntries? fetchSortSellResetData() => sortSellIniteialSelected;
 
@@ -618,14 +618,14 @@ class HouseFiltersRepository {
   }
 
   /// 排序 初始选中项
-  DropdownSelectorResult? sortRentResult;
+  SelectorEntries? sortRentResult;
 
   final sortRentIniteialSelected = <SelectorTextEntry>{
     SelectorTextEntry.id(id: 'comprehensive_sort')
   };
 
   SelectorEntries? fetchSortRentSelectedData() =>
-      sortRentResult?.selected ?? sortRentIniteialSelected;
+      sortRentResult ?? sortRentIniteialSelected;
 
   SelectorEntries? fetchSortRentResetData() => sortRentIniteialSelected;
 
