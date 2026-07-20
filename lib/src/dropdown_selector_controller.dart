@@ -413,6 +413,13 @@ class DropdownSelectorController extends ChangeNotifier {
     final result =
         DropdownSelectorResult(tabData: currentTabData, selected: selected);
     hideSelector();
+    // Persist the applied selection back onto the delegate so that reopening
+    // the selector (DropdownSelectorBar / DropdownSelectorButton / showSelector
+    // / showModalBottomSelector) reconstructs its SelectorController with
+    // `previousSelected = selected`. Without this write-back, `selectedData`
+    // keeps the initial `selectedEntriesLoader` value and the previous selection
+    // is lost on reopen — even though `selectedEntriesLoader` was supplied.
+    previousSelectorDelegate?.selectedData = selected;
     // ignore: deprecated_member_use_from_same_package
     onApplied?.call(result);
     for (final listener in List.of(_applyListeners)) {
