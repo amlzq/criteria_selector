@@ -4,21 +4,16 @@ A highly customizable Flutter selector library. Supports SelectorBox, DropdownSe
 
 ## Features
 
-**Entry points**
-- `SelectorBox`, `DropdownSelectorBar`, `DropdownSelectorButton`, `showSelector` (dialog), and `showModalBottomSelector` (bottom sheet) — all built on the same `SelectorDelegate`, so any layout works on any surface.
+Two layers work together: **entry points** decide *where* the selector appears, and **delegates** decide *how* entries are laid out — any delegate plugs into any entry point.
 
-**Layouts** (via `SelectorDelegate`)
-- `CascadingSelectorDelegate`, `GridSelectorDelegate`, `ListSelectorDelegate`, `FlattenSelectorDelegate`.
-
-**Selection & data**
+- **Entry points** — five ways to show a selector: `SelectorBox` (inline), `DropdownSelectorBar` (tab bar), `DropdownSelectorButton` (single trigger), `showSelector` (dialog), `showModalBottomSelector` (bottom sheet).
+- **Delegates** — four layouts: `CascadingSelectorDelegate` (tree), `GridSelectorDelegate` (grid), `ListSelectorDelegate` (single column), `FlattenSelectorDelegate` (grid that keeps category grouping).
 - Single & multiple selection via `SelectionMode` (per category or as a delegate fallback).
 - Async data loading through `entriesLoader`.
-- Flexible entries: an "Any" entry clears a category, `SelectorRangeEntry.custom` accepts min/max input, and `immediate` entries apply without the action bar.
-
-**Customization**
-- `skeletonBuilder` & `errorBuilder` for loading/error states.
+- Flexible entries: the "Any" entry clears a category, `SelectorRangeEntry.custom` takes user min/max input, and an `immediate` entry applies on tap without the action bar.
+- `skeletonBuilder` & `errorBuilder` for loading and error states.
 - Theming via `SelectorThemeData` and the `DropdownSelectorBarTheme` / `DropdownSelectorButtonTheme` extensions.
-- Built-in i18n (10 languages) via `CriteriaSelectorLocalizationsDelegate`.
+- Built-in i18n in 10 languages via `CriteriaSelectorLocalizationsDelegate`.
 
 ## Getting started
 
@@ -38,7 +33,7 @@ import 'package:criteria_selector/criteria_selector.dart';
 
 ### Delegates
 
-The building blocks below are shared by every entry point. Each delegate decides how entries are loaded and how the selector body is rendered.
+A delegate controls both data loading and how the body is rendered, and any delegate works with every entry point above.
 
 #### Common concepts
 
@@ -50,7 +45,7 @@ Entries form a tree. `SelectorCategoryEntry` is the root (a category) and `Selec
 | `SelectorTextEntry` | A plain text leaf. Use `.any(...)` for the "Any" (clear) entry. `.name(...)` creates a parentless leaf for flat lists. |
 | `SelectorRangeEntry<N, E>` | A numeric range leaf (`min`/`max`). Use `.any(...)` for "Any" and `.custom(...)` for a user-input range. `SelectorIntEntry<E>` is a handy alias for `SelectorRangeEntry<int, E>`. |
 
-Selection is controlled by `SelectionMode` (`single` by default, or `multiple`), set on a `SelectorCategoryEntry` (per category) or on the delegate (fallback).
+Selection is controlled by `SelectionMode` (`single` by default, or `multiple`), set on a `SelectorCategoryEntry` (per category) or on the delegate (fallback). In multiple-selection mode, an entry with `immediate: true` applies on tap and skips the action bar.
 
 Entries load asynchronously via `entriesLoader`, which returns a `Future<SelectorEntries>` where `SelectorEntries` is `Set<SelectorEntry>`.
 
@@ -81,118 +76,27 @@ SelectorCategoryEntry(
 SelectorTextEntry.name(id: 'default', name: 'Default');
 ```
 
-Every delegate below is rendered by any entry point — `SelectorBox` (shown next) is the simplest.
+The built-in delegates are:
 
-#### CascadingSelectorDelegate
-
-A tree selector: categories on the left, a cascading list on the right.
-
-```dart
-Future<SelectorEntries> _fetchRegion() async {
-  return {
-    SelectorCategoryEntry(
-      id: 'region',
-      name: 'Region',
-      children: {
-        SelectorTextEntry.any(parentId: 'region', name: 'Any'),
-        SelectorTextEntry(
-          parentId: 'region',
-          id: 'bj',
-          name: 'Beijing',
-          children: {
-            SelectorTextEntry(parentId: 'bj', id: 'cy', name: 'Chaoyang'),
-            SelectorTextEntry(parentId: 'bj', id: 'hd', name: 'Haidian'),
-          },
-        ),
-      },
-    ),
-  };
-}
-
-SelectorBox(delegate: CascadingSelectorDelegate(entriesLoader: _fetchRegion));
-```
-
-![CascadingSelectorDelegate](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/cascading.jpg)
-
-#### GridSelectorDelegate
-
-A grid layout. `crossAxisCount` is required.
-
-```dart
-Future<SelectorEntries> _fetchPrice() async {
-  return {
-    SelectorCategoryEntry(
-      id: 'price',
-      name: 'Price',
-      children: {
-        SelectorRangeEntry<int, void>.any(parentId: 'price', name: 'Any'),
-        SelectorRangeEntry<int, void>(parentId: 'price', id: '0-100', name: '0-100', min: 0, max: 100),
-        SelectorRangeEntry<int, void>(parentId: 'price', id: '100-500', name: '100-500', min: 100, max: 500),
-        SelectorRangeEntry<int, void>.custom(parentId: 'price', name: 'Custom'),
-      },
-    ),
-  };
-}
-
-SelectorBox(
-  delegate: GridSelectorDelegate(crossAxisCount: 3, entriesLoader: _fetchPrice),
-);
-```
-
-![GridSelectorDelegate](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/grid.jpg)
-
-#### ListSelectorDelegate
-
-A single-column list. Use parentless `SelectorTextEntry.name(...)` leaves for a flat list.
-
-```dart
-Future<SelectorEntries> _fetchSort() async {
-  return {
-    SelectorTextEntry.name(id: 'default', name: 'Default'),
-    SelectorTextEntry.name(id: 'price_low', name: 'Price: low to high'),
-    SelectorTextEntry.name(id: 'price_high', name: 'Price: high to low'),
-  };
-}
-
-SelectorBox(delegate: ListSelectorDelegate(entriesLoader: _fetchSort));
-```
-
-![ListSelectorDelegate](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/list.jpg)
-
-#### FlattenSelectorDelegate
-
-Renders children in a grid while keeping the category hierarchy. Best with `SelectionMode.multiple` and an "Any" entry.
-
-```dart
-Future<SelectorEntries> _fetchMore() async {
-  return {
-    SelectorCategoryEntry(
-      id: 'more',
-      name: 'More',
-      selectionMode: SelectionMode.multiple,
-      children: {
-        SelectorTextEntry.any(parentId: 'more', name: 'Any'),
-        SelectorTextEntry(parentId: 'more', id: 'near_subway', name: 'Near subway'),
-        SelectorTextEntry(parentId: 'more', id: 'pet_friendly', name: 'Pet friendly'),
-      },
-    ),
-  };
-}
-
-SelectorBox(
-  delegate: FlattenSelectorDelegate(
-    crossAxisCount: 3,
-    selectionMode: SelectionMode.multiple,
-    entriesLoader: _fetchMore,
-  ),
-);
-```
-
-![FlattenSelectorDelegate](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/flatten.jpg)
+| Delegate | Description | Preview |
+| --- | --- | --- |
+| `CascadingSelectorDelegate` | A tree selector: categories on the left, a cascading list on the right. | ![CascadingSelectorDelegate](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/cascading.jpg) |
+| `GridSelectorDelegate` | A grid layout. `crossAxisCount` is required. | ![GridSelectorDelegate](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/grid.jpg) |
+| `ListSelectorDelegate` | A single-column list (use `.name(...)` leaves for a flat list). | ![ListSelectorDelegate](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/list.jpg) |
+| `FlattenSelectorDelegate` | Renders children in a grid while keeping the category hierarchy. Best with `SelectionMode.multiple` and an "Any" entry. | ![FlattenSelectorDelegate](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/flatten.jpg) |
 
 ### SelectorBox
 
 `SelectorBox` embeds a selector directly in a page or dialog body. Pass any `delegate` from the [Delegates](#delegates) section above — it controls both loading and rendering.
+
+```dart
+SelectorBox(
+  delegate: CascadingSelectorDelegate(entriesLoader: _fetchNeighborhood),
+  onChanged: (selected) {
+    // selected is the SelectorEntries when the selection changes
+  },
+);
+```
 
 ### DropdownSelectorBar
 
@@ -203,11 +107,15 @@ DropdownSelectorBar(
   tabs: const [
     DropdownTab(label: 'Region'),
     DropdownTab(label: 'Price'),
+    DropdownTab(label: 'Rooms'),
+    DropdownTab(label: 'More'),
     DropdownTab(label: 'Sort'),
   ],
   selectorDelegates: [
     CascadingSelectorDelegate(entriesLoader: _fetchRegion),
     GridSelectorDelegate(crossAxisCount: 3, entriesLoader: _fetchPrice),
+    GridSelectorDelegate(crossAxisCount: 3, entriesLoader: _fetchRooms),
+    FlattenSelectorDelegate(crossAxisCount: 3, entriesLoader: _fetchMore),
     ListSelectorDelegate(entriesLoader: _fetchSort),
   ],
   onApplied: (result) {
@@ -250,8 +158,8 @@ Shows a selector in a modal dialog. Returns the selected `SelectorEntries` when 
 ```dart
 final SelectorEntries? selected = await showSelector(
   context: context,
-  delegate: ListSelectorDelegate(entriesLoader: _fetchSort),
-  title: const Text('Sort'),
+  delegate: FlattenSelectorDelegate(entriesLoader: _fetchRooms),
+  title: const Text('Rooms'),
 );
 
 if (selected != null) {
@@ -268,7 +176,7 @@ Shows a selector in a modal bottom sheet built on Flutter's `showModalBottomShee
 ```dart
 final SelectorEntries? selected = await showModalBottomSelector(
   context: context,
-  delegate: FlattenSelectorDelegate(
+  delegate: ListSelectorDelegate(
     crossAxisCount: 3,
     selectionMode: SelectionMode.multiple,
     entriesLoader: _fetchMore,
