@@ -2,6 +2,8 @@
 
 A highly customizable Flutter selector library. Supports SelectorBox, DropdownSelectorBar, DropdownSelectorButton, dialog, and bottom-sheet selectors.
 
+### [Playground](https://criteria-selector.zeaon.dev/)
+
 ## Features
 
 Two layers work together: **entry points** decide *where* the selector appears, and **delegates** decide *how* entries are laid out — any delegate plugs into any entry point.
@@ -105,14 +107,14 @@ A tab bar (`PreferredSizeWidget`) that opens an overlay selector when a tab is t
 ```dart
 DropdownSelectorBar(
   tabs: const [
-    DropdownTab(label: 'Region'),
+    DropdownTab(label: 'Neighborhood'),
     DropdownTab(label: 'Price'),
     DropdownTab(label: 'Rooms'),
     DropdownTab(label: 'More'),
     DropdownTab(label: 'Sort'),
   ],
   selectorDelegates: [
-    CascadingSelectorDelegate(entriesLoader: _fetchRegion),
+    CascadingSelectorDelegate(entriesLoader: _fetchNeighborhood),
     GridSelectorDelegate(crossAxisCount: 3, entriesLoader: _fetchPrice),
     GridSelectorDelegate(crossAxisCount: 3, entriesLoader: _fetchRooms),
     FlattenSelectorDelegate(crossAxisCount: 3, entriesLoader: _fetchMore),
@@ -132,8 +134,8 @@ A single-trigger alternative to `DropdownSelectorBar` — opens a selector overl
 
 ```dart
 DropdownSelectorButton(
-  label: 'Price',
-  selectorDelegate: GridSelectorDelegate(crossAxisCount: 3, entriesLoader: _fetchPrice),
+  label: 'Neighborhood',
+  selectorDelegate: GridSelectorDelegate(crossAxisCount: 3, entriesLoader: _fetchNeighborhood),
   onApplied: (result) { /* ... */ },
 );
 
@@ -143,9 +145,9 @@ DropdownSelectorButton.elevated(
 );
 
 DropdownSelectorButton.outlined(
-  label: 'Price',
+  label: 'Rooms',
   icon: const Icon(Icons.filter_alt_outlined),
-  selectorDelegate: GridSelectorDelegate(crossAxisCount: 3, entriesLoader: _fetchPrice),
+  selectorDelegate: GridSelectorDelegate(crossAxisCount: 3, entriesLoader: _fetchRooms),
 );
 ```
 
