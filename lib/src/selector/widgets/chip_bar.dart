@@ -231,10 +231,17 @@ class _SelectorChipBarDefaults extends SelectorChipBarTheme {
   /// Default [chipColor] based on [variant].
   ///
   /// Mirrors [_SelectorGridTileDefaults.tileColor]: a light tint derived from
-  /// [SelectorThemeData.onBackgroundColorHighest] toward white, slightly deeper
-  /// for the outlined variant to keep borders visible.
+  /// [SelectorThemeData.onBackgroundColorHighest] toward white in light theme;
+  /// blends surface colors for harmony in dark theme.
   @override
   Color? get chipColor {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    if (isDark) {
+      final blendAmount =
+          variant == SelectorChipVariant.outlined ? 0.2 : 0.35;
+      return Color.lerp(_theme.backgroundColor,
+          _theme.backgroundColorHighest, blendAmount);
+    }
     if (variant == SelectorChipVariant.outlined) {
       return Color.lerp(_theme.onBackgroundColorHighest, Colors.white, 0.55);
     }
@@ -243,10 +250,17 @@ class _SelectorChipBarDefaults extends SelectorChipBarTheme {
 
   /// Default [selectedChipColor].
   ///
-  /// Mirrors [_SelectorGridTileDefaults.selectedTileColor]: uses
-  /// [SelectorThemeData.selectedColor] directly.
+  /// Mirrors [_SelectorGridTileDefaults.selectedTileColor]: blends with
+  /// background in dark theme for a harmonious look.
   @override
-  Color? get selectedChipColor => _theme.selectedColor;
+  Color? get selectedChipColor {
+    final baseSelected = _theme.selectedColor;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    if (isDark) {
+      return Color.lerp(_theme.backgroundColor, baseSelected, 0.35);
+    }
+    return baseSelected;
+  }
 
   @override
   TextStyle? get labelStyle => _textTheme.labelLarge?.copyWith(

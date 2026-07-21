@@ -169,6 +169,14 @@ class _SelectorGridTileDefaults extends SelectorGridTileTheme {
 
   @override
   Color? get tileColor {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    if (isDark) {
+      // In dark theme, use a subtle surface elevation for better harmony
+      final blendAmount =
+          variant == SelectorGridTileVariant.outlined ? 0.2 : 0.35;
+      return Color.lerp(
+          _theme.backgroundColor, _theme.backgroundColorHighest, blendAmount);
+    }
     if (variant == SelectorGridTileVariant.outlined) {
       return Color.lerp(_theme.onBackgroundColorHighest, Colors.white, 0.55);
     }
@@ -176,5 +184,13 @@ class _SelectorGridTileDefaults extends SelectorGridTileTheme {
   }
 
   @override
-  Color? get selectedTileColor => _theme.selectedColor;
+  Color? get selectedTileColor {
+    final baseSelected = _theme.selectedColor;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    if (isDark) {
+      // In dark theme, blend with background for a more harmonious look
+      return Color.lerp(_theme.backgroundColor, baseSelected, 0.35);
+    }
+    return baseSelected;
+  }
 }

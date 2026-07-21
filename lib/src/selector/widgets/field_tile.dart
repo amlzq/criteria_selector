@@ -248,10 +248,17 @@ class _SelectorFieldTileDefaults extends SelectorFieldTileTheme {
   /// Default [tileColor] based on [variant].
   ///
   /// Mirrors [_SelectorGridTileDefaults.tileColor]: a light tint derived from
-  /// [SelectorThemeData.onBackgroundColorHighest] toward white, slightly deeper
-  /// for the outlined variant to keep borders visible.
+  /// [SelectorThemeData.onBackgroundColorHighest] toward white in light theme;
+  /// blends surface colors for harmony in dark theme.
   @override
   Color? get tileColor {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    if (isDark) {
+      final blendAmount =
+          variant == SelectorFieldTileVariant.outlined ? 0.2 : 0.35;
+      return Color.lerp(_theme.backgroundColor,
+          _theme.backgroundColorHighest, blendAmount);
+    }
     if (variant == SelectorFieldTileVariant.outlined) {
       return Color.lerp(_theme.onBackgroundColorHighest, Colors.white, 0.55);
     }
@@ -260,8 +267,15 @@ class _SelectorFieldTileDefaults extends SelectorFieldTileTheme {
 
   /// Default [selectedTileColor].
   ///
-  /// Mirrors [_SelectorGridTileDefaults.selectedTileColor]: uses
-  /// [SelectorThemeData.selectedColor] directly.
+  /// Mirrors [_SelectorGridTileDefaults.selectedTileColor]: blends with
+  /// background in dark theme for a harmonious look.
   @override
-  Color? get selectedTileColor => _theme.selectedColor;
+  Color? get selectedTileColor {
+    final baseSelected = _theme.selectedColor;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    if (isDark) {
+      return Color.lerp(_theme.backgroundColor, baseSelected, 0.35);
+    }
+    return baseSelected;
+  }
 }
