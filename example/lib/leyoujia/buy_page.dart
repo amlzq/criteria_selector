@@ -8,7 +8,8 @@ import 'package:example/log.dart';
 import 'package:example/my_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../generated/l10n/app_localizations.dart';
 
 const _bannerHeight = 150.0;
 const _filterBarHeight = 44.0;
@@ -351,9 +352,8 @@ class _BuyPageState extends State<BuyPage> {
               final searchFillColor = isCollapsed
                   ? colorScheme.surfaceContainerHighest
                   : Colors.white;
-              final searchHintColor = isCollapsed
-                  ? colorScheme.onSurfaceVariant
-                  : Colors.grey;
+              final searchHintColor =
+                  isCollapsed ? colorScheme.onSurfaceVariant : Colors.grey;
               final systemOverlayStyle = isCollapsed
                   ? (isDark
                       ? SystemUiOverlayStyle.light
@@ -841,7 +841,7 @@ class _NavigationGrid extends StatelessWidget {
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
-        child:         Card(
+        child: Card(
           elevation: 0,
           color: cardColor,
           shape: RoundedRectangleBorder(

@@ -5,8 +5,8 @@ import 'package:example/log.dart';
 import 'package:example/my_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../generated/l10n/app_localizations.dart';
 import 'house_filters_repository.dart';
 import 'house_repository.dart';
 import 'utils.dart';

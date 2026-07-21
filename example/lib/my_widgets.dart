@@ -1,6 +1,7 @@
 import 'package:criteria_selector/criteria_selector.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../generated/l10n/app_localizations.dart';
 
 class MyRadio extends StatelessWidget {
   final bool value;
