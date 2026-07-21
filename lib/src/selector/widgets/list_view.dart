@@ -27,25 +27,57 @@ class SelectorListView<T extends SelectorEntry> extends StatefulWidget {
     this.showTitle = true,
   });
 
+  /// The category this list belongs to, used to render its title.
+  ///
+  /// If provided and [showTitle] is true, the category's name is displayed as
+  /// a header above the list. Otherwise no header is shown.
   final SelectorEntry? category;
 
+  /// The terminal-node entries to display as selectable list items.
+  ///
+  /// This list must be a terminal-node list (no further sub-categories). If it
+  /// contains a range/custom entry, an input field is rendered at the header or
+  /// footer.
   final List<T> entries;
 
+  /// The set of currently selected entries.
+  ///
+  /// An item is rendered as selected when it is contained in this set; the
+  /// selection is reflected by the radio or checkbox tile.
   final SelectorEntries? selectedEntries;
 
+  /// Called when an item is tapped.
+  ///
+  /// The callback receives the tapped item's index and its [SelectorEntry].
   final ItemTapCallback onItemTap;
 
+  /// Called when the value of the optional range input field changes.
+  ///
+  /// Receives the category id along with the current minimum and maximum input
+  /// values. Only used when [entries] contains a custom range entry.
   final Function(String? categoryId, String minValue, String maxValue)?
       inputListener;
 
+  /// The padding around the list content, including the title and input field.
+  ///
+  /// Defaults to [EdgeInsets.zero].
   final EdgeInsetsGeometry padding;
 
+  /// Determines whether a single or multiple items can be selected.
+  ///
+  /// Defaults to [SelectionMode.single], which renders radio tiles; when set to
+  /// [SelectionMode.multiple], checkbox tiles are used instead.
   final SelectionMode selectionMode;
 
+  /// Optional builder for the radio widget shown in [SelectionMode.single].
   final ToggleWidgetBuilder? radioBuilder;
 
+  /// Optional builder for the checkbox widget shown in [SelectionMode.multiple].
   final ToggleWidgetBuilder? checkboxBuilder;
 
+  /// Whether to show the [category] name as a header above the list.
+  ///
+  /// Defaults to true. Has no effect when [category] is null.
   final bool showTitle;
 
   @override
@@ -272,6 +304,7 @@ class SelectorListViewState<T extends SelectorEntry>
 class SelectorListSkeleton extends StatelessWidget {
   const SelectorListSkeleton({super.key, required this.itemCount});
 
+  /// The number of placeholder items to render in the skeleton.
   final int itemCount;
 
   @override

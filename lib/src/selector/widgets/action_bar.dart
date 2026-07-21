@@ -25,24 +25,58 @@ class SelectorActionBar extends StatelessWidget {
     this.onApplyTap,
   });
 
+  /// The color of the action bar's background.
+  ///
+  /// If null, the value from the surrounding [SelectorActionBarTheme] or the
+  /// default is used.
   final Color? backgroundColor;
 
+  /// The padding around the action bar's contents.
+  ///
+  /// Defaults to [EdgeInsets.symmetric] with a horizontal inset of 12.0 and a
+  /// vertical inset of 8.0.
   final EdgeInsetsGeometry? padding;
 
+  /// The flex factor to apply to the reset button's [Expanded] parent.
+  ///
+  /// Defaults to 4.
   final int? resetFlex;
 
+  /// The flex factor to apply to the apply button's [Expanded] parent.
+  ///
+  /// Defaults to 6.
   final int? applyFlex;
 
+  /// The visual style of the reset button.
+  ///
+  /// If null, the value from the surrounding [SelectorActionBarTheme] or the
+  /// default is used.
   final ButtonStyle? resetButtonStyle;
 
+  /// The visual style of the apply button.
+  ///
+  /// If null, the value from the surrounding [SelectorActionBarTheme] or the
+  /// default is used.
   final ButtonStyle? applyButtonStyle;
 
+  /// The text label for the reset button.
+  ///
+  /// If null, the localized "Reset" string is used, falling back to `"Reset"`.
   final String? resetText;
 
+  /// The text label for the apply button.
+  ///
+  /// If null, the localized "Apply" string is used, falling back to `"Apply"`.
   final String? applyText;
 
+  /// Called when the user taps the reset button.
+  ///
+  /// If null, the button is disabled.
   final GestureTapCallback? onResetTap;
 
+  /// Called when the user taps the apply button.
+  ///
+  /// If null, the button is disabled.
   final GestureTapCallback? onApplyTap;
 
   @override

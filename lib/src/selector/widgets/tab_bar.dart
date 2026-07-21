@@ -32,38 +32,96 @@ class SelectorTabBar<T extends SelectorEntry> extends StatelessWidget {
     required this.onTap,
   });
 
+  /// The category entries to display as tabs in this bar.
+  ///
+  /// Each entry renders a tab UI and must be a [SelectorCategoryEntry]; the
+  /// number of tabs equals the length of this list.
   final List<T> entries;
 
+  /// The set of currently selected categories.
+  ///
+  /// A tab is rendered as selected when its entry is contained in this set,
+  /// and its indicator is shown accordingly.
   final Set<T> selectedCategories;
 
+  /// The index of the tab that should be considered focused.
+  ///
+  /// Used to track which tab receives visual emphasis or keyboard focus; it
+  /// does not by itself change the selected state.
   final int focusedIndex;
 
+  /// The padding around the whole tab bar.
+  ///
+  /// If null, [SelectorTabBarTheme.padding] is used. If that is also null, the
+  /// value is [EdgeInsets.zero]. When [isScrollable] is true, this padding is
+  /// ignored in favor of the inner scroll view's padding.
   final EdgeInsetsGeometry? padding;
 
+  /// Whether this tab bar can be scrolled horizontally.
+  ///
+  /// If true, each tab is sized to fit its own content and the whole bar
+  /// becomes horizontally scrollable. If false (the default), the tabs are
+  /// expanded to divide the available width equally.
   final bool isScrollable;
 
+  /// The color of the tab bar itself.
+  ///
+  /// If null, [SelectorTabBarTheme.backgroundColor] is used. If that is also
+  /// null, the value is [SelectorThemeData.backgroundColor].
   final Color? backgroundColor;
 
-  /// Selected color for text.
+  /// The color of the tab labels and indicator when a tab is selected.
+  ///
+  /// If null, [SelectorTabBarTheme.selectedColor] is used. If that is also
+  /// null, the value is [SelectorThemeData.selectedColor].
   final Color? selectedColor;
 
+  /// The text style of the tab labels when not selected.
+  ///
+  /// If null, [SelectorTabBarTheme.labelStyle] is used. If that is also null,
+  /// the value is [TextTheme.titleSmall].
   final TextStyle? labelStyle;
 
+  /// The text style of the tab labels when selected.
+  ///
+  /// If null, [SelectorTabBarTheme.selectedLabelStyle] is used. If that is also
+  /// null, the value defaults to [TextTheme.titleSmall] colored with
+  /// [selectedColor].
   final TextStyle? selectedLabelStyle;
 
   /// The color of the line that appears below the selected tab.
+  ///
+  /// If null, [SelectorTabBarTheme.indicatorColor] is used. If that is also
+  /// null, the value is [selectedColor].
   final Color? indicatorColor;
 
+  /// The thickness of the selected tab indicator line.
+  ///
+  /// If null, [SelectorTabBarTheme.indicatorHeight] is used. If that is also
+  /// null, the default is 2.0.
   final double? indicatorHeight;
 
-  /// The padding for the indicator.
+  /// The padding used to inset the indicator from the tab edges.
+  ///
+  /// If null, [SelectorTabBarTheme.indicatorPadding] is used. If that is also
+  /// null, the value is [EdgeInsets.zero].
   final EdgeInsetsGeometry? indicatorPadding;
 
   /// Defines how the selected tab indicator's size is computed.
+  ///
+  /// If null, [SelectorTabBarTheme.indicatorSize] is used. If that is also
+  /// null, the default is [SelectorTabBarIndicatorSize.tab].
   final SelectorTabBarIndicatorSize? indicatorSize;
 
+  /// The duration of the indicator's size animation when the selection changes.
+  ///
+  /// If null, [SelectorTabBarTheme.indicatorAnimationDuration] is used. If that
+  /// is also null, the default is 200ms.
   final Duration? indicatorAnimationDuration;
 
+  /// Called when a tab is tapped.
+  ///
+  /// The callback receives the tapped tab's index and its [SelectorEntry].
   final ItemTapCallback onTap;
 
   double _measureLabelWidth(
@@ -300,8 +358,16 @@ class SelectorTabBarSkeleton extends StatelessWidget {
     this.backgroundColor,
   });
 
+  /// The padding around the skeleton.
+  ///
+  /// If null, [SelectorTabBarTheme.padding] is used. If that is also null, the
+  /// value is [EdgeInsets.zero].
   final EdgeInsetsGeometry? padding;
 
+  /// The background color of the skeleton.
+  ///
+  /// If null, [SelectorTabBarTheme.backgroundColor] is used. If that is also
+  /// null, the value is [SelectorThemeData.backgroundColor].
   final Color? backgroundColor;
 
   @override

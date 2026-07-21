@@ -24,18 +24,41 @@ class SelectorFieldTile extends StatelessWidget {
     this.variant,
   });
 
+  /// The range entry that defines this tile's input configuration.
+  ///
+  /// Provides the min/max hint text and an optional input label rendered before
+  /// the two fields.
   final SelectorRangeEntry entry;
 
+  /// The padding around the whole tile.
+  ///
+  /// If null, [EdgeInsets.zero] is used.
   final EdgeInsetsGeometry? padding;
 
+  /// The controller for the minimum value text field.
+  ///
+  /// If null, an internal controller is created for this field.
   final TextEditingController? minController;
 
+  /// The controller for the maximum value text field.
+  ///
+  /// If null, an internal controller is created for this field.
   final TextEditingController? maxController;
 
+  /// The focus node for the minimum value text field.
+  ///
+  /// If null, an internal focus node is created for this field.
   final FocusNode? minFocusNode;
 
+  /// The focus node for the maximum value text field.
+  ///
+  /// If null, an internal focus node is created for this field.
   final FocusNode? maxFocusNode;
 
+  /// The color used to highlight the tile when a field is focused or has input.
+  ///
+  /// If null, [SelectorFieldTileTheme.selectedColor] is used. If that is also
+  /// null, the value is [SelectorThemeData.selectedColor].
   final Color? selectedColor;
 
   /// Defines the background color of `SelectorFieldTile` when not focused.

@@ -18,10 +18,25 @@ import 'state/selector_state_tree.dart';
 /// construction time. The controller does not depend on the [Selector]
 /// configuration class.
 class SelectorController extends ChangeNotifier {
+  /// The selection behavior applied at the top level of the selector.
+  ///
+  /// Determines how many entries can be selected at once. Per-category
+  /// [SelectorCategoryEntry.selectionMode] may override this for nested levels.
   final SelectionMode selectionMode;
+
+  /// The initial selection state to restore when the controller is created.
+  ///
+  /// Typically the selection persisted from a previous session. If null, the
+  /// controller starts with no selection.
   final SelectorEntries? previousSelected;
+
+  /// The selection state used when the user triggers a reset.
+  ///
+  /// If null, reset falls back to [previousSelected] (or no selection).
   final SelectorEntries? resetSelected;
 
+  /// The underlying state tree holding the bound entries and their selection
+  /// state.
   final SelectorStateTree stateTree = SelectorStateTree();
   final SelectorSelectionRules _selectionRules = const SelectorSelectionRules();
   bool _isDisposed = false;
@@ -75,8 +90,12 @@ class SelectorController extends ChangeNotifier {
     _resetListeners.remove(listener);
   }
 
+  /// Whether this controller has been disposed.
+  ///
+  /// Once disposed, the controller no longer notifies listeners.
   bool get isDisposed => _isDisposed;
 
+  /// A snapshot of the current selection state.
   SelectorStateSnapshot get snapshot => stateTree.snapshot;
 
   void _notifyListenersIfAlive() {

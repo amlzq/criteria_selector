@@ -34,12 +34,22 @@ class SelectorChipBar<T extends SelectorEntry> extends StatelessWidget {
     required this.onItemTap,
   });
 
+  /// The parent [SelectorEntry] whose [SelectorEntry.name] is displayed as the
+  /// bar's title when [showTitle] is true.
   final SelectorEntry? category;
 
+  /// The sibling entries to display as chips in the bar.
   final List<T> entries;
 
+  /// The set of currently selected entries.
+  ///
+  /// Chips whose entry is contained in this set are rendered in the selected
+  /// state. When null, no chip is considered selected.
   final SelectorEntries? selectedEntries;
 
+  /// How many chips can be selected at the same time.
+  ///
+  /// Defaults to [SelectionMode.single].
   final SelectionMode selectionMode;
 
   /// Whether the chip bar is wrapable.
@@ -48,20 +58,53 @@ class SelectorChipBar<T extends SelectorEntry> extends StatelessWidget {
   /// Whether to show the category title.
   final bool showTitle;
 
+  /// The color of the chip bar's background.
+  ///
+  /// If null, the value from the surrounding [SelectorChipBarTheme] or the
+  /// default is used.
   final Color? backgroundColor;
 
+  /// The padding around the chip bar's contents.
+  ///
+  /// Defaults to [EdgeInsets.only] with a left inset of 12.0, or
+  /// [EdgeInsets.zero] when [isWrapable] is true.
   final EdgeInsetsGeometry? padding;
 
+  /// The visual style of the chips.
+  ///
+  /// See [SelectorChipVariant] for the available styles. Defaults to
+  /// [SelectorChipVariant.filled].
   final SelectorChipVariant? variant;
 
+  /// The color of an unselected chip.
+  ///
+  /// When [variant] is [SelectorChipVariant.filled] this is used as the chip's
+  /// background color; otherwise it is used as the chip's border color.
   final Color? chipColor;
 
+  /// The color of a selected chip.
+  ///
+  /// When [variant] is [SelectorChipVariant.filled] this is used as the chip's
+  /// background color; otherwise it is used as the chip's border and label
+  /// color.
   final Color? selectedChipColor;
 
+  /// The text style for an unselected chip's [label].
+  ///
+  /// If null, the value from the surrounding [SelectorChipBarTheme] or the
+  /// default is used.
   final TextStyle? labelStyle;
 
+  /// The text style for a selected chip's [label].
+  ///
+  /// If null, the value from the surrounding [SelectorChipBarTheme] or the
+  /// default is used.
   final TextStyle? selectedLabelStyle;
 
+  /// Called when the user taps a chip.
+  ///
+  /// The [index] of the tapped entry within [entries] and the tapped entry
+  /// itself are passed to the callback.
   final ItemTapCallback onItemTap;
 
   @override
@@ -237,10 +280,9 @@ class _SelectorChipBarDefaults extends SelectorChipBarTheme {
   Color? get chipColor {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     if (isDark) {
-      final blendAmount =
-          variant == SelectorChipVariant.outlined ? 0.2 : 0.35;
-      return Color.lerp(_theme.backgroundColor,
-          _theme.backgroundColorHighest, blendAmount);
+      final blendAmount = variant == SelectorChipVariant.outlined ? 0.2 : 0.35;
+      return Color.lerp(
+          _theme.backgroundColor, _theme.backgroundColorHighest, blendAmount);
     }
     if (variant == SelectorChipVariant.outlined) {
       return Color.lerp(_theme.onBackgroundColorHighest, Colors.white, 0.55);

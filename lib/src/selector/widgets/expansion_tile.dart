@@ -25,32 +25,82 @@ class SelectorExpansionTile extends StatefulWidget {
     this.onExpansionChanged,
   });
 
+  /// The primary text displayed in the tile's header.
   final String title;
 
+  /// The text style of the [title].
+  ///
+  /// If null, [SelectorExpansionTileTheme.titleStyle] is used. If that is also
+  /// null, the value is [TextTheme.titleLarge].
   final TextStyle? titleStyle;
 
+  /// The color used to highlight the tile when expanded.
+  ///
+  /// If null, [SelectorExpansionTileTheme.selectedColor] is used. If that is
+  /// also null, the value is [SelectorThemeData.selectedColor].
   final Color? selectedColor;
 
+  /// The content displayed below the header when the tile is expanded.
   final Widget child;
 
+  /// Whether to show the expand/collapse icon at the end of the header.
+  ///
+  /// Defaults to true. The icon rotates as the tile expands and collapses.
   final bool showTrailingIcon;
 
+  /// The padding around the header (title and trailing icon).
+  ///
+  /// If null, [SelectorExpansionTileTheme.titlePadding] is used. If that is
+  /// also null, the value is [EdgeInsets.zero].
   final EdgeInsetsGeometry? titlePadding;
 
+  /// The padding around the [child] content.
+  ///
+  /// If null, [SelectorExpansionTileTheme.childPadding] is used. If that is
+  /// also null, the value is [EdgeInsets.zero].
   final EdgeInsetsGeometry? childPadding;
 
+  /// The duration of the expand and collapse animation.
+  ///
+  /// If null, [SelectorExpansionTileTheme.animationDuration] is used. If that
+  /// is also null, the default is 200ms.
   final Duration? animationDuration;
 
+  /// The animation curve used when the tile expands.
+  ///
+  /// If null, [SelectorExpansionTileTheme.expansionCurve] is used. If that is
+  /// also null, the default is [Curves.easeIn].
   final Curve? expansionCurve;
 
+  /// The animation curve used when the tile collapses.
+  ///
+  /// If null, [SelectorExpansionTileTheme.collapseCurve] is used. If that is
+  /// also null, the default is [Curves.easeOut].
   final Curve? collapseCurve;
 
+  /// Whether the tile is expanded when first built.
+  ///
+  /// Defaults to false. The expanded state is restored across rebuilds via
+  /// [PageStorage].
   final bool initiallyExpanded;
 
+  /// Whether the [child] is kept in the tree when the tile is collapsed.
+  ///
+  /// If false (the default), the child is removed from the tree when collapsed
+  /// and its state is lost. If true, the child is kept mounted (though hidden)
+  /// so its state is preserved.
   final bool maintainState;
 
+  /// Whether the tile responds to taps.
+  ///
+  /// Defaults to true. When false, the tile cannot be expanded or collapsed,
+  /// and the header is shown in a disabled color.
   final bool enabled;
 
+  /// Called when the tile expands or collapses.
+  ///
+  /// The argument is true when the tile becomes expanded and false when it
+  /// becomes collapsed.
   final ValueChanged<bool>? onExpansionChanged;
 
   @override

@@ -63,6 +63,11 @@ class DropdownSelectorBar extends StatefulWidget
             'Either selectorDelegates or selectors must be provided.'),
         selectorDelegates = selectorDelegates ?? selectors ?? const [];
 
+  /// The set of tabs to display in the bar.
+  ///
+  /// Each entry renders a tab's UI and must have a matching entry in
+  /// [selectorDelegates]; the number of [tabs] must equal the number of
+  /// [selectorDelegates].
   final List<DropdownTab> tabs;
 
   /// Selector configuration for each tab.
@@ -127,6 +132,9 @@ class DropdownSelectorBar extends StatefulWidget
   /// If not null, the initial index of the selected tab and show selector.
   final int? initialIndex;
 
+  /// Visual configuration for the selector overlay panel.
+  ///
+  /// If null, [DropdownSelectorBarTheme.overlayStyle] is used.
   final DropdownOverlayStyle? overlayStyle;
 
   /// Theme overrides applied to selector widgets inside the overlay.
@@ -484,12 +492,21 @@ class _DropdownSelectorTabStyle extends StatelessWidget {
 /// Provide either [label] or [child]. Use [labelGetter] to compute a custom
 /// label from the applied selection result.
 class DropdownTab extends StatelessWidget {
+  /// The text label shown in the tab.
+  ///
+  /// Mutually exclusive with [child]; providing both triggers an assertion.
   final String? label;
 
+  /// An optional callback that builds the label from the current selection
+  /// result.
   final DropdownTabLabelGetter? labelGetter;
 
+  /// A custom widget displayed in the tab instead of [label].
+  ///
+  /// Mutually exclusive with [label]; providing both triggers an assertion.
   final Widget? child;
 
+  /// An optional tag used to identify this tab.
   final String? tag;
 
   const DropdownTab({

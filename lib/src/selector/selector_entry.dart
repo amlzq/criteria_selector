@@ -34,10 +34,19 @@ class SelectorRangeEntry<N, E> extends SelectorChildEntry<E> {
     super.extra,
   });
 
+  /// The minimum value of the range.
   N? min;
+
+  /// The maximum value of the range.
   N? max;
+
+  /// An optional label for the input field(s) representing this range.
   final String? inputLabel;
+
+  /// Hint text shown for the minimum value input field.
   final String? minHintText;
+
+  /// Hint text shown for the maximum value input field.
   final String? maxHintText;
 
   /// Custom range entry
@@ -163,6 +172,7 @@ class SelectorChildEntry<E> extends SelectorEntry<E> {
     super.extra,
   });
 
+  /// The id of this entry's parent category.
   final String parentId;
 
   /// "Any" entry
@@ -253,19 +263,34 @@ class SelectorCategoryEntry<E> extends SelectorEntry<E> {
     super.immediate,
   });
 
-  /// Selection mode for child entry
+  /// The selection mode applied to this category's children.
+  ///
+  /// Defaults to [SelectionMode.single].
   final SelectionMode selectionMode;
 
+  /// An optional header entry rendered above this category's children.
   SelectorEntry<E>? header;
+
+  /// The selection mode applied to [header].
+  ///
+  /// Defaults to [SelectionMode.single].
   final SelectionMode headerSelectionMode;
 
+  /// An optional footer entry rendered below this category's children.
   SelectorEntry<E>? footer;
+
+  /// The selection mode applied to [footer].
+  ///
+  /// Defaults to [SelectionMode.single].
   final SelectionMode footerSelectionMode;
 
+  /// The list layout configuration for this category, if any.
   final SelectorListConfig? listConfig;
 
+  /// The grid layout configuration for this category, if any.
   final SelectorGridConfig? gridConfig;
 
+  /// The chip bar configuration for this category, if any.
   final SelectorChipConfig? chipConfig;
 
   SelectorCategoryEntry<E> copyWith({
@@ -359,18 +384,28 @@ abstract class SelectorEntry<E> {
     this.extra,
   });
 
+  /// The unique identifier of this entry within its parent.
   final String id;
+
+  /// The display name of this entry.
   String? name;
 
+  /// The child entries of this entry, or null if it is a leaf.
   final Set<SelectorEntry<E>>? children;
 
+  /// Whether this entry can be selected or interacted with.
+  ///
+  /// Defaults to true. When false, the entry is rendered as disabled.
   final bool enabled;
 
   /// If true, selecting this node will immediately apply the entry without needing to click the "Apply" button.
-  /// Default value is false; if the node's id is [kAnyEntryId] and the node's data is empty, then immediate value is true.
-  /// In single-selection mode, this value is ignored and applied immediately.
+  ///
+  /// Defaults to false. If the node's id is [kAnyEntryId] and the node's data
+  /// is empty, the effective value becomes true. In single-selection mode this
+  /// value is ignored and the entry is applied immediately.
   final bool immediate;
 
+  /// Optional arbitrary data attached to this entry.
   final E? extra;
 
   @override
@@ -421,9 +456,16 @@ class SelectorGridConfig {
     this.childAspectRatio = 1.0,
   });
 
+  /// The number of children in the cross axis.
   final int crossAxisCount;
+
+  /// The spacing between children in the main axis.
   final double mainAxisSpacing;
+
+  /// The spacing between children in the cross axis.
   final double crossAxisSpacing;
+
+  /// The ratio of the cross-axis to the main-axis extent of each child.
   final double childAspectRatio;
 }
 

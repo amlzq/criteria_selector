@@ -16,9 +16,25 @@ class SkeletonBox extends StatefulWidget {
     this.colors,
   });
 
+  /// The widget to which the shimmer effect is applied.
   final Widget child;
+
+  /// The duration of a single shimmer sweep across the [child].
+  ///
+  /// Defaults to 2000ms. After each sweep completes, the animation restarts
+  /// (optionally delayed by [interval]).
   final Duration duration;
+
+  /// The delay between consecutive shimmer sweeps.
+  ///
+  /// Defaults to [Duration.zero], which restarts the sweep immediately. A
+  /// non-zero value inserts a pause after each completed sweep before the next
+  /// one begins.
   final Duration interval;
+
+  /// The gradient colors used for the shimmer effect.
+  ///
+  /// If null, a default translucent white gradient is used.
   final List<Color>? colors;
 
   @override
@@ -102,12 +118,37 @@ class _SkeletonBoxState extends State<SkeletonBox>
 
 /// A rectangular placeholder used inside [SkeletonBox].
 class SkeletonTile extends StatelessWidget {
+  /// The height of the placeholder tile.
+  ///
+  /// If null, the tile's height is determined by its parent constraints or
+  /// content.
   final double? height;
+
+  /// The width of the placeholder tile.
+  ///
+  /// If null (the default), the tile expands to fill the available width
+  /// unless [random] is provided, in which case a randomized width is used.
   final double? width;
+
+  /// The fill color of the placeholder tile.
+  ///
+  /// If null, [SelectorThemeData.backgroundColorHigh] is used.
   final Color? color;
+
+  /// A border to draw around the placeholder tile.
   final BoxBorder? border;
+
+  /// The border radius of the placeholder tile's corners.
   final BorderRadiusGeometry? borderRadius;
+
+  /// An optional source of randomness used to vary the tile's width.
+  ///
+  /// When provided, the tile width is randomized within the available space
+  /// (bounded by [widthUsed]) and [width] is ignored.
   final Random? random;
+
+  /// The horizontal space already consumed, used to bound the randomized
+  /// [width] when [random] is provided.
   final double widthUsed;
 
   const SkeletonTile({

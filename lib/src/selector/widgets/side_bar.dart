@@ -25,27 +25,71 @@ class SelectorSideBar<T extends SelectorEntry> extends StatelessWidget {
     required this.onTap,
   });
 
+  /// The category entries to display as tiles in this sidebar.
+  ///
+  /// Each entry renders a [SelectorListTile]; the number of tiles equals the
+  /// length of this list.
   final List<T> entries;
 
+  /// The set of currently selected categories.
+  ///
+  /// A tile is rendered as selected when its entry is contained in this set,
+  /// and its badge is shown accordingly.
   final Set<T> selectedCategories;
 
+  /// The index of the tile that should be considered focused.
+  ///
+  /// The focused tile is highlighted via its selected appearance; this does
+  /// not by itself change [selectedCategories].
   final int focusedIndex;
 
+  /// The width of the sidebar.
+  ///
+  /// If null, [SelectorSideBarTheme.width] is used. If that is also null, the
+  /// default is 80.0.
   final double? width;
 
+  /// The color of the sidebar itself.
+  ///
+  /// If null, [SelectorSideBarTheme.backgroundColor] is used. If that is also
+  /// null, the value is [SelectorThemeData.backgroundColor].
   final Color? backgroundColor;
 
+  /// The padding around the sidebar's tiles.
+  ///
+  /// If null, [SelectorSideBarTheme.padding] is used. If that is also null, the
+  /// value is [EdgeInsets.zero]. When [isScrollable] is true, this padding is
+  /// ignored in favor of the inner scroll view's padding.
   final EdgeInsetsGeometry? padding;
 
+  /// Whether this sidebar can be scrolled vertically.
+  ///
+  /// If true, the tiles are laid out at their natural height inside a scroll
+  /// view. If false (the default), the tiles are expanded to divide the
+  /// available height equally when the sidebar has a bounded height.
   final bool isScrollable;
 
-  /// Selected color for text.
+  /// The color of the tile labels and badge when a tile is selected.
+  ///
+  /// If null, [SelectorSideBarTheme.selectedColor] is used. If that is also
+  /// null, the value is [SelectorThemeData.selectedColor].
   final Color? selectedColor;
 
+  /// The text style of the tile labels.
+  ///
+  /// If null, [SelectorSideBarTheme.labelStyle] is used. If that is also null,
+  /// the value is [TextTheme.bodyLarge].
   final TextStyle? labelStyle;
 
+  /// The background color of the selected tile.
+  ///
+  /// If null, [SelectorSideBarTheme.selectedTileColor] is used. If that is also
+  /// null, no tile background is applied.
   final Color? selectedTileColor;
 
+  /// Called when a tile is tapped.
+  ///
+  /// The callback receives the tapped tile's index and its [SelectorEntry].
   final ItemTapCallback onTap;
 
   @override
@@ -128,10 +172,22 @@ class SelectorSideBarSkeleton extends StatelessWidget {
     this.backgroundColor,
   });
 
+  /// The width of the skeleton sidebar.
+  ///
+  /// If null, [SelectorSideBarTheme.width] is used. If that is also null, the
+  /// default is 80.0.
   final double? width;
 
+  /// The padding around the skeleton's tiles.
+  ///
+  /// If null, [SelectorSideBarTheme.padding] is used. If that is also null, the
+  /// value is [EdgeInsets.zero].
   final EdgeInsetsGeometry? padding;
 
+  /// The background color of the skeleton sidebar.
+  ///
+  /// If null, [SelectorSideBarTheme.backgroundColor] is used. If that is also
+  /// null, the value is [SelectorThemeData.backgroundColor].
   final Color? backgroundColor;
 
   @override
