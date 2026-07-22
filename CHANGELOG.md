@@ -1,3 +1,13 @@
+## 0.2.1
+
+* **FIX** persist selection so it is restored when the panel is reopened.
+
+* **IMPROVEMENT** improve dark theme color in selector widgets.
+* **IMPROVEMENT** add dartdoc comments to public API members.
+* **IMPROVEMENT** remove `@immutable` annotations from enums.
+
+* **PERF** refresh the overlay when delegates change.
+
 ## 0.2.0
 
 * **FEATURE** add new components: `SelectorBox`, `DropdownSelectorButton`, `showSelector`, `showModalBottomSelector`.
@@ -13,7 +23,7 @@
 * **DEPRECATION** rename the selector configuration types with a `Delegate` suffix and `DropdownSelectorBar.selectors` to `selectorDelegates` (old names kept as deprecated aliases).
 * **DEPRECATION** deprecate `SelectorDelegate.dataFetcher` / `selectedDataFetcher` / `resetDataFetcher` in favor of `entriesLoader` / `selectedEntriesLoader` / `resetEntriesLoader`.
 
-For step-by-step rename tables, see [MIGRATION.md](MIGRATION.md).
+* For step-by-step rename tables, see [Migrate to 0.2.0](https://github.com/amlzq/criteria_selector/blob/main/MIGRATION.md#migrate-to-020).
 
 ## 0.1.1
 
