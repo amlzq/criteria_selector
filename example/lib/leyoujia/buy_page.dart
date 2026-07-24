@@ -130,9 +130,9 @@ class _BuyPageState extends State<BuyPage> {
     }
   }
 
-  void _showSelectedResult(DropdownSelectorResult result) {
+  void _showSelectedResult(DropdownTabData tabData, SelectorEntries selected) {
     final l10n = AppLocalizations.of(context);
-    final conditions = '${result.selected.flatten()}';
+    final conditions = '${selected.flatten()}';
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(l10n?.filterUpdated ?? ''),
@@ -164,16 +164,17 @@ class _BuyPageState extends State<BuyPage> {
     );
   }
 
-  HouseFilter? _dropdownSelectorResultParser(DropdownSelectorResult result) {
+  HouseFilter? _dropdownSelectorResultParser(
+      DropdownTabData tabData, SelectorEntries selected) {
     final filter = HouseFilter(cityId: userCityId);
-    if (result.tabIndex == 0) {
+    if (tabData.index == 0) {
       // 区域
-      _filtersRepo.regionResult = result.selected;
-      final category = result.selected.firstOrNull;
+      _filtersRepo.regionResult = selected;
+      final category = selected.firstOrNull;
       if (category == null) return null;
       if (category.id == 'region') {
         // 行政区
-        filter.district = result
+        filter.district = selected
             .cascadingPairsOf('region')
             .map((p) => {
                   "district_id": p.id,
@@ -182,7 +183,7 @@ class _BuyPageState extends State<BuyPage> {
             .toList(growable: false);
       } else if (category.id == 'metro') {
         // 地铁
-        filter.metro = result
+        filter.metro = selected
             .cascadingPairsOf('metro')
             .map((p) => {
                   "line_id": p.id,
@@ -192,18 +193,18 @@ class _BuyPageState extends State<BuyPage> {
       } else if (category.id == 'nearby') {
         // 附近
         final nearbyRadiusMeters =
-            result.findIdsAtLevel(category, 1).firstOrNull;
+            selected.findIdsAtLevel(category, 1).firstOrNull;
         filter.nearbyRadiusMeters = nearbyRadiusMeters;
         filter.userLatLon = userLatLon;
       }
-    } else if (result.tabIndex == 1) {
+    } else if (tabData.index == 1) {
       // 价格筛选
-      _filtersRepo.buyPriceResult = result.selected;
-      final category = result.selected.firstOrNull;
+      _filtersRepo.buyPriceResult = selected;
+      final category = selected.firstOrNull;
       if (category == null) return null;
       if (category.id == 'total') {
         // 总价
-        filter.totalPrice = result
+        filter.totalPrice = selected
             .childRangesOf('total')
             .map((e) => {
                   "id": e.id,
@@ -214,7 +215,7 @@ class _BuyPageState extends State<BuyPage> {
       }
       if (category.id == 'unit') {
         // 单价
-        filter.unitPrice = result
+        filter.unitPrice = selected
             .childRangesOf('unit')
             .map((e) => {
                   "id": e.id,
@@ -223,13 +224,13 @@ class _BuyPageState extends State<BuyPage> {
                 })
             .toList(growable: false);
       }
-    } else if (result.tabIndex == 2) {
+    } else if (tabData.index == 2) {
       // 户型筛选
-      _filtersRepo.floorPlanBuyResult = result.selected;
-      filter.livingRoom = result.childIdsOf('living_room');
-      filter.bathroom = result.childIdsOf('bathroom');
-      filter.balcony = result.childIdsOf('balcony');
-      filter.area = result
+      _filtersRepo.floorPlanBuyResult = selected;
+      filter.livingRoom = selected.childIdsOf('living_room');
+      filter.bathroom = selected.childIdsOf('bathroom');
+      filter.balcony = selected.childIdsOf('balcony');
+      filter.area = selected
           .childRangesOf('area')
           .map((e) => {
                 "id": e.id,
@@ -237,34 +238,35 @@ class _BuyPageState extends State<BuyPage> {
                 "max": e.max,
               })
           .toList(growable: false);
-    } else if (result.tabIndex == 3) {
+    } else if (tabData.index == 3) {
       // 更多筛选
-      _filtersRepo.moreBuyResult = result.selected;
-      filter.homeType = result.childIdsOf('home_type');
-      filter.saleStatus = result.childIdsOf('sale_status');
-      filter.openTime = result.childIdsOf('open_time');
-      filter.deliveryTime = result.childIdsOf('delivery_time');
-      filter.decorationStatus = result.childIdsOf('decoration_status');
-      filter.buildingFeatures = result.childIdsOf('building_features');
-      filter.houseViewService = result.childIdsOf('house_view_service');
-    } else if (result.tabIndex == 4) {
+      _filtersRepo.moreBuyResult = selected;
+      filter.homeType = selected.childIdsOf('home_type');
+      filter.saleStatus = selected.childIdsOf('sale_status');
+      filter.openTime = selected.childIdsOf('open_time');
+      filter.deliveryTime = selected.childIdsOf('delivery_time');
+      filter.decorationStatus = selected.childIdsOf('decoration_status');
+      filter.buildingFeatures = selected.childIdsOf('building_features');
+      filter.houseViewService = selected.childIdsOf('house_view_service');
+    } else if (tabData.index == 4) {
       // 排序筛选
-      _filtersRepo.sortBuyResult = result.selected;
-      filter.sort = result.firstSelectedId;
+      _filtersRepo.sortBuyResult = selected;
+      filter.sort = selected.firstSelectedId;
     }
     return filter;
   }
 
-  void _handleSelectorChange(DropdownSelectorResult result) async {
+  void _handleSelectorChange(
+      DropdownTabData tabData, SelectorEntries selected) async {
     final l10n = AppLocalizations.of(context);
-    _filter = _dropdownSelectorResultParser(result);
+    _filter = _dropdownSelectorResultParser(tabData, selected);
     if (_filter == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n?.filterParseFailed ?? '')),
       );
       return;
     }
-    if (result.tabIndex == 2) {
+    if (tabData.index == 2) {
       _floorPlanApplyTextDebounce?.cancel();
 
       final requestId = ++_floorPlanApplyTextRequestId;
@@ -290,11 +292,11 @@ class _BuyPageState extends State<BuyPage> {
     }
   }
 
-  void _handleSelectorApply(DropdownSelectorResult result) {
+  void _handleSelectorApply(DropdownTabData tabData, SelectorEntries selected) {
     final l10n = AppLocalizations.of(context);
-    _filter = _dropdownSelectorResultParser(result);
+    _filter = _dropdownSelectorResultParser(tabData, selected);
     if (_filter == null) {
-      if (result.tabIndex == 3) {
+      if (tabData.index == 3) {
         _moreShortcutSelected.clear();
         setState(() {});
       }
@@ -303,7 +305,7 @@ class _BuyPageState extends State<BuyPage> {
       );
       return;
     }
-    if (result.tabIndex == 3) {
+    if (tabData.index == 3) {
       final latestMoreFilterSelected = <String>[];
       if (_filter!.deliveryTime != null) {
         latestMoreFilterSelected.addAll(_filter!.deliveryTime!);
@@ -627,21 +629,21 @@ class _BuyPageState extends State<BuyPage> {
               onSelectorHidden: (DropdownTabData tabData) {
                 debugPrint('onHidden: ${tabData.label}');
               },
-              onChanged: (DropdownSelectorResult result) {
-                debugPrintLarge('onChanged: $result');
-                _handleSelectorChange(result);
-                _showSelectedResult(result);
+              onChanged: (tabData, selected) {
+                debugPrintLarge('onChanged: $tabData, $selected');
+                _handleSelectorChange(tabData, selected);
+                _showSelectedResult(tabData, selected);
               },
-              onApplied: (DropdownSelectorResult result) {
-                debugPrintLarge('onApplied: $result');
-                _handleSelectorApply(result);
-                if (result.tabIndex == 2) {
+              onApplied: (tabData, selected) {
+                debugPrintLarge('onApplied: $tabData, $selected');
+                _handleSelectorApply(tabData, selected);
+                if (tabData.index == 2) {
                   _floorPlanApplyTextDebounce?.cancel();
                   _floorPlanApplyTextRequestId++;
                   _floorPlanApplyText.value =
                       AppLocalizations.of(context)?.apply ?? '';
                 }
-                _showSelectedResult(result);
+                _showSelectedResult(tabData, selected);
               },
               onReset: () {
                 debugPrint('onReset');

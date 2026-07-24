@@ -2,6 +2,16 @@
 
 * **DEPRECATION** rename `CriteriaSelectorLocalizations` → `SelectorLocalizations` and `CriteriaSelectorLocalizationsDelegate` → `SelectorLocalizationsDelegate` (old names kept as deprecated aliases).
 
+* **CHANGED** `DropdownSelectorResultCallback` is now `void Function(DropdownTabData tabData, SelectorEntries selected)` instead of `void Function(DropdownSelectorResult result)`. Callbacks receive the tab metadata and the selected entries directly, so a `DropdownSelectorResult` no longer needs to be unwrapped.
+
+* **CHANGED** `DropdownTabLabelGetter` is now `String Function(DropdownTabData tabData, SelectorEntries selected)` instead of `String Function(DropdownSelectorResult result)`.
+
+* **DEPRECATION** `DropdownSelectorController.onChanged` / `DropdownSelectorController.onApplied` keep the legacy `void Function(DropdownSelectorResult)` signature for backward compatibility; they will be removed in a future major version.
+
+* **DEPRECATION** added `fromLegacyResultCallback` and `fromLegacyLabelGetter` helpers (in `selector/constants.dart`) to adapt a legacy `DropdownSelectorResult`-based callback / label getter to the new signatures.
+
+* **DEPRECATION** `DropdownSelectorResult` is deprecated. Callbacks now receive `(tabData, selected)` directly, so constructing a `DropdownSelectorResult` is only needed to keep an existing legacy `void Function(DropdownSelectorResult)` callback working. It will be removed in a future major version. The `DropselectResult` rename alias is also deprecated.
+
 ## 0.2.1
 
 * **FIX** persist selection so it is restored when the panel is reopened.

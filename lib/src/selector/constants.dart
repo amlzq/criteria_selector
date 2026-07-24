@@ -6,13 +6,25 @@ import '../dropdown_selector_result.dart';
 import '../dropdown_tab_data.dart';
 import '../selector/selector_controller.dart';
 import 'selector_entry.dart';
+import 'selector_utils.dart';
 
 /// A set of selected [SelectorEntry] values.
 typedef SelectorEntries<T> = Set<SelectorEntry<T>>;
 
 /// Callback invoked when the selection changes or is applied.
+///
+/// The current tab metadata is provided as [tabData] and the selected entries
+/// as [selected]. This replaces the previous single-`DropdownSelectorResult`
+/// parameter so callers no longer need to unwrap it.
+///
+/// To keep using a legacy `void Function(DropdownSelectorResult)` callback,
+/// wrap it with `fromLegacyResultCallback` or inline-construct the result:
+/// ```dart
+/// onChanged: (tabData, selected) => legacy(DropdownSelectorResult(
+///   tabData: tabData, selected: selected));
+/// ```
 typedef DropdownSelectorResultCallback = void Function(
-    DropdownSelectorResult result);
+    DropdownTabData tabData, SelectorEntries selected);
 
 /// Callback invoked with the currently selected entries.
 typedef SelectorCallback = void Function(SelectorEntries selected);
@@ -35,8 +47,12 @@ typedef SelectorToggleCallback = void Function(DropdownTabData tabData);
 typedef SelectorWillToggleCallback = FutureOr<bool> Function(
     DropdownTabData tabData);
 
-/// Builds a custom label for a tab based on the current [DropdownSelectorResult].
-typedef DropdownTabLabelGetter = String Function(DropdownSelectorResult result);
+/// Builds a custom label for a tab based on the current selection.
+///
+/// [tabData] is the tab metadata and [selected] the selected entries. This
+/// replaces the previous single-`DropdownSelectorResult` parameter.
+typedef DropdownTabLabelGetter = String Function(
+    DropdownTabData tabData, SelectorEntries selected);
 
 /// Callback invoked when a custom range entry is tapped.
 typedef CustomRangeListener = void Function(
@@ -151,7 +167,7 @@ extension SelectorEntriesExtension on SelectorEntries {
   /// This is the entry point for most of the convenience query helpers below.
   /// Because it lives on this extension it is available on a bare
   /// [SelectorEntries] — e.g. the return value of `showSelector` /
-  /// `showModalBottomSelector` — not only on [DropdownSelectorResult].
+  /// `showModalBottomSelector` — not only on `DropdownSelectorResult`.
   SelectorEntry? findCategory(String categoryId) =>
       where((e) => e.id == categoryId).firstOrNull;
 
@@ -199,6 +215,29 @@ extension SelectorEntriesExtension on SelectorEntries {
     }).toList(growable: false);
   }
 
+  /// Returns the child entries of [entry] located at the given tree [level].
+  ///
+  /// A level of `0` returns [entry] itself; level `1` returns its direct
+  /// children; deeper levels walk further down the tree. Equivalent to the
+  /// legacy `DropdownSelectorResult.findChildrenAtLevel`.
+  Set<SelectorEntry> findChildrenAtLevel(SelectorEntry entry, int level) =>
+      SelectorUtils.findChildrenAtLevel(entry, level);
+
+  /// Returns the ids of the children of [entry] located at the given tree [level].
+  ///
+  /// See [findChildrenAtLevel] for the level semantics. Equivalent to the
+  /// legacy `DropdownSelectorResult.findIdsAtLevel`.
+  Set<String> findIdsAtLevel(SelectorEntry entry, int level) =>
+      SelectorUtils.findIdsAtLevel(entry, level);
+
+  /// Returns the extra ids of the children of [entry] located at the given tree
+  /// [level].
+  ///
+  /// See [findChildrenAtLevel] for the level semantics. Equivalent to the
+  /// legacy `DropdownSelectorResult.findExtrasAtLevel`.
+  List<String> findExtrasAtLevel(SelectorEntry entry, int level) =>
+      SelectorUtils.findExtrasAtLevel(entry, level);
+
   /// Returns the id of the first selected entry, or `null` when nothing is
   /// selected. Convenience accessor for single-selection tabs such as sort
   /// order.
@@ -230,3 +269,38 @@ extension IterableExtension<SelectorEntry> on Iterable<SelectorEntry> {
     return null;
   }
 }
+
+/// Adapts a legacy [DropdownSelectorResult]-based result callback to the current
+/// [DropdownSelectorResultCallback] signature.
+///
+/// Kept for backward compatibility during migration; it wraps the legacy
+/// handler and forwards a [DropdownSelectorResult] built from the new
+/// `(tabData, selected)` arguments. It will be removed in a future major
+/// version.
+@Deprecated(
+    'Pass a (tabData, selected) callback directly; this adapter exists only to ease migration.')
+DropdownSelectorResultCallback fromLegacyResultCallback(
+  void Function(DropdownSelectorResult) legacy,
+) =>
+    (tabData, selected) {
+      // ignore: deprecated_member_use_from_same_package
+      legacy(DropdownSelectorResult(tabData: tabData, selected: selected));
+    };
+
+/// Adapts a legacy [DropdownSelectorResult]-based label getter to the current
+/// [DropdownTabLabelGetter] signature.
+///
+/// Kept for backward compatibility during migration; it wraps the legacy getter
+/// and forwards a [DropdownSelectorResult] built from the new
+/// `(tabData, selected)` arguments. It will be removed in a future major
+/// version.
+@Deprecated(
+    'Pass a (tabData, selected) label getter directly; this adapter exists only to ease migration.')
+DropdownTabLabelGetter fromLegacyLabelGetter(
+  String Function(DropdownSelectorResult) legacy,
+) =>
+    (tabData, selected) {
+      // ignore: deprecated_member_use_from_same_package
+      return legacy(
+          DropdownSelectorResult(tabData: tabData, selected: selected));
+    };

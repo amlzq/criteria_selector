@@ -11,6 +11,98 @@ simply replace the name in your code.
 | `CriteriaSelectorLocalizations` | `SelectorLocalizations` |
 | `CriteriaSelectorLocalizationsDelegate` | `SelectorLocalizationsDelegate` |
 
+### `DropdownSelectorResultCallback` / `DropdownTabLabelGetter` now take `(tabData, selected)`
+
+`DropdownSelectorResultCallback` and `DropdownTabLabelGetter` previously received a
+single `DropdownSelectorResult`. They now receive the tab metadata and the selected
+entries directly:
+
+```dart
+// Before
+DropdownSelectorBar(
+  onChanged: (DropdownSelectorResult result) { /* ... */ },
+  onApplied: (DropdownSelectorResult result) { /* ... */ },
+);
+
+// After
+DropdownSelectorBar(
+  onChanged: (DropdownTabData tabData, SelectorEntries selected) { /* ... */ },
+  onApplied: (DropdownTabData tabData, SelectorEntries selected) { /* ... */ },
+);
+```
+
+`DropdownTabLabelGetter` changes the same way:
+
+```dart
+// Before
+DropdownTab(labelGetter: (DropdownSelectorResult result) => '...');
+
+// After
+DropdownTab(labelGetter: (DropdownTabData tabData, SelectorEntries selected) => '...');
+```
+
+The `DropdownSelectorResult` class is unchanged and is still useful for querying the
+selection (for example `childIdsOf`, `firstSelectedId`). To keep an existing legacy
+callback with minimal changes, wrap it with the new adapter helpers:
+
+```dart
+onChanged: fromLegacyResultCallback((DropdownSelectorResult result) {
+  // existing legacy code that uses `result`
+}),
+```
+
+Backward compatibility is also preserved on `DropdownSelectorController`:
+`onChanged` / `onApplied` still accept the legacy `void Function(DropdownSelectorResult)`
+signature (they are deprecated and will be removed in a future major version), so
+existing `addChangeListener` / `addApplyListener` call sites that you have not yet
+migrated continue to compile.
+
+### `DropdownSelectorResult` is deprecated
+
+The `DropdownSelectorResult` class still works, but it is now deprecated and will be
+removed in a future major version. You only need to construct it to keep an existing
+legacy `void Function(DropdownSelectorResult)` callback working. Prefer consuming the
+tab metadata and the selected entries directly:
+
+```dart
+// Before
+DropdownSelectorBar(
+  onApplied: (DropdownSelectorResult result) {
+    final ids = result.childIdsOf('bedrooms');
+    final tabIndex = result.tabIndex;
+  },
+);
+
+// After — read the values straight from the arguments
+DropdownSelectorBar(
+  onApplied: (DropdownTabData tabData, SelectorEntries selected) {
+    final ids = selected.childIdsOf('bedrooms');
+    final tabIndex = tabData.index;
+  },
+);
+```
+
+The convenience accessors previously provided by `DropdownSelectorResult` all have a
+direct equivalent:
+
+| `DropdownSelectorResult` | Replacement |
+| --- | --- |
+| `result.tabData` | the `tabData` argument |
+| `result.selected` | the `selected` argument |
+| `result.tabIndex` | `tabData.index` |
+| `result.tabTag` | `tabData.tag` |
+| `result.childIdsOf(id)` | `selected.childIdsOf(id)` |
+| `result.childRangesOf(id)` | `selected.childRangesOf(id)` |
+| `result.firstSelectedId` | `selected.firstSelectedId` |
+| `result.cascadingPairsOf(firstId)` | `selected.cascadingPairsOf(firstId)` |
+| `result.findCategory(...)` | `selected.findCategory(...)` |
+| `result.findIdsAtLevel(...)` | `selected.findIdsAtLevel(...)` |
+| `result.findChildrenAtLevel(...)` | `selected.findChildrenAtLevel(...)` |
+| `result.findExtrasAtLevel(...)` | `selected.findExtrasAtLevel(...)` |
+
+If you must keep a legacy handler untouched for now, wrap it with `fromLegacyResultCallback`
+(see the previous section). The `DropselectResult` rename alias is deprecated as well.
+
 ## MIGRATE TO 0.2.0
 The old names are kept as deprecated type/constant/parameter aliases during the deprecation period and will be removed in the next major version.
 

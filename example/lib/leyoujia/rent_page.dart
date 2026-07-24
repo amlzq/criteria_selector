@@ -265,7 +265,7 @@ class _RentPageState extends State<RentPage> {
                 DropdownTab(
                   // tag: 'region',
                   label: l10n?.region ?? '',
-                  // labelGetter: (DropdownSelectorResult result) {
+                  // labelGetter: (tabData, selected) {
                   //   // 可选：用户根据结果自定义标签
                   //   return '自定义标签';
                   // },
@@ -352,12 +352,16 @@ class _RentPageState extends State<RentPage> {
               onSelectorHidden: (DropdownTabData tabData) {
                 debugPrint('onHidden: ${tabData.label}');
               },
-              onChanged: (DropdownSelectorResult result) {
+              onChanged: (tabData, selected) {
+
+                final result = DropdownSelectorResult(tabData: tabData, selected: selected);
                 debugPrintLarge('onChanged: $result');
                 _handleSelectorChange(result);
                 _showSelectedResult(result);
               },
-              onApplied: (DropdownSelectorResult result) {
+              onApplied: (tabData, selected) {
+
+                final result = DropdownSelectorResult(tabData: tabData, selected: selected);
                 debugPrintLarge('onApplied: $result');
                 _handleSelectorApply(result);
                 if (result.tabIndex == 2) {

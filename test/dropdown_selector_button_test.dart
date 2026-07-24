@@ -37,8 +37,7 @@ void main() {
         of: find.byType(DropdownSelectorButton),
         matching: find.byType(RotationTransition),
       );
-      final rotation =
-          tester.widget<RotationTransition>(rotationFinder);
+      final rotation = tester.widget<RotationTransition>(rotationFinder);
       expect(rotation.turns.value, closeTo(0.5, 0.001));
       expect(find.text('A'), findsOneWidget);
 
@@ -46,8 +45,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(hidden, isTrue);
-      final rotationClosed =
-          tester.widget<RotationTransition>(rotationFinder);
+      final rotationClosed = tester.widget<RotationTransition>(rotationFinder);
       expect(rotationClosed.turns.value, closeTo(0.0, 0.001));
     });
 
@@ -66,7 +64,8 @@ void main() {
                   SelectorTextEntry<dynamic>.name(id: 'b', name: 'B'),
                 },
               ),
-              onApplied: (result) => applied = result,
+              onApplied: (tabData, selected) => applied =
+                  DropdownSelectorResult(tabData: tabData, selected: selected),
             ),
           ),
         ),

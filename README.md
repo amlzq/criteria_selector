@@ -120,8 +120,8 @@ DropdownSelectorBar(
     FlattenSelectorDelegate(crossAxisCount: 3, entriesLoader: _fetchMore),
     ListSelectorDelegate(entriesLoader: _fetchSort),
   ],
-  onApplied: (result) {
-    // result is a DropdownSelectorResult; result.selected is the SelectorEntries
+  onApplied: (tabData, selected) {
+    // tabData is the DropdownTabData; selected is the SelectorEntries
   },
 );
 ```
@@ -136,7 +136,7 @@ A single-trigger alternative to `DropdownSelectorBar` — opens a selector overl
 DropdownSelectorButton(
   label: 'Neighborhood',
   selectorDelegate: GridSelectorDelegate(crossAxisCount: 3, entriesLoader: _fetchNeighborhood),
-  onApplied: (result) { /* ... */ },
+  onApplied: (tabData, selected) { /* ... */ },
 );
 
 DropdownSelectorButton.elevated(

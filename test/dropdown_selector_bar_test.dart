@@ -89,7 +89,8 @@ void main() {
                   },
                 ),
               ],
-              onApplied: (result) => applied = result,
+              onApplied: (tabData, selected) => applied =
+                  DropdownSelectorResult(tabData: tabData, selected: selected),
               controller: controller,
             ),
             body: const SizedBox.expand(),
@@ -125,7 +126,7 @@ void main() {
               tabs: [
                 DropdownTab(
                   label: 'Price',
-                  labelGetter: (_) => 'Custom',
+                  labelGetter: (tabData, selected) => 'Custom',
                 ),
               ],
               selectorDelegates: [
@@ -135,7 +136,8 @@ void main() {
                   },
                 ),
               ],
-              onApplied: (result) => applied = result,
+              onApplied: (tabData, selected) => applied =
+                  DropdownSelectorResult(tabData: tabData, selected: selected),
               controller: controller,
             ),
             body: const SizedBox.expand(),
@@ -179,7 +181,8 @@ void main() {
                   },
                 ),
               ],
-              onChanged: (result) => changed = result,
+              onChanged: (tabData, selected) => changed =
+                  DropdownSelectorResult(tabData: tabData, selected: selected),
               onReset: () => resetCalled = true,
               controller: controller,
             ),

@@ -27,7 +27,7 @@ class DropdownSelectorController extends ChangeNotifier {
   @Deprecated(
     'Use addChangeListener instead. This field will be removed in a future major version.',
   )
-  DropdownSelectorResultCallback? onChanged;
+  void Function(DropdownSelectorResult)? onChanged;
 
   /// Fired when a selector is applied.
   ///
@@ -38,7 +38,7 @@ class DropdownSelectorController extends ChangeNotifier {
   @Deprecated(
     'Use addApplyListener instead. This field will be removed in a future major version.',
   )
-  DropdownSelectorResultCallback? onApplied;
+  void Function(DropdownSelectorResult)? onApplied;
 
   /// Fired when reset is triggered.
   ///
@@ -398,18 +398,20 @@ class DropdownSelectorController extends ChangeNotifier {
   /// Dispatches a selection change event.
   void handleChange(SelectorEntries selected) {
     if (_isDisposed) return;
+    // ignore: deprecated_member_use_from_same_package
     final result =
         DropdownSelectorResult(tabData: currentTabData, selected: selected);
     // ignore: deprecated_member_use_from_same_package
     onChanged?.call(result);
     for (final listener in List.of(_changeListeners)) {
-      listener(result);
+      listener(result.tabData, result.selected);
     }
   }
 
   /// Dispatches an apply event and updates the tab result label.
   void handleApply(SelectorEntries selected, String multipleText) {
     if (_isDisposed) return;
+    // ignore: deprecated_member_use_from_same_package
     final result =
         DropdownSelectorResult(tabData: currentTabData, selected: selected);
     hideSelector();
@@ -423,9 +425,10 @@ class DropdownSelectorController extends ChangeNotifier {
     // ignore: deprecated_member_use_from_same_package
     onApplied?.call(result);
     for (final listener in List.of(_applyListeners)) {
-      listener(result);
+      listener(result.tabData, result.selected);
     }
-    final customLabel = result.tabData.labelGetter?.call(result);
+    final customLabel =
+        result.tabData.labelGetter?.call(result.tabData, result.selected);
     result.tabData.resultLabel = customLabel ??
         SelectorUtils.getResultLabel(result.selected, multipleText);
     notifyListeners();
@@ -434,7 +437,7 @@ class DropdownSelectorController extends ChangeNotifier {
   /// Programmatically applies selection ids to the tab at [tabIndex].
   ///
   /// This method does not open the selector panel. Instead, it resolves
-  /// [selectedEntryIds] against the selector data, builds a [DropdownSelectorResult],
+  /// [selectedEntryIds] against the selector data, builds a `DropdownSelectorResult`,
   /// fires `onApplied`, updates the tab label, and notifies listeners.
   ///
   /// Matching rules:
@@ -481,13 +484,14 @@ class DropdownSelectorController extends ChangeNotifier {
     if (ctx.invalidCategoryHit) return false;
     if (ctx.invalidCustomHit) return false;
 
+    // ignore: deprecated_member_use_from_same_package
     final result = DropdownSelectorResult(tabData: tabData, selected: selected);
     // ignore: deprecated_member_use_from_same_package
     onApplied?.call(result);
     for (final listener in List.of(_applyListeners)) {
-      listener(result);
+      listener(tabData, selected);
     }
-    final customLabel = tabData.labelGetter?.call(result);
+    final customLabel = tabData.labelGetter?.call(tabData, selected);
     tabData.resultLabel = customLabel ??
         SelectorUtils.getResultLabel(result.selected, multipleText);
     notifyListeners();

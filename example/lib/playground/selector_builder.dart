@@ -372,8 +372,10 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
                 DropdownTab(label: l10n.layoutList),
               ],
               selectorDelegates: tabDelegates,
-              onChanged: (result) => _onChanged(result),
-              onApplied: (result) => _onApplied(result),
+              onChanged: (tabData, selected) => _onChanged(
+                  DropdownSelectorResult(tabData: tabData, selected: selected)),
+              onApplied: (tabData, selected) => _onApplied(
+                  DropdownSelectorResult(tabData: tabData, selected: selected)),
             ),
           ),
           body: Column(
@@ -393,8 +395,12 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
                   child: DropdownSelectorButton(
                     selectorDelegate: widget.delegate,
                     label: l10n.filterLabel,
-                    onChanged: (result) => _onChanged(result),
-                    onApplied: (result) => _onApplied(result),
+                    onChanged: (tabData, selected) => _onChanged(
+                        DropdownSelectorResult(
+                            tabData: tabData, selected: selected)),
+                    onApplied: (tabData, selected) => _onApplied(
+                        DropdownSelectorResult(
+                            tabData: tabData, selected: selected)),
                   ),
                 ),
               ),

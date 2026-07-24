@@ -6,7 +6,6 @@ import 'dropdown_overlay.dart';
 import 'dropdown_overlay_style.dart';
 import 'dropdown_selector_bar_theme.dart';
 import 'dropdown_selector_controller.dart';
-import 'dropdown_selector_result.dart';
 import 'dropdown_tab_data.dart';
 import 'i18n/localizations.dart';
 import 'selector/constants.dart';
@@ -236,11 +235,11 @@ class _DropdownSelectorBarState extends State<DropdownSelectorBar>
     setState(() {});
   }
 
-  void _handleWidgetChange(DropdownSelectorResult result) =>
-      widget.onChanged?.call(result);
+  void _handleWidgetChange(DropdownTabData tabData, SelectorEntries selected) =>
+      widget.onChanged?.call(tabData, selected);
 
-  void _handleWidgetApply(DropdownSelectorResult result) =>
-      widget.onApplied?.call(result);
+  void _handleWidgetApply(DropdownTabData tabData, SelectorEntries selected) =>
+      widget.onApplied?.call(tabData, selected);
 
   void _handleWidgetReset() => widget.onReset?.call();
 

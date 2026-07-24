@@ -570,12 +570,16 @@ class _HousePageState extends State<HousePage> {
               onSelectorHidden: (DropdownTabData tabData) {
                 debugPrint('onHidden: ${tabData.label}');
               },
-              onChanged: (DropdownSelectorResult result) {
+              onChanged: (tabData, selected) {
+                final result = DropdownSelectorResult(
+                    tabData: tabData, selected: selected);
                 debugPrintLarge('onChanged: $result');
                 _handleSelectorChange(result);
                 _showSelectedResult(result);
               },
-              onApplied: (DropdownSelectorResult result) {
+              onApplied: (tabData, selected) {
+                final result = DropdownSelectorResult(
+                    tabData: tabData, selected: selected);
                 debugPrintLarge('onApplied: $result');
                 _handleSelectorApply(result);
                 if (result.tabIndex == 3) {

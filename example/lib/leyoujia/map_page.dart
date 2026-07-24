@@ -245,7 +245,7 @@ class _MapPageState extends State<MapPage> {
               DropdownTab(
                 // tag: 'region',
                 label: l10n?.region ?? '',
-                // labelGetter: (DropdownSelectorResult result) {
+                // labelGetter: (tabData, selected) {
                 //   // 可选：用户根据结果自定义标签
                 //   return '自定义标签';
                 // },
@@ -296,11 +296,15 @@ class _MapPageState extends State<MapPage> {
                 selectionMode: SelectionMode.single,
               ),
             ],
-            onChanged: (DropdownSelectorResult result) {
+            onChanged: (tabData, selected) {
+              final result =
+                  DropdownSelectorResult(tabData: tabData, selected: selected);
               debugPrint('onChanged: $result');
               _handleSelectorChange(result);
             },
-            onApplied: (DropdownSelectorResult result) {
+            onApplied: (tabData, selected) {
+              final result =
+                  DropdownSelectorResult(tabData: tabData, selected: selected);
               debugPrint('onApplied: $result');
               _handleSelectorApply(result);
             },

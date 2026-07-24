@@ -63,10 +63,15 @@ typedef DropselectTabControllerProvider = DropdownSelectorControllerProvider;
 )
 typedef DropselectTabData = DropdownTabData;
 
-/// Use [DropdownSelectorResult] instead.
+/// Deprecated rename of [DropdownSelectorResult].
+///
+/// Note that [DropdownSelectorResult] itself is now deprecated as well; migrate
+/// callbacks to the `(tabData, selected)` signature
+/// ([DropdownSelectorResultCallback] / [DropdownTabLabelGetter]) instead.
 @Deprecated(
-  'Renamed to DropdownSelectorResult. The API and behavior are identical; '
-  'simply rename the type. This alias will be removed in a future major version.',
+  'Renamed to DropdownSelectorResult, which is itself deprecated. Migrate to the '
+  '(tabData, selected) callback signature instead. This alias will be removed in a '
+  'future major version.',
 )
 typedef DropselectResult = DropdownSelectorResult;
 

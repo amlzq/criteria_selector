@@ -198,7 +198,7 @@ class _SellPageState extends State<SellPage> {
                 DropdownTab(
                   // tag: 'region',
                   label: l10n?.region ?? '',
-                  // labelGetter: (DropdownSelectorResult result) {
+                  // labelGetter: (tabData, selected) {
                   //   // 可选：用户根据结果自定义标签
                   //   return '自定义标签';
                   // },
@@ -266,7 +266,9 @@ class _SellPageState extends State<SellPage> {
               onSelectorHidden: (DropdownTabData tabData) {
                 debugPrint('onHidden: ${tabData.label}');
               },
-              onChanged: (DropdownSelectorResult result) {
+              onChanged: (tabData, selected) {
+
+                final result = DropdownSelectorResult(tabData: tabData, selected: selected);
                 debugPrint('onChanged: $result');
                 final conditions = '${result.selected.flatten()}';
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -277,7 +279,9 @@ class _SellPageState extends State<SellPage> {
                   ),
                 );
               },
-              onApplied: (DropdownSelectorResult result) {
+              onApplied: (tabData, selected) {
+
+                final result = DropdownSelectorResult(tabData: tabData, selected: selected);
                 debugPrint('onApplied: $result');
                 _handleSelectorApply(result);
                 final conditions = '${result.selected.flatten()}';

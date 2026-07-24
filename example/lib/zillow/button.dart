@@ -168,12 +168,16 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                 return MyCheckbox(value: selected);
               },
             ),
-            onChanged: (result) {
+            onChanged: (tabData, selected) {
+              final result =
+                  DropdownSelectorResult(tabData: tabData, selected: selected);
               debugPrint('onChanged: $result');
               _handleSelectorChange(result);
               _showSelectedResult(result);
             },
-            onApplied: (result) {
+            onApplied: (tabData, selected) {
+              final result =
+                  DropdownSelectorResult(tabData: tabData, selected: selected);
               debugPrint('onApplied: $result');
               _handleSelectorApply(result);
               _showSelectedResult(result);
@@ -201,12 +205,16 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                 ),
                 applyText: AppLocalizations.of(context)?.apply ?? '',
               ),
-              onChanged: (result) {
+              onChanged: (tabData, selected) {
+                final result = DropdownSelectorResult(
+                    tabData: tabData, selected: selected);
                 debugPrint('onChanged: $result');
                 _handleSelectorChange(result);
                 _showSelectedResult(result);
               },
-              onApplied: (result) {
+              onApplied: (tabData, selected) {
+                final result = DropdownSelectorResult(
+                    tabData: tabData, selected: selected);
                 debugPrint('onApplied: $result');
                 _handleSelectorApply(result);
                 _showSelectedResult(result);
@@ -237,12 +245,16 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                   clipBehavior: Clip.antiAlias,
                 ),
               ),
-              onChanged: (result) {
+              onChanged: (tabData, selected) {
+                final result = DropdownSelectorResult(
+                    tabData: tabData, selected: selected);
                 debugPrint('onChanged: $result');
                 _handleSelectorChange(result);
                 _showSelectedResult(result);
               },
-              onApplied: (result) {
+              onApplied: (tabData, selected) {
+                final result = DropdownSelectorResult(
+                    tabData: tabData, selected: selected);
                 debugPrint('onApplied: $result');
                 _handleSelectorApply(result);
                 _showSelectedResult(result);
@@ -272,12 +284,16 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                   variant: SelectorChipVariant.outlined,
                 ),
               ),
-              onChanged: (result) {
+              onChanged: (tabData, selected) {
+                final result = DropdownSelectorResult(
+                    tabData: tabData, selected: selected);
                 debugPrint('onChanged: $result');
                 _handleSelectorChange(result);
                 _showSelectedResult(result);
               },
-              onApplied: (result) {
+              onApplied: (tabData, selected) {
+                final result = DropdownSelectorResult(
+                    tabData: tabData, selected: selected);
                 debugPrint('onApplied: $result');
                 _handleSelectorApply(result);
                 _showSelectedResult(result);
