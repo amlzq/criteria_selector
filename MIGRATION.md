@@ -1,5 +1,16 @@
 # Migration Guide
 
+## MIGRATE TO Next
+
+The i18n classes were renamed to drop the redundant `Criteria` prefix. This is a
+pure rename — each old symbol is the exact same type as its new counterpart, so
+simply replace the name in your code.
+
+| Old | New |
+| --- | --- |
+| `CriteriaSelectorLocalizations` | `SelectorLocalizations` |
+| `CriteriaSelectorLocalizationsDelegate` | `SelectorLocalizationsDelegate` |
+
 ## MIGRATE TO 0.2.0
 The old names are kept as deprecated type/constant/parameter aliases during the deprecation period and will be removed in the next major version.
 

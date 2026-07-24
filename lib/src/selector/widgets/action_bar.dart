@@ -95,7 +95,7 @@ class SelectorActionBar extends StatelessWidget {
     final effectiveApplyFlex =
         applyFlex ?? theme.applyFlex ?? defaults.applyFlex!;
 
-    final localizations = CriteriaSelectorLocalizations.of(context);
+    final localizations = SelectorLocalizations.of(context);
 
     final effectiveResetText = resetText ?? localizations?.reset ?? 'Reset';
 

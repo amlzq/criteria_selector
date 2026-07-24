@@ -15,7 +15,7 @@ Two layers work together: **entry points** decide *where* the selector appears, 
 - Flexible entries: the "Any" entry clears a category, `SelectorRangeEntry.custom` takes user min/max input, and an `immediate` entry applies on tap without the action bar.
 - `skeletonBuilder` & `errorBuilder` for loading and error states.
 - Theming via `SelectorThemeData` and the `DropdownSelectorBarTheme` / `DropdownSelectorButtonTheme` extensions.
-- Built-in i18n in 10 languages via `CriteriaSelectorLocalizationsDelegate`.
+- Built-in i18n in 10 languages via `SelectorLocalizationsDelegate`.
 
 ## Getting started
 
@@ -230,16 +230,16 @@ MaterialApp(
 
 ### Internationalization
 
-Add `CriteriaSelectorLocalizationsDelegate()` to your `MaterialApp`. It ships translations for `en`, `zh` (Hans/Hant), `es`, `pt`, `id`, `vi`, `fr`, `de`, `ja`, and `ko`, localizing the "Apply" / "Reset" / "Multiple" labels automatically.
+Add `SelectorLocalizationsDelegate()` to your `MaterialApp`. It ships translations for `en`, `zh` (Hans/Hant), `es`, `pt`, `id`, `vi`, `fr`, `de`, `ja`, and `ko`, localizing the "Apply" / "Reset" / "Multiple" labels automatically.
 
 ```dart
 const localizationsDelegates = <LocalizationsDelegate>[
   GlobalMaterialLocalizations.delegate,
   GlobalWidgetsLocalizations.delegate,
-  CriteriaSelectorLocalizationsDelegate(),
+  SelectorLocalizationsDelegate(),
 ];
 
-const supportedLocales = CriteriaSelectorLocalizationsDelegate.supportedLocales;
+const supportedLocales = SelectorLocalizationsDelegate.supportedLocales;
 
 MaterialApp(
   localizationsDelegates: localizationsDelegates,

@@ -1,3 +1,7 @@
+## Next
+
+* **DEPRECATION** rename `CriteriaSelectorLocalizations` → `SelectorLocalizations` and `CriteriaSelectorLocalizationsDelegate` → `SelectorLocalizationsDelegate` (old names kept as deprecated aliases).
+
 ## 0.2.1
 
 * **FIX** persist selection so it is restored when the panel is reopened.

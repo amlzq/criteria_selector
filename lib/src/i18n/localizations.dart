@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class CriteriaSelectorLocalizations {
+class SelectorLocalizations {
   final Locale locale;
 
-  CriteriaSelectorLocalizations(this.locale);
+  SelectorLocalizations(this.locale);
 
-  static CriteriaSelectorLocalizations? of(BuildContext context) {
-    return Localizations.of<CriteriaSelectorLocalizations>(
-        context, CriteriaSelectorLocalizations);
+  static SelectorLocalizations? of(BuildContext context) {
+    return Localizations.of<SelectorLocalizations>(
+        context, SelectorLocalizations);
   }
 
   // Dynamically compute the best-matching language pack for the current context.

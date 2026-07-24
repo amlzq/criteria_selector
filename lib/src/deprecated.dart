@@ -15,6 +15,8 @@ import 'dropdown_selector_bar_theme.dart';
 import 'dropdown_selector_controller.dart';
 import 'dropdown_selector_result.dart';
 import 'dropdown_tab_data.dart';
+import 'i18n/localizations.dart';
+import 'i18n/localizations_delegate.dart';
 import 'selector/constants.dart';
 import 'selector/selector_delegate.dart';
 
@@ -145,3 +147,18 @@ typedef GridSelector = GridSelectorDelegate;
   'simply rename the type. This alias will be removed in a future major version.',
 )
 typedef FlattenSelector = FlattenSelectorDelegate;
+
+/// Use [SelectorLocalizations] instead.
+@Deprecated(
+  'Renamed to SelectorLocalizations. The API and behavior are identical; '
+  'simply rename the type. This alias will be removed in a future major version.',
+)
+typedef CriteriaSelectorLocalizations = SelectorLocalizations;
+
+/// Use [SelectorLocalizationsDelegate] instead.
+@Deprecated(
+  'Renamed to SelectorLocalizationsDelegate. The API and behavior are '
+  'identical; simply rename the type. This alias will be removed in a future '
+  'major version.',
+)
+typedef CriteriaSelectorLocalizationsDelegate = SelectorLocalizationsDelegate;

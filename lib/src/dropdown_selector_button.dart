@@ -272,7 +272,7 @@ class _DropdownSelectorButtonState extends State<DropdownSelectorButton>
     final overlayStyle = widget.overlayStyle ?? resolved.overlayStyle;
     final effectiveSelectorTheme = resolved.selectorTheme;
 
-    final localizations = CriteriaSelectorLocalizations.of(context);
+    final localizations = SelectorLocalizations.of(context);
     _controller.applyMultipleText = localizations?.multiple ?? 'Multiple';
 
     return SelectorOverlayHost(

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'localizations.dart';
 
-class CriteriaSelectorLocalizationsDelegate
-    extends LocalizationsDelegate<CriteriaSelectorLocalizations> {
-  const CriteriaSelectorLocalizationsDelegate();
+class SelectorLocalizationsDelegate
+    extends LocalizationsDelegate<SelectorLocalizations> {
+  const SelectorLocalizationsDelegate();
 
   static const supportedLanguageCodes = <String>{
     'en',
@@ -45,13 +45,13 @@ class CriteriaSelectorLocalizationsDelegate
   }
 
   @override
-  Future<CriteriaSelectorLocalizations> load(Locale locale) async {
-    return CriteriaSelectorLocalizations(locale);
+  Future<SelectorLocalizations> load(Locale locale) async {
+    return SelectorLocalizations(locale);
   }
 
   @override
   bool shouldReload(
-      covariant LocalizationsDelegate<CriteriaSelectorLocalizations> old) {
+      covariant LocalizationsDelegate<SelectorLocalizations> old) {
     return false;
   }
 }

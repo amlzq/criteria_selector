@@ -323,7 +323,7 @@ class _DropdownSelectorBarState extends State<DropdownSelectorBar>
 
     final effectiveSelectorTheme = widget.selectorTheme ?? theme?.selectorTheme;
 
-    final localizations = CriteriaSelectorLocalizations.of(context);
+    final localizations = SelectorLocalizations.of(context);
 
     final effectiveMultipleText = localizations?.multiple ?? 'Multiple';
 
