@@ -348,8 +348,18 @@ class DropdownSelectorController extends ChangeNotifier {
     if (_isDisposed) return;
     if (index == null) return;
 
+    final newDelegate = _selectorAt(index);
+    if (newDelegate == null) return;
+
+    final wasShowing = portalCtrl.isShowing;
+
     currentIndex = index;
     _isExpanded = true;
+    // Bind the panel content to the *target* tab's delegate. Without this,
+    // switching from an already-open panel to a different index would rebuild
+    // the controller against the previously shown delegate, rendering the old
+    // tab's content under the new index.
+    previousSelectorDelegate = newDelegate;
 
     // Create (or refresh) the SelectorController for this selector session.
     _createSelectorController();
@@ -357,13 +367,15 @@ class DropdownSelectorController extends ChangeNotifier {
     _ensureOverlayAnimationController();
     final animCtrl = _overlayAnimCtrl;
 
-    if (!portalCtrl.isShowing) {
+    if (!wasShowing) {
       portalCtrl.show();
       animCtrl?.forward(from: 0.0);
       notifyListeners();
       return;
     }
 
+    // Already showing: switch the panel in place without replaying the enter
+    // animation, so jumping between tabs doesn't flash or collapse the overlay.
     animCtrl?.value = 1.0;
     notifyListeners();
   }

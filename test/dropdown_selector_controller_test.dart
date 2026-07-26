@@ -1,0 +1,184 @@
+import 'package:criteria_selector/criteria_selector.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+/// Unit tests for [DropdownSelectorController] behavior driven directly through
+/// its public API (rather than via simulated taps). The real [DropdownSelectorBar]
+/// widget is mounted only to wire up the ticker provider, tab data and selector
+/// delegates the controller depends on; assertions then call
+/// `controller.toggleSelector` / `controller.hideSelector` directly.
+void main() {
+  group('DropdownSelectorController', () {
+    Future<void> pumpBar(
+      WidgetTester tester,
+      DropdownSelectorController controller,
+      List<DropdownTab> tabs,
+      List<SelectorDelegate> delegates,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            appBar: DropdownSelectorBar(
+              tabs: tabs,
+              selectorDelegates: delegates,
+              controller: controller,
+            ),
+            body: const SizedBox.expand(),
+          ),
+        ),
+      );
+    }
+
+    testWidgets('toggleSelector opens the requested panel', (tester) async {
+      final controller = DropdownSelectorController();
+      await pumpBar(
+        tester,
+        controller,
+        const [DropdownTab(label: 'T0'), DropdownTab(label: 'T1')],
+        [
+          ListSelectorDelegate(
+            entriesLoader: () async => {
+              SelectorTextEntry<dynamic>.name(id: 'a0', name: 'A0'),
+            },
+          ),
+          ListSelectorDelegate(
+            entriesLoader: () async => {
+              SelectorTextEntry<dynamic>.name(id: 'a1', name: 'A1'),
+            },
+          ),
+        ],
+      );
+
+      controller.toggleSelector(index: 0);
+      await tester.pumpAndSettle();
+
+      expect(controller.isSelectorShowing, isTrue);
+      expect(controller.currentIndex, 0);
+      // The panel binds to tab 0's delegate and renders its entries.
+      expect(find.text('A0'), findsOneWidget);
+      expect(controller.selectorController, isNotNull);
+    });
+
+    testWidgets(
+        'toggleSelector switches to another open panel without closing the '
+        'overlay and renders the new panel content', (tester) async {
+      final controller = DropdownSelectorController();
+      await pumpBar(
+        tester,
+        controller,
+        const [DropdownTab(label: 'T0'), DropdownTab(label: 'T1')],
+        [
+          ListSelectorDelegate(
+            entriesLoader: () async => {
+              SelectorTextEntry<dynamic>.name(id: 'a0', name: 'A0'),
+            },
+          ),
+          ListSelectorDelegate(
+            entriesLoader: () async => {
+              SelectorTextEntry<dynamic>.name(id: 'a1', name: 'A1'),
+            },
+          ),
+        ],
+      );
+
+      // Open panel 0 first.
+      controller.toggleSelector(index: 0);
+      await tester.pumpAndSettle();
+      expect(controller.currentIndex, 0);
+      expect(find.text('A0'), findsOneWidget);
+
+      // While panel 0 is open, switch to panel 1 programmatically.
+      controller.toggleSelector(index: 1);
+      await tester.pumpAndSettle();
+
+      // The overlay must stay open (no collapse/reopen) and show panel 1.
+      expect(controller.isSelectorShowing, isTrue);
+      expect(controller.currentIndex, 1);
+      expect(find.text('A1'), findsOneWidget);
+      // The previous panel's content is gone.
+      expect(find.text('A0'), findsNothing);
+    });
+
+    testWidgets('toggleSelector on the already-open panel closes it',
+        (tester) async {
+      final controller = DropdownSelectorController();
+      await pumpBar(
+        tester,
+        controller,
+        const [DropdownTab(label: 'T0'), DropdownTab(label: 'T1')],
+        [
+          ListSelectorDelegate(
+            entriesLoader: () async => {
+              SelectorTextEntry<dynamic>.name(id: 'a0', name: 'A0'),
+            },
+          ),
+          ListSelectorDelegate(
+            entriesLoader: () async => {
+              SelectorTextEntry<dynamic>.name(id: 'a1', name: 'A1'),
+            },
+          ),
+        ],
+      );
+
+      controller.toggleSelector(index: 1);
+      await tester.pumpAndSettle();
+      expect(controller.isSelectorShowing, isTrue);
+      expect(controller.currentIndex, 1);
+
+      // Tapping the same (open) index toggles it closed.
+      controller.toggleSelector(index: 1);
+      await tester.pumpAndSettle();
+
+      expect(controller.isSelectorShowing, isFalse);
+    });
+
+    testWidgets('hideSelector closes an open overlay', (tester) async {
+      final controller = DropdownSelectorController();
+      await pumpBar(
+        tester,
+        controller,
+        const [DropdownTab(label: 'T0')],
+        [
+          ListSelectorDelegate(
+            entriesLoader: () async => {
+              SelectorTextEntry<dynamic>.name(id: 'a0', name: 'A0'),
+            },
+          ),
+        ],
+      );
+
+      controller.toggleSelector(index: 0);
+      await tester.pumpAndSettle();
+      expect(controller.isSelectorShowing, isTrue);
+
+      controller.hideSelector();
+      await tester.pumpAndSettle();
+
+      expect(controller.isSelectorShowing, isFalse);
+    });
+
+    testWidgets('toggleSelector is a no-op for an out-of-range index',
+        (tester) async {
+      final controller = DropdownSelectorController();
+      await pumpBar(
+        tester,
+        controller,
+        const [DropdownTab(label: 'T0')],
+        [
+          ListSelectorDelegate(
+            entriesLoader: () async => {
+              SelectorTextEntry<dynamic>.name(id: 'a0', name: 'A0'),
+            },
+          ),
+        ],
+      );
+
+      // Index 5 is not registered; the controller must not open or throw.
+      controller.toggleSelector(index: 5);
+      await tester.pumpAndSettle();
+
+      expect(controller.isSelectorShowing, isFalse);
+      expect(controller.currentIndex, isNull);
+    });
+  });
+}
