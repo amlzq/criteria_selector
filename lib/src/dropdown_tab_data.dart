@@ -15,12 +15,6 @@ class DropdownTabData extends SelectorLabelState {
   /// Optional tag for identifying the tab.
   final String? tag;
 
-  /// Optional custom label loader based on the current selection result.
-  ///
-  /// Use the canonical [SelectorLabelLoader] form, which receives only the
-  /// selected entries.
-  final SelectorLabelLoader? labelLoader;
-
   /// @Deprecated('Use [labelLoader]. This legacy loader additionally received '
   /// 'tab metadata; pass it to [labelLoader] via fromTabLabelGetter, or set it '
   /// 'here directly to keep receiving the live [DropdownTabData]. Will be '
@@ -31,17 +25,21 @@ class DropdownTabData extends SelectorLabelState {
   ///
   /// Prefers [labelLoader]; falls back to [legacyLabelGetter], forwarding the
   /// live [DropdownTabData] as the tab metadata so legacy getters keep working.
-  SelectorLabelLoader? get labelGetter =>
+  @override
+  SelectorLabelLoader? get resolvedLabelLoader =>
       labelLoader ??
       (legacyLabelGetter == null
           ? null
           : (SelectorEntries selected) => legacyLabelGetter!(this, selected));
 
+  /// Backward-compatible alias for [resolvedLabelLoader].
+  SelectorLabelLoader? get labelGetter => resolvedLabelLoader;
+
   DropdownTabData({
     required this.index,
     super.originalLabel,
     this.tag,
-    this.labelLoader,
+    super.labelLoader,
     this.legacyLabelGetter,
   });
 

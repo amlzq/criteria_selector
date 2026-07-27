@@ -455,7 +455,7 @@ class DropdownSelectorController extends ChangeNotifier {
     for (final listener in List.of(_applyListeners)) {
       listener(labelState, selected);
     }
-    final customLabel = tabData?.labelGetter?.call(selected);
+    final customLabel = labelState.resolvedLabelLoader?.call(selected);
     labelState.resultLabel =
         customLabel ?? SelectorUtils.getResultLabel(selected, multipleText);
     notifyListeners();
@@ -519,7 +519,7 @@ class DropdownSelectorController extends ChangeNotifier {
     for (final listener in List.of(_applyListeners)) {
       listener(tabData, selected);
     }
-    final customLabel = tabData.labelGetter?.call(selected);
+    final customLabel = tabData.resolvedLabelLoader?.call(selected);
     tabData.resultLabel = customLabel ??
         SelectorUtils.getResultLabel(result.selected, multipleText);
     notifyListeners();

@@ -85,6 +85,35 @@ void main() {
       expect(applied!.any((e) => e.id == 'a'), isTrue);
     });
 
+    testWidgets('labelLoader overrides the trigger label after apply',
+        (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: DropdownSelectorButton(
+              label: 'Sort',
+              labelLoader: (selected) => '${selected.length} selected',
+              selectorDelegate: ListSelectorDelegate(
+                entriesLoader: () async => <SelectorEntry<dynamic>>{
+                  SelectorTextEntry<dynamic>.name(id: 'a', name: 'A'),
+                  SelectorTextEntry<dynamic>.name(id: 'b', name: 'B'),
+                },
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Sort'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('A'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Sort'), findsNothing);
+      expect(find.text('1 selected'), findsOneWidget);
+    });
+
     testWidgets('renders outlined and elevated variants', (tester) async {
       await tester.pumpWidget(
         MaterialApp(

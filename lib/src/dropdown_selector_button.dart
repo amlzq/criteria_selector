@@ -7,6 +7,7 @@ import 'dropdown_overlay_style.dart';
 import 'dropdown_selector_button_theme.dart';
 import 'dropdown_selector_controller.dart';
 import 'i18n/localizations.dart';
+import 'selector/constants.dart';
 import 'selector/selector_delegate.dart';
 import 'selector/selector_entry.dart';
 import 'selector_label_state.dart';
@@ -63,6 +64,7 @@ class DropdownSelectorButton extends StatefulWidget {
     this.onChanged,
     this.onApplied,
     this.onReset,
+    this.labelLoader,
     this.direction = DropdownSelectorDirection.below,
   }) : assert(label == null || child == null,
             'Provide either label or child, not both.');
@@ -83,6 +85,7 @@ class DropdownSelectorButton extends StatefulWidget {
     this.onChanged,
     this.onApplied,
     this.onReset,
+    this.labelLoader,
     this.direction = DropdownSelectorDirection.below,
   })  : variant = DropdownSelectorButtonVariant.elevated,
         assert(label == null || child == null,
@@ -104,6 +107,7 @@ class DropdownSelectorButton extends StatefulWidget {
     this.onChanged,
     this.onApplied,
     this.onReset,
+    this.labelLoader,
     this.direction = DropdownSelectorDirection.below,
   })  : variant = DropdownSelectorButtonVariant.outlined,
         assert(label == null || child == null,
@@ -153,6 +157,15 @@ class DropdownSelectorButton extends StatefulWidget {
   /// Fired when reset is triggered.
   final VoidCallback? onReset;
 
+  /// Optional custom label loader based on the applied selection result.
+  ///
+  /// Receives only the selected entries; the canonical [SelectorLabelLoader]
+  /// form. When provided, the trigger label is built from the applied selection
+  /// instead of the default [label] / result label. Mutually exclusive with
+  /// [child] only in spirit — both may be set, but the loaded label replaces
+  /// the displayed text.
+  final SelectorLabelLoader? labelLoader;
+
   /// Vertical placement of the selector panel relative to the trigger.
   ///
   /// Defaults to [DropdownSelectorDirection.below], which always shows the
@@ -186,6 +199,7 @@ class _DropdownSelectorButtonState extends State<DropdownSelectorButton>
     _controller.attachSelectorDelegates([widget.selectorDelegate]);
     _controller.attachTickerProvider(this);
     _labelState.originalLabel = widget.label;
+    _labelState.labelLoader = widget.labelLoader;
     _controller.labelStateMap[0] = _labelState;
   }
 
@@ -196,6 +210,10 @@ class _DropdownSelectorButtonState extends State<DropdownSelectorButton>
     _controller.attachTickerProvider(this);
     if (oldWidget.label != widget.label) {
       _labelState.originalLabel = widget.label;
+      _controller.notifyListeners();
+    }
+    if (oldWidget.labelLoader != widget.labelLoader) {
+      _labelState.labelLoader = widget.labelLoader;
       _controller.notifyListeners();
     }
   }

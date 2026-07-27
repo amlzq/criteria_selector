@@ -215,6 +215,9 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
           Center(
             child: DropdownSelectorButton.elevated(
               label: '价格',
+              labelLoader: (selected) {
+                return '价格${selected.length}';
+              },
               selectorDelegate: GridSelectorDelegate(
                 entriesLoader: _filtersRepo.fetchBuyPriceData,
                 selectedEntriesLoader: _filtersRepo.fetchBuyPriceSelectedData,

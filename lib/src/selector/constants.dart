@@ -54,7 +54,8 @@ typedef DropdownTabLabelGetter = String Function(
 /// Unlike the deprecated [DropdownTabLabelGetter], it receives only the
 /// [selected] entries — the tab metadata is no longer needed. This is the
 /// canonical label-loader type going forward and is used by
-/// [DropdownTabData.labelLoader] / [DropdownTab.labelGetter].
+/// [DropdownTabData.labelLoader] / [DropdownTab.labelLoader] /
+/// [DropdownSelectorButton.labelLoader].
 typedef SelectorLabelLoader = String Function(SelectorEntries selected);
 
 /// Callback invoked when a custom range entry is tapped.
