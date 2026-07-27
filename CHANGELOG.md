@@ -1,30 +1,31 @@
-## Next
+## 0.3.0
 
 * **DEPRECATION** rename `CriteriaSelectorLocalizations` → `SelectorLocalizations` and `CriteriaSelectorLocalizationsDelegate` → `SelectorLocalizationsDelegate` (old names kept as deprecated aliases).
 
-* **CHANGED** `DropdownSelectorResultCallback` is now `void Function(DropdownTabData tabData, SelectorEntries selected)` instead of `void Function(DropdownSelectorResult result)`. Callbacks receive the tab metadata and the selected entries directly, so a `DropdownSelectorResult` no longer needs to be unwrapped.
+* **DEPRECATION** change `DropdownSelectorResultCallback` to `void Function(DropdownTabData tabData, SelectorEntries selected)` (was `void Function(DropdownSelectorResult)`) and `DropdownTabLabelGetter` to `String Function(DropdownTabData, SelectorEntries)` (was `String Function(DropdownSelectorResult)`); callbacks now receive the tab metadata and selected entries directly, so a `DropdownSelectorResult` no longer needs to be unwrapped.
 
-* **CHANGED** `DropdownTabLabelGetter` is now `String Function(DropdownTabData tabData, SelectorEntries selected)` instead of `String Function(DropdownSelectorResult result)`.
+* **DEPRECATION** type `DropdownTab.labelGetter` / `DropdownTabData.labelGetter` as `SelectorLabelLoader` (`String Function(SelectorEntries)`) instead of the deprecated `DropdownTabLabelGetter`; the tab metadata argument is no longer passed to the canonical loader.
 
-* **CHANGED** `DropdownTab.labelGetter` / `DropdownTabData.labelGetter` are now typed as `SelectorLabelLoader` (`String Function(SelectorEntries selected)`) instead of the now-deprecated `DropdownTabLabelGetter` (`String Function(DropdownTabData, SelectorEntries)`). The tab metadata argument is no longer passed to the canonical loader.
+* **DEPRECATION** deprecate `DropdownSelectorResult` (and the `DropselectResult` alias); it is now only needed to keep an existing legacy `void Function(DropdownSelectorResult)` callback working, and will be removed in a future major version.
 
-* **DEPRECATION** `DropdownTabLabelGetter` is deprecated in favor of `SelectorLabelLoader`; it is retained as a backward-compatible alias. `DropdownTab` / `DropdownTabData` additionally expose a deprecated `legacyLabelGetter` field that keeps forwarding the live `DropdownTabData` to legacy getters.
+* **DEPRECATION** keep `DropdownSelectorController.onChanged` / `onApplied` on the legacy `void Function(DropdownSelectorResult)` signature; they will be removed in a future major version.
 
-* **DEPRECATION** `DropdownSelectorController.onChanged` / `DropdownSelectorController.onApplied` keep the legacy `void Function(DropdownSelectorResult)` signature for backward compatibility; they will be removed in a future major version.
+* **DEPRECATION** keep `DropdownTabLabelGetter` as a backward-compatible alias and add a deprecated `legacyLabelGetter` field on `DropdownTab` / `DropdownTabData` to forward the live `DropdownTabData` to legacy getters.
 
-* **DEPRECATION** added `fromLegacyResultCallback`, `fromLegacyLabelGetter`, and `fromTabLabelGetter` helpers (in `selector/constants.dart`) to adapt legacy callbacks / label getters to the current signatures.
+* **IMPROVEMENT** add `DropdownSelectorButton.labelLoader` (`SelectorLabelLoader?`) to build the trigger label from the applied selection; it is stored on the shared `SelectorLabelState.labelLoader` and resolved via `SelectorLabelState.resolvedLabelLoader`, so single-trigger buttons and multi-tab bars now share one code path.
 
-* **DEPRECATION** `DropdownSelectorResult` is deprecated. Callbacks now receive `(tabData, selected)` directly, so constructing a `DropdownSelectorResult` is only needed to keep an existing legacy `void Function(DropdownSelectorResult)` callback working. It will be removed in a future major version. The `DropselectResult` rename alias is also deprecated.
+* **IMPROVEMENT** add `fromLegacyResultCallback`, `fromLegacyLabelGetter`, and `fromTabLabelGetter` helpers (in `selector/constants.dart`) to adapt legacy callbacks / label getters to the current signatures.
+
+* see [Migrate to 0.3.0](https://github.com/amlzq/criteria_selector/blob/main/MIGRATION.md#migrate-to-030).
 
 ## 0.2.1
 
-* **FIX** persist selection so it is restored when the panel is reopened.
+* **BUGFIX** persist selection so it is restored when the panel is reopened.
 
 * **IMPROVEMENT** improve dark theme color in selector widgets.
 * **IMPROVEMENT** add dartdoc comments to public API members.
 * **IMPROVEMENT** remove `@immutable` annotations from enums.
-
-* **PERF** refresh the overlay when delegates change.
+* **IMPROVEMENT** refresh the overlay when delegates change.
 
 ## 0.2.0
 
