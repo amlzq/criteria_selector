@@ -6,9 +6,13 @@
 
 * **CHANGED** `DropdownTabLabelGetter` is now `String Function(DropdownTabData tabData, SelectorEntries selected)` instead of `String Function(DropdownSelectorResult result)`.
 
+* **CHANGED** `DropdownTab.labelGetter` / `DropdownTabData.labelGetter` are now typed as `SelectorLabelLoader` (`String Function(SelectorEntries selected)`) instead of the now-deprecated `DropdownTabLabelGetter` (`String Function(DropdownTabData, SelectorEntries)`). The tab metadata argument is no longer passed to the canonical loader.
+
+* **DEPRECATION** `DropdownTabLabelGetter` is deprecated in favor of `SelectorLabelLoader`; it is retained as a backward-compatible alias. `DropdownTab` / `DropdownTabData` additionally expose a deprecated `legacyLabelGetter` field that keeps forwarding the live `DropdownTabData` to legacy getters.
+
 * **DEPRECATION** `DropdownSelectorController.onChanged` / `DropdownSelectorController.onApplied` keep the legacy `void Function(DropdownSelectorResult)` signature for backward compatibility; they will be removed in a future major version.
 
-* **DEPRECATION** added `fromLegacyResultCallback` and `fromLegacyLabelGetter` helpers (in `selector/constants.dart`) to adapt a legacy `DropdownSelectorResult`-based callback / label getter to the new signatures.
+* **DEPRECATION** added `fromLegacyResultCallback`, `fromLegacyLabelGetter`, and `fromTabLabelGetter` helpers (in `selector/constants.dart`) to adapt legacy callbacks / label getters to the current signatures.
 
 * **DEPRECATION** `DropdownSelectorResult` is deprecated. Callbacks now receive `(tabData, selected)` directly, so constructing a `DropdownSelectorResult` is only needed to keep an existing legacy `void Function(DropdownSelectorResult)` callback working. It will be removed in a future major version. The `DropselectResult` rename alias is also deprecated.
 

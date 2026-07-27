@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'selector/constants.dart';
 import 'selector/selector_delegate.dart';
+import 'selector/selector_entry.dart';
 import 'selector/selector_panel.dart';
 
 /// Shows a criteria selector in a modal bottom sheet built with Flutter's

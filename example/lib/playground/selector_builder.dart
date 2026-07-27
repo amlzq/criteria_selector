@@ -395,12 +395,8 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
                   child: DropdownSelectorButton(
                     selectorDelegate: widget.delegate,
                     label: l10n.filterLabel,
-                    onChanged: (tabData, selected) => _onChanged(
-                        DropdownSelectorResult(
-                            tabData: tabData, selected: selected)),
-                    onApplied: (tabData, selected) => _onApplied(
-                        DropdownSelectorResult(
-                            tabData: tabData, selected: selected)),
+                    onChanged: (selected) => _onChanged(selected),
+                    onApplied: (selected) => _onApplied(selected),
                   ),
                 ),
               ),

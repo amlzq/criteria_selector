@@ -1,4 +1,4 @@
-import '../constants.dart';
+import '../selector_entry.dart';
 
 class SelectorStateSnapshot {
   const SelectorStateSnapshot({

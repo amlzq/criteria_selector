@@ -1,34 +1,49 @@
 import 'selector/constants.dart';
+import 'selector/selector_entry.dart';
+import 'selector_label_state.dart';
 
-/// Aggregates tab label data for easy passing between widgets.
-class DropdownTabData {
+/// Tab label data for [DropdownSelectorBar].
+///
+/// Extends [SelectorLabelState] (which carries the label / result state shared
+/// with [DropdownSelectorButton]) by adding the tab identity ([index] / [tag])
+/// and an optional label loader. A standalone [DropdownSelectorButton] never
+/// creates a [DropdownTabData]; it uses [SelectorLabelState] directly.
+class DropdownTabData extends SelectorLabelState {
   /// Tab index in the [DropdownSelectorBar].
   final int index;
-
-  /// Original label provided by the tab (before any result is applied).
-  String? originalLabel;
 
   /// Optional tag for identifying the tab.
   final String? tag;
 
-  /// Optional custom label builder based on the current selection result.
-  final DropdownTabLabelGetter? labelGetter;
+  /// Optional custom label loader based on the current selection result.
+  ///
+  /// Use the canonical [SelectorLabelLoader] form, which receives only the
+  /// selected entries.
+  final SelectorLabelLoader? labelLoader;
 
-  /// Applied result label, if any.
-  String? resultLabel;
+  /// @Deprecated('Use [labelLoader]. This legacy loader additionally received '
+  /// 'tab metadata; pass it to [labelLoader] via fromTabLabelGetter, or set it '
+  /// 'here directly to keep receiving the live [DropdownTabData]. Will be '
+  /// 'removed in a future major version.')
+  final DropdownTabLabelGetter? legacyLabelGetter;
+
+  /// The effective label loader applied to the current selection.
+  ///
+  /// Prefers [labelLoader]; falls back to [legacyLabelGetter], forwarding the
+  /// live [DropdownTabData] as the tab metadata so legacy getters keep working.
+  SelectorLabelLoader? get labelGetter =>
+      labelLoader ??
+      (legacyLabelGetter == null
+          ? null
+          : (SelectorEntries selected) => legacyLabelGetter!(this, selected));
 
   DropdownTabData({
     required this.index,
-    this.originalLabel,
+    super.originalLabel,
     this.tag,
-    this.labelGetter,
+    this.labelLoader,
+    this.legacyLabelGetter,
   });
-
-  /// Effective label shown in the tab.
-  String? get label => resultLabel ?? originalLabel;
-
-  /// Whether there is a selector result
-  bool get isResulted => originalLabel != label;
 
   @override
   String toString() =>

@@ -14,7 +14,7 @@ class SellPage extends StatefulWidget {
 }
 
 class _SellPageState extends State<SellPage> {
-  final _controller = DropdownSelectorController();
+  final DropdownSelectorController _controller = DropdownSelectorController();
   late final HouseRepository _repo;
   late final HouseFiltersRepository _filtersRepo;
   HouseFilter? _filter;
@@ -198,7 +198,7 @@ class _SellPageState extends State<SellPage> {
                 DropdownTab(
                   // tag: 'region',
                   label: l10n?.region ?? '',
-                  // labelGetter: (tabData, selected) {
+                  // labelLoader: (tabData, selected) {
                   //   // 可选：用户根据结果自定义标签
                   //   return '自定义标签';
                   // },
@@ -267,8 +267,8 @@ class _SellPageState extends State<SellPage> {
                 debugPrint('onHidden: ${tabData.label}');
               },
               onChanged: (tabData, selected) {
-
-                final result = DropdownSelectorResult(tabData: tabData, selected: selected);
+                final result = DropdownSelectorResult(
+                    tabData: tabData, selected: selected);
                 debugPrint('onChanged: $result');
                 final conditions = '${result.selected.flatten()}';
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -280,8 +280,8 @@ class _SellPageState extends State<SellPage> {
                 );
               },
               onApplied: (tabData, selected) {
-
-                final result = DropdownSelectorResult(tabData: tabData, selected: selected);
+                final result = DropdownSelectorResult(
+                    tabData: tabData, selected: selected);
                 debugPrint('onApplied: $result');
                 _handleSelectorApply(result);
                 final conditions = '${result.selected.flatten()}';

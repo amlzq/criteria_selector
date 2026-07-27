@@ -1,13 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'dropdown_overlay.dart';
 import 'dropdown_overlay_style.dart';
 import 'dropdown_selector_button_theme.dart';
 import 'dropdown_selector_controller.dart';
-import 'dropdown_tab_data.dart';
 import 'i18n/localizations.dart';
-import 'selector/constants.dart';
 import 'selector/selector_delegate.dart';
+import 'selector/selector_entry.dart';
+import 'selector_label_state.dart';
 import 'selector_overlay_host.dart';
 
 /// Visual variants for [DropdownSelectorButton].
@@ -22,6 +24,12 @@ enum DropdownSelectorButtonVariant {
   /// (like [OutlinedButton]).
   outlined,
 }
+
+/// Callback invoked with the selected entries only — used by
+typedef DropdownSelectorButtonResultCallback = void Function(
+    SelectorEntries selected);
+
+typedef DropdownSelectorButtonWillToggleCallback = FutureOr<bool> Function();
 
 /// Default height used when the button size cannot be measured yet.
 const kDropdownSelectorButtonHeight = 40.0;
@@ -122,25 +130,25 @@ class DropdownSelectorButton extends StatefulWidget {
   final DropdownOverlayStyle? overlayStyle;
 
   /// Fired when the selector overlay is shown.
-  final SelectorToggleCallback? onSelectorShowed;
+  final VoidCallback? onSelectorShowed;
 
   /// Fired when the selector overlay is hidden.
-  final SelectorToggleCallback? onSelectorHidden;
+  final VoidCallback? onSelectorHidden;
 
   /// Invoked just before the overlay is shown. The returned [Future] (if any)
   /// is awaited before the overlay appears, e.g. to scroll a header into place.
   /// Returning `false` cancels the show, leaving the overlay hidden.
-  final SelectorWillToggleCallback? onSelectorWillShow;
+  final DropdownSelectorButtonWillToggleCallback? onSelectorWillShow;
 
   /// Invoked just before the overlay is hidden. Returning `false` cancels the
   /// hide, leaving the overlay visible.
-  final SelectorWillToggleCallback? onSelectorWillHide;
+  final DropdownSelectorButtonWillToggleCallback? onSelectorWillHide;
 
   /// Fired whenever a selector reports a selection change.
-  final DropdownSelectorResultCallback? onChanged;
+  final DropdownSelectorButtonResultCallback? onChanged;
 
   /// Fired when a selector is applied.
-  final DropdownSelectorResultCallback? onApplied;
+  final DropdownSelectorButtonResultCallback? onApplied;
 
   /// Fired when reset is triggered.
   final VoidCallback? onReset;
@@ -161,6 +169,7 @@ class DropdownSelectorButton extends StatefulWidget {
 class _DropdownSelectorButtonState extends State<DropdownSelectorButton>
     with SingleTickerProviderStateMixin {
   late final DropdownSelectorController _controller;
+  final SelectorLabelState _labelState = SelectorLabelState();
 
   VoidCallback? _removeChangeListener;
   VoidCallback? _removeApplyListener;
@@ -176,10 +185,8 @@ class _DropdownSelectorButtonState extends State<DropdownSelectorButton>
     _removeResetListener = _controller.addResetListener(_handleWidgetReset);
     _controller.attachSelectorDelegates([widget.selectorDelegate]);
     _controller.attachTickerProvider(this);
-    _controller.tabDataMap[0] = DropdownTabData(
-      index: 0,
-      originalLabel: widget.label,
-    );
+    _labelState.originalLabel = widget.label;
+    _controller.labelStateMap[0] = _labelState;
   }
 
   @override
@@ -188,15 +195,7 @@ class _DropdownSelectorButtonState extends State<DropdownSelectorButton>
     _controller.attachSelectorDelegates([widget.selectorDelegate]);
     _controller.attachTickerProvider(this);
     if (oldWidget.label != widget.label) {
-      final tabData = _controller.tabDataMap[0];
-      if (tabData != null) {
-        tabData.originalLabel = widget.label;
-      } else {
-        _controller.tabDataMap[0] = DropdownTabData(
-          index: 0,
-          originalLabel: widget.label,
-        );
-      }
+      _labelState.originalLabel = widget.label;
       _controller.notifyListeners();
     }
   }
@@ -215,33 +214,28 @@ class _DropdownSelectorButtonState extends State<DropdownSelectorButton>
 
   void _handleControllerTick() => setState(() {});
 
-  void _handleWidgetChange(DropdownTabData tabData, SelectorEntries selected) =>
-      widget.onChanged?.call(tabData, selected);
+  void _handleWidgetChange(
+          SelectorLabelState labelState, SelectorEntries selected) =>
+      widget.onChanged?.call(selected);
 
-  void _handleWidgetApply(DropdownTabData tabData, SelectorEntries selected) =>
-      widget.onApplied?.call(tabData, selected);
+  void _handleWidgetApply(
+          SelectorLabelState labelState, SelectorEntries selected) =>
+      widget.onApplied?.call(selected);
 
   void _handleWidgetReset() => widget.onReset?.call();
 
   Future<void> _handleTap() async {
-    final tabData = _controller.tabDataMap[0];
     final willShow = !_controller.isSelectorShowing;
-    bool proceed = true;
-    if (tabData != null) {
-      proceed = willShow
-          ? await widget.onSelectorWillShow?.call(tabData) ?? true
-          : await widget.onSelectorWillHide?.call(tabData) ?? true;
-    }
+    bool proceed = willShow
+        ? await widget.onSelectorWillShow?.call() ?? true
+        : await widget.onSelectorWillHide?.call() ?? true;
     if (!proceed) return;
     _controller.previousSelectorDelegate = widget.selectorDelegate;
     _controller.toggleSelector(index: 0);
-    if (tabData == null) {
-      return;
-    }
     if (_controller.isSelectorShowing) {
-      widget.onSelectorShowed?.call(tabData);
+      widget.onSelectorShowed?.call();
     } else {
-      widget.onSelectorHidden?.call(tabData);
+      widget.onSelectorHidden?.call();
     }
   }
 
@@ -308,7 +302,7 @@ class _DropdownSelectorButtonState extends State<DropdownSelectorButton>
 
     final icon = widget.icon ?? const Icon(Icons.arrow_drop_down, size: 20);
 
-    final labelText = _controller.tabDataMap[0]?.label ?? widget.label ?? '';
+    final labelText = _labelState.label ?? widget.label ?? '';
 
     final content = widget.child ??
         Row(

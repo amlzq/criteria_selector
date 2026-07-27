@@ -8,7 +8,8 @@ SelectorEntries _entries(String id) => <SelectorEntry<dynamic>>{
 
 void main() {
   group('Selection restoration', () {
-    test('handleApply writes the applied selection back to delegate.selectedData',
+    test(
+        'handleApply writes the applied selection back to delegate.selectedData',
         () {
       final delegate = ListSelectorDelegate(
         entriesLoader: () async => <SelectorEntry<dynamic>>{},
@@ -19,8 +20,9 @@ void main() {
       // Opening the selector sets `previousSelectorDelegate`; `handleApply`
       // then writes the applied selection back onto it.
       controller.previousSelectorDelegate = delegate;
-      // `handleApply` reads `currentTabData.resultLabel`, so a tab must exist.
-      controller.tabDataMap[0] = DropdownTabData(index: 0);
+      // `handleApply` writes the applied selection back to the active label
+      // state, so a label state must exist at index 0.
+      controller.labelStateMap[0] = SelectorLabelState();
 
       final applied = _entries('a');
       controller.handleApply(applied, 'Selected');

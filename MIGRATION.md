@@ -103,6 +103,84 @@ direct equivalent:
 If you must keep a legacy handler untouched for now, wrap it with `fromLegacyResultCallback`
 (see the previous section). The `DropselectResult` rename alias is deprecated as well.
 
+### `DropdownSelectorButton` no longer exposes tab metadata
+
+`DropdownSelectorButton` is a single trigger with no tab concept, so its
+lifecycle callbacks no longer receive `DropdownTabData` (or a `tabData` argument):
+
+| Callback | Before | After |
+| --- | --- | --- |
+| `onChanged` | `void Function(DropdownTabData, SelectorEntries)` | `void Function(SelectorEntries)` (typedef `SelectorResultCallback`) |
+| `onApplied` | `void Function(DropdownTabData, SelectorEntries)` | `void Function(SelectorEntries)` |
+| `onSelectorShowed` / `onSelectorHidden` | `void Function(DropdownTabData)` | `void Function()` |
+| `onSelectorWillShow` / `onSelectorWillHide` | `FutureOr<bool> Function(DropdownTabData)` | `FutureOr<bool> Function()` |
+
+Internally the button now stores a `SelectorLabelState` (a new, tab-agnostic base
+class) instead of a faked `DropdownTabData(index: 0, ...)`. `DropdownSelectorBar`
+is unaffected — it still uses `DropdownTabData` and the `(tabData, selected)`
+callbacks.
+
+```dart
+// Before
+DropdownSelectorButton(
+  onChanged: (tabData, selected) {
+    final result = DropdownSelectorResult(tabData: tabData, selected: selected);
+    _handle(result);
+  },
+  onSelectorShowed: (tabData) { /* ... */ },
+);
+
+// After
+DropdownSelectorButton(
+  onChanged: (selected) {
+    _handle(selected);
+  },
+  onSelectorShowed: () { /* ... */ },
+);
+```
+
+If you previously keyed behaviour off `tabData.index` to distinguish multiple
+buttons, give each button its own handler (or a domain argument) instead — the
+`index` branch was always `0` for a standalone button and is no longer available.
+
+### `DropdownTab.labelLoader` now takes `(selected)` instead of `(tabData, selected)`
+
+The label builder has been refactored to the tab-agnostic typedef
+`SelectorLabelLoader` (`String Function(SelectorEntries selected)`). The old
+`DropdownTabLabelGetter` (`String Function(DropdownTabData, SelectorEntries)`)
+is kept as a deprecated alias for backward compatibility.
+
+| API | Before | After |
+| --- | --- | --- |
+| `DropdownTab.labelLoader` | `DropdownTabLabelGetter?` (`(tabData, selected)`) | `SelectorLabelLoader?` (`(selected)`) |
+| `DropdownTabData.labelGetter` | `DropdownTabLabelGetter?` | `SelectorLabelLoader?` (getter; also keeps `labelLoader` / `legacyLabelGetter`) |
+
+Migration options:
+
+```dart
+// 1. New canonical form — drop the unused tabData argument
+DropdownTab(
+  label: 'Price',
+  labelLoader: (SelectorEntries selected) => '${selected.length} selected',
+);
+
+// 2. Keep a legacy (tabData, selected) getter compiling — wrap with the adapter
+DropdownTab(
+  label: 'Price',
+  labelLoader: fromTabLabelGetter((tabData, selected) => '...'),
+);
+
+// 3. Keep receiving the live tab metadata losslessly — use the legacy field
+DropdownTab(
+  label: 'Price',
+  legacyLabelGetter: (tabData, selected) => '${tabData.tag}: ${selected.length}',
+);
+```
+
+`fromTabLabelGetter` drops the tab metadata (a placeholder tab is passed), so
+getters that relied on `tabData` should use `legacyLabelGetter` (option 3), which
+forwards the live `DropdownTabData`, or be rewritten to the new signature.
+
 ## MIGRATE TO 0.2.0
 The old names are kept as deprecated type/constant/parameter aliases during the deprecation period and will be removed in the next major version.
 

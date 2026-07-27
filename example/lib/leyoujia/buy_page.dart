@@ -23,7 +23,7 @@ class BuyPage extends StatefulWidget {
 }
 
 class _BuyPageState extends State<BuyPage> {
-  final _controller = DropdownSelectorController();
+  final DropdownSelectorController _controller = DropdownSelectorController();
   late final HouseRepository _repo;
   late final HouseFiltersRepository _filtersRepo;
   HouseFilter? _filter;

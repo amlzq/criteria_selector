@@ -63,10 +63,9 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
     );
   }
 
-  HouseFilter? _dropdownSelectorResultParser(
-      DropdownTabData tabData, SelectorEntries selected) {
+  HouseFilter? _parseFilter(String domain, SelectorEntries selected) {
     final filter = HouseFilter(cityId: userCityId);
-    if (tabData.index == 0) {
+    if (domain == 'region') {
       // 区域
       _filtersRepo.regionResult = selected;
       final category = selected.firstOrNull;
@@ -96,7 +95,7 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
         filter.nearbyRadiusMeters = nearbyRadiusMeters;
         filter.userLatLon = userLatLon;
       }
-    } else if (tabData.index == 1) {
+    } else if (domain == 'price') {
       // 价格筛选
       _filtersRepo.buyPriceResult = selected;
       final category = selected.firstOrNull;
@@ -123,7 +122,7 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                 })
             .toList(growable: false);
       }
-    } else if (tabData.index == 2) {
+    } else if (domain == 'floorplan') {
       // 户型筛选
       _filtersRepo.floorPlanBuyResult = selected;
       filter.livingRoom = selected.childIdsOf('living_room');
@@ -137,7 +136,7 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                 "max": e.max,
               })
           .toList(growable: false);
-    } else if (tabData.index == 3) {
+    } else if (domain == 'more') {
       // 更多筛选
       _filtersRepo.moreBuyResult = selected;
       filter.homeType = selected.childIdsOf('home_type');
@@ -147,7 +146,7 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
       filter.decorationStatus = selected.childIdsOf('decoration_status');
       filter.buildingFeatures = selected.childIdsOf('building_features');
       filter.houseViewService = selected.childIdsOf('house_view_service');
-    } else if (tabData.index == 4) {
+    } else if (domain == 'sort') {
       // 排序筛选
       _filtersRepo.sortBuyResult = selected;
       filter.sort = selected.firstSelectedId;
@@ -155,10 +154,9 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
     return filter;
   }
 
-  void _handleSelectorChange(
-      DropdownTabData tabData, SelectorEntries selected) async {
+  void _handleSelectorChange(String domain, SelectorEntries selected) async {
     final l10n = AppLocalizations.of(context);
-    _filter = _dropdownSelectorResultParser(tabData, selected);
+    _filter = _parseFilter(domain, selected);
     if (_filter == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n?.filterParseFailed ?? '')),
@@ -167,9 +165,9 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
     }
   }
 
-  void _handleSelectorApply(DropdownTabData tabData, SelectorEntries selected) {
+  void _handleSelectorApply(String domain, SelectorEntries selected) {
     final l10n = AppLocalizations.of(context);
-    _filter = _dropdownSelectorResultParser(tabData, selected);
+    _filter = _parseFilter(domain, selected);
     if (_filter == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n?.filterParseFailed ?? '')),
@@ -200,14 +198,14 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                 return MyCheckbox(value: selected);
               },
             ),
-            onChanged: (tabData, selected) {
-              debugPrint('onChanged: $tabData $selected');
-              _handleSelectorChange(tabData, selected);
+            onChanged: (selected) {
+              debugPrint('onChanged: $selected');
+              _handleSelectorChange('region', selected);
               _showSelectedResult(selected);
             },
-            onApplied: (tabData, selected) {
+            onApplied: (selected) {
               debugPrint('onApplied: $selected');
-              _handleSelectorApply(tabData, selected);
+              _handleSelectorApply('region', selected);
               _showSelectedResult(selected);
             },
             onReset: () {
@@ -241,14 +239,14 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                 ),
                 applyText: AppLocalizations.of(context)?.apply ?? '',
               ),
-              onChanged: (tabData, selected) {
+              onChanged: (selected) {
                 debugPrint('onChanged: $selected');
-                _handleSelectorChange(tabData, selected);
+                _handleSelectorChange('price', selected);
                 _showSelectedResult(selected);
               },
-              onApplied: (tabData, selected) {
+              onApplied: (selected) {
                 debugPrint('onApplied: $selected');
-                _handleSelectorApply(tabData, selected);
+                _handleSelectorApply('price', selected);
                 _showSelectedResult(selected);
               },
               onReset: () {
@@ -272,14 +270,14 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                 mainAxisSpacing: 8,
                 sideBarTheme: const SelectorSideBarTheme(width: 98),
               ),
-              onChanged: (tabData, selected) {
+              onChanged: (selected) {
                 debugPrint('onChanged: $selected');
-                _handleSelectorChange(tabData, selected);
+                _handleSelectorChange('floorplan', selected);
                 _showSelectedResult(selected);
               },
-              onApplied: (tabData, selected) {
+              onApplied: (selected) {
                 debugPrint('onApplied: $selected');
-                _handleSelectorApply(tabData, selected);
+                _handleSelectorApply('floorplan', selected);
                 _showSelectedResult(selected);
               },
               onReset: () {
@@ -301,14 +299,14 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                   return MyRadio(value: selected);
                 },
               ),
-              onChanged: (tabData, selected) {
+              onChanged: (selected) {
                 debugPrint('onChanged: $selected');
-                _handleSelectorChange(tabData, selected);
+                _handleSelectorChange('sort', selected);
                 _showSelectedResult(selected);
               },
-              onApplied: (tabData, selected) {
+              onApplied: (selected) {
                 debugPrint('onApplied: $selected');
-                _handleSelectorApply(tabData, selected);
+                _handleSelectorApply('sort', selected);
                 _showSelectedResult(selected);
               },
               onReset: () {

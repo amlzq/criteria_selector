@@ -25,3 +25,4 @@ export 'src/selector/selector_theme.dart';
 export 'src/selector/selector_theme_data.dart';
 export 'src/selector/widgets/widgets.dart';
 export 'src/selector_box.dart';
+export 'src/selector_label_state.dart';

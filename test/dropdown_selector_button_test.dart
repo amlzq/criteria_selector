@@ -18,8 +18,8 @@ void main() {
                   SelectorTextEntry<dynamic>.name(id: 'a', name: 'A'),
                 },
               ),
-              onSelectorShowed: (_) => showed = true,
-              onSelectorHidden: (_) => hidden = true,
+              onSelectorShowed: () => showed = true,
+              onSelectorHidden: () => hidden = true,
             ),
           ),
         ),
@@ -51,7 +51,7 @@ void main() {
 
     testWidgets('applies selection and updates the trigger label',
         (tester) async {
-      DropdownSelectorResult? applied;
+      SelectorEntries? applied;
 
       await tester.pumpWidget(
         MaterialApp(
@@ -64,8 +64,7 @@ void main() {
                   SelectorTextEntry<dynamic>.name(id: 'b', name: 'B'),
                 },
               ),
-              onApplied: (tabData, selected) => applied =
-                  DropdownSelectorResult(tabData: tabData, selected: selected),
+              onApplied: (selected) => applied = selected,
             ),
           ),
         ),
@@ -83,7 +82,7 @@ void main() {
       expect(find.text('A'), findsOneWidget);
 
       expect(applied, isNotNull);
-      expect(applied!.selected.any((e) => e.id == 'a'), isTrue);
+      expect(applied!.any((e) => e.id == 'a'), isTrue);
     });
 
     testWidgets('renders outlined and elevated variants', (tester) async {

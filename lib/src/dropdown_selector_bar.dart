@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -10,11 +11,20 @@ import 'dropdown_tab_data.dart';
 import 'i18n/localizations.dart';
 import 'selector/constants.dart';
 import 'selector/selector_delegate.dart';
+import 'selector/selector_entry.dart';
 import 'selector/selector_theme_data.dart';
+import 'selector_label_state.dart';
 import 'selector_overlay_host.dart';
 
 /// Default height for [DropdownSelectorBar] when no theme override is provided.
 const kDropdownSelectorBarHeight = 44.0;
+
+typedef DropdownSelectorBarWillToggleCallback = FutureOr<bool> Function(
+    DropdownTabData tabData);
+
+/// Callback parameter indicates which selector is being shown or hidden.
+typedef DropdownSelectorBarToggleCallback = void Function(
+    DropdownTabData tabData);
 
 /// A tab bar that shows an overlay selector panel when a tab is tapped.
 ///
@@ -100,9 +110,9 @@ class DropdownSelectorBar extends StatefulWidget
 
   final Widget? unselectedIndicator;
 
-  final SelectorToggleCallback? onSelectorShowed;
+  final DropdownSelectorBarToggleCallback? onSelectorShowed;
 
-  final SelectorToggleCallback? onSelectorHidden;
+  final DropdownSelectorBarToggleCallback? onSelectorHidden;
 
   /// Invoked just before the overlay is shown for a tab.
   ///
@@ -110,11 +120,11 @@ class DropdownSelectorBar extends StatefulWidget
   /// async work such as scrolling a [SliverPersistentHeader] to the top can
   /// finish first and the overlay is positioned against the final layout.
   /// Returning `false` cancels the show, leaving the overlay hidden.
-  final SelectorWillToggleCallback? onSelectorWillShow;
+  final DropdownSelectorBarWillToggleCallback? onSelectorWillShow;
 
   /// Invoked just before the overlay is hidden for a tab. Returning `false`
   /// cancels the hide, leaving the overlay visible.
-  final SelectorWillToggleCallback? onSelectorWillHide;
+  final DropdownSelectorBarWillToggleCallback? onSelectorWillHide;
 
   /// Fired whenever a selector reports a selection change.
   final DropdownSelectorResultCallback? onChanged;
@@ -235,11 +245,13 @@ class _DropdownSelectorBarState extends State<DropdownSelectorBar>
     setState(() {});
   }
 
-  void _handleWidgetChange(DropdownTabData tabData, SelectorEntries selected) =>
-      widget.onChanged?.call(tabData, selected);
+  void _handleWidgetChange(
+          SelectorLabelState labelState, SelectorEntries selected) =>
+      widget.onChanged?.call(labelState as DropdownTabData, selected);
 
-  void _handleWidgetApply(DropdownTabData tabData, SelectorEntries selected) =>
-      widget.onApplied?.call(tabData, selected);
+  void _handleWidgetApply(
+          SelectorLabelState labelState, SelectorEntries selected) =>
+      widget.onApplied?.call(labelState as DropdownTabData, selected);
 
   void _handleWidgetReset() => widget.onReset?.call();
 
@@ -353,7 +365,7 @@ class _DropdownSelectorBarState extends State<DropdownSelectorBar>
                     child: _DropdownSelectorTabStyle(
                       isSelected: (_controller?.isSelectorShowing == true &&
                               _controller!.currentIndex == i) ||
-                          _controller?.tabDataMap[i]?.isResulted == true,
+                          _controller?.labelStateMap[i]?.isResulted == true,
                       labelColor: widget.labelColor,
                       unselectedLabelColor: widget.unselectedLabelColor,
                       labelStyle: widget.labelStyle,
@@ -488,7 +500,7 @@ class _DropdownSelectorTabStyle extends StatelessWidget {
 
 /// A tab widget used inside [DropdownSelectorBar].
 ///
-/// Provide either [label] or [child]. Use [labelGetter] to compute a custom
+/// Provide either [label] or [child]. Use [labelLoader] to compute a custom
 /// label from the applied selection result.
 class DropdownTab extends StatelessWidget {
   /// The text label shown in the tab.
@@ -496,9 +508,18 @@ class DropdownTab extends StatelessWidget {
   /// Mutually exclusive with [child]; providing both triggers an assertion.
   final String? label;
 
-  /// An optional callback that builds the label from the current selection
+  /// An optional loader that builds the label from the current selection
   /// result.
-  final DropdownTabLabelGetter? labelGetter;
+  ///
+  /// Receives only the selected entries; the canonical [SelectorLabelLoader]
+  /// form. To keep receiving the live tab metadata, use [legacyLabelGetter].
+  final SelectorLabelLoader? labelLoader;
+
+  /// @Deprecated('Use [labelLoader] (the canonical [SelectorLabelLoader] form). '
+  /// 'This legacy getter additionally received tab metadata; adapt it with '
+  /// 'fromTabLabelGetter if you must keep the (tabData, selected) signature. '
+  /// 'Will be removed in a future major version.')
+  final DropdownTabLabelGetter? legacyLabelGetter;
 
   /// A custom widget displayed in the tab instead of [label].
   ///
@@ -511,9 +532,10 @@ class DropdownTab extends StatelessWidget {
   const DropdownTab({
     super.key,
     this.label,
-    this.labelGetter,
+    this.labelLoader,
     this.child,
     this.tag,
+    this.legacyLabelGetter,
   }) : assert(label == null || child == null,
             'Either provide a label or an child, not both.');
 
@@ -530,16 +552,17 @@ class DropdownTab extends StatelessWidget {
     final unselected = controller.currentIndex != info.index;
     final isSelectorShowing = controller.isSelectorShowing;
 
-    DropdownTabData? tabData = controller.tabDataMap.containsKey(info.index)
-        ? controller.tabDataMap[info.index]
+    DropdownTabData? tabData = controller.labelStateMap.containsKey(info.index)
+        ? controller.labelStateMap[info.index] as DropdownTabData?
         : null;
     if (tabData == null) {
       tabData = DropdownTabData(
           index: info.index,
           originalLabel: label,
           tag: tag,
-          labelGetter: labelGetter);
-      controller.tabDataMap[info.index] = tabData;
+          labelLoader: labelLoader,
+          legacyLabelGetter: legacyLabelGetter);
+      controller.labelStateMap[info.index] = tabData;
     }
 
     return InkWell(

@@ -15,7 +15,7 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
-  final _controller = DropdownSelectorController();
+  final DropdownSelectorController _controller = DropdownSelectorController();
   late final HouseRepository _repo;
   late final HouseFiltersRepository _filtersRepo;
   HouseFilter? _filter;
@@ -245,7 +245,7 @@ class _MapPageState extends State<MapPage> {
               DropdownTab(
                 // tag: 'region',
                 label: l10n?.region ?? '',
-                // labelGetter: (tabData, selected) {
+                // labelLoader: (tabData, selected) {
                 //   // 可选：用户根据结果自定义标签
                 //   return '自定义标签';
                 // },

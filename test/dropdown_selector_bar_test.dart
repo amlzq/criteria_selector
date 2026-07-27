@@ -126,7 +126,7 @@ void main() {
               tabs: [
                 DropdownTab(
                   label: 'Price',
-                  labelGetter: (tabData, selected) => 'Custom',
+                  labelLoader: (selected) => 'Custom',
                 ),
               ],
               selectorDelegates: [

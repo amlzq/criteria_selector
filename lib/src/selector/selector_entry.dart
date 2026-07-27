@@ -2,6 +2,9 @@ import 'package:flutter/foundation.dart';
 
 import 'constants.dart';
 
+/// A set of selected [SelectorEntry] values.
+typedef SelectorEntries<T> = Set<SelectorEntry<T>>;
+
 /// Special entry id representing the "Any" entry.
 const kAnyEntryId = 'any';
 

@@ -24,7 +24,7 @@ const _chipBarHeight = 48.0;
 const _filterHeaderHeight = _filterBarHeight + _chipBarHeight;
 
 class _HousePageState extends State<HousePage> {
-  final _controller = DropdownSelectorController();
+  final DropdownSelectorController _controller = DropdownSelectorController();
   late final HouseRepository _repo;
   late final HouseFiltersRepository _filtersRepo;
   HouseFilter? _filter;

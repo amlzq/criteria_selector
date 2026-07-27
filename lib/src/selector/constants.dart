@@ -5,11 +5,9 @@ import 'package:flutter/material.dart';
 import '../dropdown_selector_result.dart';
 import '../dropdown_tab_data.dart';
 import '../selector/selector_controller.dart';
+import '../selector_label_state.dart';
 import 'selector_entry.dart';
 import 'selector_utils.dart';
-
-/// A set of selected [SelectorEntry] values.
-typedef SelectorEntries<T> = Set<SelectorEntry<T>>;
 
 /// Callback invoked when the selection changes or is applied.
 ///
@@ -32,27 +30,32 @@ typedef SelectorCallback = void Function(SelectorEntries selected);
 /// Callback invoked when an item in a list/grid is tapped.
 typedef ItemTapCallback<T extends SelectorEntry> = Function(int index, T entry);
 
-/// Callback parameter indicates which selector is being shown or hidden.
-typedef SelectorToggleCallback = void Function(DropdownTabData tabData);
-
-/// Callback invoked just before the selector overlay is shown or hidden for
-/// [tabData].
+/// Tab-agnostic change callback used internally by [DropdownSelectorController].
 ///
-/// The returned [Future] (if any) is awaited *before* the overlay is actually
-/// displayed or hidden, so callers can run an async task first — for example,
-/// animating a [SliverPersistentHeader] to the top of the list — and have the
-/// overlay anchored to the final layout. Returning `false` cancels the
-/// operation: for a show it leaves the overlay hidden, for a hide it leaves the
-/// overlay visible.
-typedef SelectorWillToggleCallback = FutureOr<bool> Function(
-    DropdownTabData tabData);
+/// Unlike [DropdownSelectorResultCallback], it does not expose tab metadata and
+/// is therefore suitable for [DropdownSelectorButton], which has no tab concept.
+typedef SelectorLabelChangeCallback = void Function(
+    SelectorLabelState labelState, SelectorEntries selected);
 
 /// Builds a custom label for a tab based on the current selection.
 ///
 /// [tabData] is the tab metadata and [selected] the selected entries. This
 /// replaces the previous single-`DropdownSelectorResult` parameter.
+///
+/// @Deprecated('Use [SelectorLabelLoader] instead, which receives only the '
+/// 'selected entries. Adapt an existing getter with fromTabLabelGetter if you '
+/// 'must keep receiving tab metadata. This typedef will be removed in a future '
+/// 'major version.')
 typedef DropdownTabLabelGetter = String Function(
     DropdownTabData tabData, SelectorEntries selected);
+
+/// Builds a custom label for a selector / tab from the applied selection.
+///
+/// Unlike the deprecated [DropdownTabLabelGetter], it receives only the
+/// [selected] entries — the tab metadata is no longer needed. This is the
+/// canonical label-loader type going forward and is used by
+/// [DropdownTabData.labelLoader] / [DropdownTab.labelGetter].
+typedef SelectorLabelLoader = String Function(SelectorEntries selected);
 
 /// Callback invoked when a custom range entry is tapped.
 typedef CustomRangeListener = void Function(
@@ -304,3 +307,19 @@ DropdownTabLabelGetter fromLegacyLabelGetter(
       return legacy(
           DropdownSelectorResult(tabData: tabData, selected: selected));
     };
+
+/// Adapts a legacy [DropdownTabLabelGetter] (which also received tab metadata)
+/// to the canonical [SelectorLabelLoader] signature.
+///
+/// The tab metadata argument is dropped, since [SelectorLabelLoader] is invoked
+/// with the selected entries only. Getters that relied solely on [selected] are
+/// unaffected; getters that required [tabData] should be rewritten. For a
+/// lossless migration that keeps receiving the live tab data, set
+/// [DropdownTab.legacyLabelGetter] / [DropdownTabData.legacyLabelGetter]
+/// directly instead. Kept for backward compatibility during migration.
+SelectorLabelLoader fromTabLabelGetter(DropdownTabLabelGetter getter) {
+  // Placeholder for the dropped tab metadata; legacy getters that need real
+  // tab data should migrate or use the legacyLabelGetter field.
+  final placeholder = DropdownTabData(index: -1);
+  return (SelectorEntries selected) => getter(placeholder, selected);
+}

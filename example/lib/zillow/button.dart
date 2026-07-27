@@ -29,9 +29,9 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
     super.dispose();
   }
 
-  void _showSelectedResult(DropdownSelectorResult result) {
+  void _showSelectedResult(SelectorEntries selected) {
     final l10n = AppLocalizations.of(context);
-    final conditions = '${result.selected.flatten()}';
+    final conditions = '${selected.flatten()}';
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(l10n?.filterUpdated ?? ''),
@@ -63,25 +63,25 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
     );
   }
 
-  HouseFilter? _dropdownSelectorResultParser(DropdownSelectorResult result) {
+  HouseFilter? _parseFilter(String domain, SelectorEntries selected) {
     final filter = HouseFilter(cityId: userCityId);
-    if (result.tabIndex == 0) {
+    if (domain == 'neighborhood') {
       // Neighborhood filter
-      _filtersRepo.neighborhoodResult = result.selected;
-      filter.neighborhood = result
+      _filtersRepo.neighborhoodResult = selected;
+      filter.neighborhood = selected
           .cascadingPairsOf('neighborhood')
           .map((p) => {
                 "region_id": p.id,
                 "neighborhood_id": p.childIds,
               })
           .toList(growable: false);
-    } else if (result.tabIndex == 1) {
+    } else if (domain == 'price') {
       // Price filter
-      _filtersRepo.priceResult = result.selected;
-      final category = result.selected.firstOrNull;
+      _filtersRepo.priceResult = selected;
+      final category = selected.firstOrNull;
       if (category == null) return null;
       if (category.id == 'list_price') {
-        filter.listPrice = result
+        filter.listPrice = selected
             .childRangesOf('list_price')
             .map((e) => {
                   "id": e.id,
@@ -90,7 +90,7 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                 })
             .toList(growable: false);
       } else if (category.id == 'monthly_price') {
-        filter.monthlyPayment = result
+        filter.monthlyPayment = selected
             .childRangesOf('monthly_price')
             .map((e) => {
                   "id": e.id,
@@ -99,32 +99,32 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                 })
             .toList(growable: false);
       }
-    } else if (result.tabIndex == 2) {
+    } else if (domain == 'rooms') {
       // Rooms filter
-      _filtersRepo.roomsResult = result.selected;
-      filter.bedrooms = result.childIdsOf('bedrooms');
-      filter.bathrooms = result.childIdsOf('bathrooms');
-    } else if (result.tabIndex == 3) {
+      _filtersRepo.roomsResult = selected;
+      filter.bedrooms = selected.childIdsOf('bedrooms');
+      filter.bathrooms = selected.childIdsOf('bathrooms');
+    } else if (domain == 'more') {
       // More filter
-      _filtersRepo.moreResult = result.selected;
-      filter.homeType = result.childIdsOf('home_type');
-      filter.listsDetails = result.childIdsOf('lists_details');
-      filter.squareFeet = result.childIdsOf('square_feet');
-      filter.lotSize = result.childIdsOf('lot_size');
-      filter.homeFeatures = result.childIdsOf('home_features');
-      filter.commute = result.childIdsOf('commute');
-      filter.expandedSearch = result.childIdsOf('expanded_search');
-    } else if (result.tabIndex == 4) {
+      _filtersRepo.moreResult = selected;
+      filter.homeType = selected.childIdsOf('home_type');
+      filter.listsDetails = selected.childIdsOf('lists_details');
+      filter.squareFeet = selected.childIdsOf('square_feet');
+      filter.lotSize = selected.childIdsOf('lot_size');
+      filter.homeFeatures = selected.childIdsOf('home_features');
+      filter.commute = selected.childIdsOf('commute');
+      filter.expandedSearch = selected.childIdsOf('expanded_search');
+    } else if (domain == 'sort') {
       // Sort filter
-      _filtersRepo.sortResult = result.selected;
-      filter.sort = result.firstSelectedId;
+      _filtersRepo.sortResult = selected;
+      filter.sort = selected.firstSelectedId;
     }
     return filter;
   }
 
-  void _handleSelectorChange(DropdownSelectorResult result) async {
+  void _handleSelectorChange(String domain, SelectorEntries selected) async {
     final l10n = AppLocalizations.of(context);
-    _filter = _dropdownSelectorResultParser(result);
+    _filter = _parseFilter(domain, selected);
     if (_filter == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n?.filterParseFailed ?? '')),
@@ -133,9 +133,9 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
     }
   }
 
-  void _handleSelectorApply(DropdownSelectorResult result) {
+  void _handleSelectorApply(String domain, SelectorEntries selected) {
     final l10n = AppLocalizations.of(context);
-    _filter = _dropdownSelectorResultParser(result);
+    _filter = _parseFilter(domain, selected);
     if (_filter == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n?.filterParseFailed ?? '')),
@@ -168,19 +168,15 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                 return MyCheckbox(value: selected);
               },
             ),
-            onChanged: (tabData, selected) {
-              final result =
-                  DropdownSelectorResult(tabData: tabData, selected: selected);
-              debugPrint('onChanged: $result');
-              _handleSelectorChange(result);
-              _showSelectedResult(result);
+            onChanged: (selected) {
+              debugPrint('onChanged: $selected');
+              _handleSelectorChange('neighborhood', selected);
+              _showSelectedResult(selected);
             },
-            onApplied: (tabData, selected) {
-              final result =
-                  DropdownSelectorResult(tabData: tabData, selected: selected);
-              debugPrint('onApplied: $result');
-              _handleSelectorApply(result);
-              _showSelectedResult(result);
+            onApplied: (selected) {
+              debugPrint('onApplied: $selected');
+              _handleSelectorApply('neighborhood', selected);
+              _showSelectedResult(selected);
             },
             onReset: () {
               debugPrint('onReset');
@@ -205,19 +201,15 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                 ),
                 applyText: AppLocalizations.of(context)?.apply ?? '',
               ),
-              onChanged: (tabData, selected) {
-                final result = DropdownSelectorResult(
-                    tabData: tabData, selected: selected);
-                debugPrint('onChanged: $result');
-                _handleSelectorChange(result);
-                _showSelectedResult(result);
+              onChanged: (selected) {
+                debugPrint('onChanged: $selected');
+                _handleSelectorChange('price', selected);
+                _showSelectedResult(selected);
               },
-              onApplied: (tabData, selected) {
-                final result = DropdownSelectorResult(
-                    tabData: tabData, selected: selected);
-                debugPrint('onApplied: $result');
-                _handleSelectorApply(result);
-                _showSelectedResult(result);
+              onApplied: (selected) {
+                debugPrint('onApplied: $selected');
+                _handleSelectorApply('price', selected);
+                _showSelectedResult(selected);
               },
               onReset: () {
                 debugPrint('onReset');
@@ -245,19 +237,15 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                   clipBehavior: Clip.antiAlias,
                 ),
               ),
-              onChanged: (tabData, selected) {
-                final result = DropdownSelectorResult(
-                    tabData: tabData, selected: selected);
-                debugPrint('onChanged: $result');
-                _handleSelectorChange(result);
-                _showSelectedResult(result);
+              onChanged: (selected) {
+                debugPrint('onChanged: $selected');
+                _handleSelectorChange('rooms', selected);
+                _showSelectedResult(selected);
               },
-              onApplied: (tabData, selected) {
-                final result = DropdownSelectorResult(
-                    tabData: tabData, selected: selected);
-                debugPrint('onApplied: $result');
-                _handleSelectorApply(result);
-                _showSelectedResult(result);
+              onApplied: (selected) {
+                debugPrint('onApplied: $selected');
+                _handleSelectorApply('rooms', selected);
+                _showSelectedResult(selected);
               },
               onReset: () {
                 debugPrint('onReset');
@@ -284,19 +272,15 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                   variant: SelectorChipVariant.outlined,
                 ),
               ),
-              onChanged: (tabData, selected) {
-                final result = DropdownSelectorResult(
-                    tabData: tabData, selected: selected);
-                debugPrint('onChanged: $result');
-                _handleSelectorChange(result);
-                _showSelectedResult(result);
+              onChanged: (selected) {
+                debugPrint('onChanged: $selected');
+                _handleSelectorChange('more', selected);
+                _showSelectedResult(selected);
               },
-              onApplied: (tabData, selected) {
-                final result = DropdownSelectorResult(
-                    tabData: tabData, selected: selected);
-                debugPrint('onApplied: $result');
-                _handleSelectorApply(result);
-                _showSelectedResult(result);
+              onApplied: (selected) {
+                debugPrint('onApplied: $selected');
+                _handleSelectorApply('more', selected);
+                _showSelectedResult(selected);
               },
               onReset: () {
                 debugPrint('onReset');

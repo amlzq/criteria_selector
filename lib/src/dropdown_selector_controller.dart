@@ -7,6 +7,7 @@ import 'selector/selector_controller.dart';
 import 'selector/selector_delegate.dart';
 import 'selector/selector_entry.dart';
 import 'selector/selector_utils.dart';
+import 'selector_label_state.dart';
 
 /// Controller for [DropdownSelectorBar] and its selector overlay.
 ///
@@ -51,34 +52,34 @@ class DropdownSelectorController extends ChangeNotifier {
   )
   VoidCallback? onReset;
 
-  final List<DropdownSelectorResultCallback> _changeListeners = [];
-  final List<DropdownSelectorResultCallback> _applyListeners = [];
+  final List<SelectorLabelChangeCallback> _changeListeners = [];
+  final List<SelectorLabelChangeCallback> _applyListeners = [];
   final List<VoidCallback> _resetListeners = [];
 
   /// Registers a listener to be called when a selector reports a selection
   /// change.
   ///
   /// Returns a [VoidCallback] that unregisters the listener when called.
-  VoidCallback addChangeListener(DropdownSelectorResultCallback listener) {
+  VoidCallback addChangeListener(SelectorLabelChangeCallback listener) {
     _changeListeners.add(listener);
     return () => removeChangeListener(listener);
   }
 
   /// Unregisters a previously registered change listener.
-  void removeChangeListener(DropdownSelectorResultCallback listener) {
+  void removeChangeListener(SelectorLabelChangeCallback listener) {
     _changeListeners.remove(listener);
   }
 
   /// Registers a listener to be called when a selector is applied.
   ///
   /// Returns a [VoidCallback] that unregisters the listener when called.
-  VoidCallback addApplyListener(DropdownSelectorResultCallback listener) {
+  VoidCallback addApplyListener(SelectorLabelChangeCallback listener) {
     _applyListeners.add(listener);
     return () => removeApplyListener(listener);
   }
 
   /// Unregisters a previously registered apply listener.
-  void removeApplyListener(DropdownSelectorResultCallback listener) {
+  void removeApplyListener(SelectorLabelChangeCallback listener) {
     _applyListeners.remove(listener);
   }
 
@@ -96,7 +97,11 @@ class DropdownSelectorController extends ChangeNotifier {
   }
 
   /// Per-tab label and result data keyed by tab index.
-  final Map<int, DropdownTabData> tabDataMap = {};
+  ///
+  /// For [DropdownSelectorBar] these are [DropdownTabData] (tab identity + label
+  /// state); for a standalone [DropdownSelectorButton] the lone trigger is a
+  /// plain [SelectorLabelState] stored at index `0`.
+  final Map<int, SelectorLabelState> labelStateMap = {};
   bool _isDisposed = false;
 
   /// Returns the nearest controller provided by [DropdownSelectorControllerProvider]
@@ -149,7 +154,8 @@ class DropdownSelectorController extends ChangeNotifier {
   int? currentIndex;
 
   /// Returns the current tab data for [currentIndex].
-  DropdownTabData get currentTabData => tabDataMap[currentIndex]!;
+  DropdownTabData get currentTabData =>
+      labelStateMap[currentIndex]! as DropdownTabData;
 
   /// The selector previously used for the overlay.
   SelectorDelegate? previousSelectorDelegate;
@@ -258,7 +264,7 @@ class DropdownSelectorController extends ChangeNotifier {
     hideSelector(immediate: true);
     _isDisposed = true;
     detachTickerProvider();
-    tabDataMap.clear();
+    labelStateMap.clear();
     _changeListeners.clear();
     _applyListeners.clear();
     _resetListeners.clear();
@@ -410,22 +416,26 @@ class DropdownSelectorController extends ChangeNotifier {
   /// Dispatches a selection change event.
   void handleChange(SelectorEntries selected) {
     if (_isDisposed) return;
-    // ignore: deprecated_member_use_from_same_package
-    final result =
-        DropdownSelectorResult(tabData: currentTabData, selected: selected);
-    // ignore: deprecated_member_use_from_same_package
-    onChanged?.call(result);
+    final labelState = labelStateMap[currentIndex];
+    if (labelState == null) return;
+    final tabData = labelState is DropdownTabData ? labelState : null;
+    if (tabData != null) {
+      // ignore: deprecated_member_use_from_same_package
+      final result =
+          DropdownSelectorResult(tabData: tabData, selected: selected);
+      // ignore: deprecated_member_use_from_same_package
+      onChanged?.call(result);
+    }
     for (final listener in List.of(_changeListeners)) {
-      listener(result.tabData, result.selected);
+      listener(labelState, selected);
     }
   }
 
   /// Dispatches an apply event and updates the tab result label.
   void handleApply(SelectorEntries selected, String multipleText) {
     if (_isDisposed) return;
-    // ignore: deprecated_member_use_from_same_package
-    final result =
-        DropdownSelectorResult(tabData: currentTabData, selected: selected);
+    final labelState = labelStateMap[currentIndex];
+    if (labelState == null) return;
     hideSelector();
     // Persist the applied selection back onto the delegate so that reopening
     // the selector (DropdownSelectorBar / DropdownSelectorButton / showSelector
@@ -434,15 +444,20 @@ class DropdownSelectorController extends ChangeNotifier {
     // keeps the initial `selectedEntriesLoader` value and the previous selection
     // is lost on reopen — even though `selectedEntriesLoader` was supplied.
     previousSelectorDelegate?.selectedData = selected;
-    // ignore: deprecated_member_use_from_same_package
-    onApplied?.call(result);
-    for (final listener in List.of(_applyListeners)) {
-      listener(result.tabData, result.selected);
+    final tabData = labelState is DropdownTabData ? labelState : null;
+    if (tabData != null) {
+      // ignore: deprecated_member_use_from_same_package
+      final result =
+          DropdownSelectorResult(tabData: tabData, selected: selected);
+      // ignore: deprecated_member_use_from_same_package
+      onApplied?.call(result);
     }
-    final customLabel =
-        result.tabData.labelGetter?.call(result.tabData, result.selected);
-    result.tabData.resultLabel = customLabel ??
-        SelectorUtils.getResultLabel(result.selected, multipleText);
+    for (final listener in List.of(_applyListeners)) {
+      listener(labelState, selected);
+    }
+    final customLabel = tabData?.labelGetter?.call(selected);
+    labelState.resultLabel =
+        customLabel ?? SelectorUtils.getResultLabel(selected, multipleText);
     notifyListeners();
   }
 
@@ -475,8 +490,9 @@ class DropdownSelectorController extends ChangeNotifier {
     String multipleText = 'Multiple',
   }) async {
     if (_isDisposed) return false;
-    final tabData = tabDataMap[tabIndex];
-    if (tabData == null) return false;
+    final labelState = labelStateMap[tabIndex];
+    if (labelState is! DropdownTabData) return false;
+    final tabData = labelState;
 
     final selector = _selectorAt(tabIndex);
     if (selector == null) return false;
@@ -503,7 +519,7 @@ class DropdownSelectorController extends ChangeNotifier {
     for (final listener in List.of(_applyListeners)) {
       listener(tabData, selected);
     }
-    final customLabel = tabData.labelGetter?.call(tabData, selected);
+    final customLabel = tabData.labelGetter?.call(selected);
     tabData.resultLabel = customLabel ??
         SelectorUtils.getResultLabel(result.selected, multipleText);
     notifyListeners();
@@ -512,8 +528,7 @@ class DropdownSelectorController extends ChangeNotifier {
 
   Future<bool> select(int tabIndex, Set<String> selectedEntryIds) async {
     if (_isDisposed) return false;
-    final tabData = tabDataMap[tabIndex];
-    if (tabData == null) return false;
+    if (labelStateMap[tabIndex] is! DropdownTabData) return false;
 
     final selector = _selectorAt(tabIndex);
     if (selector == null) return false;

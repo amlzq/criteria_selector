@@ -135,7 +135,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
 /// The translations for Chinese, using the Han script (`zh_Hans`).
 class AppLocalizationsZhHans extends AppLocalizationsZh {
-  AppLocalizationsZhHans() : super('zh_Hans');
+  AppLocalizationsZhHans(): super('zh_Hans');
 
   @override
   String get appName => '条件选择器示例';
@@ -266,7 +266,7 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
 /// The translations for Chinese, as used in Hong Kong, using the Han script (`zh_Hant_HK`).
 class AppLocalizationsZhHantHk extends AppLocalizationsZh {
-  AppLocalizationsZhHantHk() : super('zh_Hant_HK');
+  AppLocalizationsZhHantHk(): super('zh_Hant_HK');
 
   @override
   String get appName => '條件選擇器示範';
@@ -397,7 +397,7 @@ class AppLocalizationsZhHantHk extends AppLocalizationsZh {
 
 /// The translations for Chinese, as used in Taiwan, using the Han script (`zh_Hant_TW`).
 class AppLocalizationsZhHantTw extends AppLocalizationsZh {
-  AppLocalizationsZhHantTw() : super('zh_Hant_TW');
+  AppLocalizationsZhHantTw(): super('zh_Hant_TW');
 
   @override
   String get appName => '條件選擇器範例';
