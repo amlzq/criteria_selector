@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import 'action_bar_visibility.dart';
+import 'children_layout.dart';
 import 'constants.dart';
 import 'selector_controller.dart';
 import 'selector_delegate.dart';
@@ -182,77 +183,72 @@ class ListSelectorState extends State<ListSelector> {
                       final selectedEntries =
                           controller?.selectedEntriesAtLevel(1) ?? {};
                       final entries = category.children?.toList() ?? [];
-                      final listConfig = category.listConfig;
-                      final gridConfig = category.gridConfig;
-                      final chipConfig = category.chipConfig;
+                      final layout =
+                          category.childrenLayout ?? const SelectorListLayout();
                       return SelectorExpansionTile(
                         title: category.name ?? '',
                         titlePadding: const EdgeInsets.symmetric(vertical: 10),
                         initiallyExpanded: true,
-                        child: listConfig != null
-                            ? SelectorListView(
-                                key: ValueKey('category_$index'),
-                                category: category,
-                                showTitle: false,
-                                entries: entries,
-                                selectedEntries: selectedEntries,
-                                onItemTap: (index, item) => _onTerminalItemTap(
-                                    item as SelectorChildEntry),
-                                inputListener:
-                                    (categoryId, minValue, maxValue) {
-                                  _customItemSelection(
-                                    categoryId ?? category.id,
-                                    minValue,
-                                    maxValue,
-                                  );
-                                },
-                              )
-                            : gridConfig != null
-                                ? SelectorGridView(
-                                    key: ValueKey('category_$index'),
-                                    crossAxisCount: gridConfig.crossAxisCount,
-                                    mainAxisSpacing: gridConfig.mainAxisSpacing,
-                                    crossAxisSpacing:
-                                        gridConfig.crossAxisSpacing,
-                                    childAspectRatio:
-                                        gridConfig.childAspectRatio,
-                                    tileVariant:
-                                        delegate.gridTileTheme?.variant,
-                                    fieldVariant:
-                                        delegate.fieldTileTheme?.variant,
-                                    category: category,
-                                    showTitle: false,
-                                    entries: entries,
-                                    selectedEntries: selectedEntries,
-                                    onItemTap: (index, item) =>
-                                        _onTerminalItemTap(
-                                            item as SelectorChildEntry),
-                                    focusListener: _focusListener,
-                                  )
-                                : chipConfig != null
-                                    ? SelectorChipBar(
-                                        key: ValueKey('category_$index'),
-                                        category: category,
-                                        entries: entries,
-                                        selectedEntries: selectedEntries,
-                                        showTitle: false,
-                                        isWrapable: true,
-                                        backgroundColor:
-                                            chipBarTheme?.backgroundColor,
-                                        padding: chipBarTheme?.padding,
-                                        variant: chipBarTheme?.variant,
-                                        chipColor: chipBarTheme?.chipColor,
-                                        selectedChipColor:
-                                            chipBarTheme?.selectedChipColor,
-                                        labelStyle: chipBarTheme?.labelStyle,
-                                        selectedLabelStyle:
-                                            chipBarTheme?.selectedLabelStyle,
-                                        onItemTap: (index, item) =>
-                                            _onTerminalItemTap(
-                                                item as SelectorChildEntry),
-                                        // focusListener: _focusListener,
-                                      )
-                                    : const SizedBox.shrink(),
+                        child: switch (layout) {
+                          SelectorListLayout() => SelectorListView(
+                              key: ValueKey('category_$index'),
+                              category: category,
+                              showTitle: false,
+                              entries: entries,
+                              selectedEntries: selectedEntries,
+                              onItemTap: (index, item) => _onTerminalItemTap(
+                                  item as SelectorChildEntry),
+                              inputListener: (categoryId, minValue, maxValue) {
+                                _customItemSelection(
+                                  categoryId ?? category.id,
+                                  minValue,
+                                  maxValue,
+                                );
+                              },
+                            ),
+                          SelectorGridLayout(
+                            :final crossAxisCount,
+                            :final mainAxisSpacing,
+                            :final crossAxisSpacing,
+                            :final childAspectRatio,
+                          ) =>
+                            SelectorGridView(
+                              key: ValueKey('category_$index'),
+                              crossAxisCount: crossAxisCount,
+                              mainAxisSpacing: mainAxisSpacing,
+                              crossAxisSpacing: crossAxisSpacing,
+                              childAspectRatio: childAspectRatio,
+                              tileVariant: delegate.gridTileTheme?.variant,
+                              fieldVariant: delegate.fieldTileTheme?.variant,
+                              category: category,
+                              showTitle: false,
+                              entries: entries,
+                              selectedEntries: selectedEntries,
+                              onItemTap: (index, item) => _onTerminalItemTap(
+                                  item as SelectorChildEntry),
+                              focusListener: _focusListener,
+                            ),
+                          SelectorChipLayout() => SelectorChipBar(
+                              key: ValueKey('category_$index'),
+                              category: category,
+                              entries: entries,
+                              selectedEntries: selectedEntries,
+                              showTitle: false,
+                              isWrapable: true,
+                              backgroundColor: chipBarTheme?.backgroundColor,
+                              padding: chipBarTheme?.padding,
+                              variant: chipBarTheme?.variant,
+                              chipColor: chipBarTheme?.chipColor,
+                              selectedChipColor:
+                                  chipBarTheme?.selectedChipColor,
+                              labelStyle: chipBarTheme?.labelStyle,
+                              selectedLabelStyle:
+                                  chipBarTheme?.selectedLabelStyle,
+                              onItemTap: (index, item) => _onTerminalItemTap(
+                                  item as SelectorChildEntry),
+                              // focusListener: _focusListener,
+                            ),
+                        },
                       );
                     }),
                   ),

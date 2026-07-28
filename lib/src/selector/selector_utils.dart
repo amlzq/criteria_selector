@@ -2,7 +2,6 @@ import 'dart:collection';
 
 import 'package:collection/collection.dart';
 
-import 'constants.dart';
 import 'selector_entry.dart';
 
 /// Utility methods for working with [SelectorEntry] trees and selections.

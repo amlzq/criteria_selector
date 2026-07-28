@@ -1,5 +1,60 @@
 # Migration Guide
 
+## MIGRATE TO NEXT
+
+### Single `childrenLayout` replaces `listConfig` / `gridConfig` / `chipConfig`
+
+**Description**
+`SelectorCategoryEntry` previously exposed three mutually-exclusive, nullable
+fields (`listConfig`, `gridConfig`, `chipConfig`) to choose how a category's
+children are rendered. These are replaced by a single `childrenLayout` property
+of the new sealed `SelectorChildrenLayout` type, with the concrete layouts
+`SelectorListLayout`, `SelectorGridLayout`, and `SelectorChipLayout`. A `switch`
+over `childrenLayout` is exhaustively checked by the compiler (the base class is
+`sealed`). When `childrenLayout` is `null`, a default `SelectorListLayout` is
+used at render time.
+
+The old fields are **deprecated but still available** as getters and constructor
+parameters. They are mapped to the new layouts with the priority
+`listConfig` > `gridConfig` > `chipConfig`, so existing code keeps compiling and
+behaving the same. The deprecated members will be removed in a future major
+version.
+
+**Before → After**
+
+```dart
+// Before
+SelectorCategoryEntry(
+  id: 'home_type',
+  name: 'Home type',
+  gridConfig: const SelectorGridConfig(
+    crossAxisCount: 2,
+    childAspectRatio: 5,
+  ),
+  children: {...},
+);
+
+// After
+SelectorCategoryEntry(
+  id: 'home_type',
+  name: 'Home type',
+  childrenLayout: const SelectorGridLayout(
+    crossAxisCount: 2,
+    childAspectRatio: 5,
+  ),
+  children: {...},
+);
+```
+
+| Old | New |
+| --- | --- |
+| `SelectorCategoryEntry.listConfig` | `SelectorCategoryEntry.childrenLayout` is `SelectorListLayout` |
+| `SelectorCategoryEntry.gridConfig` | `SelectorCategoryEntry.childrenLayout` is `SelectorGridLayout` |
+| `SelectorCategoryEntry.chipConfig` | `SelectorCategoryEntry.childrenLayout` is `SelectorChipLayout` |
+| `SelectorListConfig` | `SelectorListLayout` |
+| `SelectorGridConfig` | `SelectorGridLayout` |
+| `SelectorChipConfig` | `SelectorChipLayout` |
+
 ## MIGRATE TO 0.3.0
 
 ### Rename i18n classes (drop the redundant `Criteria` prefix)

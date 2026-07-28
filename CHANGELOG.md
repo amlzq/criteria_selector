@@ -1,3 +1,11 @@
+## Next
+
+* **DEPRECATION**
+  * `SelectorCategoryEntry` previously exposed three mutually-exclusive, nullable fields `listConfig` / `gridConfig` / `chipConfig`. They are replaced by a single `childrenLayout` property of the new sealed `SelectorChildrenLayout` type. The old fields remain available as deprecated getters/constructor parameters that map to `SelectorListLayout` / `SelectorGridLayout` / `SelectorChipLayout` and will be removed in a future major version.
+
+* **FEATURE**
+  * Add `SelectorChildrenLayout` (sealed) with `SelectorListLayout`, `SelectorGridLayout` (value-equatable) and `SelectorChipLayout` to describe how a category's children are rendered. A `switch` over `childrenLayout` is exhaustively checked by the compiler.
+
 ## 0.3.0
 
 * **DEPRECATION** rename `CriteriaSelectorLocalizations` → `SelectorLocalizations` and `CriteriaSelectorLocalizationsDelegate` → `SelectorLocalizationsDelegate` (old names kept as deprecated aliases).

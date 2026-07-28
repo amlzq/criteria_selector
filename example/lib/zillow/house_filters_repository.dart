@@ -196,11 +196,11 @@ class HouseFiltersRepository {
     final more = moreFromJson(await loadJsonData('more.json'));
     debugPrint('more length: ${more.length}');
 
-    SelectorGridConfig? gridConfig(String categoryId) {
+    SelectorGridLayout? gridLayout(String categoryId) {
       if (categoryId == 'home_type' ||
           categoryId == 'lists_details' ||
           categoryId == 'commute') {
-        return const SelectorGridConfig(
+        return const SelectorGridLayout(
           crossAxisCount: 2,
           childAspectRatio: 5,
           crossAxisSpacing: 10,
@@ -210,7 +210,7 @@ class HouseFiltersRepository {
       if (categoryId == 'square_feet' ||
           categoryId == 'lot_size' ||
           categoryId == 'home_features') {
-        return const SelectorGridConfig(
+        return const SelectorGridLayout(
           crossAxisCount: 3,
           childAspectRatio: 3,
           crossAxisSpacing: 10,
@@ -221,9 +221,9 @@ class HouseFiltersRepository {
       }
     }
 
-    SelectorChipConfig? chipConfig(String categoryId) {
+    SelectorChipLayout? chipLayout(String categoryId) {
       if (categoryId == 'expanded_search') {
-        return const SelectorChipConfig();
+        return const SelectorChipLayout();
       }
       return null;
     }
@@ -252,8 +252,8 @@ class HouseFiltersRepository {
             selectionMode: category.id == 'expanded_search'
                 ? SelectionMode.single
                 : SelectionMode.multiple,
-            gridConfig: gridConfig(category.id!),
-            chipConfig: chipConfig(category.id!),
+            childrenLayout:
+                gridLayout(category.id!) ?? chipLayout(category.id!),
           ),
         )
         .toSet();

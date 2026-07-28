@@ -1,5 +1,5 @@
-import 'package:flutter/foundation.dart';
-
+import '../deprecated.dart';
+import 'children_layout.dart';
 import 'constants.dart';
 
 /// A set of selected [SelectorEntry] values.
@@ -256,15 +256,46 @@ class SelectorCategoryEntry<E> extends SelectorEntry<E> {
     this.headerSelectionMode = SelectionMode.single,
     this.footer,
     this.footerSelectionMode = SelectionMode.single,
-    this.listConfig,
-    this.gridConfig,
-    this.chipConfig,
+    SelectorChildrenLayout? childrenLayout,
+    @Deprecated(
+      'Use childrenLayout instead. When set, it is mapped to a '
+      'SelectorListLayout. It will be removed in a future major version.',
+    )
+    SelectorListConfig? listConfig,
+    @Deprecated(
+      'Use childrenLayout instead. When set, it is mapped to a '
+      'SelectorGridLayout. It will be removed in a future major version.',
+    )
+    SelectorGridConfig? gridConfig,
+    @Deprecated(
+      'Use childrenLayout instead. When set, it is mapped to a '
+      'SelectorChipLayout. It will be removed in a future major version.',
+    )
+    SelectorChipConfig? chipConfig,
     required super.id,
     required super.name,
     required super.children,
     super.enabled,
     super.immediate,
-  });
+  })  : assert(
+          childrenLayout == null ||
+              (listConfig == null && gridConfig == null && chipConfig == null),
+          'Provide either childrenLayout or one of the deprecated '
+          'listConfig/gridConfig/chipConfig, but not both.',
+        ),
+        childrenLayout = childrenLayout ??
+            (listConfig != null
+                ? const SelectorListLayout()
+                : gridConfig != null
+                    ? SelectorGridLayout(
+                        crossAxisCount: gridConfig.crossAxisCount,
+                        mainAxisSpacing: gridConfig.mainAxisSpacing,
+                        crossAxisSpacing: gridConfig.crossAxisSpacing,
+                        childAspectRatio: gridConfig.childAspectRatio,
+                      )
+                    : chipConfig != null
+                        ? const SelectorChipLayout()
+                        : null);
 
   /// The selection mode applied to this category's children.
   ///
@@ -287,14 +318,45 @@ class SelectorCategoryEntry<E> extends SelectorEntry<E> {
   /// Defaults to [SelectionMode.single].
   final SelectionMode footerSelectionMode;
 
-  /// The list layout configuration for this category, if any.
-  final SelectorListConfig? listConfig;
+  /// The layout used to render this category's children.
+  ///
+  /// When `null`, a default [SelectorListLayout] is used at render time.
+  final SelectorChildrenLayout? childrenLayout;
 
-  /// The grid layout configuration for this category, if any.
-  final SelectorGridConfig? gridConfig;
+  /// Use [childrenLayout] instead.
+  @Deprecated(
+    'Use childrenLayout instead. Returns a SelectorListConfig when '
+    'childrenLayout is a SelectorListLayout. It will be removed in a future '
+    'major version.',
+  )
+  SelectorListConfig? get listConfig =>
+      childrenLayout is SelectorListLayout ? const SelectorListConfig() : null;
 
-  /// The chip bar configuration for this category, if any.
-  final SelectorChipConfig? chipConfig;
+  /// Use [childrenLayout] instead.
+  @Deprecated(
+    'Use childrenLayout instead. Returns a SelectorGridConfig mirroring the '
+    'current SelectorGridLayout. It will be removed in a future major version.',
+  )
+  SelectorGridConfig? get gridConfig {
+    final layout = childrenLayout;
+    return layout is SelectorGridLayout
+        ? SelectorGridConfig(
+            crossAxisCount: layout.crossAxisCount,
+            mainAxisSpacing: layout.mainAxisSpacing,
+            crossAxisSpacing: layout.crossAxisSpacing,
+            childAspectRatio: layout.childAspectRatio,
+          )
+        : null;
+  }
+
+  /// Use [childrenLayout] instead.
+  @Deprecated(
+    'Use childrenLayout instead. Returns a SelectorChipConfig when '
+    'childrenLayout is a SelectorChipLayout. It will be removed in a future '
+    'major version.',
+  )
+  SelectorChipConfig? get chipConfig =>
+      childrenLayout is SelectorChipLayout ? const SelectorChipConfig() : null;
 
   SelectorCategoryEntry<E> copyWith({
     String? id,
@@ -307,10 +369,36 @@ class SelectorCategoryEntry<E> extends SelectorEntry<E> {
     SelectionMode? headerSelectionMode,
     SelectorEntry<E>? footer,
     SelectionMode? footerSelectionMode,
+    SelectorChildrenLayout? childrenLayout,
+    @Deprecated(
+      'Use childrenLayout instead. When set, it is mapped to a '
+      'SelectorListLayout. It will be removed in a future major version.',
+    )
     SelectorListConfig? listConfig,
+    @Deprecated(
+      'Use childrenLayout instead. When set, it is mapped to a '
+      'SelectorGridLayout. It will be removed in a future major version.',
+    )
     SelectorGridConfig? gridConfig,
+    @Deprecated(
+      'Use childrenLayout instead. When set, it is mapped to a '
+      'SelectorChipLayout. It will be removed in a future major version.',
+    )
     SelectorChipConfig? chipConfig,
   }) {
+    final SelectorChildrenLayout? resolvedLayout = childrenLayout ??
+        (listConfig != null
+            ? const SelectorListLayout()
+            : gridConfig != null
+                ? SelectorGridLayout(
+                    crossAxisCount: gridConfig.crossAxisCount,
+                    mainAxisSpacing: gridConfig.mainAxisSpacing,
+                    crossAxisSpacing: gridConfig.crossAxisSpacing,
+                    childAspectRatio: gridConfig.childAspectRatio,
+                  )
+                : chipConfig != null
+                    ? const SelectorChipLayout()
+                    : this.childrenLayout);
     return SelectorCategoryEntry<E>(
       id: id ?? this.id,
       name: name ?? this.name,
@@ -322,9 +410,7 @@ class SelectorCategoryEntry<E> extends SelectorEntry<E> {
       headerSelectionMode: headerSelectionMode ?? this.headerSelectionMode,
       footer: footer ?? this.footer,
       footerSelectionMode: footerSelectionMode ?? this.footerSelectionMode,
-      listConfig: listConfig ?? this.listConfig,
-      gridConfig: gridConfig ?? this.gridConfig,
-      chipConfig: chipConfig ?? this.chipConfig,
+      childrenLayout: resolvedLayout,
     );
   }
 
@@ -336,18 +422,15 @@ class SelectorCategoryEntry<E> extends SelectorEntry<E> {
             other.id == id &&
             other.name == name &&
             other.selectionMode == selectionMode &&
-            other.listConfig == listConfig &&
-            other.gridConfig == gridConfig &&
-            other.chipConfig == chipConfig;
+            other.childrenLayout == childrenLayout;
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, name, selectionMode, listConfig, gridConfig, chipConfig);
+  int get hashCode => Object.hash(id, name, selectionMode, childrenLayout);
 
   @override
   String toString() =>
-      'SelectorCategoryEntry(id: $id, name: $name, selectionMode: $selectionMode, header: $header, footer: $footer, listConfig: $listConfig, gridConfig: $gridConfig)';
+      'SelectorCategoryEntry(id: $id, name: $name, selectionMode: $selectionMode, header: $header, footer: $footer, childrenLayout: $childrenLayout)';
 }
 
 extension SelectorCategoryEntryExtension on SelectorCategoryEntry {
@@ -443,36 +526,4 @@ extension SelectorEntryExt on SelectorEntry {
     }
     return childMaxLevel + 1;
   }
-}
-
-@immutable
-class SelectorListConfig {
-  const SelectorListConfig();
-}
-
-@immutable
-class SelectorGridConfig {
-  const SelectorGridConfig({
-    required this.crossAxisCount,
-    this.mainAxisSpacing = 0.0,
-    this.crossAxisSpacing = 0.0,
-    this.childAspectRatio = 1.0,
-  });
-
-  /// The number of children in the cross axis.
-  final int crossAxisCount;
-
-  /// The spacing between children in the main axis.
-  final double mainAxisSpacing;
-
-  /// The spacing between children in the cross axis.
-  final double crossAxisSpacing;
-
-  /// The ratio of the cross-axis to the main-axis extent of each child.
-  final double childAspectRatio;
-}
-
-@immutable
-class SelectorChipConfig {
-  const SelectorChipConfig();
 }

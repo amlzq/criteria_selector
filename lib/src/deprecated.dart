@@ -8,6 +8,8 @@
 /// its new counterpart, so you can simply replace the name in your code.
 library;
 
+import 'package:flutter/foundation.dart';
+
 import 'dropdown_overlay.dart';
 import 'dropdown_overlay_style.dart';
 import 'dropdown_selector_bar.dart';
@@ -17,6 +19,7 @@ import 'dropdown_selector_result.dart';
 import 'dropdown_tab_data.dart';
 import 'i18n/localizations.dart';
 import 'i18n/localizations_delegate.dart';
+import 'selector/children_layout.dart';
 import 'selector/constants.dart';
 import 'selector/selector_delegate.dart';
 
@@ -167,3 +170,65 @@ typedef CriteriaSelectorLocalizations = SelectorLocalizations;
   'major version.',
 )
 typedef CriteriaSelectorLocalizationsDelegate = SelectorLocalizationsDelegate;
+
+/// Deprecated layout configuration for the children of a [SelectorCategoryEntry].
+///
+/// Use [SelectorChildrenLayout] / [SelectorListLayout] via
+/// [SelectorCategoryEntry.childrenLayout] instead. This class is kept only for
+/// backward compatibility and will be removed in a future major version.
+@Deprecated(
+  'Use SelectorChildrenLayout / SelectorListLayout via '
+  'SelectorCategoryEntry.childrenLayout instead. '
+  'This class will be removed in a future major version.',
+)
+@immutable
+class SelectorListConfig {
+  const SelectorListConfig();
+}
+
+/// Deprecated layout configuration for the children of a [SelectorCategoryEntry].
+///
+/// Use [SelectorChildrenLayout] / [SelectorGridLayout] via
+/// [SelectorCategoryEntry.childrenLayout] instead. This class is kept only for
+/// backward compatibility and will be removed in a future major version.
+@Deprecated(
+  'Use SelectorChildrenLayout / SelectorGridLayout via '
+  'SelectorCategoryEntry.childrenLayout instead. '
+  'This class will be removed in a future major version.',
+)
+@immutable
+class SelectorGridConfig {
+  const SelectorGridConfig({
+    required this.crossAxisCount,
+    this.mainAxisSpacing = 0.0,
+    this.crossAxisSpacing = 0.0,
+    this.childAspectRatio = 1.0,
+  });
+
+  /// The number of children in the cross axis.
+  final int crossAxisCount;
+
+  /// The spacing between children in the main axis.
+  final double mainAxisSpacing;
+
+  /// The spacing between children in the cross axis.
+  final double crossAxisSpacing;
+
+  /// The ratio of the cross-axis to the main-axis extent of each child.
+  final double childAspectRatio;
+}
+
+/// Deprecated layout configuration for the children of a [SelectorCategoryEntry].
+///
+/// Use [SelectorChildrenLayout] / [SelectorChipLayout] via
+/// [SelectorCategoryEntry.childrenLayout] instead. This class is kept only for
+/// backward compatibility and will be removed in a future major version.
+@Deprecated(
+  'Use SelectorChildrenLayout / SelectorChipLayout via '
+  'SelectorCategoryEntry.childrenLayout instead. '
+  'This class will be removed in a future major version.',
+)
+@immutable
+class SelectorChipConfig {
+  const SelectorChipConfig();
+}
