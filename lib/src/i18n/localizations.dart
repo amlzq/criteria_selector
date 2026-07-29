@@ -47,6 +47,11 @@ class SelectorLocalizations {
 
   // Extended language resource dictionary
   static const Map<String, Map<String, String>> _localizedValues = {
+    'de': {
+      'reset': 'Zurücksetzen',
+      'apply': 'Anwenden',
+      'multiple': 'Mehrfach',
+    },
     'en': {
       'reset': 'Reset',
       'apply': 'Apply',
@@ -57,30 +62,15 @@ class SelectorLocalizations {
       'apply': 'Aplicar',
       'multiple': 'Multiple',
     },
-    'pt': {
-      'reset': 'Redefinir',
-      'apply': 'Aplicar',
-      'multiple': 'Múltipla',
-    },
-    'id': {
-      'reset': 'Atur Ulang',
-      'apply': 'Terapkan',
-      'multiple': 'Multi',
-    },
-    'vi': {
-      'reset': 'Đặt lại',
-      'apply': 'Áp dụng',
-      'multiple': 'Nhiều lựa chọn',
-    },
     'fr': {
       'reset': 'Réinitialiser',
       'apply': 'Appliquer',
       'multiple': 'Multiple',
     },
-    'de': {
-      'reset': 'Zurücksetzen',
-      'apply': 'Anwenden',
-      'multiple': 'Mehrfach',
+    'id': {
+      'reset': 'Atur Ulang',
+      'apply': 'Terapkan',
+      'multiple': 'Multi',
     },
     'ja': {
       'reset': 'リセット',
@@ -92,6 +82,16 @@ class SelectorLocalizations {
       'apply': '적용',
       'multiple': '다중',
     },
+    'pt': {
+      'reset': 'Redefinir',
+      'apply': 'Aplicar',
+      'multiple': 'Múltipla',
+    },
+    'vi': {
+      'reset': 'Đặt lại',
+      'apply': 'Áp dụng',
+      'multiple': 'Nhiều lựa chọn',
+    },
     'zh_Hans': {
       'reset': '重置',
       'apply': '应用',
@@ -102,14 +102,14 @@ class SelectorLocalizations {
       'apply': '应用',
       'multiple': '多選',
     },
-    'zh_Hant_TW': {
-      'reset': '重設',
-      'apply': '套用',
-      'multiple': '多選',
-    },
     'zh_Hant_HK': {
       'reset': '重設',
       'apply': '立即搜尋',
+      'multiple': '多選',
+    },
+    'zh_Hant_TW': {
+      'reset': '重設',
+      'apply': '套用',
       'multiple': '多選',
     },
   };

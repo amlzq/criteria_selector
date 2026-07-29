@@ -7,34 +7,34 @@ class SelectorLocalizationsDelegate
   const SelectorLocalizationsDelegate();
 
   static const supportedLanguageCodes = <String>{
-    'en',
-    'zh',
-    'es',
-    'pt',
-    'id',
-    'vi',
-    'fr',
     'de',
+    'en',
+    'es',
+    'fr',
+    'id',
     'ja',
     'ko',
+    'pt',
+    'vi',
+    'zh',
   };
 
   static const supportedLocales = <Locale>[
+    Locale('de'),
     Locale('en'),
+    Locale('es'),
+    Locale('fr'),
+    Locale('id'),
+    Locale('ja'),
+    Locale('ko'),
+    Locale('pt'),
+    Locale('vi'),
     Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans'),
     Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'),
     Locale.fromSubtags(
-        languageCode: 'zh', scriptCode: 'Hant', countryCode: 'TW'),
-    Locale.fromSubtags(
         languageCode: 'zh', scriptCode: 'Hant', countryCode: 'HK'),
-    Locale('es'),
-    Locale('pt'),
-    Locale('id'),
-    Locale('vi'),
-    Locale('fr'),
-    Locale('de'),
-    Locale('ja'),
-    Locale('ko'),
+    Locale.fromSubtags(
+        languageCode: 'zh', scriptCode: 'Hant', countryCode: 'TW'),
   ];
 
   @override
