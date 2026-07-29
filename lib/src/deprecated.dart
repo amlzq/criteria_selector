@@ -2,7 +2,7 @@
 ///
 /// The `Dropselect*` public API has been renamed to `Dropdown*` for clarity and
 /// consistency. The old names below are kept only as type/const aliases and are
-/// scheduled for removal in the next major version.
+/// scheduled for removal in the next minor version.
 ///
 /// Migration is a pure rename: every old symbol is the exact same type/value as
 /// its new counterpart, so you can simply replace the name in your code.
@@ -26,28 +26,28 @@ import 'selector/selector_delegate.dart';
 /// Use [DropdownSelectorBar] instead.
 @Deprecated(
   'Renamed to DropdownSelectorBar. The API and behavior are identical; '
-  'simply rename the type. This alias will be removed in a future major version.',
+  'simply rename the type. This alias will be removed in a future minor version.',
 )
 typedef DropselectTabBar = DropdownSelectorBar;
 
 /// Use [DropdownTab] instead.
 @Deprecated(
   'Renamed to DropdownTab. The API and behavior are identical; '
-  'simply rename the type. This alias will be removed in a future major version.',
+  'simply rename the type. This alias will be removed in a future minor version.',
 )
 typedef DropselectTab = DropdownTab;
 
 /// Use [DropdownSelectorBarTheme] instead.
 @Deprecated(
   'Renamed to DropdownSelectorBarTheme. The API and behavior are identical; '
-  'simply rename the type. This alias will be removed in a future major version.',
+  'simply rename the type. This alias will be removed in a future minor version.',
 )
 typedef DropselectTabBarTheme = DropdownSelectorBarTheme;
 
 /// Use [DropdownSelectorController] instead.
 @Deprecated(
   'Renamed to DropdownSelectorController. The API and behavior are identical; '
-  'simply rename the type. This alias will be removed in a future major version.',
+  'simply rename the type. This alias will be removed in a future minor version.',
 )
 typedef DropselectTabController = DropdownSelectorController;
 
@@ -55,14 +55,14 @@ typedef DropselectTabController = DropdownSelectorController;
 @Deprecated(
   'Renamed to DropdownSelectorControllerProvider. The API and behavior are '
   'identical; simply rename the type. This alias will be removed in a future '
-  'major version.',
+  'minor version.',
 )
 typedef DropselectTabControllerProvider = DropdownSelectorControllerProvider;
 
 /// Use [DropdownTabData] instead.
 @Deprecated(
   'Renamed to DropdownTabData. The API and behavior are identical; '
-  'simply rename the type. This alias will be removed in a future major version.',
+  'simply rename the type. This alias will be removed in a future minor version.',
 )
 typedef DropselectTabData = DropdownTabData;
 
@@ -74,49 +74,49 @@ typedef DropselectTabData = DropdownTabData;
 @Deprecated(
   'Renamed to DropdownSelectorResult, which is itself deprecated. Migrate to the '
   '(tabData, selected) callback signature instead. This alias will be removed in a '
-  'future major version.',
+  'future minor version.',
 )
 typedef DropselectResult = DropdownSelectorResult;
 
 /// Use [DropdownOverlay] instead.
 @Deprecated(
   'Renamed to DropdownOverlay. The API and behavior are identical; '
-  'simply rename the type. This alias will be removed in a future major version.',
+  'simply rename the type. This alias will be removed in a future minor version.',
 )
 typedef DropselectOverlay = DropdownOverlay;
 
 /// Use [DropdownOverlayStyle] instead.
 @Deprecated(
   'Renamed to DropdownOverlayStyle. The API and behavior are identical; '
-  'simply rename the type. This alias will be removed in a future major version.',
+  'simply rename the type. This alias will be removed in a future minor version.',
 )
 typedef DropselectOverlayStyle = DropdownOverlayStyle;
 
 /// Use [DropdownSelectorResultCallback] instead.
 @Deprecated(
   'Renamed to DropdownSelectorResultCallback. The signature is identical; '
-  'simply rename the type. This alias will be removed in a future major version.',
+  'simply rename the type. This alias will be removed in a future minor version.',
 )
 typedef DropselectResultCallback = DropdownSelectorResultCallback;
 
 /// Use [DropdownTabLabelGetter] instead.
 @Deprecated(
   'Renamed to DropdownTabLabelGetter. The signature is identical; '
-  'simply rename the type. This alias will be removed in a future major version.',
+  'simply rename the type. This alias will be removed in a future minor version.',
 )
 typedef DropselectTabLabelGetter = DropdownTabLabelGetter;
 
 /// Use [kDropdownSelectorBarHeight] instead.
 @Deprecated(
   'Renamed to kDropdownSelectorBarHeight. This is the same constant; '
-  'simply rename it. This alias will be removed in a future major version.',
+  'simply rename it. This alias will be removed in a future minor version.',
 )
 const double kDropselectTabBarHeight = kDropdownSelectorBarHeight;
 
 /// Use [kDropdownOverlayMaxHeightFactor] instead.
 @Deprecated(
   'Renamed to kDropdownOverlayMaxHeightFactor. This is the same constant; '
-  'simply rename it. This alias will be removed in a future major version.',
+  'simply rename it. This alias will be removed in a future minor version.',
 )
 const double kDropselectOverlayMaxHeightFactor =
     kDropdownOverlayMaxHeightFactor;
@@ -124,42 +124,42 @@ const double kDropselectOverlayMaxHeightFactor =
 /// Use [SelectorDelegate] instead.
 @Deprecated(
   'Renamed to SelectorDelegate. The API and behavior are identical; '
-  'simply rename the type. This alias will be removed in a future major version.',
+  'simply rename the type. This alias will be removed in a future minor version.',
 )
 typedef Selector = SelectorDelegate;
 
 /// Use [CascadingSelectorDelegate] instead.
 @Deprecated(
   'Renamed to CascadingSelectorDelegate. The API and behavior are identical; '
-  'simply rename the type. This alias will be removed in a future major version.',
+  'simply rename the type. This alias will be removed in a future minor version.',
 )
 typedef CascadingSelector = CascadingSelectorDelegate;
 
 /// Use [ListSelectorDelegate] instead.
 @Deprecated(
   'Renamed to ListSelectorDelegate. The API and behavior are identical; '
-  'simply rename the type. This alias will be removed in a future major version.',
+  'simply rename the type. This alias will be removed in a future minor version.',
 )
 typedef ListSelector = ListSelectorDelegate;
 
 /// Use [GridSelectorDelegate] instead.
 @Deprecated(
   'Renamed to GridSelectorDelegate. The API and behavior are identical; '
-  'simply rename the type. This alias will be removed in a future major version.',
+  'simply rename the type. This alias will be removed in a future minor version.',
 )
 typedef GridSelector = GridSelectorDelegate;
 
 /// Use [FlattenSelectorDelegate] instead.
 @Deprecated(
   'Renamed to FlattenSelectorDelegate. The API and behavior are identical; '
-  'simply rename the type. This alias will be removed in a future major version.',
+  'simply rename the type. This alias will be removed in a future minor version.',
 )
 typedef FlattenSelector = FlattenSelectorDelegate;
 
 /// Use [SelectorLocalizations] instead.
 @Deprecated(
   'Renamed to SelectorLocalizations. The API and behavior are identical; '
-  'simply rename the type. This alias will be removed in a future major version.',
+  'simply rename the type. This alias will be removed in a future minor version.',
 )
 typedef CriteriaSelectorLocalizations = SelectorLocalizations;
 
@@ -167,7 +167,7 @@ typedef CriteriaSelectorLocalizations = SelectorLocalizations;
 @Deprecated(
   'Renamed to SelectorLocalizationsDelegate. The API and behavior are '
   'identical; simply rename the type. This alias will be removed in a future '
-  'major version.',
+  'minor version.',
 )
 typedef CriteriaSelectorLocalizationsDelegate = SelectorLocalizationsDelegate;
 
@@ -175,11 +175,11 @@ typedef CriteriaSelectorLocalizationsDelegate = SelectorLocalizationsDelegate;
 ///
 /// Use [SelectorChildrenLayout] / [SelectorListLayout] via
 /// [SelectorCategoryEntry.childrenLayout] instead. This class is kept only for
-/// backward compatibility and will be removed in a future major version.
+/// backward compatibility and will be removed in a future minor version.
 @Deprecated(
   'Use SelectorChildrenLayout / SelectorListLayout via '
   'SelectorCategoryEntry.childrenLayout instead. '
-  'This class will be removed in a future major version.',
+  'This class will be removed in a future minor version.',
 )
 @immutable
 class SelectorListConfig {
@@ -190,11 +190,11 @@ class SelectorListConfig {
 ///
 /// Use [SelectorChildrenLayout] / [SelectorGridLayout] via
 /// [SelectorCategoryEntry.childrenLayout] instead. This class is kept only for
-/// backward compatibility and will be removed in a future major version.
+/// backward compatibility and will be removed in a future minor version.
 @Deprecated(
   'Use SelectorChildrenLayout / SelectorGridLayout via '
   'SelectorCategoryEntry.childrenLayout instead. '
-  'This class will be removed in a future major version.',
+  'This class will be removed in a future minor version.',
 )
 @immutable
 class SelectorGridConfig {
@@ -222,11 +222,11 @@ class SelectorGridConfig {
 ///
 /// Use [SelectorChildrenLayout] / [SelectorChipLayout] via
 /// [SelectorCategoryEntry.childrenLayout] instead. This class is kept only for
-/// backward compatibility and will be removed in a future major version.
+/// backward compatibility and will be removed in a future minor version.
 @Deprecated(
   'Use SelectorChildrenLayout / SelectorChipLayout via '
   'SelectorCategoryEntry.childrenLayout instead. '
-  'This class will be removed in a future major version.',
+  'This class will be removed in a future minor version.',
 )
 @immutable
 class SelectorChipConfig {

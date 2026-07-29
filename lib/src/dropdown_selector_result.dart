@@ -12,10 +12,10 @@ import 'selector/selector_utils.dart';
 /// directly as `(tabData, selected)` (see [DropdownSelectorResultCallback] and
 /// [DropdownTabLabelGetter]). Construct a [DropdownSelectorResult] only to keep
 /// an existing legacy `void Function(DropdownSelectorResult)` callback working;
-/// this class will be removed in a future major version.')
+/// this class will be removed in a future minor version.')
 @Deprecated(
     'Callbacks now receive (tabData, selected) directly; construct this only for legacy callbacks. '
-    'It will be removed in a future major version.')
+    'It will be removed in a future minor version.')
 class DropdownSelectorResult {
   const DropdownSelectorResult({required this.tabData, required this.selected});
 

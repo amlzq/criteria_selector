@@ -23,10 +23,10 @@ class DropdownSelectorController extends ChangeNotifier {
   ///
   /// Deprecated: register a listener via [addChangeListener] instead. This
   /// field is kept for backwards compatibility and will be removed in a future
-  /// major version. When set, it is invoked alongside any registered
+  /// minor version. When set, it is invoked alongside any registered
   /// [addChangeListener] listeners.
   @Deprecated(
-    'Use addChangeListener instead. This field will be removed in a future major version.',
+    'Use addChangeListener instead. This field will be removed in a future minor version.',
   )
   void Function(DropdownSelectorResult)? onChanged;
 
@@ -34,10 +34,10 @@ class DropdownSelectorController extends ChangeNotifier {
   ///
   /// Deprecated: register a listener via [addApplyListener] instead. This
   /// field is kept for backwards compatibility and will be removed in a future
-  /// major version. When set, it is invoked alongside any registered
+  /// minor version. When set, it is invoked alongside any registered
   /// [addApplyListener] listeners.
   @Deprecated(
-    'Use addApplyListener instead. This field will be removed in a future major version.',
+    'Use addApplyListener instead. This field will be removed in a future minor version.',
   )
   void Function(DropdownSelectorResult)? onApplied;
 
@@ -45,10 +45,10 @@ class DropdownSelectorController extends ChangeNotifier {
   ///
   /// Deprecated: register a listener via [addResetListener] instead. This
   /// field is kept for backwards compatibility and will be removed in a future
-  /// major version. When set, it is invoked alongside any registered
+  /// minor version. When set, it is invoked alongside any registered
   /// [addResetListener] listeners.
   @Deprecated(
-    'Use addResetListener instead. This field will be removed in a future major version.',
+    'Use addResetListener instead. This field will be removed in a future minor version.',
   )
   VoidCallback? onReset;
 

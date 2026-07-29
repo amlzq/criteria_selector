@@ -18,7 +18,7 @@ class DropdownTabData extends SelectorLabelState {
   /// @Deprecated('Use [labelLoader]. This legacy loader additionally received '
   /// 'tab metadata; pass it to [labelLoader] via fromTabLabelGetter, or set it '
   /// 'here directly to keep receiving the live [DropdownTabData]. Will be '
-  /// 'removed in a future major version.')
+  /// 'removed in a future minor version.')
   final DropdownTabLabelGetter? legacyLabelGetter;
 
   /// The effective label loader applied to the current selection.

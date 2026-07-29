@@ -45,7 +45,7 @@ typedef SelectorLabelChangeCallback = void Function(
 /// @Deprecated('Use [SelectorLabelLoader] instead, which receives only the '
 /// 'selected entries. Adapt an existing getter with fromTabLabelGetter if you '
 /// 'must keep receiving tab metadata. This typedef will be removed in a future '
-/// 'major version.')
+/// 'minor version.')
 typedef DropdownTabLabelGetter = String Function(
     DropdownTabData tabData, SelectorEntries selected);
 

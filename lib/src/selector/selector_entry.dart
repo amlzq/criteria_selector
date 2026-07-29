@@ -259,17 +259,17 @@ class SelectorCategoryEntry<E> extends SelectorEntry<E> {
     SelectorChildrenLayout? childrenLayout,
     @Deprecated(
       'Use childrenLayout instead. When set, it is mapped to a '
-      'SelectorListLayout. It will be removed in a future major version.',
+      'SelectorListLayout. It will be removed in a future minor version.',
     )
     SelectorListConfig? listConfig,
     @Deprecated(
       'Use childrenLayout instead. When set, it is mapped to a '
-      'SelectorGridLayout. It will be removed in a future major version.',
+      'SelectorGridLayout. It will be removed in a future minor version.',
     )
     SelectorGridConfig? gridConfig,
     @Deprecated(
       'Use childrenLayout instead. When set, it is mapped to a '
-      'SelectorChipLayout. It will be removed in a future major version.',
+      'SelectorChipLayout. It will be removed in a future minor version.',
     )
     SelectorChipConfig? chipConfig,
     required super.id,
@@ -327,7 +327,7 @@ class SelectorCategoryEntry<E> extends SelectorEntry<E> {
   @Deprecated(
     'Use childrenLayout instead. Returns a SelectorListConfig when '
     'childrenLayout is a SelectorListLayout. It will be removed in a future '
-    'major version.',
+    'minor version.',
   )
   SelectorListConfig? get listConfig =>
       childrenLayout is SelectorListLayout ? const SelectorListConfig() : null;
@@ -335,7 +335,7 @@ class SelectorCategoryEntry<E> extends SelectorEntry<E> {
   /// Use [childrenLayout] instead.
   @Deprecated(
     'Use childrenLayout instead. Returns a SelectorGridConfig mirroring the '
-    'current SelectorGridLayout. It will be removed in a future major version.',
+    'current SelectorGridLayout. It will be removed in a future minor version.',
   )
   SelectorGridConfig? get gridConfig {
     final layout = childrenLayout;
@@ -353,7 +353,7 @@ class SelectorCategoryEntry<E> extends SelectorEntry<E> {
   @Deprecated(
     'Use childrenLayout instead. Returns a SelectorChipConfig when '
     'childrenLayout is a SelectorChipLayout. It will be removed in a future '
-    'major version.',
+    'minor version.',
   )
   SelectorChipConfig? get chipConfig =>
       childrenLayout is SelectorChipLayout ? const SelectorChipConfig() : null;
@@ -372,17 +372,17 @@ class SelectorCategoryEntry<E> extends SelectorEntry<E> {
     SelectorChildrenLayout? childrenLayout,
     @Deprecated(
       'Use childrenLayout instead. When set, it is mapped to a '
-      'SelectorListLayout. It will be removed in a future major version.',
+      'SelectorListLayout. It will be removed in a future minor version.',
     )
     SelectorListConfig? listConfig,
     @Deprecated(
       'Use childrenLayout instead. When set, it is mapped to a '
-      'SelectorGridLayout. It will be removed in a future major version.',
+      'SelectorGridLayout. It will be removed in a future minor version.',
     )
     SelectorGridConfig? gridConfig,
     @Deprecated(
       'Use childrenLayout instead. When set, it is mapped to a '
-      'SelectorChipLayout. It will be removed in a future major version.',
+      'SelectorChipLayout. It will be removed in a future minor version.',
     )
     SelectorChipConfig? chipConfig,
   }) {

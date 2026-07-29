@@ -42,7 +42,7 @@ class DropdownSelectorBar extends StatefulWidget
     @Deprecated(
       'Use [selectorDelegates] instead. The type and behavior are identical; '
       'simply rename the parameter. This parameter will be removed in a future '
-      'major version.',
+      'minor version.',
     )
     List<SelectorDelegate>? selectors,
     List<SelectorDelegate>? selectorDelegates,
@@ -518,7 +518,7 @@ class DropdownTab extends StatelessWidget {
   /// @Deprecated('Use [labelLoader] (the canonical [SelectorLabelLoader] form). '
   /// 'This legacy getter additionally received tab metadata; adapt it with '
   /// 'fromTabLabelGetter if you must keep the (tabData, selected) signature. '
-  /// 'Will be removed in a future major version.')
+  /// 'Will be removed in a future minor version.')
   final DropdownTabLabelGetter? legacyLabelGetter;
 
   /// A custom widget displayed in the tab instead of [label].

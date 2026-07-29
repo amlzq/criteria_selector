@@ -35,13 +35,13 @@ abstract class SelectorDelegate {
     this.selectedEntriesLoader,
     this.resetEntriesLoader,
     @Deprecated(
-        'Use [entriesLoader] instead. Will be removed in the next major version.')
+        'Use [entriesLoader] instead. Will be removed in the next minor version.')
     this.dataFetcher,
     @Deprecated(
-        'Use [selectedEntriesLoader] instead. Will be removed in the next major version.')
+        'Use [selectedEntriesLoader] instead. Will be removed in the next minor version.')
     this.selectedDataFetcher,
     @Deprecated(
-        'Use [resetEntriesLoader] instead. Will be removed in the next major version.')
+        'Use [resetEntriesLoader] instead. Will be removed in the next minor version.')
     this.resetDataFetcher,
     this.actionBarBuilder,
     this.selectedColor,
@@ -82,7 +82,7 @@ abstract class SelectorDelegate {
   /// @Deprecated Use [entriesLoader] instead. Will be removed in the next major
   /// version.
   @Deprecated(
-      'Use [entriesLoader] instead. Will be removed in the next major version.')
+      'Use [entriesLoader] instead. Will be removed in the next minor version.')
   final Future<SelectorEntries> Function()? dataFetcher;
 
   Future<SelectorEntries>? _data;
@@ -101,9 +101,9 @@ abstract class SelectorDelegate {
   /// Returns the previously selected entries to restore.
   ///
   /// @Deprecated Use [selectedEntriesLoader] instead. Will be removed in the
-  /// next major version.
+  /// next minor version.
   @Deprecated(
-      'Use [selectedEntriesLoader] instead. Will be removed in the next major version.')
+      'Use [selectedEntriesLoader] instead. Will be removed in the next minor version.')
   final SelectorEntries? Function()? selectedDataFetcher;
 
   SelectorEntries? _selectedData;
@@ -124,9 +124,9 @@ abstract class SelectorDelegate {
   /// Returns the selection that should be used when "Reset" is tapped.
   ///
   /// @Deprecated Use [resetEntriesLoader] instead. Will be removed in the next
-  /// major version.
+  /// minor version.
   @Deprecated(
-      'Use [resetEntriesLoader] instead. Will be removed in the next major version.')
+      'Use [resetEntriesLoader] instead. Will be removed in the next minor version.')
   final SelectorEntries? Function()? resetDataFetcher;
 
   SelectorEntries? _resetData;
