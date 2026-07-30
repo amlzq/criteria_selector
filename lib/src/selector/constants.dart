@@ -80,8 +80,6 @@ const EdgeInsets kSelectorLabelPadding = EdgeInsets.symmetric(horizontal: 16.0);
 /// Default width for the category tile column.
 const kSelectorCategoryTileWidth = 80.0;
 
-const kSelectorCategoryBarMaxWidthFactor = 0.7;
-
 /// Builds a selector widget from async data and its controller.
 typedef SelectorBuilder = Widget Function(
   BuildContext context,

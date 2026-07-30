@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import 'selector_panel_theme.dart';
 import 'widgets/action_bar_theme.dart';
-import 'widgets/category_bar_theme.dart';
 import 'widgets/chip_bar_theme.dart';
 import 'widgets/expansion_tile_theme.dart';
 import 'widgets/field_tile_theme.dart';
@@ -30,8 +29,6 @@ class SelectorThemeData with Diagnosticable {
     Color? backgroundColorHighest,
     Color? onBackgroundColorHighest,
     SelectorActionBarTheme? actionBarTheme,
-    @Deprecated('Use [tabBarTheme] (horizontal) or [sideBarTheme] (vertical).')
-    SelectorCategoryBarTheme? categoryBarTheme,
     SelectorTabBarTheme? tabBarTheme,
     SelectorSideBarTheme? sideBarTheme,
     SelectorGridTileTheme? gridTileTheme,
@@ -55,8 +52,6 @@ class SelectorThemeData with Diagnosticable {
       onBackgroundColorHighest:
           onBackgroundColorHighest ?? theme.colorScheme.onSurfaceVariant,
       actionBarTheme: actionBarTheme ?? const SelectorActionBarTheme(),
-      // ignore: deprecated_member_use_from_same_package
-      categoryBarTheme: categoryBarTheme ?? const SelectorCategoryBarTheme(),
       tabBarTheme: tabBarTheme ?? const SelectorTabBarTheme(),
       sideBarTheme: sideBarTheme ?? const SelectorSideBarTheme(),
       gridTileTheme: gridTileTheme ?? const SelectorGridTileTheme(),
@@ -81,8 +76,6 @@ class SelectorThemeData with Diagnosticable {
     required this.backgroundColorHighest,
     required this.onBackgroundColorHighest,
     required this.actionBarTheme,
-    @Deprecated('Use [tabBarTheme] (horizontal) or [sideBarTheme] (vertical).')
-    required this.categoryBarTheme,
     required this.tabBarTheme,
     required this.sideBarTheme,
     required this.gridTileTheme,
@@ -123,14 +116,6 @@ class SelectorThemeData with Diagnosticable {
   /// Theme overrides for the action bar widget.
   final SelectorActionBarTheme actionBarTheme;
 
-  /// Theme overrides for the category bar widget.
-  ///
-  /// Deprecated: this was used by SelectorCategoryBar. Migrate to:
-  /// - [tabBarTheme] to style SelectorTabBar (horizontal).
-  /// - [sideBarTheme] to style SelectorSideBar (vertical).
-  @Deprecated('Use [tabBarTheme] (horizontal) or [sideBarTheme] (vertical).')
-  final SelectorCategoryBarTheme categoryBarTheme;
-
   /// Theme overrides for the tab bar widget.
   final SelectorTabBarTheme tabBarTheme;
 
@@ -170,8 +155,6 @@ class SelectorThemeData with Diagnosticable {
     Color? backgroundColorHighest,
     Color? onBackgroundColorHighest,
     SelectorActionBarTheme? actionBarTheme,
-    @Deprecated('Use [tabBarTheme] (horizontal) or [sideBarTheme] (vertical).')
-    SelectorCategoryBarTheme? categoryBarTheme,
     SelectorTabBarTheme? tabBarTheme,
     SelectorSideBarTheme? sideBarTheme,
     SelectorGridTileTheme? gridTileTheme,
@@ -194,8 +177,6 @@ class SelectorThemeData with Diagnosticable {
       onBackgroundColorHighest:
           onBackgroundColorHighest ?? this.onBackgroundColorHighest,
       actionBarTheme: actionBarTheme ?? this.actionBarTheme,
-      // ignore: deprecated_member_use_from_same_package
-      categoryBarTheme: categoryBarTheme ?? this.categoryBarTheme,
       tabBarTheme: tabBarTheme ?? this.tabBarTheme,
       sideBarTheme: sideBarTheme ?? this.sideBarTheme,
       gridTileTheme: gridTileTheme ?? this.gridTileTheme,
@@ -229,9 +210,6 @@ class SelectorThemeData with Diagnosticable {
           a?.onBackgroundColorHighest, b?.onBackgroundColorHighest, t)!,
       actionBarTheme:
           SelectorActionBarTheme.lerp(a?.actionBarTheme, b?.actionBarTheme, t),
-      // ignore: deprecated_member_use_from_same_package
-      categoryBarTheme: SelectorCategoryBarTheme.lerp(
-          a?.categoryBarTheme, b?.categoryBarTheme, t),
       tabBarTheme: SelectorTabBarTheme.lerp(a?.tabBarTheme, b?.tabBarTheme, t),
       sideBarTheme:
           SelectorSideBarTheme.lerp(a?.sideBarTheme, b?.sideBarTheme, t),
@@ -262,8 +240,6 @@ class SelectorThemeData with Diagnosticable {
         backgroundColorHighest,
         onBackgroundColorHighest,
         actionBarTheme,
-        // ignore: deprecated_member_use_from_same_package
-        categoryBarTheme,
         tabBarTheme,
         sideBarTheme,
         gridTileTheme,
@@ -293,8 +269,6 @@ class SelectorThemeData with Diagnosticable {
         other.backgroundColorHighest == backgroundColorHighest &&
         other.onBackgroundColorHighest == onBackgroundColorHighest &&
         other.actionBarTheme == actionBarTheme &&
-        // ignore: deprecated_member_use_from_same_package
-        other.categoryBarTheme == categoryBarTheme &&
         other.tabBarTheme == tabBarTheme &&
         other.sideBarTheme == sideBarTheme &&
         other.gridTileTheme == gridTileTheme &&

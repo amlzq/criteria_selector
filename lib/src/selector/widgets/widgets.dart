@@ -1,7 +1,5 @@
 export 'action_bar.dart';
 export 'action_bar_theme.dart';
-export 'category_bar.dart';
-export 'category_bar_theme.dart';
 export 'chip_bar.dart';
 export 'chip_bar_theme.dart';
 export 'expansion_tile.dart';

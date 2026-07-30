@@ -39,13 +39,7 @@ class DropdownSelectorBar extends StatefulWidget
   const DropdownSelectorBar({
     super.key,
     required this.tabs,
-    @Deprecated(
-      'Use [selectorDelegates] instead. The type and behavior are identical; '
-      'simply rename the parameter. This parameter will be removed in a future '
-      'minor version.',
-    )
-    List<SelectorDelegate>? selectors,
-    List<SelectorDelegate>? selectorDelegates,
+    this.selectorDelegates = const [],
     this.height,
     this.isScrollable = false,
     this.backgroundColor,
@@ -68,9 +62,7 @@ class DropdownSelectorBar extends StatefulWidget
     this.initialIndex,
     this.selectorTheme,
     this.direction = DropdownSelectorDirection.below,
-  })  : assert(selectorDelegates != null || selectors != null,
-            'Either selectorDelegates or selectors must be provided.'),
-        selectorDelegates = selectorDelegates ?? selectors ?? const [];
+  });
 
   /// The set of tabs to display in the bar.
   ///

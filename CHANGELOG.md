@@ -1,10 +1,18 @@
 ## Next
 
-* **DEPRECATION**
-  * `SelectorCategoryEntry` previously exposed three mutually-exclusive, nullable fields `listConfig` / `gridConfig` / `chipConfig`. They are replaced by a single `childrenLayout` property of the new sealed `SelectorChildrenLayout` type. The old fields remain available as deprecated getters/constructor parameters that map to `SelectorListLayout` / `SelectorGridLayout` / `SelectorChipLayout` and will be removed in a future major version.
+* **FEATURE** add `SelectorChildrenLayout` (sealed) with `SelectorListLayout`, `SelectorGridLayout` (value-equatable) and `SelectorChipLayout` to describe how a category's children are rendered. A `switch` over `childrenLayout` is exhaustively checked by the compiler.
 
-* **FEATURE**
-  * Add `SelectorChildrenLayout` (sealed) with `SelectorListLayout`, `SelectorGridLayout` (value-equatable) and `SelectorChipLayout` to describe how a category's children are rendered. A `switch` over `childrenLayout` is exhaustively checked by the compiler.
+* **DEPRECATION** `SelectorCategoryEntry` previously exposed three mutually-exclusive, nullable fields `listConfig` / `gridConfig` / `chipConfig`. They are replaced by a single `childrenLayout` property of the new sealed `SelectorChildrenLayout` type. The old fields remain available as deprecated getters/constructor parameters that map to `SelectorListLayout` / `SelectorGridLayout` / `SelectorChipLayout` and will be removed in a future major version.
+
+* **BREAKING** remove the deprecated `Dropselect*` public API aliases (introduced in 0.2.0). Use the `Dropdown*` / `DropdownSelector*` names instead.
+
+* **BREAKING** remove the deprecated `Selector` / `CascadingSelector` / `ListSelector` / `GridSelector` / `FlattenSelector` type aliases and the `DropdownSelectorBar.selectors` parameter (introduced in 0.2.0). Use the `*Delegate` types and `selectorDelegates` parameter instead.
+
+* **BREAKING** remove the deprecated `SelectorDelegate.dataFetcher` / `selectedDataFetcher` / `resetDataFetcher` parameters (introduced in 0.2.0). Use `entriesLoader` / `selectedEntriesLoader` / `resetEntriesLoader` instead.
+
+* **BREAKING** remove the deprecated `SelectorCategoryBar` / `SelectorCategoryBarSkeleton` / `SelectorCategoryBarTheme` / `SelectorCategoryBarIndicatorSize` widgets and types, the `SelectorThemeData.categoryBarTheme` property, and the `SelectorDelegate.categoryBarTheme` parameter (introduced in 0.2.0). Use `SelectorTabBar` / `SelectorSideBar` and `tabBarTheme` / `sideBarTheme` instead.
+
+* see [Migration guide](https://github.com/amlzq/criteria_selector/blob/main/MIGRATION.md#migrate-to-020).
 
 ## 0.3.0
 
