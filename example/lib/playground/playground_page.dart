@@ -91,60 +91,79 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
       selectionCache: _selectionCache,
     );
 
-    // Wrap the phone screen with a theme that is driven entirely by the
-    // playground parameters, including the dropdown overlay selector theme.
-    final themedScreen = Theme(
-      data: paramTheme.copyWith(
-        extensions: <ThemeExtension<dynamic>>[
-          DropdownSelectorBarTheme(
-            selectorTheme: SelectorThemeData(paramTheme),
-          ),
-          DropdownSelectorButtonTheme(
-            selectorTheme: SelectorThemeData(paramTheme),
-          ),
-        ],
-      ),
-      child: buildPhoneScreen(
-        _params,
-        delegate,
-        l10n,
-        data: _dataSource,
-        delegateCache: _delegateCache,
-        selectionCache: _selectionCache,
-      ),
+    // Add the playground theme *above* the scoped [Navigator] so that routes
+    // pushed by [showSelector] / [showModalBottomSelector] /
+    // [DropdownSelectorBar] / [DropdownSelectorButton] (which all use the
+    // scoped navigator via `useRootNavigator: false`) also inherit this theme.
+    // If the [Theme] is placed *inside* the navigator's base page, only the
+    // base screen gets it while the route overlay (which lives outside the
+    // page stack) falls back to the host app's light theme — making the
+    // selector popup ignore the dark/light toggle.
+    final paramThemeWithExtensions = paramTheme.copyWith(
+      extensions: <ThemeExtension<dynamic>>[
+        DropdownSelectorBarTheme(
+          selectorTheme: SelectorThemeData(paramTheme),
+        ),
+        DropdownSelectorButtonTheme(
+          selectorTheme: SelectorThemeData(paramTheme),
+        ),
+      ],
     );
 
     // Scope the dropdown overlay, dialog and bottom sheet to the phone: a
     // dedicated [Navigator] provides a local overlay, and a phone-sized
     // [MediaQuery] makes the selector position/clamp itself within the phone
     // screen instead of the whole window.
-    final phoneScreen = MediaQuery(
-      data: MediaQuery.of(context).copyWith(
-        size: kPhoneContentSize,
-        padding: EdgeInsets.zero,
-        viewPadding: EdgeInsets.zero,
-        viewInsets: EdgeInsets.zero,
-      ),
-      child: Navigator(
-        // Use `pages` (not `onGenerateRoute`): `onGenerateRoute` is only
-        // invoked once, so the captured initial route would never reflect
-        // later parameter/theme changes and switching the entry point would
-        // appear to do nothing. With `pages` the base screen stays in sync
-        // with the latest `themedScreen`, while `showDialog` /
-        // `showModalBottomSheet` still push their routes on top.
-        onDidRemovePage: (page) {
-          // The base phone screen must never be removed. Pushed dialogs /
-          // bottom sheets are route-backed (not page-backed), so this callback
-          // is only ever invoked for the base page, which we intentionally keep.
-          if (page.name == _kPhoneBaseRouteName) return;
-        },
-        pages: <Page<void>>[
-          MaterialPage<void>(
-            key: const ValueKey(_kPhoneBaseRouteName),
-            name: _kPhoneBaseRouteName,
-            child: themedScreen,
-          ),
-        ],
+    final phoneScreen = Theme(
+      data: paramThemeWithExtensions,
+      child: MediaQuery(
+        data: MediaQuery.of(context).copyWith(
+          size: kPhoneContentSize,
+          padding: EdgeInsets.zero,
+          viewPadding: EdgeInsets.zero,
+          viewInsets: EdgeInsets.zero,
+        ),
+        child: Navigator(
+          // Use `pages` (not `onGenerateRoute`): `onGenerateRoute` is only
+          // invoked once, so the captured initial route would never reflect
+          // later parameter/theme changes and switching the entry point would
+          // appear to do nothing. With `pages` the base screen stays in sync
+          // with the latest `themedScreen`, while `showDialog` /
+          // `showModalBottomSheet` still push their routes on top.
+          onDidRemovePage: (page) {
+            // The base phone screen must never be removed. Pushed dialogs /
+            // bottom sheets are route-backed (not page-backed), so this
+            // callback is only ever invoked for the base page, which we
+            // intentionally keep.
+            if (page.name == _kPhoneBaseRouteName) return;
+          },
+          pages: <Page<void>>[
+            MaterialPage<void>(
+              // Keep a constant key so switching the playground theme does NOT
+              // tear down and rebuild the base route: a changing key would
+              // dispose the SelectorBox / DropdownSelectorBar subtrees, drop
+              // their controllers and re-fetch selector data (showing a skeleton
+              // flash) — a visible hitch. Instead the theme is applied *inside*
+              // this page via the [Theme] below, whose dependents rebuild in
+              // place (elements kept, no data reload). The entry-point switch is
+              // still handled by the keyed [EntryPointScreen] inside
+              // [buildPhoneScreen], so this constant key only concerns the base.
+              key: const ValueKey(_kPhoneBaseRouteName),
+              name: _kPhoneBaseRouteName,
+              child: Theme(
+                data: paramThemeWithExtensions,
+                child: buildPhoneScreen(
+                  _params,
+                  delegate,
+                  l10n,
+                  data: _dataSource,
+                  delegateCache: _delegateCache,
+                  selectionCache: _selectionCache,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
 

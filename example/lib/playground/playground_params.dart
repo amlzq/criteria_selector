@@ -24,6 +24,27 @@ enum TileVariant {
   outlined,
 }
 
+/// Default [PlaygroundParams.crossAxisCount] per [Delegate]. Only the grid and
+/// flatten delegates are column-based, so they get dedicated defaults (4 and 2
+/// respectively); the others fall back to 4.
+const Map<Delegate, int> defaultCrossAxisCountByDelegate = <Delegate, int>{
+  Delegate.cascading: 4,
+  Delegate.grid: 4,
+  Delegate.flatten: 2,
+  Delegate.list: 4,
+};
+
+/// Default [PlaygroundParams.childAspectRatio] per [Delegate]. Only the grid
+/// and flatten delegates are column-based, so they get dedicated defaults
+/// (2.5 and 2.8 respectively); the others fall back to 2.5.
+const Map<Delegate, double> defaultChildAspectRatioByDelegate =
+    <Delegate, double>{
+  Delegate.cascading: 2.5,
+  Delegate.grid: 2.5,
+  Delegate.flatten: 2.8,
+  Delegate.list: 2.5,
+};
+
 /// All tunable parameters of the interactive demo, held in a single immutable
 /// value so the controls panel can replace it in one [setState] call.
 class PlaygroundParams {
@@ -81,9 +102,7 @@ class PlaygroundParams {
       tileVariant: tileVariant ?? this.tileVariant,
       seedColor: seedColor ?? this.seedColor,
       useMaterial3: useMaterial3 ?? this.useMaterial3,
-      brightness: clearBrightness
-          ? null
-          : (brightness ?? this.brightness),
+      brightness: clearBrightness ? null : (brightness ?? this.brightness),
     );
   }
 }

@@ -54,7 +54,11 @@ class ControlsPanel extends StatelessWidget {
             Delegate.flatten: l10n.layoutFlatten,
             Delegate.list: l10n.layoutList,
           },
-          onChanged: (v) => onChanged(params.copyWith(delegate: v)),
+          onChanged: (v) => onChanged(params.copyWith(
+            delegate: v,
+            crossAxisCount: defaultCrossAxisCountByDelegate[v],
+            childAspectRatio: defaultChildAspectRatioByDelegate[v],
+          )),
         ),
         const SizedBox(height: 16),
         _SectionTitle(l10n.selectionMode),

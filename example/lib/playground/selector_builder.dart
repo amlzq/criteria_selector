@@ -169,7 +169,6 @@ SelectorDelegate _createDelegate(
     PlaygroundParams p, PlaygroundDataSource data) {
   final chipBarTheme =
       SelectorChipBarTheme(variant: _chipVariant(p.tileVariant));
-
   switch (p.delegate) {
     case Delegate.cascading:
       return CascadingSelectorDelegate(
@@ -180,6 +179,7 @@ SelectorDelegate _createDelegate(
         radioBuilder: _radioBuilder,
         checkboxBuilder: _checkboxBuilder,
         chipBarTheme: chipBarTheme,
+        sideBarTheme: const SelectorSideBarTheme(width: 150),
       );
     case Delegate.grid:
       // Grid / Flatten delegates use the default radio & checkbox widgets, so
@@ -210,6 +210,7 @@ SelectorDelegate _createDelegate(
         gridTileTheme:
             SelectorGridTileTheme(variant: _gridVariant(p.tileVariant)),
         chipBarTheme: chipBarTheme,
+        sideBarTheme: const SelectorSideBarTheme(width: 110),
       );
     case Delegate.list:
       return ListSelectorDelegate(
