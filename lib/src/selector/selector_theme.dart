@@ -50,6 +50,7 @@ class SelectorTheme extends InheritedTheme {
           listTileTheme: data.listTileTheme,
           fieldTileTheme: data.fieldTileTheme,
           expansionTileTheme: data.expansionTileTheme,
+          rangeSliderTheme: data.rangeSliderTheme,
           radioTheme: data.radioTheme,
           checkboxTheme: data.checkboxTheme,
           chipBarThemeData: data.chipBarThemeData,

@@ -71,3 +71,35 @@ class SelectorChipLayout extends SelectorChildrenLayout {
   @override
   int get hashCode => runtimeType.hashCode;
 }
+
+/// Range-slider layout for the children of a [SelectorCategoryEntry].
+///
+/// Use this layout when a category owns a single custom [SelectorRangeEntry]
+/// and you want to render it as a "price-range" style control: a
+/// [SelectorRangeSlider] on top of two synced text fields.
+///
+/// The category is expected to expose exactly one
+/// [SelectorRangeEntry.firstCustomOrNull]; if none is found, the view falls
+/// back to a degenerate 0..1 range.
+class SelectorRangeLayout extends SelectorChildrenLayout {
+  const SelectorRangeLayout({
+    this.showTitle = true,
+    this.toText = 'to',
+  });
+
+  /// Whether to render the category's name as a title above the slider.
+  final bool showTitle;
+
+  /// Text rendered between the two text fields (default: `'to'`).
+  final String toText;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SelectorRangeLayout &&
+          showTitle == other.showTitle &&
+          toText == other.toText;
+
+  @override
+  int get hashCode => Object.hash(showTitle, toText);
+}

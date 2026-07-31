@@ -25,6 +25,7 @@ class SelectorRangeEntry<N, E> extends SelectorChildEntry<E> {
   SelectorRangeEntry({
     this.min,
     this.max,
+    this.divisions,
     this.inputLabel,
     this.minHintText,
     this.maxHintText,
@@ -43,6 +44,16 @@ class SelectorRangeEntry<N, E> extends SelectorChildEntry<E> {
   /// The maximum value of the range.
   N? max;
 
+  /// Optional step count for range-slider UIs.
+  ///
+  /// When set, [SelectorRangeSlider] snaps the released handle positions
+  /// to the nearest multiple of `(max - min) / divisions`. The track is
+  /// **not** decorated with tick marks regardless of this value.
+  ///
+  /// `null` (the default) keeps the slider continuous and is fully
+  /// backward-compatible with existing code.
+  int? divisions;
+
   /// An optional label for the input field(s) representing this range.
   final String? inputLabel;
 
@@ -57,6 +68,7 @@ class SelectorRangeEntry<N, E> extends SelectorChildEntry<E> {
   SelectorRangeEntry.custom({
     this.min,
     this.max,
+    this.divisions,
     this.inputLabel,
     this.minHintText,
     this.maxHintText,
@@ -72,6 +84,7 @@ class SelectorRangeEntry<N, E> extends SelectorChildEntry<E> {
   SelectorRangeEntry.any({
     this.min,
     this.max,
+    this.divisions,
     this.inputLabel,
     this.minHintText,
     this.maxHintText,
@@ -92,6 +105,7 @@ class SelectorRangeEntry<N, E> extends SelectorChildEntry<E> {
     E? extra,
     N? min,
     N? max,
+    int? divisions,
     String? inputLabel,
     String? minHintText,
     String? maxHintText,
@@ -106,6 +120,7 @@ class SelectorRangeEntry<N, E> extends SelectorChildEntry<E> {
       extra: extra ?? this.extra,
       min: min ?? this.min,
       max: max ?? this.max,
+      divisions: divisions ?? this.divisions,
       inputLabel: inputLabel ?? this.inputLabel,
       minHintText: minHintText ?? this.minHintText,
       maxHintText: maxHintText ?? this.maxHintText,
@@ -114,7 +129,7 @@ class SelectorRangeEntry<N, E> extends SelectorChildEntry<E> {
 
   @override
   String toString() =>
-      'SelectorRangeEntry(id: $id, parentId: $parentId, name: $name, min: $min, max: $max)';
+      'SelectorRangeEntry(id: $id, parentId: $parentId, name: $name, min: $min, max: $max, divisions: $divisions)';
 }
 
 extension SelectorRangeEntryExt on SelectorRangeEntry {
@@ -430,7 +445,7 @@ class SelectorCategoryEntry<E> extends SelectorEntry<E> {
 
   @override
   String toString() =>
-      'SelectorCategoryEntry(id: $id, name: $name, selectionMode: $selectionMode, header: $header, footer: $footer, childrenLayout: $childrenLayout)';
+      'SelectorCategoryEntry(id: $id, name: $name, selectionMode: $selectionMode, header: $header, footer: $footer, childrenLayout: $childrenLayout, children: $children)';
 }
 
 extension SelectorCategoryEntryExtension on SelectorCategoryEntry {

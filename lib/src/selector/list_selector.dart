@@ -248,6 +248,20 @@ class ListSelectorState extends State<ListSelector> {
                                   item as SelectorChildEntry),
                               // focusListener: _focusListener,
                             ),
+                          SelectorRangeLayout() => SelectorRangeView(
+                              key: ValueKey('category_$index'),
+                              category: category,
+                              layout: layout,
+                              entries: entries,
+                              selectedEntries: selectedEntries,
+                              focusListener: (categoryId, minValue, maxValue) {
+                                _customItemSelection(
+                                  categoryId,
+                                  minValue,
+                                  maxValue,
+                                );
+                              },
+                            ),
                         },
                       );
                     }),

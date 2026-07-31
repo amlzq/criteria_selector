@@ -169,6 +169,7 @@ class SelectorUtils {
       return SelectorRangeEntry<int, dynamic>(
         min: entry.min,
         max: entry.max,
+        divisions: entry.divisions,
         inputLabel: entry.inputLabel,
         minHintText: entry.minHintText,
         maxHintText: entry.maxHintText,
@@ -186,6 +187,7 @@ class SelectorUtils {
       return SelectorRangeEntry(
         min: entry.min,
         max: entry.max,
+        divisions: entry.divisions,
         inputLabel: entry.inputLabel,
         minHintText: entry.minHintText,
         maxHintText: entry.maxHintText,
@@ -225,6 +227,7 @@ class SelectorUtils {
         id: entry.id,
         name: entry.name ?? '',
         children: clonedChildren,
+        childrenLayout: entry.childrenLayout,
         enabled: entry.enabled,
         immediate: entry.immediate,
       );
@@ -256,6 +259,7 @@ class SelectorUtils {
       return SelectorRangeEntry<int, dynamic>(
         min: entry.min,
         max: entry.max,
+        divisions: entry.divisions,
         inputLabel: entry.inputLabel,
         minHintText: entry.minHintText,
         maxHintText: entry.maxHintText,
@@ -273,6 +277,7 @@ class SelectorUtils {
       return SelectorRangeEntry(
         min: entry.min,
         max: entry.max,
+        divisions: entry.divisions,
         inputLabel: entry.inputLabel,
         minHintText: entry.minHintText,
         maxHintText: entry.maxHintText,
@@ -308,6 +313,7 @@ class SelectorUtils {
         id: entry.id,
         name: entry.name ?? '',
         children: children,
+        childrenLayout: entry.childrenLayout,
         enabled: entry.enabled,
         immediate: entry.immediate,
       );
@@ -439,9 +445,24 @@ class SelectorUtils {
             clonedChildren =
                 deepCloneSelectedSubtree ? deepCloneEntries(children) : null;
           } else {
-            final ordered = children.toList();
-            final selectedOrdered =
-                ordered.where((child) => selectedNext.contains(child));
+            // Pick the entries selected at the next level whose parent is this
+            // entry. Match by id rather than instance identity, so that entries
+            // dynamically added to the selection (e.g. custom range entries)
+            // are included even when they are not part of `entry.children`
+            // (custom entries live only in the selection state, not the static
+            // tree). Without this, selectedNext.contains(child) is always false
+            // for such entries and the cloned children end up empty/null.
+            final selectedChildren = selectedNext
+                .whereType<SelectorChildEntry>()
+                .where((child) => child.parentId == entry.id)
+                .toList();
+            final staticIds = children.map((c) => c.id).toSet();
+            final selectedOrdered = <SelectorEntry>[
+              for (final child in children)
+                if (selectedChildren.any((s) => s.id == child.id)) child,
+              for (final s in selectedChildren)
+                if (!staticIds.contains(s.id)) s,
+            ];
             final copied = selectedOrdered
                 .map((child) => cloneEntryAtLevel(child, nextLevel))
                 .toSet();

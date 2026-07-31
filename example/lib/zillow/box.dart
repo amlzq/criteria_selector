@@ -1,4 +1,5 @@
 import 'package:criteria_selector/criteria_selector.dart';
+import 'package:example/log.dart';
 import 'package:example/my_widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -26,7 +27,8 @@ class _BoxPageState extends State<BoxPage> {
 
   void _showSelectedResult(SelectorEntries result) {
     final l10n = AppLocalizations.of(context);
-    final conditions = '${result.flatten()}';
+    final conditions = 'result=${result.flatten()}';
+    debugPrintLarge(conditions);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(l10n?.filterUpdated ?? ''),
@@ -192,6 +194,27 @@ class _BoxPageState extends State<BoxPage> {
                       variant: SelectorFieldTileVariant.outlined,
                     ),
                     applyText: AppLocalizations.of(context)?.apply ?? '',
+                  ),
+                  onChangeTap: (selected) {
+                    debugPrint('onChangeTap: $selected');
+                    _handlePriceChange(selected);
+                    _showSelectedResult(selected);
+                  },
+                ),
+                const SizedBox(height: 24),
+                const Text(
+                  'Price (Range Slider)',
+                  style: TextStyle(fontSize: 20),
+                ),
+                SelectorBox(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  delegate: ListSelectorDelegate(
+                    entriesLoader: _filtersRepo.fetchPriceRangeData,
+                    selectedEntriesLoader:
+                        _filtersRepo.fetchPriceRangeSelectedData,
+                    resetEntriesLoader: _filtersRepo.fetchPriceRangeResetData,
+                    selectionMode: SelectionMode.multiple,
                   ),
                   onChangeTap: (selected) {
                     debugPrint('onChangeTap: $selected');

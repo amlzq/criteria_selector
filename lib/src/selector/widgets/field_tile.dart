@@ -22,6 +22,12 @@ class SelectorFieldTile extends StatelessWidget {
     this.tileColor,
     this.selectedTileColor,
     this.variant,
+    this.separator = '-',
+    this.allowDecimal = false,
+    this.onMinChanged,
+    this.onMaxChanged,
+    this.onMinSubmitted,
+    this.onMaxSubmitted,
   });
 
   /// The range entry that defines this tile's input configuration.
@@ -73,6 +79,32 @@ class SelectorFieldTile extends StatelessWidget {
   /// [SelectorFieldTileVariant.filled], matching [SelectorGridTile].
   final SelectorFieldTileVariant? variant;
 
+  /// The text rendered between the two fields (e.g. "-", "to", "and").
+  ///
+  /// Defaults to `"-"`.
+  final String separator;
+
+  /// Whether the fields accept decimal input.
+  ///
+  /// When `false` (the default), the keyboard is `TextInputType.number` and a
+  /// digits-only formatter is applied — matching the historical behavior for
+  /// integer ranges. When `true`, the keyboard allows decimals and no
+  /// digits-only filter is applied, so fractional values can be typed (the
+  /// caller is responsible for any rounding on commit).
+  final bool allowDecimal;
+
+  /// Called whenever the min field's text changes (per keystroke).
+  final ValueChanged<String>? onMinChanged;
+
+  /// Called whenever the max field's text changes (per keystroke).
+  final ValueChanged<String>? onMaxChanged;
+
+  /// Called when the min field is submitted (e.g. "done").
+  final ValueChanged<String>? onMinSubmitted;
+
+  /// Called when the max field is submitted (e.g. "done").
+  final ValueChanged<String>? onMaxSubmitted;
+
   @override
   Widget build(BuildContext context) {
     // final theme = SelectorFieldTileTheme.of(context);
@@ -98,11 +130,15 @@ class SelectorFieldTile extends StatelessWidget {
                 tileColor: tileColor,
                 selectedTileColor: selectedTileColor,
                 variant: variant,
+                allowDecimal: allowDecimal,
+                onChanged: onMinChanged,
+                onSubmitted: onMinSubmitted,
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Text("-", style: TextStyle(color: Colors.grey)),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child:
+                  Text(separator, style: const TextStyle(color: Colors.grey)),
             ),
             Expanded(
               child: _TextField(
@@ -112,6 +148,9 @@ class SelectorFieldTile extends StatelessWidget {
                 tileColor: tileColor,
                 selectedTileColor: selectedTileColor,
                 variant: variant,
+                allowDecimal: allowDecimal,
+                onChanged: onMaxChanged,
+                onSubmitted: onMaxSubmitted,
               ),
             ),
           ],
@@ -129,6 +168,9 @@ class _TextField extends StatelessWidget {
   final Color? tileColor;
   final Color? selectedTileColor;
   final SelectorFieldTileVariant? variant;
+  final bool allowDecimal;
+  final ValueChanged<String>? onChanged;
+  final ValueChanged<String>? onSubmitted;
 
   const _TextField({
     this.controller,
@@ -137,6 +179,9 @@ class _TextField extends StatelessWidget {
     this.tileColor,
     this.selectedTileColor,
     this.variant,
+    this.allowDecimal = false,
+    this.onChanged,
+    this.onSubmitted,
   });
 
   @override
@@ -184,12 +229,17 @@ class _TextField extends StatelessWidget {
       child: TextField(
         controller: controller,
         focusNode: focusNode,
-        keyboardType: TextInputType.number,
-        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+        keyboardType: allowDecimal
+            ? const TextInputType.numberWithOptions(decimal: true)
+            : TextInputType.number,
+        inputFormatters:
+            allowDecimal ? null : [FilteringTextInputFormatter.digitsOnly],
         textAlign: TextAlign.center,
         style: const TextStyle(fontSize: 13),
+        onChanged: onChanged,
+        onSubmitted: onSubmitted,
         // [SelectorFieldTile] wraps the whole row in a [TextFieldTapRegion], so
-        // taps on the sibling field / "-" separator are treated as inside and
+        // taps on the sibling field / separator are treated as inside and
         // do not trigger this. Only genuine outside taps (grid cells, scrim)
         // unfocus and dismiss the keyboard.
         onTapOutside: (event) {
@@ -279,8 +329,8 @@ class _SelectorFieldTileDefaults extends SelectorFieldTileTheme {
     if (isDark) {
       final blendAmount =
           variant == SelectorFieldTileVariant.outlined ? 0.2 : 0.35;
-      return Color.lerp(_theme.backgroundColor,
-          _theme.backgroundColorHighest, blendAmount);
+      return Color.lerp(
+          _theme.backgroundColor, _theme.backgroundColorHighest, blendAmount);
     }
     if (variant == SelectorFieldTileVariant.outlined) {
       return Color.lerp(_theme.onBackgroundColorHighest, Colors.white, 0.55);

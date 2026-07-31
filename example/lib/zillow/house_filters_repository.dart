@@ -125,6 +125,40 @@ class HouseFiltersRepository {
     return Future.value(entries);
   }
 
+  SelectorEntries? priceRangeResult;
+
+  SelectorEntries? fetchPriceRangeSelectedData() => priceRangeResult;
+
+  final _priceRangeReset = <SelectorCategoryEntry>{};
+
+  SelectorEntries? fetchPriceRangeResetData() => _priceRangeReset;
+
+  /// A price category rendered with [SelectorRangeLayout]: a single custom
+  /// [SelectorRangeEntry] shown as a price-range slider above two synced
+  /// text fields.
+  Future<SelectorEntries> fetchPriceRangeData() async {
+    // simulate network delay
+    await Future.delayed(const Duration(milliseconds: 250));
+    final category = SelectorCategoryEntry(
+      id: 'list_price',
+      name: 'Price',
+      selectionMode: SelectionMode.multiple,
+      childrenLayout: const SelectorRangeLayout(showTitle: false, toText: '-'),
+      children: {
+        SelectorIntEntry.custom(
+          parentId: 'list_price',
+          min: 0,
+          max: 2000000,
+          divisions: 80,
+          minHintText: noMinHintText,
+          maxHintText: noMaxHintText,
+        ),
+      },
+    );
+    final SelectorEntries entries = {category};
+    return Future.value(entries);
+  }
+
   SelectorEntries? roomsResult;
 
   final roomsIniteialSelected = {
