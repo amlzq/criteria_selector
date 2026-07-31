@@ -2,16 +2,16 @@
 
 ## MIGRATE TO NEXT
 
-### Single `childrenLayout` replaces `listConfig` / `gridConfig` / `chipConfig`
+### Single `layout` replaces `listConfig` / `gridConfig` / `chipConfig`
 
 **Description**
 `SelectorCategoryEntry` previously exposed three mutually-exclusive, nullable
 fields (`listConfig`, `gridConfig`, `chipConfig`) to choose how a category's
-children are rendered. These are replaced by a single `childrenLayout` property
-of the new sealed `SelectorChildrenLayout` type, with the concrete layouts
+children are rendered. These are replaced by a single `layout` property
+of the new sealed `SelectorLayout` type, with the concrete layouts
 `SelectorListLayout`, `SelectorGridLayout`, and `SelectorChipLayout`. A `switch`
-over `childrenLayout` is exhaustively checked by the compiler (the base class is
-`sealed`). When `childrenLayout` is `null`, a default `SelectorListLayout` is
+over `layout` is exhaustively checked by the compiler (the base class is
+`sealed`). When `layout` is `null`, a default `SelectorListLayout` is
 used at render time.
 
 The old fields are **deprecated but still available** as getters and constructor
@@ -38,7 +38,7 @@ SelectorCategoryEntry(
 SelectorCategoryEntry(
   id: 'home_type',
   name: 'Home type',
-  childrenLayout: const SelectorGridLayout(
+  layout: const SelectorGridLayout(
     crossAxisCount: 2,
     childAspectRatio: 5,
   ),
@@ -48,9 +48,9 @@ SelectorCategoryEntry(
 
 | Old | New |
 | --- | --- |
-| `SelectorCategoryEntry.listConfig` | `SelectorCategoryEntry.childrenLayout` is `SelectorListLayout` |
-| `SelectorCategoryEntry.gridConfig` | `SelectorCategoryEntry.childrenLayout` is `SelectorGridLayout` |
-| `SelectorCategoryEntry.chipConfig` | `SelectorCategoryEntry.childrenLayout` is `SelectorChipLayout` |
+| `SelectorCategoryEntry.listConfig` | `SelectorCategoryEntry.layout` is `SelectorListLayout` |
+| `SelectorCategoryEntry.gridConfig` | `SelectorCategoryEntry.layout` is `SelectorGridLayout` |
+| `SelectorCategoryEntry.chipConfig` | `SelectorCategoryEntry.layout` is `SelectorChipLayout` |
 | `SelectorListConfig` | `SelectorListLayout` |
 | `SelectorGridConfig` | `SelectorGridLayout` |
 | `SelectorChipConfig` | `SelectorChipLayout` |

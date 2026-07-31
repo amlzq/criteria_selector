@@ -9,7 +9,7 @@ import 'package:flutter/foundation.dart';
 
 import 'i18n/localizations.dart';
 import 'i18n/localizations_delegate.dart';
-import 'selector/children_layout.dart';
+import 'selector/selector_layout.dart';
 
 /// Use [SelectorLocalizations] instead.
 @Deprecated(
@@ -28,12 +28,12 @@ typedef CriteriaSelectorLocalizationsDelegate = SelectorLocalizationsDelegate;
 
 /// Deprecated layout configuration for the children of a [SelectorCategoryEntry].
 ///
-/// Use [SelectorChildrenLayout] / [SelectorListLayout] via
-/// [SelectorCategoryEntry.childrenLayout] instead. This class is kept only for
+/// Use [SelectorLayout] / [SelectorListLayout] via
+/// [SelectorCategoryEntry.layout] instead. This class is kept only for
 /// backward compatibility and will be removed in a future minor version.
 @Deprecated(
-  'Use SelectorChildrenLayout / SelectorListLayout via '
-  'SelectorCategoryEntry.childrenLayout instead. '
+  'Use SelectorLayout / SelectorListLayout via '
+  'SelectorCategoryEntry.layout instead. '
   'This class will be removed in a future minor version.',
 )
 @immutable
@@ -43,12 +43,12 @@ class SelectorListConfig {
 
 /// Deprecated layout configuration for the children of a [SelectorCategoryEntry].
 ///
-/// Use [SelectorChildrenLayout] / [SelectorGridLayout] via
-/// [SelectorCategoryEntry.childrenLayout] instead. This class is kept only for
+/// Use [SelectorLayout] / [SelectorGridLayout] via
+/// [SelectorCategoryEntry.layout] instead. This class is kept only for
 /// backward compatibility and will be removed in a future minor version.
 @Deprecated(
-  'Use SelectorChildrenLayout / SelectorGridLayout via '
-  'SelectorCategoryEntry.childrenLayout instead. '
+  'Use SelectorLayout / SelectorGridLayout via '
+  'SelectorCategoryEntry.layout instead. '
   'This class will be removed in a future minor version.',
 )
 @immutable
@@ -75,12 +75,12 @@ class SelectorGridConfig {
 
 /// Deprecated layout configuration for the children of a [SelectorCategoryEntry].
 ///
-/// Use [SelectorChildrenLayout] / [SelectorChipLayout] via
-/// [SelectorCategoryEntry.childrenLayout] instead. This class is kept only for
+/// Use [SelectorLayout] / [SelectorChipLayout] via
+/// [SelectorCategoryEntry.layout] instead. This class is kept only for
 /// backward compatibility and will be removed in a future minor version.
 @Deprecated(
-  'Use SelectorChildrenLayout / SelectorChipLayout via '
-  'SelectorCategoryEntry.childrenLayout instead. '
+  'Use SelectorLayout / SelectorChipLayout via '
+  'SelectorCategoryEntry.layout instead. '
   'This class will be removed in a future minor version.',
 )
 @immutable

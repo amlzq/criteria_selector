@@ -374,7 +374,7 @@ void main() {
         name: 'Price',
         selectionMode: SelectionMode.single,
         children: {customEntry},
-        childrenLayout: const SelectorRangeLayout(),
+        layout: const SelectorRangeLayout(),
       );
 
       await tester.pumpWidget(
@@ -425,7 +425,7 @@ void main() {
         name: 'Price',
         selectionMode: SelectionMode.single,
         children: {customEntry},
-        childrenLayout: const SelectorRangeLayout(),
+        layout: const SelectorRangeLayout(),
       );
       await tester.pumpWidget(
         MaterialApp(
@@ -459,7 +459,7 @@ void main() {
         name: 'Price',
         selectionMode: SelectionMode.single,
         children: {customEntry},
-        childrenLayout: const SelectorRangeLayout(),
+        layout: const SelectorRangeLayout(),
       );
 
       await tester.pumpWidget(
@@ -522,7 +522,7 @@ void main() {
         name: 'Price',
         selectionMode: SelectionMode.single,
         children: {customEntry},
-        childrenLayout: const SelectorRangeLayout(),
+        layout: const SelectorRangeLayout(),
       );
       final base = SelectorRangeView(
         category: category,
@@ -577,7 +577,7 @@ void main() {
         name: 'Price',
         selectionMode: SelectionMode.single,
         children: {customEntry},
-        childrenLayout: const SelectorRangeLayout(),
+        layout: const SelectorRangeLayout(),
       );
       String? lastMin;
       await tester.pumpWidget(
@@ -634,7 +634,7 @@ void main() {
         name: 'Price',
         selectionMode: SelectionMode.single,
         children: {customEntry},
-        childrenLayout: const SelectorRangeLayout(),
+        layout: const SelectorRangeLayout(),
       );
       await tester.pumpWidget(
         MaterialApp(
@@ -694,7 +694,7 @@ void main() {
         name: 'Price',
         selectionMode: SelectionMode.single,
         children: {customEntry},
-        childrenLayout: const SelectorRangeLayout(),
+        layout: const SelectorRangeLayout(),
       );
       await tester.pumpWidget(
         MaterialApp(

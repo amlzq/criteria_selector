@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../children_layout.dart';
+import '../selector_layout.dart';
 import '../constants.dart';
 import '../selector_entry.dart';
 import 'field_tile.dart';

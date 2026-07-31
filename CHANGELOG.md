@@ -2,13 +2,13 @@
 
 * **FEATURE** add `SelectorRangeSlider` — a custom-drawn dual-thumb range slider (no Material `RangeSlider`, no tooltip, no tick marks) with bottom-end extreme-value labels and full theming via the new `SelectorRangeSliderTheme` (wired into `SelectorThemeData` / `SelectorTheme.merge`).
 
-* **FEATURE** add `SelectorRangeLayout` as a new `SelectorChildrenLayout` sealed subclass. The existing `switch (layout)` in `ListSelector` now routes to `SelectorRangeView`, which composes `SelectorRangeSlider` + a paired two-text-field row with bidirectional sync and `focusListener` callback.
+* **FEATURE** add `SelectorRangeLayout` as a new `SelectorLayout` sealed subclass. The existing `switch (layout)` in `ListSelector` now routes to `SelectorRangeView`, which composes `SelectorRangeSlider` + a paired two-text-field row with bidirectional sync and `focusListener` callback.
 
 * **FEATURE** add `divisions: int?` to `SelectorRangeEntry` (forwarded through `copyWith` / `toString` / `SelectorUtils.deepCloneEntries` / `SelectorUtils.cloneTree`). When set, the slider snaps the released handles to the nearest `(max - min) / divisions` step on `onChangeEnd`. `null` (the default) preserves the previous continuous behaviour and is fully backward-compatible.
 
-* **FEATURE** add `SelectorChildrenLayout` (sealed) with `SelectorListLayout`, `SelectorGridLayout` (value-equatable) and `SelectorChipLayout` to describe how a category's children are rendered. A `switch` over `childrenLayout` is exhaustively checked by the compiler.
+* **FEATURE** add `SelectorLayout` (sealed) with `SelectorListLayout`, `SelectorGridLayout` (value-equatable) and `SelectorChipLayout` to describe how a category's children are rendered. A `switch` over `layout` is exhaustively checked by the compiler.
 
-* **DEPRECATION** `SelectorCategoryEntry` previously exposed three mutually-exclusive, nullable fields `listConfig` / `gridConfig` / `chipConfig`. They are replaced by a single `childrenLayout` property of the new sealed `SelectorChildrenLayout` type. The old fields remain available as deprecated getters/constructor parameters that map to `SelectorListLayout` / `SelectorGridLayout` / `SelectorChipLayout` and will be removed in a future major version.
+* **DEPRECATION** `SelectorCategoryEntry` previously exposed three mutually-exclusive, nullable fields `listConfig` / `gridConfig` / `chipConfig`. They are replaced by a single `layout` property of the new sealed `SelectorLayout` type. The old fields remain available as deprecated getters/constructor parameters that map to `SelectorListLayout` / `SelectorGridLayout` / `SelectorChipLayout` and will be removed in a future major version.
 
 * **BREAKING** remove the deprecated `Dropselect*` public API aliases (introduced in 0.2.0). Use the `Dropdown*` / `DropdownSelector*` names instead.
 

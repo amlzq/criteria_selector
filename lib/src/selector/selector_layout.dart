@@ -4,19 +4,19 @@ import 'package:flutter/foundation.dart';
 ///
 /// This replaces the previously separate, mutually-exclusive `listConfig`,
 /// `gridConfig` and `chipConfig` fields on [SelectorCategoryEntry] with a single
-/// `childrenLayout` property. Use a [SelectorListLayout] for a vertical list,
+/// `layout` property. Use a [SelectorListLayout] for a vertical list,
 /// [SelectorGridLayout] for a grid, or [SelectorChipLayout] for a wrap of chips.
 ///
 /// Because the class is `sealed`, the compiler can exhaustively check `switch`
-/// statements over [SelectorChildrenLayout], so adding a new layout later is a
+/// statements over [SelectorLayout], so adding a new layout later is a
 /// compile-time-safe change.
 @immutable
-sealed class SelectorChildrenLayout {
-  const SelectorChildrenLayout();
+sealed class SelectorLayout {
+  const SelectorLayout();
 }
 
 /// Vertical list layout for the children of a [SelectorCategoryEntry].
-class SelectorListLayout extends SelectorChildrenLayout {
+class SelectorListLayout extends SelectorLayout {
   const SelectorListLayout();
 
   @override
@@ -27,7 +27,7 @@ class SelectorListLayout extends SelectorChildrenLayout {
 }
 
 /// Grid layout for the children of a [SelectorCategoryEntry].
-class SelectorGridLayout extends SelectorChildrenLayout {
+class SelectorGridLayout extends SelectorLayout {
   const SelectorGridLayout({
     required this.crossAxisCount,
     this.mainAxisSpacing = 0.0,
@@ -62,7 +62,7 @@ class SelectorGridLayout extends SelectorChildrenLayout {
 }
 
 /// Wrap of chips layout for the children of a [SelectorCategoryEntry].
-class SelectorChipLayout extends SelectorChildrenLayout {
+class SelectorChipLayout extends SelectorLayout {
   const SelectorChipLayout();
 
   @override
@@ -81,10 +81,10 @@ class SelectorChipLayout extends SelectorChildrenLayout {
 /// The category is expected to expose exactly one
 /// [SelectorRangeEntry.firstCustomOrNull]; if none is found, the view falls
 /// back to a degenerate 0..1 range.
-class SelectorRangeLayout extends SelectorChildrenLayout {
+class SelectorRangeLayout extends SelectorLayout {
   const SelectorRangeLayout({
     this.showTitle = true,
-    this.toText = 'to',
+    this.toText = '-',
   });
 
   /// Whether to render the category's name as a title above the slider.

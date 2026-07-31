@@ -143,7 +143,7 @@ class HouseFiltersRepository {
       id: 'list_price',
       name: 'Price',
       selectionMode: SelectionMode.multiple,
-      childrenLayout: const SelectorRangeLayout(showTitle: false, toText: '-'),
+      layout: const SelectorRangeLayout(showTitle: false, toText: 'to'),
       children: {
         SelectorIntEntry.custom(
           parentId: 'list_price',
@@ -286,8 +286,7 @@ class HouseFiltersRepository {
             selectionMode: category.id == 'expanded_search'
                 ? SelectionMode.single
                 : SelectionMode.multiple,
-            childrenLayout:
-                gridLayout(category.id!) ?? chipLayout(category.id!),
+            layout: gridLayout(category.id!) ?? chipLayout(category.id!),
           ),
         )
         .toSet();

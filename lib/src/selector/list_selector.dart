@@ -2,11 +2,11 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import 'action_bar_visibility.dart';
-import 'children_layout.dart';
 import 'constants.dart';
 import 'selector_controller.dart';
 import 'selector_delegate.dart';
 import 'selector_entry.dart';
+import 'selector_layout.dart';
 import 'widgets/widgets.dart';
 
 /// Standard list view
@@ -184,7 +184,7 @@ class ListSelectorState extends State<ListSelector> {
                           controller?.selectedEntriesAtLevel(1) ?? {};
                       final entries = category.children?.toList() ?? [];
                       final layout =
-                          category.childrenLayout ?? const SelectorListLayout();
+                          category.layout ?? const SelectorListLayout();
                       return SelectorExpansionTile(
                         title: category.name ?? '',
                         titlePadding: const EdgeInsets.symmetric(vertical: 10),

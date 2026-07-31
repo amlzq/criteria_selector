@@ -609,7 +609,7 @@ class DropdownSelectorController extends ChangeNotifier {
         headerSelectionMode: entry.headerSelectionMode,
         footer: footer,
         footerSelectionMode: entry.footerSelectionMode,
-        childrenLayout: entry.childrenLayout,
+        layout: entry.layout,
         id: entry.id,
         name: entry.name ?? '',
         children: croppedChildren,

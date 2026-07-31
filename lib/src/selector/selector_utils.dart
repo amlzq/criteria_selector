@@ -227,7 +227,7 @@ class SelectorUtils {
         id: entry.id,
         name: entry.name ?? '',
         children: clonedChildren,
-        childrenLayout: entry.childrenLayout,
+        layout: entry.layout,
         enabled: entry.enabled,
         immediate: entry.immediate,
       );
@@ -313,7 +313,7 @@ class SelectorUtils {
         id: entry.id,
         name: entry.name ?? '',
         children: children,
-        childrenLayout: entry.childrenLayout,
+        layout: entry.layout,
         enabled: entry.enabled,
         immediate: entry.immediate,
       );

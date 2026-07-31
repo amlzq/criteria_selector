@@ -16,7 +16,7 @@ export 'src/dropdown_selector_controller.dart';
 export 'src/dropdown_selector_result.dart';
 export 'src/dropdown_tab_data.dart';
 export 'src/i18n/localizations_delegate.dart';
-export 'src/selector/children_layout.dart';
+export 'src/selector/selector_layout.dart';
 export 'src/selector/constants.dart';
 export 'src/selector/selector_controller.dart';
 export 'src/selector/selector_delegate.dart';

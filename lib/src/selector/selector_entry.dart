@@ -1,6 +1,6 @@
 import '../deprecated.dart';
-import 'children_layout.dart';
 import 'constants.dart';
+import 'selector_layout.dart';
 
 /// A set of selected [SelectorEntry] values.
 typedef SelectorEntries<T> = Set<SelectorEntry<T>>;
@@ -271,19 +271,19 @@ class SelectorCategoryEntry<E> extends SelectorEntry<E> {
     this.headerSelectionMode = SelectionMode.single,
     this.footer,
     this.footerSelectionMode = SelectionMode.single,
-    SelectorChildrenLayout? childrenLayout,
+    SelectorLayout? layout,
     @Deprecated(
-      'Use childrenLayout instead. When set, it is mapped to a '
+      'Use layout instead. When set, it is mapped to a '
       'SelectorListLayout. It will be removed in a future minor version.',
     )
     SelectorListConfig? listConfig,
     @Deprecated(
-      'Use childrenLayout instead. When set, it is mapped to a '
+      'Use layout instead. When set, it is mapped to a '
       'SelectorGridLayout. It will be removed in a future minor version.',
     )
     SelectorGridConfig? gridConfig,
     @Deprecated(
-      'Use childrenLayout instead. When set, it is mapped to a '
+      'Use layout instead. When set, it is mapped to a '
       'SelectorChipLayout. It will be removed in a future minor version.',
     )
     SelectorChipConfig? chipConfig,
@@ -293,12 +293,12 @@ class SelectorCategoryEntry<E> extends SelectorEntry<E> {
     super.enabled,
     super.immediate,
   })  : assert(
-          childrenLayout == null ||
+          layout == null ||
               (listConfig == null && gridConfig == null && chipConfig == null),
-          'Provide either childrenLayout or one of the deprecated '
+          'Provide either layout or one of the deprecated '
           'listConfig/gridConfig/chipConfig, but not both.',
         ),
-        childrenLayout = childrenLayout ??
+        layout = layout ??
             (listConfig != null
                 ? const SelectorListLayout()
                 : gridConfig != null
@@ -336,24 +336,24 @@ class SelectorCategoryEntry<E> extends SelectorEntry<E> {
   /// The layout used to render this category's children.
   ///
   /// When `null`, a default [SelectorListLayout] is used at render time.
-  final SelectorChildrenLayout? childrenLayout;
+  final SelectorLayout? layout;
 
-  /// Use [childrenLayout] instead.
+  /// Use [layout] instead.
   @Deprecated(
-    'Use childrenLayout instead. Returns a SelectorListConfig when '
-    'childrenLayout is a SelectorListLayout. It will be removed in a future '
+    'Use layout instead. Returns a SelectorListConfig when '
+    'layout is a SelectorListLayout. It will be removed in a future '
     'minor version.',
   )
   SelectorListConfig? get listConfig =>
-      childrenLayout is SelectorListLayout ? const SelectorListConfig() : null;
+      layout is SelectorListLayout ? const SelectorListConfig() : null;
 
-  /// Use [childrenLayout] instead.
+  /// Use [layout] instead.
   @Deprecated(
-    'Use childrenLayout instead. Returns a SelectorGridConfig mirroring the '
+    'Use layout instead. Returns a SelectorGridConfig mirroring the '
     'current SelectorGridLayout. It will be removed in a future minor version.',
   )
   SelectorGridConfig? get gridConfig {
-    final layout = childrenLayout;
+    final layout = this.layout;
     return layout is SelectorGridLayout
         ? SelectorGridConfig(
             crossAxisCount: layout.crossAxisCount,
@@ -364,14 +364,14 @@ class SelectorCategoryEntry<E> extends SelectorEntry<E> {
         : null;
   }
 
-  /// Use [childrenLayout] instead.
+  /// Use [layout] instead.
   @Deprecated(
-    'Use childrenLayout instead. Returns a SelectorChipConfig when '
-    'childrenLayout is a SelectorChipLayout. It will be removed in a future '
+    'Use layout instead. Returns a SelectorChipConfig when '
+    'layout is a SelectorChipLayout. It will be removed in a future '
     'minor version.',
   )
   SelectorChipConfig? get chipConfig =>
-      childrenLayout is SelectorChipLayout ? const SelectorChipConfig() : null;
+      layout is SelectorChipLayout ? const SelectorChipConfig() : null;
 
   SelectorCategoryEntry<E> copyWith({
     String? id,
@@ -384,24 +384,24 @@ class SelectorCategoryEntry<E> extends SelectorEntry<E> {
     SelectionMode? headerSelectionMode,
     SelectorEntry<E>? footer,
     SelectionMode? footerSelectionMode,
-    SelectorChildrenLayout? childrenLayout,
+    SelectorLayout? layout,
     @Deprecated(
-      'Use childrenLayout instead. When set, it is mapped to a '
+      'Use layout instead. When set, it is mapped to a '
       'SelectorListLayout. It will be removed in a future minor version.',
     )
     SelectorListConfig? listConfig,
     @Deprecated(
-      'Use childrenLayout instead. When set, it is mapped to a '
+      'Use layout instead. When set, it is mapped to a '
       'SelectorGridLayout. It will be removed in a future minor version.',
     )
     SelectorGridConfig? gridConfig,
     @Deprecated(
-      'Use childrenLayout instead. When set, it is mapped to a '
+      'Use layout instead. When set, it is mapped to a '
       'SelectorChipLayout. It will be removed in a future minor version.',
     )
     SelectorChipConfig? chipConfig,
   }) {
-    final SelectorChildrenLayout? resolvedLayout = childrenLayout ??
+    final SelectorLayout? resolvedLayout = layout ??
         (listConfig != null
             ? const SelectorListLayout()
             : gridConfig != null
@@ -413,7 +413,7 @@ class SelectorCategoryEntry<E> extends SelectorEntry<E> {
                   )
                 : chipConfig != null
                     ? const SelectorChipLayout()
-                    : this.childrenLayout);
+                    : this.layout);
     return SelectorCategoryEntry<E>(
       id: id ?? this.id,
       name: name ?? this.name,
@@ -425,7 +425,7 @@ class SelectorCategoryEntry<E> extends SelectorEntry<E> {
       headerSelectionMode: headerSelectionMode ?? this.headerSelectionMode,
       footer: footer ?? this.footer,
       footerSelectionMode: footerSelectionMode ?? this.footerSelectionMode,
-      childrenLayout: resolvedLayout,
+      layout: resolvedLayout,
     );
   }
 
@@ -437,15 +437,15 @@ class SelectorCategoryEntry<E> extends SelectorEntry<E> {
             other.id == id &&
             other.name == name &&
             other.selectionMode == selectionMode &&
-            other.childrenLayout == childrenLayout;
+            other.layout == layout;
   }
 
   @override
-  int get hashCode => Object.hash(id, name, selectionMode, childrenLayout);
+  int get hashCode => Object.hash(id, name, selectionMode, layout);
 
   @override
   String toString() =>
-      'SelectorCategoryEntry(id: $id, name: $name, selectionMode: $selectionMode, header: $header, footer: $footer, childrenLayout: $childrenLayout, children: $children)';
+      'SelectorCategoryEntry(id: $id, name: $name, selectionMode: $selectionMode, header: $header, footer: $footer, layout: $layout, children: $children)';
 }
 
 extension SelectorCategoryEntryExtension on SelectorCategoryEntry {
