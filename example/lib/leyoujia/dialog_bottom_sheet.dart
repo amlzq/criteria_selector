@@ -1,10 +1,10 @@
 // ignore_for_file: avoid_print
 
 import 'package:criteria_selector/criteria_selector.dart';
-import 'package:example/my_widgets.dart';
+import 'package:example/widgets/my_widgets.dart';
 import 'package:flutter/material.dart';
 
-import '../generated/l10n/app_localizations.dart';
+import '../widgets/show_selected_result.dart';
 import 'house_filters_repository.dart';
 
 class DialogBottomSheetDemoPage extends StatefulWidget {
@@ -22,40 +22,6 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
   void initState() {
     super.initState();
     _filtersRepo = HouseFiltersRepository();
-  }
-
-  void _showSelectedResult(SelectorEntries result) {
-    final l10n = AppLocalizations.of(context);
-    final conditions = '${result.flatten()}';
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(l10n?.filterUpdated ?? ''),
-        action: SnackBarAction(
-          label: l10n?.view ?? '',
-          onPressed: () {
-            showModalBottomSheet<void>(
-              context: context,
-              isScrollControlled: true,
-              builder: (context) {
-                return SafeArea(
-                  child: FractionallySizedBox(
-                    heightFactor: 0.8,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: SingleChildScrollView(
-                        child: SelectableText(
-                          l10n?.filterConditions(conditions) ?? conditions,
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            );
-          },
-        ),
-      ),
-    );
   }
 
   @override
@@ -92,7 +58,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 // `SelectorEntriesExtension`, so they can be called directly.
                 if (result == null) return;
                 _filtersRepo.regionResult = result;
-                _showSelectedResult(result);
+                showSelectedResult(context, result);
                 debugPrint('region first: ${result.firstSelectedId}');
                 final regionFirst = result.firstSelectedId;
                 if (regionFirst != null) {
@@ -127,7 +93,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 );
                 if (result == null) return;
                 _filtersRepo.buyPriceResult = result;
-                _showSelectedResult(result);
+                showSelectedResult(context, result);
                 debugPrint('price first: ${result.firstSelectedId}');
                 debugPrint(
                     'price total ranges: ${result.childRangesOf('total')}');
@@ -163,7 +129,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 );
                 if (result == null) return;
                 _filtersRepo.floorPlanBuyResult = result;
-                _showSelectedResult(result);
+                showSelectedResult(context, result);
                 debugPrint('result: $result');
               },
               child: const Text('Show FloorPlan Selector'),
@@ -193,7 +159,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 );
                 if (result == null) return;
                 _filtersRepo.moreBuyResult = result;
-                _showSelectedResult(result);
+                showSelectedResult(context, result);
                 debugPrint('result: $result');
               },
               child: const Text('Show More Selector'),
@@ -228,7 +194,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 );
                 if (result == null) return;
                 _filtersRepo.sortBuyResult = result;
-                _showSelectedResult(result);
+                showSelectedResult(context, result);
                 debugPrint('sort id: ${result.firstSelectedId}');
               },
               child: const Text('Show Sort Selector'),
@@ -256,7 +222,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 );
                 if (result == null) return;
                 _filtersRepo.regionResult = result;
-                _showSelectedResult(result);
+                showSelectedResult(context, result);
                 debugPrint('region first: ${result.firstSelectedId}');
                 final regionFirst = result.firstSelectedId;
                 if (regionFirst != null) {
@@ -291,7 +257,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 );
                 if (result == null) return;
                 _filtersRepo.buyPriceResult = result;
-                _showSelectedResult(result);
+                showSelectedResult(context, result);
                 debugPrint('price first: ${result.firstSelectedId}');
                 debugPrint(
                     'price total ranges: ${result.childRangesOf('total')}');
@@ -325,7 +291,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 );
                 if (result == null) return;
                 _filtersRepo.floorPlanBuyResult = result;
-                _showSelectedResult(result);
+                showSelectedResult(context, result);
                 debugPrint('result: $result');
               },
               child: const Text('Show FloorPlan Selector'),
@@ -357,7 +323,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 );
                 if (result == null) return;
                 _filtersRepo.moreBuyResult = result;
-                _showSelectedResult(result);
+                showSelectedResult(context, result);
                 debugPrint('result: $result');
               },
               child: const Text('Show More Selector'),
@@ -380,7 +346,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 );
                 if (result == null) return;
                 _filtersRepo.sortBuyResult = result;
-                _showSelectedResult(result);
+                showSelectedResult(context, result);
                 debugPrint('sort id: ${result.firstSelectedId}');
               },
               child: const Text('Show Sort Selector'),

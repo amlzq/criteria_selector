@@ -1,8 +1,9 @@
 import 'package:criteria_selector/criteria_selector.dart';
-import 'package:example/my_widgets.dart';
+import 'package:example/widgets/my_widgets.dart';
 import 'package:flutter/material.dart';
 
 import '../generated/l10n/app_localizations.dart';
+import '../widgets/show_selected_result.dart';
 import 'house_filters_repository.dart';
 import 'house_repository.dart';
 import 'utils.dart';
@@ -22,40 +23,6 @@ class _BoxPageState extends State<BoxPage> {
   void initState() {
     super.initState();
     _filtersRepo = HouseFiltersRepository();
-  }
-
-  void _showSelectedResult(SelectorEntries result) {
-    final l10n = AppLocalizations.of(context);
-    final conditions = '${result.flatten()}';
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(l10n?.filterUpdated ?? ''),
-        action: SnackBarAction(
-          label: l10n?.view ?? '',
-          onPressed: () {
-            showModalBottomSheet<void>(
-              context: context,
-              isScrollControlled: true,
-              builder: (context) {
-                return SafeArea(
-                  child: FractionallySizedBox(
-                    heightFactor: 0.8,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: SingleChildScrollView(
-                        child: SelectableText(
-                          l10n?.filterConditions(conditions) ?? conditions,
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            );
-          },
-        ),
-      ),
-    );
   }
 
   void _handleRegionChange(SelectorEntries result) async {
@@ -186,7 +153,7 @@ class _BoxPageState extends State<BoxPage> {
                   onChangeTap: (selected) {
                     debugPrint('onChangeTap: $selected');
                     _handleRegionChange(selected);
-                    _showSelectedResult(selected);
+                    showSelectedResult(context, selected);
                   },
                 ),
                 const SizedBox(height: 24),
@@ -218,7 +185,7 @@ class _BoxPageState extends State<BoxPage> {
                   onChangeTap: (selected) {
                     debugPrint('onChangeTap: $selected');
                     _handlePriceChange(selected);
-                    _showSelectedResult(selected);
+                    showSelectedResult(context, selected);
                   },
                 ),
                 const SizedBox(height: 24),
@@ -244,7 +211,7 @@ class _BoxPageState extends State<BoxPage> {
                   onChangeTap: (selected) {
                     debugPrint('onChangeTap: $selected');
                     _handleFloorPlanChange(selected);
-                    _showSelectedResult(selected);
+                    showSelectedResult(context, selected);
                   },
                 ),
                 const SizedBox(height: 24),
@@ -268,7 +235,7 @@ class _BoxPageState extends State<BoxPage> {
                   onChangeTap: (selected) {
                     debugPrint('onChangeTap: $selected');
                     _handleSortChange(selected);
-                    _showSelectedResult(selected);
+                    showSelectedResult(context, selected);
                   },
                 ),
               ],

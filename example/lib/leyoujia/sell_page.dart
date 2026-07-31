@@ -2,7 +2,7 @@ import 'package:criteria_selector/criteria_selector.dart';
 import 'package:example/leyoujia/house_filters_repository.dart';
 import 'package:example/leyoujia/house_repository.dart';
 import 'package:example/leyoujia/utils.dart';
-import 'package:example/my_widgets.dart';
+import 'package:example/widgets/my_widgets.dart';
 import 'package:flutter/material.dart';
 
 import '../generated/l10n/app_localizations.dart';

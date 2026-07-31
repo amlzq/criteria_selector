@@ -5,11 +5,12 @@ import 'package:example/leyoujia/house_filters_repository.dart';
 import 'package:example/leyoujia/house_repository.dart';
 import 'package:example/leyoujia/utils.dart';
 import 'package:example/log.dart';
-import 'package:example/my_widgets.dart';
+import 'package:example/widgets/my_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../generated/l10n/app_localizations.dart';
+import '../widgets/show_selected_result.dart';
 
 const _bannerHeight = 150.0;
 const _filterBarHeight = 44.0;
@@ -128,40 +129,6 @@ class _BuyPageState extends State<BuyPage> {
     } finally {
       if (mounted) setState(() => _isLoadingMore = false);
     }
-  }
-
-  void _showSelectedResult(DropdownTabData tabData, SelectorEntries selected) {
-    final l10n = AppLocalizations.of(context);
-    final conditions = '${selected.flatten()}';
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(l10n?.filterUpdated ?? ''),
-        action: SnackBarAction(
-          label: l10n?.view ?? '',
-          onPressed: () {
-            showModalBottomSheet<void>(
-              context: context,
-              isScrollControlled: true,
-              builder: (context) {
-                return SafeArea(
-                  child: FractionallySizedBox(
-                    heightFactor: 0.8,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: SingleChildScrollView(
-                        child: SelectableText(
-                          l10n?.filterConditions(conditions) ?? conditions,
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            );
-          },
-        ),
-      ),
-    );
   }
 
   HouseFilter? _dropdownSelectorResultParser(
@@ -632,7 +599,7 @@ class _BuyPageState extends State<BuyPage> {
               onChanged: (tabData, selected) {
                 debugPrintLarge('onChanged: $tabData, $selected');
                 _handleSelectorChange(tabData, selected);
-                _showSelectedResult(tabData, selected);
+                showSelectedResult(context, selected);
               },
               onApplied: (tabData, selected) {
                 debugPrintLarge('onApplied: $tabData, $selected');
@@ -643,7 +610,7 @@ class _BuyPageState extends State<BuyPage> {
                   _floorPlanApplyText.value =
                       AppLocalizations.of(context)?.apply ?? '';
                 }
-                _showSelectedResult(tabData, selected);
+                showSelectedResult(context, selected);
               },
               onReset: () {
                 debugPrint('onReset');

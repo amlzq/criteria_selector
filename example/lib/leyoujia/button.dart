@@ -1,8 +1,9 @@
 import 'package:criteria_selector/criteria_selector.dart';
-import 'package:example/my_widgets.dart';
+import 'package:example/widgets/my_widgets.dart';
 import 'package:flutter/material.dart';
 
 import '../generated/l10n/app_localizations.dart';
+import '../widgets/show_selected_result.dart';
 import 'house_filters_repository.dart';
 import 'house_repository.dart';
 import 'utils.dart';
@@ -27,40 +28,6 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
   @override
   void dispose() {
     super.dispose();
-  }
-
-  void _showSelectedResult(SelectorEntries selected) {
-    final l10n = AppLocalizations.of(context);
-    final conditions = '${selected.flatten()}';
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(l10n?.filterUpdated ?? ''),
-        action: SnackBarAction(
-          label: l10n?.view ?? '',
-          onPressed: () {
-            showModalBottomSheet<void>(
-              context: context,
-              isScrollControlled: true,
-              builder: (context) {
-                return SafeArea(
-                  child: FractionallySizedBox(
-                    heightFactor: 0.8,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: SingleChildScrollView(
-                        child: SelectableText(
-                          l10n?.filterConditions(conditions) ?? conditions,
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            );
-          },
-        ),
-      ),
-    );
   }
 
   HouseFilter? _parseFilter(String domain, SelectorEntries selected) {
@@ -201,12 +168,12 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
             onChanged: (selected) {
               debugPrint('onChanged: $selected');
               _handleSelectorChange('region', selected);
-              _showSelectedResult(selected);
+              showSelectedResult(context, selected);
             },
             onApplied: (selected) {
               debugPrint('onApplied: $selected');
               _handleSelectorApply('region', selected);
-              _showSelectedResult(selected);
+              showSelectedResult(context, selected);
             },
             onReset: () {
               debugPrint('onReset');
@@ -245,12 +212,12 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
               onChanged: (selected) {
                 debugPrint('onChanged: $selected');
                 _handleSelectorChange('price', selected);
-                _showSelectedResult(selected);
+                showSelectedResult(context, selected);
               },
               onApplied: (selected) {
                 debugPrint('onApplied: $selected');
                 _handleSelectorApply('price', selected);
-                _showSelectedResult(selected);
+                showSelectedResult(context, selected);
               },
               onReset: () {
                 debugPrint('onReset');
@@ -276,12 +243,12 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
               onChanged: (selected) {
                 debugPrint('onChanged: $selected');
                 _handleSelectorChange('floorplan', selected);
-                _showSelectedResult(selected);
+                showSelectedResult(context, selected);
               },
               onApplied: (selected) {
                 debugPrint('onApplied: $selected');
                 _handleSelectorApply('floorplan', selected);
-                _showSelectedResult(selected);
+                showSelectedResult(context, selected);
               },
               onReset: () {
                 debugPrint('onReset');
@@ -305,12 +272,12 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
               onChanged: (selected) {
                 debugPrint('onChanged: $selected');
                 _handleSelectorChange('sort', selected);
-                _showSelectedResult(selected);
+                showSelectedResult(context, selected);
               },
               onApplied: (selected) {
                 debugPrint('onApplied: $selected');
                 _handleSelectorApply('sort', selected);
-                _showSelectedResult(selected);
+                showSelectedResult(context, selected);
               },
               onReset: () {
                 debugPrint('onReset');

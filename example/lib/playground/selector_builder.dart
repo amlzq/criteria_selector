@@ -2,7 +2,7 @@ import 'package:criteria_selector/criteria_selector.dart';
 import 'package:flutter/material.dart';
 
 import '../leyoujia/house_filters_repository.dart' as leyoujia;
-import '../my_widgets.dart';
+import '../widgets/my_widgets.dart';
 import '../zillow/house_filters_repository.dart' as zillow;
 import 'playground_l10n.dart';
 import 'playground_params.dart';

@@ -4,6 +4,7 @@ import 'package:criteria_selector/criteria_selector.dart';
 import 'package:flutter/material.dart';
 
 import '../generated/l10n/app_localizations.dart';
+import '../widgets/show_selected_result.dart';
 import 'house_filters_repository.dart';
 import 'house_repository.dart';
 import 'utils.dart';
@@ -54,40 +55,6 @@ class _MapPageState extends State<MapPage> {
     _floorPlanApplyTextDebounce?.cancel();
     _floorPlanApplyText.dispose();
     super.dispose();
-  }
-
-  void _showSelectedResult(DropdownSelectorResult result) {
-    final l10n = AppLocalizations.of(context);
-    final conditions = '${result.selected.flatten()}';
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(l10n?.filterUpdated ?? ''),
-        action: SnackBarAction(
-          label: l10n?.view ?? '',
-          onPressed: () {
-            showModalBottomSheet<void>(
-              context: context,
-              isScrollControlled: true,
-              builder: (context) {
-                return SafeArea(
-                  child: FractionallySizedBox(
-                    heightFactor: 0.8,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: SingleChildScrollView(
-                        child: SelectableText(
-                          l10n?.filterConditions(conditions) ?? conditions,
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            );
-          },
-        ),
-      ),
-    );
   }
 
   HouseFilter? _dropdownSelectorResultParser(DropdownSelectorResult result) {
@@ -206,7 +173,7 @@ class _MapPageState extends State<MapPage> {
   }
 
   void _handleSelectorApply(DropdownSelectorResult result) {
-    _showSelectedResult(result);
+    showDropdownSelectorResult(context, result);
 
     final l10n = AppLocalizations.of(context);
     _filter = _dropdownSelectorResultParser(result);
