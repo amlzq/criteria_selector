@@ -445,23 +445,19 @@ class SelectorUtils {
             clonedChildren =
                 deepCloneSelectedSubtree ? deepCloneEntries(children) : null;
           } else {
-            // Pick the entries selected at the next level whose parent is this
-            // entry. Match by id rather than instance identity, so that entries
-            // dynamically added to the selection (e.g. custom range entries)
-            // are included even when they are not part of `entry.children`
-            // (custom entries live only in the selection state, not the static
-            // tree). Without this, selectedNext.contains(child) is always false
-            // for such entries and the cloned children end up empty/null.
-            final selectedChildren = selectedNext
-                .whereType<SelectorChildEntry>()
-                .where((child) => child.parentId == entry.id)
-                .toList();
-            final staticIds = children.map((c) => c.id).toSet();
+            // Keep the entries already present in `children` (matched by
+            // identity) so existing behaviour and ordering are preserved, and
+            // additionally include any selected entries that are not part of
+            // `children` (e.g. custom range entries that are only created in
+            // the selection state, not in the static tree). Without including
+            // the latter, the cloned children would end up empty/null even
+            // though a range was actually selected.
+            final childIds = children.map((c) => c.id).toSet();
             final selectedOrdered = <SelectorEntry>[
               for (final child in children)
-                if (selectedChildren.any((s) => s.id == child.id)) child,
-              for (final s in selectedChildren)
-                if (!staticIds.contains(s.id)) s,
+                if (selectedNext.contains(child)) child,
+              for (final s in selectedNext)
+                if (!childIds.contains(s.id)) s,
             ];
             final copied = selectedOrdered
                 .map((child) => cloneEntryAtLevel(child, nextLevel))
