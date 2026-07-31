@@ -45,7 +45,7 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
 
   var _params = const PlaygroundParams(
     entryPoint: EntryPoint.box,
-    layout: Layout.grid,
+    delegate: Delegate.cascading,
     selectionMode: SelectionMode.multiple,
     crossAxisCount: 4,
     childAspectRatio: 2.5,

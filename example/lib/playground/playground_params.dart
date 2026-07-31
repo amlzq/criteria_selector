@@ -10,8 +10,8 @@ enum EntryPoint {
   bottomSheet,
 }
 
-/// Selector layout / delegate family.
-enum Layout {
+/// Selector delegate family.
+enum Delegate {
   cascading,
   grid,
   flatten,
@@ -28,7 +28,7 @@ enum TileVariant {
 /// value so the controls panel can replace it in one [setState] call.
 class PlaygroundParams {
   final EntryPoint entryPoint;
-  final Layout layout;
+  final Delegate delegate;
   final SelectionMode selectionMode;
   final int crossAxisCount;
   final double childAspectRatio;
@@ -45,7 +45,7 @@ class PlaygroundParams {
 
   const PlaygroundParams({
     required this.entryPoint,
-    required this.layout,
+    required this.delegate,
     required this.selectionMode,
     required this.crossAxisCount,
     required this.childAspectRatio,
@@ -58,7 +58,7 @@ class PlaygroundParams {
 
   PlaygroundParams copyWith({
     EntryPoint? entryPoint,
-    Layout? layout,
+    Delegate? delegate,
     SelectionMode? selectionMode,
     int? crossAxisCount,
     double? childAspectRatio,
@@ -73,7 +73,7 @@ class PlaygroundParams {
   }) {
     return PlaygroundParams(
       entryPoint: entryPoint ?? this.entryPoint,
-      layout: layout ?? this.layout,
+      delegate: delegate ?? this.delegate,
       selectionMode: selectionMode ?? this.selectionMode,
       crossAxisCount: crossAxisCount ?? this.crossAxisCount,
       childAspectRatio: childAspectRatio ?? this.childAspectRatio,

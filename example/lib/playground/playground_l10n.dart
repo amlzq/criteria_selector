@@ -48,7 +48,7 @@ class PlaygroundL10n {
 
   // Section titles.
   String get entryPoint => _t('Entry Point', '入口');
-  String get layout => _t('Layout', '布局');
+  String get delegate => _t('Delegate', '代理');
   String get selectionMode => _t('Selection Mode', '选择模式');
   String get tileVariant => _t('Tile Variant', '磁贴样式');
   String get seedColor => _t('Seed Color', '主题色');
@@ -75,7 +75,7 @@ class PlaygroundL10n {
   String get light => _t('Light', '浅色');
   String get dark => _t('Dark', '深色');
 
-  // Layout options.
+  // Delegate options.
   String get layoutCascading => _t('Cascading', '联动');
   String get layoutGrid => _t('Grid', '网格');
   String get layoutFlatten => _t('Flatten', '平铺');

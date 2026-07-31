@@ -19,12 +19,12 @@ class ControlsPanel extends StatelessWidget {
   });
 
   bool get _gridRelevant =>
-      params.layout == Layout.grid || params.layout == Layout.flatten;
+      params.delegate == Delegate.grid || params.delegate == Delegate.flatten;
 
-  // The dropdown bar demo owns 4 fixed tabs (one per layout family), so the
-  // global Layout selector no longer affects it and is disabled for that entry
-  // point.
-  bool get _layoutEnabled => params.entryPoint != EntryPoint.dropdownBar;
+  // The dropdown bar demo owns 4 fixed tabs (one per delegate family), so the
+  // global Delegate selector no longer affects it and is disabled for that
+  // entry point.
+  bool get _delegateEnabled => params.entryPoint != EntryPoint.dropdownBar;
 
   @override
   Widget build(BuildContext context) {
@@ -44,17 +44,17 @@ class ControlsPanel extends StatelessWidget {
           onChanged: (v) => onChanged(params.copyWith(entryPoint: v)),
         ),
         const SizedBox(height: 16),
-        _SectionTitle(l10n.layout, enabled: _layoutEnabled),
-        _EnumDropdown<Layout>(
-          value: params.layout,
-          enabled: _layoutEnabled,
+        _SectionTitle(l10n.delegate, enabled: _delegateEnabled),
+        _EnumDropdown<Delegate>(
+          value: params.delegate,
+          enabled: _delegateEnabled,
           items: {
-            Layout.cascading: l10n.layoutCascading,
-            Layout.grid: l10n.layoutGrid,
-            Layout.flatten: l10n.layoutFlatten,
-            Layout.list: l10n.layoutList,
+            Delegate.cascading: l10n.layoutCascading,
+            Delegate.grid: l10n.layoutGrid,
+            Delegate.flatten: l10n.layoutFlatten,
+            Delegate.list: l10n.layoutList,
           },
-          onChanged: (v) => onChanged(params.copyWith(layout: v)),
+          onChanged: (v) => onChanged(params.copyWith(delegate: v)),
         ),
         const SizedBox(height: 16),
         _SectionTitle(l10n.selectionMode),

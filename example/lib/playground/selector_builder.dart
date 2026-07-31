@@ -22,14 +22,14 @@ Widget _checkboxBuilder(BuildContext context, bool selected) =>
     MyCheckbox(value: selected);
 
 /// Loader trio (entries / current selection / reset selection) for a single
-/// layout family. Keeping them together lets the playground swap the whole demo
+/// delegate family. Keeping them together lets the playground swap the whole demo
 /// data set (Zillow ↔ Leyoujia) behind one interface.
-class LayoutLoaders {
+class DelegateLoaders {
   final Future<SelectorEntries> Function() entries;
   final SelectorEntries? Function() selected;
   final SelectorEntries? Function() reset;
 
-  const LayoutLoaders({
+  const DelegateLoaders({
     required this.entries,
     required this.selected,
     required this.reset,
@@ -40,10 +40,10 @@ class LayoutLoaders {
 /// builder works for both the English (Zillow) and Simplified Chinese
 /// (Leyoujia) data.
 class PlaygroundDataSource {
-  final LayoutLoaders cascading;
-  final LayoutLoaders grid;
-  final LayoutLoaders flatten;
-  final LayoutLoaders list;
+  final DelegateLoaders cascading;
+  final DelegateLoaders grid;
+  final DelegateLoaders flatten;
+  final DelegateLoaders list;
 
   const PlaygroundDataSource({
     required this.cascading,
@@ -55,22 +55,22 @@ class PlaygroundDataSource {
   /// English demo → Zillow data.
   factory PlaygroundDataSource.zillow(zillow.HouseFiltersRepository repo) {
     return PlaygroundDataSource(
-      cascading: LayoutLoaders(
+      cascading: DelegateLoaders(
         entries: repo.fetchNeighborhoodData,
         selected: repo.fetchNeighborhoodSelectedData,
         reset: repo.fetchNeighborhoodResetData,
       ),
-      grid: LayoutLoaders(
+      grid: DelegateLoaders(
         entries: repo.fetchRoomsData,
         selected: repo.fetchRoomsSelectedData,
         reset: repo.fetchRoomsResetData,
       ),
-      flatten: LayoutLoaders(
+      flatten: DelegateLoaders(
         entries: repo.fetchMoreData,
         selected: repo.fetchMoreSelectedData,
         reset: repo.fetchMoreResetData,
       ),
-      list: LayoutLoaders(
+      list: DelegateLoaders(
         entries: repo.fetchSortData,
         selected: repo.fetchSortSelectedData,
         reset: repo.fetchSortResetData,
@@ -81,22 +81,22 @@ class PlaygroundDataSource {
   /// Simplified Chinese demo → Leyoujia data.
   factory PlaygroundDataSource.leyoujia(leyoujia.HouseFiltersRepository repo) {
     return PlaygroundDataSource(
-      cascading: LayoutLoaders(
+      cascading: DelegateLoaders(
         entries: repo.fetchRegionData,
         selected: repo.fetchRegionSelectedData,
         reset: repo.fetchRegionResetData,
       ),
-      grid: LayoutLoaders(
+      grid: DelegateLoaders(
         entries: repo.fetchBuyPriceData,
         selected: repo.fetchBuyPriceSelectedData,
         reset: repo.fetchBuyPriceResetData,
       ),
-      flatten: LayoutLoaders(
+      flatten: DelegateLoaders(
         entries: repo.fetchFloorPlanBuyData,
         selected: repo.fetchFloorPlanBuySelectedData,
         reset: repo.fetchFloorPlanBuyResetData,
       ),
-      list: LayoutLoaders(
+      list: DelegateLoaders(
         entries: repo.fetchSortBuyData,
         selected: repo.fetchSortBuySelectedData,
         reset: repo.fetchSortBuyResetData,
@@ -121,7 +121,7 @@ String _delegateKey(
   PlaygroundLanguage language,
   PlaygroundParams p,
 ) =>
-    '${language.name}|${p.layout}|${p.selectionMode}|${p.tileVariant}|'
+    '${language.name}|${p.delegate}|${p.selectionMode}|${p.tileVariant}|'
     '${p.crossAxisCount}|${p.childAspectRatio}|${p.spacing}';
 
 /// Selection-identity key: the params that define *which* selection state a
@@ -129,7 +129,7 @@ String _delegateKey(
 /// excluded — those only affect rendering and are handled by [buildDelegate]
 /// so the applied selection survives a Columns / Aspect / Spacing tweak.
 String _selectionKey(PlaygroundLanguage language, PlaygroundParams p) =>
-    '${language.name}|${p.layout}|${p.selectionMode}|${p.tileVariant}';
+    '${language.name}|${p.delegate}|${p.selectionMode}|${p.tileVariant}';
 
 /// Builds (or reuses) a [SelectorDelegate] for the current [PlaygroundParams].
 ///
@@ -170,8 +170,8 @@ SelectorDelegate _createDelegate(
   final chipBarTheme =
       SelectorChipBarTheme(variant: _chipVariant(p.tileVariant));
 
-  switch (p.layout) {
-    case Layout.cascading:
+  switch (p.delegate) {
+    case Delegate.cascading:
       return CascadingSelectorDelegate(
         entriesLoader: data.cascading.entries,
         selectedEntriesLoader: data.cascading.selected,
@@ -181,7 +181,7 @@ SelectorDelegate _createDelegate(
         checkboxBuilder: _checkboxBuilder,
         chipBarTheme: chipBarTheme,
       );
-    case Layout.grid:
+    case Delegate.grid:
       // Grid / Flatten delegates use the default radio & checkbox widgets, so
       // the custom [MyRadio]/[MyCheckbox] builders are not forwarded here.
       return GridSelectorDelegate(
@@ -197,7 +197,7 @@ SelectorDelegate _createDelegate(
             SelectorGridTileTheme(variant: _gridVariant(p.tileVariant)),
         chipBarTheme: chipBarTheme,
       );
-    case Layout.flatten:
+    case Delegate.flatten:
       return FlattenSelectorDelegate(
         entriesLoader: data.flatten.entries,
         selectedEntriesLoader: data.flatten.selected,
@@ -211,7 +211,7 @@ SelectorDelegate _createDelegate(
             SelectorGridTileTheme(variant: _gridVariant(p.tileVariant)),
         chipBarTheme: chipBarTheme,
       );
-    case Layout.list:
+    case Delegate.list:
       return ListSelectorDelegate(
         entriesLoader: data.list.entries,
         selectedEntriesLoader: data.list.selected,
@@ -296,10 +296,10 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
   void _onApplied(Object? value) => setState(() => _lastApplied = value);
 
   /// Builds a selector delegate for one tab of the dropdown bar, using the
-  /// current playground params but a fixed layout family so each tab shows a
+  /// current playground params but a fixed delegate family so each tab shows a
   /// distinct selector (cascading / grid / flatten / list).
-  SelectorDelegate _tabDelegate(Layout layout) {
-    final tabParams = widget.params.copyWith(layout: layout);
+  SelectorDelegate _tabDelegate(Delegate delegate) {
+    final tabParams = widget.params.copyWith(delegate: delegate);
     return buildDelegate(
       tabParams,
       widget.data,
@@ -329,7 +329,7 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
                 child: SelectorBox(
                   // The box owns a [SelectorController] that is created once from
                   // the delegate and NOT re-created on delegate changes. Key it by
-                  // the params that must reset that controller (language / layout
+                  // the params that must reset that controller (language / delegate
                   // / selection mode / tile variant). Columns / aspect ratio /
                   // spacing are deliberately excluded: those now live in the
                   // delegate cache key, so changing them yields a *new* delegate
@@ -337,7 +337,7 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
                   // live and [SelectorPanel] rebuilds with the new grid, and the
                   // box keeps its in-progress selection instead of losing it.
                   key: ValueKey(
-                    '${l10n.language}|${p.layout}|${p.selectionMode}|'
+                    '${l10n.language}|${p.delegate}|${p.selectionMode}|'
                     '${p.tileVariant}',
                   ),
                   delegate: widget.delegate,
@@ -356,10 +356,10 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
         );
       case EntryPoint.dropdownBar:
         final tabDelegates = <SelectorDelegate>[
-          _tabDelegate(Layout.cascading),
-          _tabDelegate(Layout.grid),
-          _tabDelegate(Layout.flatten),
-          _tabDelegate(Layout.list),
+          _tabDelegate(Delegate.cascading),
+          _tabDelegate(Delegate.grid),
+          _tabDelegate(Delegate.flatten),
+          _tabDelegate(Delegate.list),
         ];
         return Scaffold(
           appBar: AppBar(
