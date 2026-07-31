@@ -159,7 +159,6 @@ class GridSelectorState extends State<GridSelector> {
   }
 
   void _focusListener(String categoryId, String minValue, String maxValue) {
-    debugPrint('_focusListener $categoryId: $minValue,$maxValue');
     _customEntrySelection(categoryId, minValue, maxValue);
   }
 
@@ -211,8 +210,6 @@ class GridSelectorState extends State<GridSelector> {
     /// Focused category index
     final tempSelectedCategoryIndex =
         widget.entries.indexOf(_tempSelectedCategory);
-
-    debugPrint('tempSelectedCategoryIndex: $tempSelectedCategoryIndex');
 
     return Column(
       mainAxisSize: MainAxisSize.min,

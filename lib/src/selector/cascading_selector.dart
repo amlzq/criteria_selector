@@ -93,21 +93,18 @@ class CascadingSelectorState extends State<CascadingSelector> {
     if (controller == null) {
       controller = SelectorController.of(context)!;
       controller?.addListener(_handleSelectorControllerTick);
-
-      final theme = SelectorTheme.of(context);
-
-      final categoryBackgroundColor =
-          delegate.categoryBackgroundColor ?? theme.backgroundColor;
-
-      final terminalBackgroundColor =
-          delegate.terminalBackgroundColor ?? theme.backgroundColorHighest;
-
-      // Calculate max depth and gradient colors
-      final maxDepth = _calculateMaxDepth(widget.entries.toSet(), 1);
-
-      _backgroundColors = _calculateGradientColors(
-          maxDepth, categoryBackgroundColor, terminalBackgroundColor);
     }
+    // Gradient colors depend on the ambient theme, so they must be recomputed
+    // whenever the theme changes (e.g. light/dark switch), not only on first init.
+    final theme = SelectorTheme.of(context);
+    final categoryBackgroundColor =
+        delegate.categoryBackgroundColor ?? theme.backgroundColor;
+    final terminalBackgroundColor =
+        delegate.terminalBackgroundColor ?? theme.backgroundColorHighest;
+    final maxDepth = _calculateMaxDepth(widget.entries.toSet(), 1);
+    _backgroundColors = _calculateGradientColors(
+        maxDepth, categoryBackgroundColor, terminalBackgroundColor);
+
     controller?.bindState(
       widget.entries,
       initializeAnyIfEmpty: false,
@@ -611,8 +608,6 @@ class CascadingSelectorState extends State<CascadingSelector> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('_currentLevel=$_currentLevel');
-
     final theme = SelectorTheme.of(context);
     final isScrollable = delegate.isScrollable == true;
 

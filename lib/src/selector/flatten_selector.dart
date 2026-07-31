@@ -243,7 +243,6 @@ class FlattenSelectorState extends State<FlattenSelector> {
   }
 
   void _focusListener(String categoryId, String minValue, String maxValue) {
-    debugPrint('_focusListener $categoryId: $minValue,$maxValue');
     _customItemSelection(categoryId, minValue, maxValue);
   }
 
