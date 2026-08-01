@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../generated/l10n/app_localizations.dart';
-import '../widgets/show_selected_result.dart';
+import '../widgets/show_select_result.dart';
 
 const _bannerHeight = 150.0;
 const _filterBarHeight = 44.0;
@@ -229,7 +229,7 @@ class _BuyPageState extends State<BuyPage> {
     _filter = _dropdownSelectorResultParser(tabData, selected);
     if (_filter == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n?.filterParseFailed ?? '')),
+        SnackBar(content: Text(l10n?.resultParseFailed ?? '')),
       );
       return;
     }
@@ -268,7 +268,7 @@ class _BuyPageState extends State<BuyPage> {
         setState(() {});
       }
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n?.filterParseFailed ?? '')),
+        SnackBar(content: Text(l10n?.resultParseFailed ?? '')),
       );
       return;
     }
@@ -587,22 +587,22 @@ class _BuyPageState extends State<BuyPage> {
                 return true;
               },
               onSelectorShowed: (DropdownTabData tabData) {
-                debugPrint('onShowed: ${tabData.label}');
+                largePrint('onShowed: ${tabData.label}');
               },
               onSelectorWillHide: (DropdownTabData tabData) {
-                debugPrint('onWillHide: ${tabData.label}');
+                largePrint('onWillHide: ${tabData.label}');
                 return true;
               },
               onSelectorHidden: (DropdownTabData tabData) {
-                debugPrint('onHidden: ${tabData.label}');
+                largePrint('onHidden: ${tabData.label}');
               },
               onChanged: (tabData, selected) {
-                debugPrintLarge('onChanged: $tabData, $selected');
+                largePrint('onChanged: $tabData, $selected');
                 _handleSelectorChange(tabData, selected);
-                showSelectedResult(context, selected);
+                showSelectResult(context, selected);
               },
               onApplied: (tabData, selected) {
-                debugPrintLarge('onApplied: $tabData, $selected');
+                largePrint('onApplied: $tabData, $selected');
                 _handleSelectorApply(tabData, selected);
                 if (tabData.index == 2) {
                   _floorPlanApplyTextDebounce?.cancel();
@@ -610,7 +610,7 @@ class _BuyPageState extends State<BuyPage> {
                   _floorPlanApplyText.value =
                       AppLocalizations.of(context)?.apply ?? '';
                 }
-                showSelectedResult(context, selected);
+                showSelectResult(context, selected);
               },
               onReset: () {
                 debugPrint('onReset');
@@ -649,7 +649,7 @@ class _BuyPageState extends State<BuyPage> {
                       final ok = await _controller.apply(
                           tabIndex: 3, selectedEntryIds: _moreShortcutSelected);
                       if (!ok) {
-                        debugPrint('apply failed');
+                        largePrint('apply failed');
                       }
                     },
                   );

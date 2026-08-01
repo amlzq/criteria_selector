@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../generated/l10n/app_localizations.dart';
-import '../widgets/show_selected_result.dart';
+import '../widgets/show_select_result.dart';
 import 'house_filters_repository.dart';
 import 'house_repository.dart';
 import 'utils.dart';
@@ -201,7 +201,7 @@ class _HousePageState extends State<HousePage> {
     _filter = _dropdownSelectorResultParser(result);
     if (_filter == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n?.filterParseFailed ?? '')),
+        SnackBar(content: Text(l10n?.resultParseFailed ?? '')),
       );
       return;
     }
@@ -235,7 +235,7 @@ class _HousePageState extends State<HousePage> {
     _filter = _dropdownSelectorResultParser(result);
     if (_filter == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n?.filterParseFailed ?? '')),
+        SnackBar(content: Text(l10n?.resultParseFailed ?? '')),
       );
       return;
     }
@@ -540,14 +540,14 @@ class _HousePageState extends State<HousePage> {
               onChanged: (tabData, selected) {
                 final result = DropdownSelectorResult(
                     tabData: tabData, selected: selected);
-                debugPrintLarge('onChanged: $result');
+                largePrint('onChanged: $result');
                 _handleSelectorChange(result);
                 showDropdownSelectorResult(context, result);
               },
               onApplied: (tabData, selected) {
                 final result = DropdownSelectorResult(
                     tabData: tabData, selected: selected);
-                debugPrintLarge('onApplied: $result');
+                largePrint('onApplied: $result');
                 _handleSelectorApply(result);
                 if (result.tabIndex == 3) {
                   _moreApplyTextDebounce?.cancel();

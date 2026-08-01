@@ -3,7 +3,8 @@ import 'package:example/widgets/my_widgets.dart';
 import 'package:flutter/material.dart';
 
 import '../generated/l10n/app_localizations.dart';
-import '../widgets/show_selected_result.dart';
+import '../log.dart';
+import '../widgets/show_select_result.dart';
 import 'house_filters_repository.dart';
 import 'house_repository.dart';
 import 'utils.dart';
@@ -39,7 +40,7 @@ class _BoxPageState extends State<BoxPage> {
 
     if (_filter == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n?.filterParseFailed ?? '')),
+        SnackBar(content: Text(l10n?.resultParseFailed ?? '')),
       );
       return;
     }
@@ -131,9 +132,9 @@ class _BoxPageState extends State<BoxPage> {
                     },
                   ),
                   onChangeTap: (selected) {
-                    debugPrint('onChangeTap: $selected');
+                    largePrint('onChangeTap: $selected');
                     _handleNeighborhoodChange(selected);
-                    showSelectedResult(context, selected);
+                    showSelectResult(context, selected);
                   },
                 ),
                 const SizedBox(height: 24),
@@ -161,9 +162,9 @@ class _BoxPageState extends State<BoxPage> {
                     applyText: AppLocalizations.of(context)?.apply ?? '',
                   ),
                   onChangeTap: (selected) {
-                    debugPrint('onChangeTap: $selected');
+                    largePrint('onChangeTap: $selected');
                     _handlePriceChange(selected);
-                    showSelectedResult(context, selected);
+                    showSelectResult(context, selected);
                   },
                 ),
                 const SizedBox(height: 24),
@@ -182,9 +183,9 @@ class _BoxPageState extends State<BoxPage> {
                     selectionMode: SelectionMode.multiple,
                   ),
                   onChangeTap: (selected) {
-                    debugPrint('onChangeTap: $selected');
+                    largePrint('onChangeTap: $selected');
                     _handlePriceChange(selected);
-                    showSelectedResult(context, selected);
+                    showSelectResult(context, selected);
                   },
                 ),
                 const SizedBox(height: 24),
@@ -206,9 +207,9 @@ class _BoxPageState extends State<BoxPage> {
                     sideBarTheme: const SelectorSideBarTheme(width: 110),
                   ),
                   onChangeTap: (selected) {
-                    debugPrint('onChangeTap: $selected');
+                    largePrint('onChangeTap: $selected');
                     _handleRoomsChange(selected);
-                    showSelectedResult(context, selected);
+                    showSelectResult(context, selected);
                   },
                 ),
                 const SizedBox(height: 24),
@@ -229,9 +230,9 @@ class _BoxPageState extends State<BoxPage> {
                     },
                   ),
                   onChangeTap: (selected) {
-                    debugPrint('onChangeTap: $selected');
+                    largePrint('onChangeTap: $selected');
                     _handleSortChange(selected);
-                    showSelectedResult(context, selected);
+                    showSelectResult(context, selected);
                   },
                 ),
                 const SizedBox(height: 250),

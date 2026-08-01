@@ -6,6 +6,7 @@ import 'package:example/widgets/my_widgets.dart';
 import 'package:flutter/material.dart';
 
 import '../generated/l10n/app_localizations.dart';
+import '../log.dart';
 
 class SellPage extends StatefulWidget {
   const SellPage({super.key});
@@ -261,20 +262,20 @@ class _SellPageState extends State<SellPage> {
                 ),
               ],
               onSelectorShowed: (DropdownTabData tabData) {
-                debugPrint('onShowed: ${tabData.label}');
+                largePrint('onShowed: ${tabData.label}');
               },
               onSelectorHidden: (DropdownTabData tabData) {
-                debugPrint('onHidden: ${tabData.label}');
+                largePrint('onHidden: ${tabData.label}');
               },
               onChanged: (tabData, selected) {
                 final result = DropdownSelectorResult(
                     tabData: tabData, selected: selected);
-                debugPrint('onChanged: $result');
+                largePrint('onChanged: $result');
                 final conditions = '${result.selected.flatten()}';
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
-                      l10n?.filterConditions(conditions) ?? conditions,
+                      l10n?.selectResult(conditions) ?? conditions,
                     ),
                   ),
                 );
@@ -282,13 +283,13 @@ class _SellPageState extends State<SellPage> {
               onApplied: (tabData, selected) {
                 final result = DropdownSelectorResult(
                     tabData: tabData, selected: selected);
-                debugPrint('onApplied: $result');
+                largePrint('onApplied: $result');
                 _handleSelectorApply(result);
                 final conditions = '${result.selected.flatten()}';
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
-                      l10n?.filterConditions(conditions) ?? conditions,
+                      l10n?.selectResult(conditions) ?? conditions,
                     ),
                   ),
                 );

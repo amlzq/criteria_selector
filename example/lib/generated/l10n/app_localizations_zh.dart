@@ -61,18 +61,18 @@ class AppLocalizationsZh extends AppLocalizations {
   String get more => '更多';
 
   @override
-  String get filterUpdated => '筛选条件已更新';
+  String get selectUpdated => '选择已更新';
 
   @override
   String get view => '查看';
 
   @override
-  String filterConditions(Object conditions) {
-    return '筛选条件：$conditions';
+  String selectResult(Object result) {
+    return '结果：$result';
   }
 
   @override
-  String get filterParseFailed => '筛选条件解析失败';
+  String get resultParseFailed => '结果解析失败';
 
   @override
   String get viewing => '查看中…';
@@ -192,18 +192,18 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get more => '更多';
 
   @override
-  String get filterUpdated => '筛选条件已更新';
+  String get selectUpdated => '选择已更新';
 
   @override
   String get view => '查看';
 
   @override
-  String filterConditions(Object conditions) {
-    return '筛选条件：$conditions';
+  String selectResult(Object result) {
+    return '结果：$result';
   }
 
   @override
-  String get filterParseFailed => '筛选条件解析失败';
+  String get resultParseFailed => '结果解析失败';
 
   @override
   String get viewing => '查看中…';
@@ -323,18 +323,18 @@ class AppLocalizationsZhHantHk extends AppLocalizationsZh {
   String get more => '更多';
 
   @override
-  String get filterUpdated => '篩選條件已更新';
+  String get selectUpdated => '選擇已更新';
 
   @override
   String get view => '查看';
 
   @override
-  String filterConditions(Object conditions) {
-    return '篩選條件：$conditions';
+  String selectResult(Object result) {
+    return '結果：$result';
   }
 
   @override
-  String get filterParseFailed => '篩選條件解析失敗';
+  String get resultParseFailed => '結果解析失敗';
 
   @override
   String get viewing => '查看中…';
@@ -454,18 +454,18 @@ class AppLocalizationsZhHantTw extends AppLocalizationsZh {
   String get more => '更多';
 
   @override
-  String get filterUpdated => '篩選條件已更新';
+  String get selectUpdated => '選擇已更新';
 
   @override
   String get view => '查看';
 
   @override
-  String filterConditions(Object conditions) {
-    return '篩選條件：$conditions';
+  String selectResult(Object result) {
+    return '結果：$result';
   }
 
   @override
-  String get filterParseFailed => '篩選條件解析失敗';
+  String get resultParseFailed => '結果解析失敗';
 
   @override
   String get viewing => '查看中…';

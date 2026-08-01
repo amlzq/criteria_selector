@@ -4,7 +4,8 @@ import 'package:criteria_selector/criteria_selector.dart';
 import 'package:flutter/material.dart';
 
 import '../generated/l10n/app_localizations.dart';
-import '../widgets/show_selected_result.dart';
+import '../log.dart';
+import '../widgets/show_select_result.dart';
 import 'house_filters_repository.dart';
 import 'house_repository.dart';
 import 'utils.dart';
@@ -142,7 +143,7 @@ class _MapPageState extends State<MapPage> {
     _filter = _dropdownSelectorResultParser(result);
     if (_filter == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n?.filterParseFailed ?? '')),
+        SnackBar(content: Text(l10n?.resultParseFailed ?? '')),
       );
       return;
     }
@@ -179,7 +180,7 @@ class _MapPageState extends State<MapPage> {
     _filter = _dropdownSelectorResultParser(result);
     if (_filter == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n?.filterParseFailed ?? '')),
+        SnackBar(content: Text(l10n?.resultParseFailed ?? '')),
       );
       return;
     }
@@ -266,13 +267,13 @@ class _MapPageState extends State<MapPage> {
             onChanged: (tabData, selected) {
               final result =
                   DropdownSelectorResult(tabData: tabData, selected: selected);
-              debugPrint('onChanged: $result');
+              largePrint('onChanged: $result');
               _handleSelectorChange(result);
             },
             onApplied: (tabData, selected) {
               final result =
                   DropdownSelectorResult(tabData: tabData, selected: selected);
-              debugPrint('onApplied: $result');
+              largePrint('onApplied: $result');
               _handleSelectorApply(result);
             },
             onReset: () {

@@ -13,18 +13,18 @@ DateTime? _lastShownAt;
 /// Shows a snack bar that displays the selected filter result.
 ///
 /// Tapping the "view" action opens a bottom sheet with the flattened
-/// [SelectorEntries] conditions.
+/// [SelectorEntries] result.
 ///
 /// Calls are throttled by [throttleInterval]: consecutive calls within the
 /// interval are ignored, which avoids stacking snack bars when [onChanged]
 /// fires frequently.
-void showSelectedResult(
+void showSelectResult(
   BuildContext context,
   SelectorEntries result, {
   Duration throttleInterval = _resultThrottleInterval,
 }) {
-  final conditions = '${result.flatten()}';
-  debugPrintLarge('conditions: $conditions');
+  final flattenResult = '${result.flatten()}';
+  largePrint('result.flatten: $flattenResult');
 
   final now = DateTime.now();
   if (_lastShownAt != null &&
@@ -37,7 +37,7 @@ void showSelectedResult(
 
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      content: Text(l10n?.filterUpdated ?? ''),
+      content: Text(l10n?.selectUpdated ?? ''),
       action: SnackBarAction(
         label: l10n?.view ?? '',
         onPressed: () {
@@ -52,7 +52,7 @@ void showSelectedResult(
                     padding: const EdgeInsets.all(16),
                     child: SingleChildScrollView(
                       child: SelectableText(
-                        l10n?.filterConditions(conditions) ?? conditions,
+                        l10n?.selectResult(flattenResult) ?? flattenResult,
                       ),
                     ),
                   ),
@@ -71,5 +71,5 @@ void showDropdownSelectorResult(
   BuildContext context,
   DropdownSelectorResult result,
 ) {
-  showSelectedResult(context, result.selected);
+  showSelectResult(context, result.selected);
 }

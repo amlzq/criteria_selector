@@ -4,7 +4,8 @@ import 'package:criteria_selector/criteria_selector.dart';
 import 'package:example/widgets/my_widgets.dart';
 import 'package:flutter/material.dart';
 
-import '../widgets/show_selected_result.dart';
+import '../log.dart';
+import '../widgets/show_select_result.dart';
 import 'house_filters_repository.dart';
 
 class DialogBottomSheetDemoPage extends StatefulWidget {
@@ -58,11 +59,11 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 // `SelectorEntriesExtension`, so they can be called directly.
                 if (result == null) return;
                 _filtersRepo.regionResult = result;
-                showSelectedResult(context, result);
-                debugPrint('region first: ${result.firstSelectedId}');
+                showSelectResult(context, result);
+                largePrint('region first: ${result.firstSelectedId}');
                 final regionFirst = result.firstSelectedId;
                 if (regionFirst != null) {
-                  debugPrint(
+                  largePrint(
                       'region cascading: ${result.cascadingPairsOf(regionFirst)}');
                 }
               },
@@ -93,11 +94,11 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 );
                 if (result == null) return;
                 _filtersRepo.buyPriceResult = result;
-                showSelectedResult(context, result);
-                debugPrint('price first: ${result.firstSelectedId}');
-                debugPrint(
+                showSelectResult(context, result);
+                largePrint('price first: ${result.firstSelectedId}');
+                largePrint(
                     'price total ranges: ${result.childRangesOf('total')}');
-                debugPrint(
+                largePrint(
                     'price unit ranges: ${result.childRangesOf('unit')}');
               },
               child: const Text('Show Price Selector'),
@@ -129,8 +130,8 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 );
                 if (result == null) return;
                 _filtersRepo.floorPlanBuyResult = result;
-                showSelectedResult(context, result);
-                debugPrint('result: $result');
+                showSelectResult(context, result);
+                largePrint('result: $result');
               },
               child: const Text('Show FloorPlan Selector'),
             ),
@@ -159,8 +160,8 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 );
                 if (result == null) return;
                 _filtersRepo.moreBuyResult = result;
-                showSelectedResult(context, result);
-                debugPrint('result: $result');
+                showSelectResult(context, result);
+                largePrint('result: $result');
               },
               child: const Text('Show More Selector'),
             ),
@@ -194,8 +195,8 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 );
                 if (result == null) return;
                 _filtersRepo.sortBuyResult = result;
-                showSelectedResult(context, result);
-                debugPrint('sort id: ${result.firstSelectedId}');
+                showSelectResult(context, result);
+                largePrint('sort id: ${result.firstSelectedId}');
               },
               child: const Text('Show Sort Selector'),
             ),
@@ -222,11 +223,11 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 );
                 if (result == null) return;
                 _filtersRepo.regionResult = result;
-                showSelectedResult(context, result);
-                debugPrint('region first: ${result.firstSelectedId}');
+                showSelectResult(context, result);
+                largePrint('region first: ${result.firstSelectedId}');
                 final regionFirst = result.firstSelectedId;
                 if (regionFirst != null) {
-                  debugPrint(
+                  largePrint(
                       'region cascading: ${result.cascadingPairsOf(regionFirst)}');
                 }
               },
@@ -257,11 +258,11 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 );
                 if (result == null) return;
                 _filtersRepo.buyPriceResult = result;
-                showSelectedResult(context, result);
-                debugPrint('price first: ${result.firstSelectedId}');
-                debugPrint(
+                showSelectResult(context, result);
+                largePrint('price first: ${result.firstSelectedId}');
+                largePrint(
                     'price total ranges: ${result.childRangesOf('total')}');
-                debugPrint(
+                largePrint(
                     'price unit ranges: ${result.childRangesOf('unit')}');
               },
               child: const Text('Show Price Selector'),
@@ -291,8 +292,8 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 );
                 if (result == null) return;
                 _filtersRepo.floorPlanBuyResult = result;
-                showSelectedResult(context, result);
-                debugPrint('result: $result');
+                showSelectResult(context, result);
+                largePrint('result: $result');
               },
               child: const Text('Show FloorPlan Selector'),
             ),
@@ -323,8 +324,8 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 );
                 if (result == null) return;
                 _filtersRepo.moreBuyResult = result;
-                showSelectedResult(context, result);
-                debugPrint('result: $result');
+                showSelectResult(context, result);
+                largePrint('result: $result');
               },
               child: const Text('Show More Selector'),
             ),
@@ -346,8 +347,8 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 );
                 if (result == null) return;
                 _filtersRepo.sortBuyResult = result;
-                showSelectedResult(context, result);
-                debugPrint('sort id: ${result.firstSelectedId}');
+                showSelectResult(context, result);
+                largePrint('sort id: ${result.firstSelectedId}');
               },
               child: const Text('Show Sort Selector'),
             ),

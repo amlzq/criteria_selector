@@ -61,18 +61,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get more => 'More';
 
   @override
-  String get filterUpdated => 'Filters updated';
+  String get selectUpdated => 'Selection updated';
 
   @override
   String get view => 'View';
 
   @override
-  String filterConditions(Object conditions) {
-    return 'Filters: $conditions';
+  String selectResult(Object result) {
+    return 'Result: $result';
   }
 
   @override
-  String get filterParseFailed => 'Failed to parse filters';
+  String get resultParseFailed => 'Failed to parse result';
 
   @override
   String get viewing => 'Loading...';

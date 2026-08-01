@@ -206,11 +206,11 @@ abstract class AppLocalizations {
   /// **'More'**
   String get more;
 
-  /// No description provided for @filterUpdated.
+  /// No description provided for @selectUpdated.
   ///
   /// In en, this message translates to:
-  /// **'Filters updated'**
-  String get filterUpdated;
+  /// **'Selection updated'**
+  String get selectUpdated;
 
   /// No description provided for @view.
   ///
@@ -218,17 +218,17 @@ abstract class AppLocalizations {
   /// **'View'**
   String get view;
 
-  /// No description provided for @filterConditions.
+  /// No description provided for @selectResult.
   ///
   /// In en, this message translates to:
-  /// **'Filters: {conditions}'**
-  String filterConditions(Object conditions);
+  /// **'Result: {result}'**
+  String selectResult(Object result);
 
-  /// No description provided for @filterParseFailed.
+  /// No description provided for @resultParseFailed.
   ///
   /// In en, this message translates to:
-  /// **'Failed to parse filters'**
-  String get filterParseFailed;
+  /// **'Failed to parse result'**
+  String get resultParseFailed;
 
   /// No description provided for @viewing.
   ///

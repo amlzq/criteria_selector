@@ -3,7 +3,8 @@ import 'package:example/widgets/my_widgets.dart';
 import 'package:flutter/material.dart';
 
 import '../generated/l10n/app_localizations.dart';
-import '../widgets/show_selected_result.dart';
+import '../log.dart';
+import '../widgets/show_select_result.dart';
 import 'house_filters_repository.dart';
 import 'house_repository.dart';
 import 'utils.dart';
@@ -126,7 +127,7 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
     _filter = _parseFilter(domain, selected);
     if (_filter == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n?.filterParseFailed ?? '')),
+        SnackBar(content: Text(l10n?.resultParseFailed ?? '')),
       );
       return;
     }
@@ -137,7 +138,7 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
     _filter = _parseFilter(domain, selected);
     if (_filter == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n?.filterParseFailed ?? '')),
+        SnackBar(content: Text(l10n?.resultParseFailed ?? '')),
       );
       return;
     }
@@ -166,14 +167,14 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
               },
             ),
             onChanged: (selected) {
-              debugPrint('onChanged: $selected');
+              largePrint('onChanged: $selected');
               _handleSelectorChange('region', selected);
-              showSelectedResult(context, selected);
+              showSelectResult(context, selected);
             },
             onApplied: (selected) {
-              debugPrint('onApplied: $selected');
+              largePrint('onApplied: $selected');
               _handleSelectorApply('region', selected);
-              showSelectedResult(context, selected);
+              showSelectResult(context, selected);
             },
             onReset: () {
               debugPrint('onReset');
@@ -210,14 +211,14 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                 applyText: AppLocalizations.of(context)?.apply ?? '',
               ),
               onChanged: (selected) {
-                debugPrint('onChanged: $selected');
+                largePrint('onChanged: $selected');
                 _handleSelectorChange('price', selected);
-                showSelectedResult(context, selected);
+                showSelectResult(context, selected);
               },
               onApplied: (selected) {
-                debugPrint('onApplied: $selected');
+                largePrint('onApplied: $selected');
                 _handleSelectorApply('price', selected);
-                showSelectedResult(context, selected);
+                showSelectResult(context, selected);
               },
               onReset: () {
                 debugPrint('onReset');
@@ -241,14 +242,14 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                 sideBarTheme: const SelectorSideBarTheme(width: 98),
               ),
               onChanged: (selected) {
-                debugPrint('onChanged: $selected');
+                largePrint('onChanged: $selected');
                 _handleSelectorChange('floorplan', selected);
-                showSelectedResult(context, selected);
+                showSelectResult(context, selected);
               },
               onApplied: (selected) {
-                debugPrint('onApplied: $selected');
+                largePrint('onApplied: $selected');
                 _handleSelectorApply('floorplan', selected);
-                showSelectedResult(context, selected);
+                showSelectResult(context, selected);
               },
               onReset: () {
                 debugPrint('onReset');
@@ -270,14 +271,14 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                 },
               ),
               onChanged: (selected) {
-                debugPrint('onChanged: $selected');
+                largePrint('onChanged: $selected');
                 _handleSelectorChange('sort', selected);
-                showSelectedResult(context, selected);
+                showSelectResult(context, selected);
               },
               onApplied: (selected) {
-                debugPrint('onApplied: $selected');
+                largePrint('onApplied: $selected');
                 _handleSelectorApply('sort', selected);
-                showSelectedResult(context, selected);
+                showSelectResult(context, selected);
               },
               onReset: () {
                 debugPrint('onReset');

@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 import '../generated/l10n/app_localizations.dart';
 import '../log.dart';
-import '../widgets/show_selected_result.dart';
+import '../widgets/show_select_result.dart';
 import 'house_repository.dart';
 import 'utils.dart';
 
@@ -159,7 +159,7 @@ class _RentPageState extends State<RentPage> {
     _filter = _dropdownSelectorResultParser(result);
     if (_filter == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n?.filterParseFailed ?? '')),
+        SnackBar(content: Text(l10n?.resultParseFailed ?? '')),
       );
       return;
     }
@@ -194,7 +194,7 @@ class _RentPageState extends State<RentPage> {
     _filter = _dropdownSelectorResultParser(result);
     if (_filter == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n?.filterParseFailed ?? '')),
+        SnackBar(content: Text(l10n?.resultParseFailed ?? '')),
       );
       return;
     }
@@ -314,22 +314,22 @@ class _RentPageState extends State<RentPage> {
                 ),
               ],
               onSelectorShowed: (DropdownTabData tabData) {
-                debugPrint('onShowed: ${tabData.label}');
+                largePrint('onShowed: ${tabData.label}');
               },
               onSelectorHidden: (DropdownTabData tabData) {
-                debugPrint('onHidden: ${tabData.label}');
+                largePrint('onHidden: ${tabData.label}');
               },
               onChanged: (tabData, selected) {
                 final result = DropdownSelectorResult(
                     tabData: tabData, selected: selected);
-                debugPrintLarge('onChanged: $result');
+                largePrint('onChanged: $result');
                 _handleSelectorChange(result);
                 showDropdownSelectorResult(context, result);
               },
               onApplied: (tabData, selected) {
                 final result = DropdownSelectorResult(
                     tabData: tabData, selected: selected);
-                debugPrintLarge('onApplied: $result');
+                largePrint('onApplied: $result');
                 _handleSelectorApply(result);
                 if (result.tabIndex == 2) {
                   _floorPlanApplyTextDebounce?.cancel();
