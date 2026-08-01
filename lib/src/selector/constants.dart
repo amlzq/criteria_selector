@@ -27,9 +27,6 @@ typedef DropdownSelectorResultCallback = void Function(
 /// Callback invoked with the currently selected entries.
 typedef SelectorCallback = void Function(SelectorEntries selected);
 
-/// Callback invoked when an item in a list/grid is tapped.
-typedef ItemTapCallback<T extends SelectorEntry> = Function(int index, T entry);
-
 /// Tab-agnostic change callback used internally by [DropdownSelectorController].
 ///
 /// Unlike [DropdownSelectorResultCallback], it does not expose tab metadata and
@@ -57,10 +54,6 @@ typedef DropdownTabLabelGetter = String Function(
 /// [DropdownTabData.labelLoader] / [DropdownTab.labelLoader] /
 /// [DropdownSelectorButton.labelLoader].
 typedef SelectorLabelLoader = String Function(SelectorEntries selected);
-
-/// Callback invoked when a custom range entry is tapped.
-typedef CustomRangeListener = void Function(
-    String categoryId, String minValue, String maxValue);
 
 /// Badge rendering style.
 enum BadgeStyle {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../constants.dart';
 import '../selector_entry.dart';
 import '../selector_theme.dart';
 import '../selector_theme_data.dart';
+import 'constants.dart';
 import 'skeleton_box.dart';
 import 'tab_bar_theme.dart';
 

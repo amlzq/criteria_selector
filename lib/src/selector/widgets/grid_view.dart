@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../constants.dart';
 import '../selector_entry.dart';
+import 'constants.dart';
 import 'field_tile.dart';
 import 'field_tile_theme.dart';
 import 'grid_tile.dart';
@@ -15,7 +16,6 @@ import 'skeleton_box.dart';
 class SelectorGridView<T extends SelectorEntry> extends StatefulWidget {
   const SelectorGridView({
     super.key,
-    // required this.index,
     required this.crossAxisCount,
     this.mainAxisSpacing = 0.0,
     this.crossAxisSpacing = 0.0,
@@ -32,7 +32,6 @@ class SelectorGridView<T extends SelectorEntry> extends StatefulWidget {
     this.toText = '-',
   });
 
-  // final int index;
   /// The category this grid belongs to, used to render its title.
   ///
   /// If provided and [showTitle] is true, the category's name is displayed as

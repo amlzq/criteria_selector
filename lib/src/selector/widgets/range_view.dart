@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../constants.dart';
 import '../selector_entry.dart';
+import 'constants.dart';
 import 'field_tile.dart';
 import 'range_slider.dart';
 

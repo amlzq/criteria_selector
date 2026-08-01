@@ -5,6 +5,7 @@ import '../selector_entry.dart';
 import '../selector_theme.dart';
 import '../selector_theme_data.dart';
 import 'chip_bar_theme.dart';
+import 'constants.dart';
 import 'extensions.dart';
 
 /// Default height for [SelectorChipBar].
