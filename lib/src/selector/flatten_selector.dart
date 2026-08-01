@@ -13,8 +13,6 @@ import 'widgets/widgets.dart';
 /// Tapping the left side drives scrolling on the right; scrolling the right side highlights the left side.
 /// Two-dimensional structured data.
 ///
-/// Suitable for "layout type", "more", etc.
-///
 /// Behavior notes:
 /// - This selector is fixed to a two-level structure: category -> children.
 /// - Child selection mode is determined per category by [SelectorCategoryEntry.selectionMode].
@@ -242,10 +240,6 @@ class FlattenSelectorState extends State<FlattenSelector> {
     });
   }
 
-  void _focusListener(String categoryId, String minValue, String maxValue) {
-    _customItemSelection(categoryId, minValue, maxValue);
-  }
-
   void _customItemSelection(
       String categoryId, String minValue, String maxValue) {
     var minInt = int.tryParse(minValue) ?? 0;
@@ -374,7 +368,10 @@ class FlattenSelectorState extends State<FlattenSelector> {
                           selectedEntries: selectedEntries,
                           onItemTap: (index, item) =>
                               _onTerminalItemTap(item as SelectorChildEntry),
-                          focusListener: _focusListener,
+                          focusListener: (categoryId, minValue, maxValue) {
+                            _customItemSelection(
+                                categoryId, minValue, maxValue);
+                          },
                           padding:
                               EdgeInsets.only(top: 18, bottom: isLast ? 18 : 0),
                         );

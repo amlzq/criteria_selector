@@ -129,7 +129,7 @@ class SelectorRangeEntry<N, E> extends SelectorChildEntry<E> {
 
   @override
   String toString() =>
-      'SelectorRangeEntry(id: $id, parentId: $parentId, name: $name, min: $min, max: $max, divisions: $divisions)';
+      'SelectorRangeEntry(id: $id, parentId: $parentId, name: $name, min: $min, max: $max)';
 }
 
 extension SelectorRangeEntryExt on SelectorRangeEntry {

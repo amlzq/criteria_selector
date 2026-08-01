@@ -12,7 +12,6 @@ import 'widgets/widgets.dart';
 /// Standard list view
 /// One-dimensional structured data
 ///
-/// Suitable for "sorting", etc.
 class ListSelector extends StatefulWidget {
   final ListSelectorDelegate delegate;
   final List<SelectorEntry> entries;
@@ -86,10 +85,6 @@ class ListSelectorState extends State<ListSelector> {
   SelectorCategoryEntry? get selectedCategory =>
       widget.entries.elementAtOrNull(_tempSelectedCategoryIndex)
           as SelectorCategoryEntry;
-
-  void _focusListener(String categoryId, String minValue, String maxValue) {
-    _customItemSelection(categoryId, minValue, maxValue);
-  }
 
   void _customItemSelection(
       String categoryId, String minValue, String maxValue) {
@@ -198,11 +193,8 @@ class ListSelectorState extends State<ListSelector> {
                               onItemTap: (index, item) => _onTerminalItemTap(
                                   item as SelectorChildEntry),
                               inputListener: (categoryId, minValue, maxValue) {
-                                _customItemSelection(
-                                  categoryId ?? category.id,
-                                  minValue,
-                                  maxValue,
-                                );
+                                _customItemSelection(categoryId ?? category.id,
+                                    minValue, maxValue);
                               },
                               toText: toText,
                             ),
@@ -227,7 +219,13 @@ class ListSelectorState extends State<ListSelector> {
                               selectedEntries: selectedEntries,
                               onItemTap: (index, item) => _onTerminalItemTap(
                                   item as SelectorChildEntry),
-                              focusListener: _focusListener,
+                              focusListener: (categoryId, minValue, maxValue) {
+                                _customItemSelection(
+                                  categoryId,
+                                  minValue,
+                                  maxValue,
+                                );
+                              },
                               toText: toText,
                             ),
                           SelectorChipLayout() => SelectorChipBar(
@@ -248,7 +246,6 @@ class ListSelectorState extends State<ListSelector> {
                                   chipBarTheme?.selectedLabelStyle,
                               onItemTap: (index, item) => _onTerminalItemTap(
                                   item as SelectorChildEntry),
-                              // focusListener: _focusListener,
                             ),
                           SelectorRangeLayout(:final toText) =>
                             SelectorRangeView(

@@ -14,8 +14,6 @@ import 'widgets/widgets.dart';
 /// Horizontal layout: category list on the left and cascading item lists on the right.
 /// Tree-structured data with unlimited cascading levels.
 ///
-/// Suitable for multi-level structures like "district" and "subway".
-///
 /// Behavior notes:
 /// - Supports arbitrary depth (category -> child -> grandchild -> ...).
 /// - Maintains a focused item per level to drive the cascade columns.

@@ -11,8 +11,6 @@ import 'widgets/widgets.dart';
 /// Vertical layout: category tabs on top and a grid of items below.
 /// Two-dimensional structured data.
 ///
-/// Suitable for "price range", etc.
-///
 /// Behavior notes:
 /// - This selector is fixed to a two-level structure: category -> children.
 /// - If a category contains an "Any" child entry, it may be selected by default.
@@ -158,11 +156,7 @@ class GridSelectorState extends State<GridSelector> {
     controller?.reset();
   }
 
-  void _focusListener(String categoryId, String minValue, String maxValue) {
-    _customEntrySelection(categoryId, minValue, maxValue);
-  }
-
-  void _customEntrySelection(
+  void _customItemSelection(
       String categoryId, String minValue, String maxValue) {
     var minInt = int.tryParse(minValue) ?? 0;
     var maxInt = int.tryParse(maxValue) ?? 0;
@@ -200,8 +194,9 @@ class GridSelectorState extends State<GridSelector> {
         fieldVariant: delegate.fieldTileTheme?.variant,
         entries: entries,
         selectedEntries: selectedEntries,
-        // inputListener: _inputListener,
-        focusListener: _focusListener,
+        focusListener: (categoryId, minValue, maxValue) {
+          _customItemSelection(categoryId, minValue, maxValue);
+        },
         onItemTap: (index, item) =>
             _onTerminalItemTap(item as SelectorChildEntry),
       );
