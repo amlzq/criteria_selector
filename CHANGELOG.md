@@ -10,6 +10,8 @@
 
 * **DEPRECATION** `SelectorCategoryEntry` previously exposed three mutually-exclusive, nullable fields `listConfig` / `gridConfig` / `chipConfig`. They are replaced by a single `layout` property of the new sealed `SelectorLayout` type. The old fields remain available as deprecated getters/constructor parameters that map to `SelectorListLayout` / `SelectorGridLayout` / `SelectorChipLayout` and will be removed in a future major version.
 
+* **DEPRECATION** rename `SelectorBox.onChangeTap` → `SelectorBox.onChanged`. The old `onChangeTap` argument and `onChangeTap` getter are retained as deprecated members for backward compatibility and will be removed in a future major version. Passing both `onChanged` and `onChangeTap` triggers an assertion.
+
 * **BREAKING** remove the deprecated `Dropselect*` public API aliases (introduced in 0.2.0). Use the `Dropdown*` / `DropdownSelector*` names instead.
 
 * **BREAKING** remove the deprecated `Selector` / `CascadingSelector` / `ListSelector` / `GridSelector` / `FlattenSelector` type aliases and the `DropdownSelectorBar.selectors` parameter (introduced in 0.2.0). Use the `*Delegate` types and `selectorDelegates` parameter instead.

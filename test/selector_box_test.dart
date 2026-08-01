@@ -52,7 +52,7 @@ void main() {
       expect(find.text('entries:1'), findsOneWidget);
     });
 
-    testWidgets('forwards onChangeTap through an internal controller',
+    testWidgets('forwards onChanged through an internal controller',
         (tester) async {
       SelectorController? captured;
       var changed = false;
@@ -68,7 +68,7 @@ void main() {
                   return const SizedBox();
                 },
               ),
-              onChangeTap: (_) => changed = true,
+              onChanged: (_) => changed = true,
             ),
           ),
         ),

@@ -151,7 +151,7 @@ class _BoxPageState extends State<BoxPage> {
                       return MyCheckbox(value: selected);
                     },
                   ),
-                  onChangeTap: (selected) {
+                  onChanged: (selected) {
                     largePrint('onChangeTap: $selected');
                     _handleRegionChange(selected);
                     showSelectResult(context, selected);
@@ -183,7 +183,7 @@ class _BoxPageState extends State<BoxPage> {
                     ),
                     applyText: AppLocalizations.of(context)?.apply ?? '',
                   ),
-                  onChangeTap: (selected) {
+                  onChanged: (selected) {
                     largePrint('onChangeTap: $selected');
                     _handlePriceChange(selected);
                     showSelectResult(context, selected);
@@ -209,7 +209,7 @@ class _BoxPageState extends State<BoxPage> {
                     mainAxisSpacing: 8,
                     sideBarTheme: const SelectorSideBarTheme(width: 98),
                   ),
-                  onChangeTap: (selected) {
+                  onChanged: (selected) {
                     largePrint('onChangeTap: $selected');
                     _handleFloorPlanChange(selected);
                     showSelectResult(context, selected);
@@ -233,7 +233,7 @@ class _BoxPageState extends State<BoxPage> {
                       return MyRadio(value: selected);
                     },
                   ),
-                  onChangeTap: (selected) {
+                  onChanged: (selected) {
                     largePrint('onChangeTap: $selected');
                     _handleSortChange(selected);
                     showSelectResult(context, selected);

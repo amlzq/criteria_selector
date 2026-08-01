@@ -263,7 +263,7 @@ Widget buildPhoneScreen(
 /// callback returns.
 ///
 /// [SelectorBox] applies immediately and hides the action bar, so its
-/// [SelectorBox.onChangeTap] is mirrored into both fields. [showSelector] /
+/// [SelectorBox.onChanged] is mirrored into both fields. [showSelector] /
 /// [showModalBottomSelector] deliver their result through the returned
 /// [Future], which is shown as the applied value (no `onChanged` exists for
 /// these entry points).
@@ -344,7 +344,7 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
                   delegate: widget.delegate,
                   margin:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  onChangeTap: (selected) {
+                  onChanged: (selected) {
                     // SelectorBox applies immediately: change == apply.
                     _onChanged(selected);
                     _onApplied(selected);

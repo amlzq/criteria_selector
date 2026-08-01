@@ -55,6 +55,37 @@ SelectorCategoryEntry(
 | `SelectorGridConfig` | `SelectorGridLayout` |
 | `SelectorChipConfig` | `SelectorChipLayout` |
 
+### `SelectorBox.onChangeTap` renamed to `SelectorBox.onChanged`
+
+**Description**
+`SelectorBox` exposes its selection callback under the new name `onChanged`.
+The previous `onChangeTap` argument and the `onChangeTap` getter are now
+deprecated but still supported for backward compatibility, and will be removed
+in a future major version. Passing both `onChanged` and `onChangeTap` triggers
+an assertion, so migrate existing call sites to `onChanged` to clear the
+deprecation warning.
+
+**Before → After**
+
+```dart
+// Before
+SelectorBox(
+  controller: controller,
+  onChangeTap: (SelectorEntries selected) { /* ... */ },
+);
+
+// After
+SelectorBox(
+  controller: controller,
+  onChanged: (SelectorEntries selected) { /* ... */ },
+);
+```
+
+| Old | New |
+| --- | --- |
+| `SelectorBox.onChangeTap` (argument) | `SelectorBox.onChanged` |
+| `SelectorBox.onChangeTap` (getter) | `SelectorBox.onChanged` |
+
 ## MIGRATE TO 0.3.0
 
 ### Rename i18n classes (drop the redundant `Criteria` prefix)

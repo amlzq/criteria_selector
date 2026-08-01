@@ -131,7 +131,7 @@ class _BoxPageState extends State<BoxPage> {
                       return MyCheckbox(value: selected);
                     },
                   ),
-                  onChangeTap: (selected) {
+                  onChanged: (selected) {
                     largePrint('onChangeTap: $selected');
                     _handleNeighborhoodChange(selected);
                     showSelectResult(context, selected);
@@ -161,7 +161,7 @@ class _BoxPageState extends State<BoxPage> {
                     ),
                     applyText: AppLocalizations.of(context)?.apply ?? '',
                   ),
-                  onChangeTap: (selected) {
+                  onChanged: (selected) {
                     largePrint('onChangeTap: $selected');
                     _handlePriceChange(selected);
                     showSelectResult(context, selected);
@@ -182,7 +182,7 @@ class _BoxPageState extends State<BoxPage> {
                     resetEntriesLoader: _filtersRepo.fetchPriceRangeResetData,
                     selectionMode: SelectionMode.multiple,
                   ),
-                  onChangeTap: (selected) {
+                  onChanged: (selected) {
                     largePrint('onChangeTap: $selected');
                     _handlePriceChange(selected);
                     showSelectResult(context, selected);
@@ -206,7 +206,7 @@ class _BoxPageState extends State<BoxPage> {
                     mainAxisSpacing: 8,
                     sideBarTheme: const SelectorSideBarTheme(width: 110),
                   ),
-                  onChangeTap: (selected) {
+                  onChanged: (selected) {
                     largePrint('onChangeTap: $selected');
                     _handleRoomsChange(selected);
                     showSelectResult(context, selected);
@@ -229,7 +229,7 @@ class _BoxPageState extends State<BoxPage> {
                       return MyRadio(value: selected);
                     },
                   ),
-                  onChangeTap: (selected) {
+                  onChanged: (selected) {
                     largePrint('onChangeTap: $selected');
                     _handleSortChange(selected);
                     showSelectResult(context, selected);

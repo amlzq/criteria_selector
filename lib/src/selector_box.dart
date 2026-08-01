@@ -16,7 +16,7 @@ import 'selector/selector_panel.dart';
 ///
 /// Inline selectors do not show the apply/reset action bar: [SelectorBox]
 /// wraps its panel in a [SelectorActionBarVisibility] scope that hides it, so
-/// selections apply immediately through [onChangeTap]. The action bar is still
+/// selections apply immediately through [onChanged]. The action bar is still
 /// shown by the modal hosts ([showSelector] / [showModalBottomSelector]), which
 /// do not provide that scope. The [delegate]'s
 /// [SelectorDelegate.actionBarBuilder] only customizes the bar's UI and has no
@@ -57,8 +57,14 @@ class SelectorBox extends StatefulWidget {
     double? height,
     BoxConstraints? constraints,
     this.margin,
-    this.onChangeTap,
+    SelectorCallback? onChanged,
+    @Deprecated(
+        'Use onChanged instead. This parameter will be removed in a future major version.')
+    SelectorCallback? onChangeTap,
   })  : assert(maxHeightFactor > 0 && maxHeightFactor <= 1),
+        assert(onChanged == null || onChangeTap == null,
+            'Use onChanged only; onChangeTap is deprecated.'),
+        onChanged = onChanged ?? onChangeTap,
         assert(margin == null || margin.isNonNegative),
         assert(padding == null || padding.isNonNegative),
         assert(decoration == null || decoration.debugAssertIsValid()),
@@ -83,7 +89,15 @@ class SelectorBox extends StatefulWidget {
   final SelectorController? controller;
 
   /// Fired when the selection changes.
-  final SelectorCallback? onChangeTap;
+  final SelectorCallback? onChanged;
+
+  /// Fired when the selection changes.
+  ///
+  /// @Deprecated Use [onChanged] instead. This getter is retained only for
+  /// backward compatibility and will be removed in a future major version.
+  @Deprecated(
+      'Use onChanged instead. This getter will be removed in a future major version.')
+  SelectorCallback? get onChangeTap => onChanged;
 
   /// Caps the selector's height to this fraction of the screen height when it
   /// is embedded in an unbounded context (e.g. a [Column] with
@@ -223,10 +237,8 @@ class _SelectorBoxState extends State<SelectorBox> {
       child: SelectorPanel(
         delegate: widget.delegate,
         controller: _controller,
-        onChangeTap: widget.onChangeTap,
-        // 框内无应用栏（hidden: true），选择即生效：单选/immediate 走 apply 路径，
-        // 复用 onChangeTap 以同时覆盖 change 与 apply 两路回调（二者互斥）。
-        onApplyTap: widget.onChangeTap,
+        onChangeTap: widget.onChanged,
+        onApplyTap: widget.onChanged,
       ),
     );
 
