@@ -359,6 +359,13 @@ class SelectorUtils {
   /// [selectedItemsPerLevel] represents selected entries per depth level. Nodes
   /// not present at the current [level] are removed, and the process continues
   /// recursively for remaining nodes.
+  ///
+  /// When clipping the children of an entry, only the selected entries whose
+  /// [parentId] matches the current entry's [id] are considered. This prevents
+  /// selected children from sibling categories (which share the same level but
+  /// belong to a different parent) from leaking into the wrong subtree, and
+  /// avoids false matches by id alone (e.g. `custom`/`any` exist under every
+  /// category).
   static void clippingTree(
     SelectorEntries? entries,
     List<SelectorEntries> selectedItemsPerLevel,
@@ -411,10 +418,21 @@ class SelectorUtils {
 
     if (level + 1 >= selectedItemsPerLevel.length) return;
     for (var item in entries) {
+      // Filter the next-level selection to entries that actually belong to
+      // `item`'s subtree before recursing, so clipping only removes nodes that
+      // are not selected under this specific parent.
+      final filteredPerLevel = List<SelectorEntries>.from(selectedItemsPerLevel);
+      final nextLevel = level + 1;
+      if (nextLevel < filteredPerLevel.length) {
+        filteredPerLevel[nextLevel] = filteredPerLevel[nextLevel]
+            .where((e) => e is SelectorCategoryEntry ||
+                (e is SelectorChildEntry && e.parentId == item.id))
+            .toSet();
+      }
       clippingTree(
         item.children,
-        selectedItemsPerLevel,
-        level + 1,
+        filteredPerLevel,
+        nextLevel,
         selectedHeaderEntries,
         selectedFooterEntries,
       );
@@ -428,6 +446,23 @@ class SelectorUtils {
     Map<String, SelectorEntries>? selectedHeaderEntries,
     Map<String, SelectorEntries>? selectedFooterEntries,
   }) {
+    // Returns the selected entries at [level] that belong to [parent]'s
+    // subtree. Root-level category entries are always kept (they have no
+    // parentId), while child entries are matched by [parentId] == parent.id.
+    // This is the key fix for multi-category scenarios: without it, the whole
+    // level's selection set is used, so a selected child under one category
+    // (e.g. `list_price`'s custom range) would leak into another category's
+    // (e.g. `monthly_payment`'s) subtree during cloning, and id-only matches
+    // (`custom`/`any` exist under every category) would produce wrong results.
+    SelectorEntries selectedForParent(SelectorEntry parent, int level) {
+      final all = selectedItemsPerLevel.elementAtOrNull(level);
+      if (all == null || all.isEmpty) return {};
+      return all
+          .where((e) => e is SelectorCategoryEntry ||
+              (e is SelectorChildEntry && e.parentId == parent.id))
+          .toSet();
+    }
+
     SelectorEntry cloneEntryAtLevel(SelectorEntry entry, int level) {
       Set<SelectorEntry>? clonedChildren;
       final children = entry.children;
@@ -440,7 +475,7 @@ class SelectorUtils {
           clonedChildren =
               deepCloneSelectedSubtree ? deepCloneEntries(children) : null;
         } else {
-          final selectedNext = selectedItemsPerLevel[nextLevel];
+          final selectedNext = selectedForParent(entry, nextLevel);
           if (selectedNext.isEmpty) {
             clonedChildren =
                 deepCloneSelectedSubtree ? deepCloneEntries(children) : null;
