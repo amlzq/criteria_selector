@@ -189,7 +189,7 @@ class ListSelectorState extends State<ListSelector> {
                         titlePadding: const EdgeInsets.symmetric(vertical: 10),
                         initiallyExpanded: true,
                         child: switch (layout) {
-                          SelectorListLayout() => SelectorListView(
+                          SelectorListLayout(:final toText) => SelectorListView(
                               key: ValueKey('category_$index'),
                               category: category,
                               showTitle: false,
@@ -204,12 +204,14 @@ class ListSelectorState extends State<ListSelector> {
                                   maxValue,
                                 );
                               },
+                              toText: toText,
                             ),
                           SelectorGridLayout(
                             :final crossAxisCount,
                             :final mainAxisSpacing,
                             :final crossAxisSpacing,
                             :final childAspectRatio,
+                            :final toText,
                           ) =>
                             SelectorGridView(
                               key: ValueKey('category_$index'),
@@ -226,6 +228,7 @@ class ListSelectorState extends State<ListSelector> {
                               onItemTap: (index, item) => _onTerminalItemTap(
                                   item as SelectorChildEntry),
                               focusListener: _focusListener,
+                              toText: toText,
                             ),
                           SelectorChipLayout() => SelectorChipBar(
                               key: ValueKey('category_$index'),
@@ -247,11 +250,12 @@ class ListSelectorState extends State<ListSelector> {
                                   item as SelectorChildEntry),
                               // focusListener: _focusListener,
                             ),
-                          SelectorRangeLayout() => SelectorRangeView(
+                          SelectorRangeLayout(:final toText) =>
+                            SelectorRangeView(
                               key: ValueKey('category_$index'),
                               category: category,
                               showTitle: false,
-                              layout: layout,
+                              toText: toText,
                               entries: entries,
                               selectedEntries: selectedEntries,
                               focusListener: (categoryId, minValue, maxValue) {

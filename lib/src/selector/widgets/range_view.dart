@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../constants.dart';
 import '../selector_entry.dart';
-import '../selector_layout.dart';
 import 'field_tile.dart';
 import 'range_slider.dart';
 
@@ -22,10 +21,10 @@ import 'range_slider.dart';
 class SelectorRangeView extends StatefulWidget {
   const SelectorRangeView({
     super.key,
-    required this.category,
+    this.category,
     required this.entries,
-    required this.selectedEntries,
-    required this.layout,
+    this.selectedEntries,
+    this.toText = '-',
     this.focusListener,
     this.minController,
     this.maxController,
@@ -42,7 +41,10 @@ class SelectorRangeView extends StatefulWidget {
 
   /// The category that owns the layout; supplies the [SelectorRangeEntry]
   /// to render via [SelectorCategoryEntryExtension.firstCustomOrNull].
-  final SelectorCategoryEntry category;
+  ///
+  /// When null, the view falls back to [entries] to locate a custom
+  /// [SelectorRangeEntry].
+  final SelectorCategoryEntry? category;
 
   /// The full child-entry list, used as a fallback to locate a custom
   /// [SelectorRangeEntry] when [category] does not provide one.
@@ -52,8 +54,8 @@ class SelectorRangeView extends StatefulWidget {
   /// entry's previous min/max on first build.
   final SelectorEntries? selectedEntries;
 
-  /// Layout configuration (e.g. `showTitle`, `toText`).
-  final SelectorRangeLayout layout;
+  /// Text rendered between the two text fields (default: `'-'`).
+  final String toText;
 
   /// Called when the range changes, mirroring the
   /// [CustomRangeListener] signature used elsewhere in the package.
@@ -183,7 +185,7 @@ class _SelectorRangeViewState extends State<SelectorRangeView> {
   }
 
   SelectorRangeEntry? _findEntry() {
-    final fromCategory = widget.category.firstCustomOrNull;
+    final fromCategory = widget.category?.firstCustomOrNull;
     if (fromCategory != null) return fromCategory;
     for (final e in widget.entries) {
       if (e is SelectorRangeEntry && e.isCustom) return e;
@@ -278,7 +280,7 @@ class _SelectorRangeViewState extends State<SelectorRangeView> {
     final cb = widget.focusListener;
     if (cb == null) return;
     cb(
-      widget.category.id,
+      widget.category?.id ?? '',
       _toEmitText(range.start, _atMinExtreme),
       _toEmitText(range.end, _atMaxExtreme),
     );
@@ -336,7 +338,7 @@ class _SelectorRangeViewState extends State<SelectorRangeView> {
       return const SizedBox.shrink();
     }
     final entry = _findEntry();
-    final showTitle = widget.showTitle && widget.category.name != null;
+    final showTitle = widget.showTitle && widget.category?.name != null;
     return Padding(
       padding: widget.padding ?? const EdgeInsets.symmetric(vertical: 4),
       child: Column(
@@ -354,7 +356,7 @@ class _SelectorRangeViewState extends State<SelectorRangeView> {
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
-                child: Text(widget.category.name ?? ''),
+                child: Text(widget.category?.name ?? ''),
               ),
             ),
           SelectorRangeSlider(
@@ -379,7 +381,7 @@ class _SelectorRangeViewState extends State<SelectorRangeView> {
               maxController: _maxController,
               minFocusNode: _minFocusNode,
               maxFocusNode: _maxFocusNode,
-              separator: widget.layout.toText,
+              separator: widget.toText,
               // The range view accepts fractional input while typing and
               // rounds/snaps on commit (see [_commitField]).
               allowDecimal: true,

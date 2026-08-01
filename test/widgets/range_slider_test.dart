@@ -376,7 +376,7 @@ void main() {
               category: category,
               entries: category.children!.toList(),
               selectedEntries: const <SelectorEntry>{},
-              layout: const SelectorRangeLayout(),
+              toText: const SelectorRangeLayout().toText,
               showTitle: true,
             ),
           ),
@@ -408,7 +408,7 @@ void main() {
               category: category,
               entries: category.children!.toList(),
               selectedEntries: const <SelectorEntry>{},
-              layout: const SelectorRangeLayout(),
+              toText: const SelectorRangeLayout().toText,
               showTitle: false,
             ),
           ),
@@ -441,7 +441,7 @@ void main() {
               category: category,
               entries: category.children!.toList(),
               selectedEntries: const <SelectorEntry>{},
-              layout: const SelectorRangeLayout(),
+              toText: const SelectorRangeLayout().toText,
             ),
           ),
         ),
@@ -491,7 +491,7 @@ void main() {
               category: category,
               entries: category.children!.toList(),
               selectedEntries: const <SelectorEntry>{},
-              layout: const SelectorRangeLayout(),
+              toText: const SelectorRangeLayout().toText,
             ),
           ),
         ),
@@ -529,7 +529,7 @@ void main() {
                   category: category,
                   entries: category.children!.toList(),
                   selectedEntries: const <SelectorEntry>{},
-                  layout: const SelectorRangeLayout(),
+                  toText: const SelectorRangeLayout().toText,
                   focusListener: (c, min, max) {
                     lastCategory = c;
                     lastMin = min;
@@ -585,7 +585,7 @@ void main() {
         category: category,
         entries: category.children!.toList(),
         selectedEntries: const <SelectorEntry>{},
-        layout: const SelectorRangeLayout(),
+        toText: const SelectorRangeLayout().toText,
       );
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: base)));
 
@@ -614,7 +614,7 @@ void main() {
             max: 1000,
           ),
         },
-        layout: const SelectorRangeLayout(),
+        toText: const SelectorRangeLayout().toText,
       );
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: rebuilt)));
       await tester.pumpAndSettle();
@@ -644,7 +644,7 @@ void main() {
               category: category,
               entries: category.children!.toList(),
               selectedEntries: const <SelectorEntry>{},
-              layout: const SelectorRangeLayout(),
+              toText: const SelectorRangeLayout().toText,
               focusListener: (c, min, max) {
                 lastMin = min;
               },
@@ -702,7 +702,7 @@ void main() {
               category: category,
               entries: category.children!.toList(),
               selectedEntries: const <SelectorEntry>{},
-              layout: const SelectorRangeLayout(),
+              toText: const SelectorRangeLayout().toText,
             ),
           ),
         ),
@@ -761,7 +761,7 @@ void main() {
               category: category,
               entries: category.children!.toList(),
               selectedEntries: const <SelectorEntry>{},
-              layout: const SelectorRangeLayout(),
+              toText: const SelectorRangeLayout().toText,
             ),
           ),
         ),

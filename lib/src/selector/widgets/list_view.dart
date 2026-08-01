@@ -25,13 +25,14 @@ class SelectorListView<T extends SelectorEntry> extends StatefulWidget {
     this.radioBuilder,
     this.checkboxBuilder,
     this.showTitle = true,
+    this.toText = '-',
   });
 
   /// The category this list belongs to, used to render its title.
   ///
   /// If provided and [showTitle] is true, the category's name is displayed as
   /// a header above the list. Otherwise no header is shown.
-  final SelectorEntry? category;
+  final SelectorCategoryEntry? category;
 
   /// The terminal-node entries to display as selectable list items.
   ///
@@ -79,6 +80,9 @@ class SelectorListView<T extends SelectorEntry> extends StatefulWidget {
   ///
   /// Defaults to true. Has no effect when [category] is null.
   final bool showTitle;
+
+  /// Text rendered between the two range input fields (default: `'-'`).
+  final String toText;
 
   @override
   State<SelectorListView<T>> createState() => SelectorListViewState<T>();
@@ -251,6 +255,7 @@ class SelectorListViewState<T extends SelectorEntry>
               maxController: _maxController,
               minFocusNode: _minFocusNode,
               maxFocusNode: _maxFocusNode,
+              separator: widget.toText,
             ),
           // List of items
           ListView.separated(
@@ -290,6 +295,7 @@ class SelectorListViewState<T extends SelectorEntry>
               maxController: _maxController,
               minFocusNode: _minFocusNode,
               maxFocusNode: _maxFocusNode,
+              separator: widget.toText,
             ),
         ],
       ),

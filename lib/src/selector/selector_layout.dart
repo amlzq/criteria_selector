@@ -17,13 +17,20 @@ sealed class SelectorLayout {
 
 /// Vertical list layout for the children of a [SelectorCategoryEntry].
 class SelectorListLayout extends SelectorLayout {
-  const SelectorListLayout();
+  const SelectorListLayout({
+    this.toText = '-',
+  });
+
+  /// Text rendered between the two text fields (default: `'-'`).
+  final String toText;
 
   @override
-  bool operator ==(Object other) => other is SelectorListLayout;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SelectorListLayout && toText == other.toText;
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => toText.hashCode;
 }
 
 /// Grid layout for the children of a [SelectorCategoryEntry].
@@ -33,6 +40,7 @@ class SelectorGridLayout extends SelectorLayout {
     this.mainAxisSpacing = 0.0,
     this.crossAxisSpacing = 0.0,
     this.childAspectRatio = 1.0,
+    this.toText = '-',
   });
 
   /// The number of children in the cross axis.
@@ -47,6 +55,9 @@ class SelectorGridLayout extends SelectorLayout {
   /// The ratio of the cross-axis to the main-axis extent of each child.
   final double childAspectRatio;
 
+  /// Text rendered between the two text fields (default: `'-'`).
+  final String toText;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -54,11 +65,12 @@ class SelectorGridLayout extends SelectorLayout {
           crossAxisCount == other.crossAxisCount &&
           mainAxisSpacing == other.mainAxisSpacing &&
           crossAxisSpacing == other.crossAxisSpacing &&
-          childAspectRatio == other.childAspectRatio;
+          childAspectRatio == other.childAspectRatio &&
+          toText == other.toText;
 
   @override
-  int get hashCode => Object.hash(
-      crossAxisCount, mainAxisSpacing, crossAxisSpacing, childAspectRatio);
+  int get hashCode => Object.hash(crossAxisCount, mainAxisSpacing,
+      crossAxisSpacing, childAspectRatio, toText);
 }
 
 /// Wrap of chips layout for the children of a [SelectorCategoryEntry].

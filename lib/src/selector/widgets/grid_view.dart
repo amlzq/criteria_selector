@@ -29,6 +29,7 @@ class SelectorGridView<T extends SelectorEntry> extends StatefulWidget {
     this.tileVariant,
     this.fieldVariant,
     this.showTitle = true,
+    this.toText = '-',
   });
 
   // final int index;
@@ -36,7 +37,7 @@ class SelectorGridView<T extends SelectorEntry> extends StatefulWidget {
   ///
   /// If provided and [showTitle] is true, the category's name is displayed as
   /// a header above the grid. Otherwise no header is shown.
-  final SelectorEntry? category;
+  final SelectorCategoryEntry? category;
 
   /// The terminal-node entries to display as grid tiles.
   ///
@@ -95,6 +96,9 @@ class SelectorGridView<T extends SelectorEntry> extends StatefulWidget {
   ///
   /// Defaults to true. Has no effect when [category] is null.
   final bool showTitle;
+
+  /// Text rendered between the two range input fields (default: `'-'`).
+  final String toText;
 
   @override
   State<SelectorGridView<T>> createState() => SelectorGridViewState<T>();
@@ -268,6 +272,7 @@ class SelectorGridViewState<T extends SelectorEntry>
               minFocusNode: _minFocusNode,
               maxFocusNode: _maxFocusNode,
               variant: widget.fieldVariant,
+              separator: widget.toText,
             ),
           // Grid of items (3 columns)
           GridView.builder(
@@ -303,6 +308,7 @@ class SelectorGridViewState<T extends SelectorEntry>
               minFocusNode: _minFocusNode,
               maxFocusNode: _maxFocusNode,
               variant: widget.fieldVariant,
+              separator: widget.toText,
             ),
         ],
       ),
