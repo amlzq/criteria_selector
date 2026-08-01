@@ -250,6 +250,7 @@ class ListSelectorState extends State<ListSelector> {
                           SelectorRangeLayout() => SelectorRangeView(
                               key: ValueKey('category_$index'),
                               category: category,
+                              showTitle: false,
                               layout: layout,
                               entries: entries,
                               selectedEntries: selectedEntries,

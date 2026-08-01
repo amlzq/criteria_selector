@@ -79,12 +79,11 @@ void main() {
   });
 
   group('SelectorRangeSlider', () {
-    testWidgets('renders title and end labels when provided', (tester) async {
+    testWidgets('renders end labels when provided', (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
             body: SelectorRangeSlider(
-              title: Text('Price range'),
               min: 0,
               max: 1000,
               values: RangeValues(250, 750),
@@ -95,12 +94,11 @@ void main() {
           ),
         ),
       );
-      expect(find.text('Price range'), findsOneWidget);
       expect(find.text('\$0'), findsOneWidget);
       expect(find.text('\$1k+'), findsOneWidget);
     });
 
-    testWidgets('omits the title widget when not provided', (tester) async {
+    testWidgets('builds without a title', (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -113,10 +111,6 @@ void main() {
           ),
         ),
       );
-      // Title widget isn't passed — no text other than the labels should
-      // be present. We assert by looking for the absence of any text in
-      // the title style range; here we just confirm the widget still
-      // builds without exceptions.
       expect(find.byType(SelectorRangeSlider), findsOneWidget);
     });
 
@@ -287,9 +281,7 @@ void main() {
             find.byWidgetPredicate((w) => w is AnimatedScale),
           )
           .toList();
-      final rects = thumbs
-          .map((t) => tester.getRect(find.byWidget(t)))
-          .toList()
+      final rects = thumbs.map((t) => tester.getRect(find.byWidget(t))).toList()
         ..sort((a, b) => a.left.compareTo(b.left));
       // Left thumb's left edge sits flush with the slider's left edge.
       expect((rects.first.left - sliderLeft).abs(), lessThan(0.5));
@@ -351,8 +343,8 @@ void main() {
   group('SelectorRangeLayout', () {
     test('implements == and hashCode based on fields', () {
       const a = SelectorRangeLayout();
-      const b = SelectorRangeLayout(showTitle: false);
-      const c = SelectorRangeLayout(toText: 'and');
+      const b = SelectorRangeLayout(toText: 'and');
+      const c = SelectorRangeLayout(toText: 'or');
       expect(a, equals(const SelectorRangeLayout()));
       expect(a.hashCode, b.hashCode == a.hashCode ? a.hashCode : a.hashCode);
       expect(a, isNot(equals(b)));
@@ -361,6 +353,71 @@ void main() {
   });
 
   group('SelectorRangeView', () {
+    testWidgets('renders the category name as title when showTitle is true',
+        (tester) async {
+      final category = SelectorCategoryEntry<dynamic>(
+        id: 'price',
+        name: 'Price range',
+        selectionMode: SelectionMode.single,
+        children: {
+          SelectorIntEntry<dynamic>.custom(
+            parentId: 'price',
+            min: 0,
+            max: 1000,
+          )
+        },
+        layout: const SelectorRangeLayout(),
+      );
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SelectorRangeView(
+              category: category,
+              entries: category.children!.toList(),
+              selectedEntries: const <SelectorEntry>{},
+              layout: const SelectorRangeLayout(),
+              showTitle: true,
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('Price range'), findsOneWidget);
+    });
+
+    testWidgets('omits the title when showTitle is false', (tester) async {
+      final category = SelectorCategoryEntry<dynamic>(
+        id: 'price',
+        name: 'Price range',
+        selectionMode: SelectionMode.single,
+        children: {
+          SelectorIntEntry<dynamic>.custom(
+            parentId: 'price',
+            min: 0,
+            max: 1000,
+          )
+        },
+        layout: const SelectorRangeLayout(),
+      );
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SelectorRangeView(
+              category: category,
+              entries: category.children!.toList(),
+              selectedEntries: const <SelectorEntry>{},
+              layout: const SelectorRangeLayout(),
+              showTitle: false,
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('Price range'), findsNothing);
+    });
+
     testWidgets('keeps slider and field values in sync', (tester) async {
       final customEntry = SelectorIntEntry<dynamic>.custom(
         parentId: 'price',
@@ -595,12 +652,14 @@ void main() {
           ),
         ),
       );
-      final minField = find.byWidgetPredicate(
-        (w) =>
-            w is TextField &&
-            w.keyboardType ==
-                const TextInputType.numberWithOptions(decimal: true),
-      ).first;
+      final minField = find
+          .byWidgetPredicate(
+            (w) =>
+                w is TextField &&
+                w.keyboardType ==
+                    const TextInputType.numberWithOptions(decimal: true),
+          )
+          .first;
       await tester.enterText(minField, '250.6');
       await tester.pumpAndSettle();
       // While typing (not yet committed) the raw text is kept and the slider
@@ -679,8 +738,7 @@ void main() {
       );
     });
 
-    testWidgets(
-        'swaps bounds when the max field is typed below the min field',
+    testWidgets('swaps bounds when the max field is typed below the min field',
         (tester) async {
       final customEntry = SelectorIntEntry<dynamic>.custom(
         parentId: 'price',

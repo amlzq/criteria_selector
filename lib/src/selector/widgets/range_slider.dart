@@ -20,7 +20,6 @@ import 'range_slider_theme.dart';
 class SelectorRangeSlider extends StatefulWidget {
   const SelectorRangeSlider({
     super.key,
-    this.title,
     required this.min,
     required this.max,
     required this.values,
@@ -37,9 +36,6 @@ class SelectorRangeSlider extends StatefulWidget {
     this.trackHeight,
     this.thumbRadius,
   });
-
-  /// Optional title rendered above the slider (e.g. "Price range").
-  final Widget? title;
 
   /// Lower bound of the selectable range.
   final double min;
@@ -142,8 +138,6 @@ class _SelectorRangeSliderState extends State<SelectorRangeSlider> {
         theme.thumbFillColor ??
         defaults.thumbFillColor ??
         Colors.white;
-    final effectiveTitleStyle =
-        widget.title == null ? null : (theme.titleStyle ?? defaults.titleStyle);
     final effectiveEndLabelStyle =
         theme.endLabelStyle ?? defaults.endLabelStyle;
 
@@ -151,14 +145,6 @@ class _SelectorRangeSliderState extends State<SelectorRangeSlider> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (widget.title != null)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: DefaultTextStyle.merge(
-              style: effectiveTitleStyle,
-              child: widget.title!,
-            ),
-          ),
         LayoutBuilder(
           builder: (context, constraints) {
             // Reserve enough width for both thumbs plus a small minimum
@@ -427,12 +413,6 @@ class _SelectorRangeSliderDefaults extends SelectorRangeSliderTheme {
 
   late final SelectorThemeData _theme = SelectorTheme.of(context);
   late final TextTheme _textTheme = Theme.of(context).textTheme;
-
-  @override
-  TextStyle? get titleStyle => _textTheme.titleSmall?.copyWith(
-        fontWeight: FontWeight.w600,
-        color: _theme.onBackgroundColorHighest,
-      );
 
   @override
   TextStyle? get endLabelStyle => _textTheme.bodyMedium?.copyWith(

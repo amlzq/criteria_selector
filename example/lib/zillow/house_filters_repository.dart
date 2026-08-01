@@ -142,8 +142,8 @@ class HouseFiltersRepository {
     final category = SelectorCategoryEntry(
       id: 'list_price',
       name: 'Price',
-      selectionMode: SelectionMode.multiple,
-      layout: const SelectorRangeLayout(showTitle: false, toText: 'to'),
+      selectionMode: SelectionMode.single,
+      layout: const SelectorRangeLayout(toText: 'to'),
       children: {
         SelectorIntEntry.custom(
           parentId: 'list_price',

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../selector_layout.dart';
 import '../constants.dart';
 import '../selector_entry.dart';
+import '../selector_layout.dart';
 import 'field_tile.dart';
 import 'range_slider.dart';
 
@@ -32,7 +32,13 @@ class SelectorRangeView extends StatefulWidget {
     this.minFocusNode,
     this.maxFocusNode,
     this.padding,
+    this.showTitle = true,
   });
+
+  /// Whether to show the category's name as a title above the slider.
+  ///
+  /// Defaults to true. Has no effect when [category] is null.
+  final bool showTitle;
 
   /// The category that owns the layout; supplies the [SelectorRangeEntry]
   /// to render via [SelectorCategoryEntryExtension.firstCustomOrNull].
@@ -330,23 +336,28 @@ class _SelectorRangeViewState extends State<SelectorRangeView> {
       return const SizedBox.shrink();
     }
     final entry = _findEntry();
-    final showTitle = widget.layout.showTitle && widget.category.name != null;
+    final showTitle = widget.showTitle && widget.category.name != null;
     return Padding(
       padding: widget.padding ?? const EdgeInsets.symmetric(vertical: 4),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
-          SelectorRangeSlider(
-            title: showTitle
-                ? Text(
-                    widget.category.name ?? '',
-                    style: const TextStyle(
+          if (showTitle)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: DefaultTextStyle.merge(
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ) ??
+                    const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
-                  )
-                : null,
+                child: Text(widget.category.name ?? ''),
+              ),
+            ),
+          SelectorRangeSlider(
             min: _min,
             max: _max,
             values: _currentRange,

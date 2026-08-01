@@ -7,7 +7,6 @@ import '../selector_theme.dart';
 @immutable
 class SelectorRangeSliderTheme with Diagnosticable {
   const SelectorRangeSliderTheme({
-    this.titleStyle,
     this.endLabelStyle,
     this.activeTrackColor,
     this.inactiveTrackColor,
@@ -17,9 +16,6 @@ class SelectorRangeSliderTheme with Diagnosticable {
     this.trackHeight,
     this.thumbRadius,
   });
-
-  /// Overrides the title text style.
-  final TextStyle? titleStyle;
 
   /// Overrides the end-label text style (e.g. "$0" / "$20M+").
   final TextStyle? endLabelStyle;
@@ -47,7 +43,6 @@ class SelectorRangeSliderTheme with Diagnosticable {
   final double? thumbRadius;
 
   SelectorRangeSliderTheme copyWith({
-    TextStyle? titleStyle,
     TextStyle? endLabelStyle,
     Color? activeTrackColor,
     Color? inactiveTrackColor,
@@ -58,7 +53,6 @@ class SelectorRangeSliderTheme with Diagnosticable {
     double? thumbRadius,
   }) {
     return SelectorRangeSliderTheme(
-      titleStyle: titleStyle ?? this.titleStyle,
       endLabelStyle: endLabelStyle ?? this.endLabelStyle,
       activeTrackColor: activeTrackColor ?? this.activeTrackColor,
       inactiveTrackColor: inactiveTrackColor ?? this.inactiveTrackColor,
@@ -81,7 +75,6 @@ class SelectorRangeSliderTheme with Diagnosticable {
   ) {
     if (identical(a, b) && a != null) return a;
     return SelectorRangeSliderTheme(
-      titleStyle: TextStyle.lerp(a?.titleStyle, b?.titleStyle, t),
       endLabelStyle: TextStyle.lerp(a?.endLabelStyle, b?.endLabelStyle, t),
       activeTrackColor: Color.lerp(a?.activeTrackColor, b?.activeTrackColor, t),
       inactiveTrackColor:
@@ -100,7 +93,6 @@ class SelectorRangeSliderTheme with Diagnosticable {
 
   @override
   int get hashCode => Object.hash(
-        titleStyle,
         endLabelStyle,
         activeTrackColor,
         inactiveTrackColor,
@@ -116,7 +108,6 @@ class SelectorRangeSliderTheme with Diagnosticable {
     if (identical(this, other)) return true;
     if (other.runtimeType != runtimeType) return false;
     return other is SelectorRangeSliderTheme &&
-        other.titleStyle == titleStyle &&
         other.endLabelStyle == endLabelStyle &&
         other.activeTrackColor == activeTrackColor &&
         other.inactiveTrackColor == inactiveTrackColor &&

@@ -83,12 +83,8 @@ class SelectorChipLayout extends SelectorLayout {
 /// back to a degenerate 0..1 range.
 class SelectorRangeLayout extends SelectorLayout {
   const SelectorRangeLayout({
-    this.showTitle = true,
     this.toText = '-',
   });
-
-  /// Whether to render the category's name as a title above the slider.
-  final bool showTitle;
 
   /// Text rendered between the two text fields (default: `'to'`).
   final String toText;
@@ -96,10 +92,8 @@ class SelectorRangeLayout extends SelectorLayout {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is SelectorRangeLayout &&
-          showTitle == other.showTitle &&
-          toText == other.toText;
+      other is SelectorRangeLayout && toText == other.toText;
 
   @override
-  int get hashCode => Object.hash(showTitle, toText);
+  int get hashCode => toText.hashCode;
 }
