@@ -327,6 +327,8 @@ class GridSelectorDelegate extends SelectorDelegate {
     this.mainAxisSpacing = 0.0,
     this.crossAxisSpacing = 0.0,
     this.childAspectRatio = 1.0,
+    this.checkboxBuilder,
+    this.radioBuilder,
     super.selectionMode = SelectionMode.single,
     super.entriesLoader,
     super.selectedEntriesLoader,
@@ -365,6 +367,12 @@ class GridSelectorDelegate extends SelectorDelegate {
 
   /// Child aspect ratio for each tile.
   final double childAspectRatio;
+
+  /// Optional custom radio widget builder.
+  final ToggleWidgetBuilder? radioBuilder;
+
+  /// Optional custom checkbox widget builder.
+  final ToggleWidgetBuilder? checkboxBuilder;
 
   @override
   Widget buildBody(

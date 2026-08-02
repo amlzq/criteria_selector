@@ -6,6 +6,7 @@ import 'constants.dart';
 import 'selector_controller.dart';
 import 'selector_delegate.dart';
 import 'selector_entry.dart';
+import 'selector_layout.dart';
 import 'widgets/widgets.dart';
 
 /// Vertical layout: category tabs on top and a grid of items below.
@@ -169,28 +170,83 @@ class GridSelectorState extends State<GridSelector> {
     controller?.applyFromState();
   }
 
+  Widget _buildCategoryView(
+    SelectorCategoryEntry category, {
+    required int index,
+  }) {
+    final entries = category.children?.toList() ?? [];
+    final selectedEntries =
+        controller?.selectedEntriesForParent(category.id, level: 1) ?? {};
+    final layout = category.layout ?? const SelectorListLayout();
+
+    return switch (layout) {
+      SelectorListLayout(:final toText) => SelectorListView(
+          key: ValueKey('category_$index'),
+          category: category,
+          showTitle: false,
+          entries: entries,
+          selectedEntries: selectedEntries,
+          onChanged: (_, entry) =>
+              _onTerminalItemTap(entry as SelectorChildEntry),
+          toText: toText,
+          radioBuilder: delegate.radioBuilder,
+          checkboxBuilder: delegate.checkboxBuilder,
+        ),
+      SelectorGridLayout(
+        :final crossAxisCount,
+        :final mainAxisSpacing,
+        :final crossAxisSpacing,
+        :final childAspectRatio,
+        :final toText,
+      ) =>
+        SelectorGridView(
+          key: ValueKey('category_$index'),
+          crossAxisCount: crossAxisCount,
+          mainAxisSpacing: mainAxisSpacing,
+          crossAxisSpacing: crossAxisSpacing,
+          childAspectRatio: childAspectRatio,
+          tileVariant: delegate.gridTileTheme?.variant,
+          fieldVariant: delegate.fieldTileTheme?.variant,
+          category: category,
+          showTitle: false,
+          entries: entries,
+          selectedEntries: selectedEntries,
+          onChanged: (_, entry) =>
+              _onTerminalItemTap(entry as SelectorChildEntry),
+          toText: toText,
+        ),
+      SelectorChipLayout() => SelectorChipBar(
+          key: ValueKey('category_$index'),
+          category: category,
+          entries: entries,
+          selectedEntries: selectedEntries,
+          showTitle: false,
+          isWrapable: true,
+          backgroundColor: delegate.chipBarTheme?.backgroundColor,
+          padding: delegate.chipBarTheme?.padding,
+          variant: delegate.chipBarTheme?.variant,
+          chipColor: delegate.chipBarTheme?.chipColor,
+          selectedChipColor: delegate.chipBarTheme?.selectedChipColor,
+          labelStyle: delegate.chipBarTheme?.labelStyle,
+          selectedLabelStyle: delegate.chipBarTheme?.selectedLabelStyle,
+          onChanged: (_, item) =>
+              _onTerminalItemTap(item as SelectorChildEntry),
+        ),
+      SelectorRangeLayout(:final toText) => SelectorRangeView(
+          key: ValueKey('category_$index'),
+          category: category,
+          showTitle: false,
+          toText: toText,
+          entries: entries,
+          selectedEntries: selectedEntries,
+          onChanged: (_, entry) =>
+              _onTerminalItemTap(entry as SelectorChildEntry),
+        ),
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
-    final gridviews = List.generate(widget.entries.length, (int index) {
-      final category = widget.entries[index];
-      final entries = category.children?.toList() ?? [];
-      final selectedEntries =
-          controller?.selectedEntriesForParent(category.id, level: 1) ?? {};
-      return SelectorGridView(
-        key: ValueKey('category_$index'),
-        crossAxisCount: delegate.crossAxisCount,
-        childAspectRatio: delegate.childAspectRatio,
-        mainAxisSpacing: delegate.mainAxisSpacing,
-        crossAxisSpacing: delegate.crossAxisSpacing,
-        tileVariant: delegate.gridTileTheme?.variant,
-        fieldVariant: delegate.fieldTileTheme?.variant,
-        entries: entries,
-        selectedEntries: selectedEntries,
-        onChanged: (_, entry) =>
-            _onTerminalItemTap(entry as SelectorChildEntry),
-      );
-    });
-
     /// Focused category index
     final tempSelectedCategoryIndex =
         widget.entries.indexOf(_tempSelectedCategory);
@@ -210,7 +266,10 @@ class GridSelectorState extends State<GridSelector> {
         Flexible(
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-            child: gridviews[tempSelectedCategoryIndex],
+            child: _buildCategoryView(
+              _tempSelectedCategory,
+              index: tempSelectedCategoryIndex,
+            ),
           ),
         ),
         if (SelectionMode.multiple == selectorSelectionMode &&
