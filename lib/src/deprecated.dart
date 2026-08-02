@@ -2,7 +2,7 @@
 ///
 /// This file collects the deprecated symbols that are kept for backward
 /// compatibility during a deprecation period. Each alias/class below maps to
-/// its replacement and will be removed in a future major version.
+/// its replacement and will be removed in a future minor version.
 library;
 
 import 'package:flutter/foundation.dart';

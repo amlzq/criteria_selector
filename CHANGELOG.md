@@ -2,9 +2,9 @@
 
 * **FEATURE** add `SelectorRangeLayout` as a new `SelectorLayout` sealed subclass. The existing `switch (layout)` in `ListSelector` now routes to `SelectorRangeView`, which composes `SelectorRangeSlider` + a paired two-text-field row with bidirectional sync and `focusListener` callback.
 
-* **DEPRECATION** `SelectorCategoryEntry` previously exposed three mutually-exclusive, nullable fields `listConfig` / `gridConfig` / `chipConfig`. They are replaced by a single `layout` property of the new sealed `SelectorLayout` type. The old fields remain available as deprecated getters/constructor parameters that map to `SelectorListLayout` / `SelectorGridLayout` / `SelectorChipLayout` and will be removed in a future major version.
+* **DEPRECATION** `SelectorCategoryEntry` previously exposed three mutually-exclusive, nullable fields `listConfig` / `gridConfig` / `chipConfig`. They are replaced by a single `layout` property of the new sealed `SelectorLayout` type. The old fields remain available as deprecated getters/constructor parameters that map to `SelectorListLayout` / `SelectorGridLayout` / `SelectorChipLayout` and will be removed in a future minor version.
 
-* **DEPRECATION** rename `SelectorBox.onChangeTap` → `SelectorBox.onChanged`. The old `onChangeTap` argument and `onChangeTap` getter are retained as deprecated members for backward compatibility and will be removed in a future major version. Passing both `onChanged` and `onChangeTap` triggers an assertion.
+* **DEPRECATION** rename `SelectorBox.onChangeTap` → `SelectorBox.onChanged`. The old `onChangeTap` argument and `onChangeTap` getter are retained as deprecated members for backward compatibility and will be removed in a future minor version. Passing both `onChanged` and `onChangeTap` triggers an assertion.
 
 * **BREAKING** remove the deprecated `Dropselect*` public API aliases (introduced in 0.2.0). Use the `Dropdown*` / `DropdownSelector*` names instead.
 
@@ -24,9 +24,9 @@
 
 * **DEPRECATION** type `DropdownTab.labelGetter` / `DropdownTabData.labelGetter` as `SelectorLabelLoader` (`String Function(SelectorEntries)`) instead of the deprecated `DropdownTabLabelGetter`; the tab metadata argument is no longer passed to the canonical loader.
 
-* **DEPRECATION** deprecate `DropdownSelectorResult` (and the `DropselectResult` alias); it is now only needed to keep an existing legacy `void Function(DropdownSelectorResult)` callback working, and will be removed in a future major version.
+* **DEPRECATION** deprecate `DropdownSelectorResult` (and the `DropselectResult` alias); it is now only needed to keep an existing legacy `void Function(DropdownSelectorResult)` callback working, and will be removed in a future minor version.
 
-* **DEPRECATION** keep `DropdownSelectorController.onChanged` / `onApplied` on the legacy `void Function(DropdownSelectorResult)` signature; they will be removed in a future major version.
+* **DEPRECATION** keep `DropdownSelectorController.onChanged` / `onApplied` on the legacy `void Function(DropdownSelectorResult)` signature; they will be removed in a future minor version.
 
 * **DEPRECATION** keep `DropdownTabLabelGetter` as a backward-compatible alias and add a deprecated `legacyLabelGetter` field on `DropdownTab` / `DropdownTabData` to forward the live `DropdownTabData` to legacy getters.
 

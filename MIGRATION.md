@@ -61,7 +61,7 @@ SelectorCategoryEntry(
 `SelectorBox` exposes its selection callback under the new name `onChanged`.
 The previous `onChangeTap` argument and the `onChangeTap` getter are now
 deprecated but still supported for backward compatibility, and will be removed
-in a future major version. Passing both `onChanged` and `onChangeTap` triggers
+in a future minor version. Passing both `onChanged` and `onChangeTap` triggers
 an assertion, so migrate existing call sites to `onChanged` to clear the
 deprecation warning.
 
@@ -134,7 +134,7 @@ To keep an existing legacy `void Function(DropdownSelectorResult)` handler
 compiling with minimal changes, wrap it with the `fromLegacyResultCallback`
 adapter helper. Backward compatibility is also preserved on
 `DropdownSelectorController`: `onChanged` / `onApplied` still accept the legacy
-signature (deprecated, to be removed in a future major version), so
+signature (deprecated, to be removed in a future minor version), so
 `addChangeListener` / `addApplyListener` call sites you have not yet migrated
 continue to compile.
 
@@ -167,7 +167,7 @@ onChanged: fromLegacyResultCallback((DropdownSelectorResult result) {
 
 **Description**
 `DropdownSelectorResult` still works but is now deprecated and will be removed in
-a future major version. You only need to construct it to keep an existing legacy
+a future minor version. You only need to construct it to keep an existing legacy
 `void Function(DropdownSelectorResult)` callback working. Prefer consuming the tab
 metadata and the selected entries directly via the `(tabData, selected)`
 arguments instead. The `DropselectResult` rename alias is also deprecated.
@@ -295,7 +295,7 @@ DropdownTab(
 | `DropdownTabData.labelGetter` | `DropdownTabLabelGetter?` | `SelectorLabelLoader?` (getter; also keeps `labelLoader` / `legacyLabelGetter`) |
 
 ## MIGRATE TO 0.2.0
-The old names are kept as deprecated type/constant/parameter aliases during the deprecation period and will be removed in the next major version.
+The old names are kept as deprecated type/constant/parameter aliases during the deprecation period and will be removed in the next minor version.
 
 > The rename tables below (`Dropselect*` → `Dropdown*`, `Selector*` →
 > `*Delegate`, and the loader parameters) are **pure renames** — each old symbol

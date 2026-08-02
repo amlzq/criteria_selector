@@ -59,7 +59,7 @@ class SelectorBox extends StatefulWidget {
     this.margin,
     SelectorCallback? onChanged,
     @Deprecated(
-        'Use onChanged instead. This parameter will be removed in a future major version.')
+        'Use onChanged instead. This parameter will be removed in a future minor version.')
     SelectorCallback? onChangeTap,
   })  : assert(maxHeightFactor > 0 && maxHeightFactor <= 1),
         assert(onChanged == null || onChangeTap == null,
@@ -94,9 +94,9 @@ class SelectorBox extends StatefulWidget {
   /// Fired when the selection changes.
   ///
   /// @Deprecated Use [onChanged] instead. This getter is retained only for
-  /// backward compatibility and will be removed in a future major version.
+  /// backward compatibility and will be removed in a future minor version.
   @Deprecated(
-      'Use onChanged instead. This getter will be removed in a future major version.')
+      'Use onChanged instead. This getter will be removed in a future minor version.')
   SelectorCallback? get onChangeTap => onChanged;
 
   /// Caps the selector's height to this fraction of the screen height when it
