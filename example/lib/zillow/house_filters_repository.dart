@@ -165,12 +165,12 @@ class HouseFiltersRepository {
     SelectorCategoryEntry(
       id: 'bedrooms',
       name: '',
-      children: {SelectorIntEntry(parentId: 'bedrooms', id: '203', name: '')},
+      children: {SelectorTextEntry(parentId: 'bedrooms', id: '203', name: '')},
     ),
     SelectorCategoryEntry(
       id: 'bathrooms',
       name: '',
-      children: {SelectorIntEntry(parentId: 'bathrooms', id: '104', name: '')},
+      children: {SelectorTextEntry(parentId: 'bathrooms', id: '104', name: '')},
     ),
   };
 
@@ -191,13 +191,13 @@ class HouseFiltersRepository {
             id: category.id!,
             name: category.name!,
             children: category.data
-                ?.map((l1) => SelectorIntEntry(
+                ?.map((l1) => SelectorTextEntry(
                       parentId: category.id!,
                       id: l1.id!,
                       name: l1.name,
                     ))
                 .toSet(),
-            selectionMode: SelectionMode.multiple,
+            selectionMode: SelectionMode.single,
           ),
         )
         .toSet();
@@ -207,7 +207,7 @@ class HouseFiltersRepository {
       // Insert the "Any" entry
       category.children?.insert(
           0,
-          SelectorIntEntry.any(
+          SelectorTextEntry.any(
               parentId: category.id, name: anyEntryText, immediate: false));
     }
 
