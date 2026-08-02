@@ -1,38 +1,39 @@
+import 'dart:async';
+
 import 'package:criteria_selector/criteria_selector.dart';
 import 'package:flutter/material.dart';
 
 import '../generated/l10n/app_localizations.dart';
-import '../log.dart';
 
-/// Minimum interval between two snack bars so that high-frequency
-/// [onChanged] callbacks don't stack snack bars.
-const Duration _resultThrottleInterval = Duration(milliseconds: 500);
+/// Debounce delay: consecutive calls within this duration cancel the previous
+/// pending call so that only the **last** result is shown.
+const Duration _resultDebounceInterval = Duration(seconds: 1);
 
-DateTime? _lastShownAt;
+Timer? _debounceTimer;
+SelectorEntries? _latestResult;
 
 /// Shows a snack bar that displays the selected filter result.
 ///
 /// Tapping the "view" action opens a bottom sheet with the flattened
 /// [SelectorEntries] result.
 ///
-/// Calls are throttled by [throttleInterval]: consecutive calls within the
-/// interval are ignored, which avoids stacking snack bars when [onChanged]
-/// fires frequently.
+/// Calls are debounced by [debounceInterval]: intermediate calls cancel the
+/// previous pending timer so that only the last result within the window is
+/// actually displayed. This avoids stacking snack bars when [onChanged] fires
+/// frequently.
 void showSelectResult(
   BuildContext context,
   SelectorEntries result, {
-  Duration throttleInterval = _resultThrottleInterval,
+  Duration debounceInterval = _resultDebounceInterval,
 }) {
-  final flattenResult = '${result.flatten()}';
-  largePrint('result.flatten: $flattenResult');
+  _latestResult = result;
+  _debounceTimer?.cancel();
+  _debounceTimer = Timer(debounceInterval, () {
+    _showSnackBar(context, _latestResult!);
+  });
+}
 
-  final now = DateTime.now();
-  if (_lastShownAt != null &&
-      now.difference(_lastShownAt!) < throttleInterval) {
-    return;
-  }
-  _lastShownAt = now;
-
+void _showSnackBar(BuildContext context, SelectorEntries result) {
   final l10n = AppLocalizations.of(context);
 
   ScaffoldMessenger.of(context).showSnackBar(
@@ -47,12 +48,13 @@ void showSelectResult(
             builder: (context) {
               return SafeArea(
                 child: FractionallySizedBox(
+                  widthFactor: 1,
                   heightFactor: 0.8,
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: SingleChildScrollView(
                       child: SelectableText(
-                        l10n?.selectResult(flattenResult) ?? flattenResult,
+                        l10n?.selectResult('$result') ?? '$result',
                       ),
                     ),
                   ),
