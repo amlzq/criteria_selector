@@ -530,10 +530,10 @@ void main() {
                   entries: category.children!.toList(),
                   selectedEntries: const <SelectorEntry>{},
                   toText: const SelectorRangeLayout().toText,
-                  focusListener: (c, min, max) {
-                    lastCategory = c;
-                    lastMin = min;
-                    lastMax = max;
+                  onChanged: (index, entry) {
+                    lastCategory = (entry as SelectorRangeEntry).parentId;
+                    lastMin = entry.min?.toString();
+                    lastMax = entry.max?.toString();
                   },
                 ),
               ),
@@ -562,7 +562,10 @@ void main() {
       await tester.pumpAndSettle();
       expect(lastCategory, 'price');
       expect(lastMin, isNotNull);
-      expect(lastMax, isNotNull);
+      // The start thumb was dragged right, so a lower bound is reported. The
+      // end thumb stays at the slider's max extreme, which normalizes to null
+      // (no upper bound) on the entry.
+      expect(lastMax, isNull);
     });
 
     testWidgets('keeps field text after a parent rebuild (didUpdateWidget)',
@@ -645,8 +648,8 @@ void main() {
               entries: category.children!.toList(),
               selectedEntries: const <SelectorEntry>{},
               toText: const SelectorRangeLayout().toText,
-              focusListener: (c, min, max) {
-                lastMin = min;
+              onChanged: (index, entry) {
+                lastMin = (entry as SelectorRangeEntry).min?.toString();
               },
             ),
           ),

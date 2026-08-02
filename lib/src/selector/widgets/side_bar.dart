@@ -9,7 +9,7 @@ import 'list_tile.dart';
 import 'side_bar_theme.dart';
 import 'skeleton_box.dart';
 
-class SelectorSideBar<T extends SelectorEntry> extends StatelessWidget {
+class SelectorSideBar extends StatelessWidget {
   const SelectorSideBar({
     super.key,
     required this.entries,
@@ -22,20 +22,20 @@ class SelectorSideBar<T extends SelectorEntry> extends StatelessWidget {
     this.selectedColor,
     this.labelStyle,
     this.selectedTileColor,
-    required this.onTap,
+    required this.onChanged,
   });
 
   /// The category entries to display as tiles in this sidebar.
   ///
   /// Each entry renders a [SelectorListTile]; the number of tiles equals the
   /// length of this list.
-  final List<T> entries;
+  final List<SelectorEntry> entries;
 
   /// The set of currently selected categories.
   ///
   /// A tile is rendered as selected when its entry is contained in this set,
   /// and its badge is shown accordingly.
-  final Set<T> selectedCategories;
+  final SelectorEntries selectedCategories;
 
   /// The index of the tile that should be considered focused.
   ///
@@ -90,7 +90,7 @@ class SelectorSideBar<T extends SelectorEntry> extends StatelessWidget {
   /// Called when a tile is tapped.
   ///
   /// The callback receives the tapped tile's index and its [SelectorEntry].
-  final ItemTapCallback onTap;
+  final OnChanged onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +129,7 @@ class SelectorSideBar<T extends SelectorEntry> extends StatelessWidget {
             color: entry.hasChildren && selected
                 ? selectedColor
                 : Colors.transparent),
-        onTap: () => onTap(index, entry),
+        onTap: () => onChanged(index, entry),
       );
     });
 

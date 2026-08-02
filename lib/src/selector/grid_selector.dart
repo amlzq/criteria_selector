@@ -130,12 +130,21 @@ class GridSelectorState extends State<GridSelector> {
         .singleWhereOrNull((e) => e.id == entry.parentId);
     if (category == null) return;
 
-    controller?.toggleFlatEntry(
-      entry,
-      selectorSelectionMode: selectorSelectionMode ?? SelectionMode.single,
-      isCategoryTree: true,
-      category: category,
-    );
+    if (entry is SelectorRangeEntry && entry.isCustom) {
+      final hasRange = entry.min != null || entry.max != null;
+      if (hasRange) {
+        controller?.select(entry.id, parentId: entry.parentId);
+      } else {
+        controller?.unselect(entry.id, parentId: entry.parentId);
+      }
+    } else {
+      controller?.toggleFlatEntry(
+        entry,
+        selectorSelectionMode: selectorSelectionMode ?? SelectionMode.single,
+        isCategoryTree: true,
+        category: category,
+      );
+    }
 
     _setStateOrImmediateApply(entry);
   }
@@ -154,23 +163,6 @@ class GridSelectorState extends State<GridSelector> {
     controller?.resetState(initializeAnyIfEmpty: true);
     setState(() {});
     controller?.reset();
-  }
-
-  void _customItemSelection(
-      String categoryId, String minValue, String maxValue) {
-    var minInt = int.tryParse(minValue) ?? 0;
-    var maxInt = int.tryParse(maxValue) ?? 0;
-    if (minInt > maxInt) {
-      final temp = minInt;
-      minInt = maxInt;
-      maxInt = temp;
-    }
-    controller?.setCustomRangeForParent(
-      parentId: categoryId,
-      min: (minInt == 0) ? null : minInt,
-      max: (maxInt == 0) ? null : maxInt,
-      applyIfImmediate: true,
-    );
   }
 
   void _onApplyTap() {
@@ -194,11 +186,8 @@ class GridSelectorState extends State<GridSelector> {
         fieldVariant: delegate.fieldTileTheme?.variant,
         entries: entries,
         selectedEntries: selectedEntries,
-        focusListener: (categoryId, minValue, maxValue) {
-          _customItemSelection(categoryId, minValue, maxValue);
-        },
-        onItemTap: (index, item) =>
-            _onTerminalItemTap(item as SelectorChildEntry),
+        onChanged: (_, entry) =>
+            _onTerminalItemTap(entry as SelectorChildEntry),
       );
     });
 
@@ -212,7 +201,7 @@ class GridSelectorState extends State<GridSelector> {
         if (widget.entries.length > 1)
           SelectorTabBar(
             isScrollable: false,
-            onTap: (index, item) =>
+            onChanged: (_, item) =>
                 _onCategoryItemTap(item as SelectorCategoryEntry),
             entries: widget.entries,
             selectedCategories: {_tempSelectedCategory},

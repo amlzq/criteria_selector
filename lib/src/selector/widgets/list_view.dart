@@ -13,14 +13,13 @@ import 'skeleton_box.dart';
 /// A list view that can include a single input item.
 /// Must be a terminal-node list.
 /// Only used in tabs or flatten; uses AutomaticKeepAliveClientMixin.
-class SelectorListView<T extends SelectorEntry> extends StatefulWidget {
+class SelectorListView extends StatefulWidget {
   const SelectorListView({
     super.key,
     this.category,
     required this.entries,
     this.selectedEntries,
-    required this.onItemTap,
-    this.inputListener,
+    required this.onChanged,
     this.padding = EdgeInsets.zero,
     this.selectionMode = SelectionMode.single,
     this.radioBuilder,
@@ -40,7 +39,7 @@ class SelectorListView<T extends SelectorEntry> extends StatefulWidget {
   /// This list must be a terminal-node list (no further sub-categories). If it
   /// contains a range/custom entry, an input field is rendered at the header or
   /// footer.
-  final List<T> entries;
+  final List<SelectorEntry> entries;
 
   /// The set of currently selected entries.
   ///
@@ -48,17 +47,13 @@ class SelectorListView<T extends SelectorEntry> extends StatefulWidget {
   /// selection is reflected by the radio or checkbox tile.
   final SelectorEntries? selectedEntries;
 
-  /// Called when an item is tapped.
+  /// Called when an item is tapped or a custom range value changes.
   ///
-  /// The callback receives the tapped item's index and its [SelectorEntry].
-  final ItemTapCallback onItemTap;
-
-  /// Called when the value of the optional range input field changes.
-  ///
-  /// Receives the category id along with the current minimum and maximum input
-  /// values. Only used when [entries] contains a custom range entry.
-  final Function(String? categoryId, String minValue, String maxValue)?
-      inputListener;
+  /// The callback receives the affected item's index and its [SelectorEntry].
+  /// For custom range entries the view has already parsed and normalized the
+  /// min/max values onto the entry before invoking this callback, so the
+  /// listener only needs to update selection state.
+  final OnChanged onChanged;
 
   /// The padding around the list content, including the title and input field.
   ///
@@ -86,15 +81,15 @@ class SelectorListView<T extends SelectorEntry> extends StatefulWidget {
   final String toText;
 
   @override
-  State<SelectorListView<T>> createState() => SelectorListViewState<T>();
+  State<SelectorListView> createState() => SelectorListViewState();
 }
 
-class SelectorListViewState<T extends SelectorEntry>
-    extends State<SelectorListView<T>> with AutomaticKeepAliveClientMixin {
+class SelectorListViewState extends State<SelectorListView>
+    with AutomaticKeepAliveClientMixin {
   SelectorRangeEntry? firstCustomEntry;
   SelectorRangeEntry? lastCustomEntry;
 
-  late List<T> entriesWithoutCustom;
+  late List<SelectorEntry> entriesWithoutCustom;
 
   TextEditingController? _minController;
   TextEditingController? _maxController;
@@ -122,7 +117,7 @@ class SelectorListViewState<T extends SelectorEntry>
   }
 
   @override
-  void didUpdateWidget(covariant SelectorListView<T> oldWidget) {
+  void didUpdateWidget(covariant SelectorListView oldWidget) {
     super.didUpdateWidget(oldWidget);
     _selectedEntries = widget.selectedEntries ?? {};
 
@@ -163,6 +158,8 @@ class SelectorListViewState<T extends SelectorEntry>
   void dispose() {
     _minController?.removeListener(_inputListener);
     _maxController?.removeListener(_inputListener);
+    _minFocusNode?.removeListener(_onFocusChanged);
+    _maxFocusNode?.removeListener(_onFocusChanged);
 
     _minController?.dispose();
     _maxController?.dispose();
@@ -184,17 +181,46 @@ class SelectorListViewState<T extends SelectorEntry>
     }
     _minFocusNode ??= FocusNode();
     _maxFocusNode ??= FocusNode();
+    _minFocusNode?.addListener(_onFocusChanged);
+    _maxFocusNode?.addListener(_onFocusChanged);
   }
 
-  /// Listens to input fields; once the user types, clears selected items
+  /// Parses the current min/max input, normalizes it onto [custom], and notifies
+  /// the listener via [OnChanged].
+  void _commitCustomRange(SelectorRangeEntry? custom) {
+    if (custom == null) return;
+    var minInt = int.tryParse(_minController!.text) ?? 0;
+    var maxInt = int.tryParse(_maxController!.text) ?? 0;
+    if (minInt > maxInt) {
+      final temp = minInt;
+      minInt = maxInt;
+      maxInt = temp;
+    }
+    custom.min = (minInt == 0) ? null : minInt;
+    custom.max = (maxInt == 0) ? null : maxInt;
+    final index = widget.entries.indexOf(custom);
+    widget.onChanged(index, custom);
+  }
+
+  /// Listens to input fields; once the user types, clears selected items and
+  /// commits the (possibly partial) range to the listener.
   void _inputListener() {
     if (widget.selectedEntries?.isNotEmpty ?? false) {
       setState(() {
         widget.selectedEntries?.clear();
       });
     }
-    widget.inputListener
-        ?.call(widget.category?.id, _minController!.text, _maxController!.text);
+    _commitCustomRange(firstCustomEntry);
+    _commitCustomRange(lastCustomEntry);
+  }
+
+  /// When the range input loses focus, commit the final normalized values.
+  void _onFocusChanged() {
+    if (!(_minFocusNode?.hasFocus ?? false) &&
+        !(_maxFocusNode?.hasFocus ?? false)) {
+      _commitCustomRange(firstCustomEntry);
+      _commitCustomRange(lastCustomEntry);
+    }
   }
 
   bool get inputNotEmpty =>
@@ -218,11 +244,11 @@ class SelectorListViewState<T extends SelectorEntry>
     }
   }
 
-  void _onItemTap(int index, T entry) {
+  void _onItemTap(int index, SelectorEntry entry) {
     // Clear custom input
     _clearAllInput();
     _unfocusAllInput();
-    widget.onItemTap(index, entry);
+    widget.onChanged(index, entry);
   }
 
   @override

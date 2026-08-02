@@ -16,7 +16,7 @@ const kSelectorChipBarHeight = 44.0;
 /// This widget is commonly used as a "quick filter" row (e.g. showing children
 /// of a selected entry). Selection state is provided by [selectedEntries] and user
 /// interactions are reported via [onItemTap].
-class SelectorChipBar<T extends SelectorEntry> extends StatelessWidget {
+class SelectorChipBar extends StatelessWidget {
   const SelectorChipBar({
     super.key,
     this.category,
@@ -32,7 +32,7 @@ class SelectorChipBar<T extends SelectorEntry> extends StatelessWidget {
     this.selectedChipColor,
     this.labelStyle,
     this.selectedLabelStyle,
-    required this.onItemTap,
+    required this.onChanged,
   });
 
   /// The parent [SelectorEntry] whose [SelectorEntry.name] is displayed as the
@@ -40,7 +40,7 @@ class SelectorChipBar<T extends SelectorEntry> extends StatelessWidget {
   final SelectorEntry? category;
 
   /// The sibling entries to display as chips in the bar.
-  final List<T> entries;
+  final List<SelectorEntry> entries;
 
   /// The set of currently selected entries.
   ///
@@ -106,7 +106,7 @@ class SelectorChipBar<T extends SelectorEntry> extends StatelessWidget {
   ///
   /// The [index] of the tapped entry within [entries] and the tapped entry
   /// itself are passed to the callback.
-  final ItemTapCallback onItemTap;
+  final OnChanged onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -162,7 +162,7 @@ class SelectorChipBar<T extends SelectorEntry> extends StatelessWidget {
             labelStyle: effectiveLabelStyle,
             selectedLabelStyle: effectiveSelectedLabelStyle,
             enabled: item.enabled,
-            onTap: () => onItemTap(index, item),
+            onTap: () => onChanged(index, item),
           );
         })(),
     ];

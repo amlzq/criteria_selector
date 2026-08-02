@@ -240,33 +240,27 @@ class FlattenSelectorState extends State<FlattenSelector> {
     });
   }
 
-  void _customItemSelection(
-      String categoryId, String minValue, String maxValue) {
-    var minInt = int.tryParse(minValue) ?? 0;
-    var maxInt = int.tryParse(maxValue) ?? 0;
-    if (minInt > maxInt) {
-      final temp = minInt;
-      minInt = maxInt;
-      maxInt = temp;
-    }
-    controller?.setCustomRangeForParent(
-      parentId: categoryId,
-      min: (minInt == 0) ? null : minInt,
-      max: (maxInt == 0) ? null : maxInt,
-      applyIfImmediate: true,
-    );
-  }
-
   void _onTerminalItemTap(SelectorChildEntry item) {
-    final category =
-        widget.entries.singleWhereOrNull((e) => e.id == item.parentId)
-            as SelectorCategoryEntry;
-    controller?.toggleFlatEntry(
-      item,
-      selectorSelectionMode: selectorSelectionMode ?? SelectionMode.single,
-      isCategoryTree: true,
-      category: category,
-    );
+    final categoryEntry =
+        widget.entries.singleWhereOrNull((e) => e.id == item.parentId);
+    if (categoryEntry is! SelectorCategoryEntry) return;
+    final category = categoryEntry;
+
+    if (item is SelectorRangeEntry && item.isCustom) {
+      final hasRange = item.min != null || item.max != null;
+      if (hasRange) {
+        controller?.select(item.id, parentId: item.parentId);
+      } else {
+        controller?.unselect(item.id, parentId: item.parentId);
+      }
+    } else {
+      controller?.toggleFlatEntry(
+        item,
+        selectorSelectionMode: selectorSelectionMode ?? SelectionMode.single,
+        isCategoryTree: true,
+        category: category,
+      );
+    }
 
     _setStateOrImmediateApply(item);
   }
@@ -330,7 +324,7 @@ class FlattenSelectorState extends State<FlattenSelector> {
                 entries: widget.entries,
                 selectedCategories: selectedCategories,
                 focusedIndex: _tempSelectedCategoryIndex,
-                onTap: (index, entry) => _onCategoryItemTap(index),
+                onChanged: (index, entry) => _onCategoryItemTap(index),
               ),
               // Right content area with NotificationListener
               Expanded(
@@ -366,12 +360,8 @@ class FlattenSelectorState extends State<FlattenSelector> {
                           category: category,
                           entries: entries,
                           selectedEntries: selectedEntries,
-                          onItemTap: (index, item) =>
-                              _onTerminalItemTap(item as SelectorChildEntry),
-                          focusListener: (categoryId, minValue, maxValue) {
-                            _customItemSelection(
-                                categoryId, minValue, maxValue);
-                          },
+                          onChanged: (_, entry) =>
+                              _onTerminalItemTap(entry as SelectorChildEntry),
                           padding:
                               EdgeInsets.only(top: 18, bottom: isLast ? 18 : 0),
                         );

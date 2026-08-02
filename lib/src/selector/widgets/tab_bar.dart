@@ -12,7 +12,7 @@ enum SelectorTabBarIndicatorSize {
   label,
 }
 
-class SelectorTabBar<T extends SelectorEntry> extends StatelessWidget {
+class SelectorTabBar extends StatelessWidget {
   const SelectorTabBar({
     super.key,
     required this.entries,
@@ -29,20 +29,20 @@ class SelectorTabBar<T extends SelectorEntry> extends StatelessWidget {
     this.indicatorPadding,
     this.indicatorSize,
     this.indicatorAnimationDuration,
-    required this.onTap,
+    required this.onChanged,
   });
 
   /// The category entries to display as tabs in this bar.
   ///
   /// Each entry renders a tab UI and must be a [SelectorCategoryEntry]; the
   /// number of tabs equals the length of this list.
-  final List<T> entries;
+  final List<SelectorEntry> entries;
 
   /// The set of currently selected categories.
   ///
   /// A tab is rendered as selected when its entry is contained in this set,
   /// and its indicator is shown accordingly.
-  final Set<T> selectedCategories;
+  final SelectorEntries selectedCategories;
 
   /// The index of the tab that should be considered focused.
   ///
@@ -122,7 +122,7 @@ class SelectorTabBar<T extends SelectorEntry> extends StatelessWidget {
   /// Called when a tab is tapped.
   ///
   /// The callback receives the tapped tab's index and its [SelectorEntry].
-  final ItemTapCallback onTap;
+  final OnChanged onChanged;
 
   double _measureLabelWidth(
       BuildContext context, String label, TextStyle style) {
@@ -191,7 +191,7 @@ class SelectorTabBar<T extends SelectorEntry> extends StatelessWidget {
         indicatorPadding: effectiveIndicatorPadding,
         indicatorSize: effectiveIndicatorSize,
         indicatorAnimationDuration: effectiveIndicatorAnimationDuration,
-        onTap: () => onTap(index, entry),
+        onTap: () => onChanged(index, entry),
       );
 
       if (isScrollable) {

@@ -3,7 +3,7 @@ import 'constants.dart';
 import 'selector_layout.dart';
 
 /// A set of selected [SelectorEntry] values.
-typedef SelectorEntries<T> = Set<SelectorEntry<T>>;
+typedef SelectorEntries<E> = Set<SelectorEntry<E>>;
 
 /// Special entry id representing the "Any" entry.
 const kAnyEntryId = 'any';
@@ -129,7 +129,7 @@ class SelectorRangeEntry<N, E> extends SelectorChildEntry<E> {
 
   @override
   String toString() =>
-      'SelectorRangeEntry(id: $id, parentId: $parentId, name: $name, min: $min, max: $max)';
+      'SelectorRangeEntry(id: $id, parentId: $parentId, name: $name, min: $min, max: $max, divisions: $divisions)';
 }
 
 extension SelectorRangeEntryExt on SelectorRangeEntry {

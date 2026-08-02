@@ -83,9 +83,10 @@ void main() {
       expect(controller.selectedEntriesForParent('c', level: 1).contains(a),
           isTrue);
 
-      expect(
-          controller.setCustomRangeForParent(parentId: 'c', min: 10, max: 20),
-          isTrue);
+      // The view normalizes the input onto the entry and then selects it.
+      custom.min = 10;
+      custom.max = 20;
+      expect(controller.select(custom.id, parentId: 'c'), isTrue);
       expect(controller.selectedEntriesForParent('c', level: 1).contains(a),
           isFalse);
       final selectedCustom = controller

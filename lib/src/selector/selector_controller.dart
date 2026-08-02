@@ -414,29 +414,6 @@ class SelectorController extends ChangeNotifier {
     return true;
   }
 
-  bool setCustomRangeForParent({
-    required String parentId,
-    Object? min,
-    Object? max,
-    bool emitChange = true,
-    bool applyIfImmediate = false,
-  }) {
-    final entry = stateTree.findEntry(kCustomEntryId, parentId: parentId);
-    if (entry is! SelectorRangeEntry) return false;
-    entry.min = min;
-    entry.max = max;
-    if (min != null || max != null) {
-      entry.name = '${min ?? ''}-${max ?? ''}';
-      return select(
-        kCustomEntryId,
-        parentId: parentId,
-        emitChange: emitChange,
-        applyIfImmediate: applyIfImmediate,
-      );
-    }
-    return unselect(kCustomEntryId, parentId: parentId, emitChange: emitChange);
-  }
-
   SelectionMode _effectiveSelectorSelectionMode() {
     if (selectionMode == SelectionMode.multiple) return SelectionMode.multiple;
     for (final entry in stateTree.entries) {

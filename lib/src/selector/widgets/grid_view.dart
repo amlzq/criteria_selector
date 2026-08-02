@@ -13,7 +13,7 @@ import 'skeleton_box.dart';
 
 /// A grid view that can include a single input item.
 /// Only used in tabs or flatten; uses AutomaticKeepAliveClientMixin.
-class SelectorGridView<T extends SelectorEntry> extends StatefulWidget {
+class SelectorGridView extends StatefulWidget {
   const SelectorGridView({
     super.key,
     required this.crossAxisCount,
@@ -23,8 +23,7 @@ class SelectorGridView<T extends SelectorEntry> extends StatefulWidget {
     this.category,
     required this.entries,
     this.selectedEntries,
-    required this.onItemTap,
-    this.focusListener,
+    required this.onChanged,
     this.padding,
     this.tileVariant,
     this.fieldVariant,
@@ -43,24 +42,20 @@ class SelectorGridView<T extends SelectorEntry> extends StatefulWidget {
   /// This list must be a terminal-node list (no further sub-categories). When
   /// it contains a custom range entry, an input field is rendered at the header
   /// or footer of the grid.
-  final List<T> entries;
+  final List<SelectorEntry> entries;
 
   /// The set of currently selected entries.
   ///
   /// A tile is rendered as selected when it is contained in this set.
   final SelectorEntries? selectedEntries;
 
-  /// Called when a tile is tapped.
+  /// Called when a tile is tapped or a custom range value changes.
   ///
-  /// The callback receives the tapped tile's index and its [SelectorEntry].
-  final ItemTapCallback onItemTap;
-
-  /// Called with the latest range input values when the input fields lose
-  /// focus.
-  ///
-  /// Receives the category id along with the current minimum and maximum input
-  /// values. Only used when [entries] contains a custom range entry.
-  final CustomRangeListener? focusListener;
+  /// The callback receives the affected item's index and its [SelectorEntry].
+  /// For custom range entries the view has already parsed and normalized the
+  /// min/max values onto the entry before invoking this callback, so the
+  /// listener only needs to update selection state.
+  final OnChanged onChanged;
 
   /// The padding around the grid, including the title and any range input.
   ///
@@ -100,15 +95,15 @@ class SelectorGridView<T extends SelectorEntry> extends StatefulWidget {
   final String toText;
 
   @override
-  State<SelectorGridView<T>> createState() => SelectorGridViewState<T>();
+  State<SelectorGridView> createState() => SelectorGridViewState();
 }
 
-class SelectorGridViewState<T extends SelectorEntry>
-    extends State<SelectorGridView<T>> with AutomaticKeepAliveClientMixin {
+class SelectorGridViewState extends State<SelectorGridView>
+    with AutomaticKeepAliveClientMixin {
   SelectorRangeEntry? _firstCustomEntry;
   SelectorRangeEntry? _lastCustomEntry;
 
-  late List<T> _entriesWithoutCustom;
+  late List<SelectorEntry> _entriesWithoutCustom;
 
   TextEditingController? _minController;
   TextEditingController? _maxController;
@@ -117,8 +112,6 @@ class SelectorGridViewState<T extends SelectorEntry>
   FocusNode? _maxFocusNode;
 
   late SelectorEntries _selectedEntries;
-
-  late String _categoryId;
 
   @override
   void initState() {
@@ -145,15 +138,12 @@ class SelectorGridViewState<T extends SelectorEntry>
       }
     }
 
-    _categoryId = widget.category?.id ??
-        (widget.entries.first as SelectorChildEntry).parentId;
-
     _minFocusNode?.addListener(_focusListener);
     _maxFocusNode?.addListener(_focusListener);
   }
 
   @override
-  void didUpdateWidget(covariant SelectorGridView<T> oldWidget) {
+  void didUpdateWidget(covariant SelectorGridView oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     _selectedEntries = widget.selectedEntries ?? {};
@@ -172,9 +162,6 @@ class SelectorGridViewState<T extends SelectorEntry>
         _maxController?.text = selectedEntry.max?.toString() ?? '';
       }
     }
-
-    _categoryId = widget.category?.id ??
-        (widget.entries.first as SelectorChildEntry).parentId;
 
     // When the custom range was selected and is now removed (e.g. tapping a
     // preset or clicking reset), clear the input fields so stale values are not
@@ -206,9 +193,26 @@ class SelectorGridViewState<T extends SelectorEntry>
   void _focusListener() {
     if (!(_minFocusNode?.hasFocus == true) &&
         !(_maxFocusNode?.hasFocus == true)) {
-      widget.focusListener
-          ?.call(_categoryId, _minController!.text, _maxController!.text);
+      _commitCustomRange(_firstCustomEntry);
+      _commitCustomRange(_lastCustomEntry);
     }
+  }
+
+  /// Parses the current min/max input, normalizes it onto [custom], and notifies
+  /// the listener via [OnChanged].
+  void _commitCustomRange(SelectorRangeEntry? custom) {
+    if (custom == null) return;
+    var minInt = int.tryParse(_minController!.text) ?? 0;
+    var maxInt = int.tryParse(_maxController!.text) ?? 0;
+    if (minInt > maxInt) {
+      final temp = minInt;
+      minInt = maxInt;
+      maxInt = temp;
+    }
+    custom.min = (minInt == 0) ? null : minInt;
+    custom.max = (maxInt == 0) ? null : maxInt;
+    final index = widget.entries.indexOf(custom);
+    widget.onChanged(index, custom);
   }
 
   bool get inputNotEmpty =>
@@ -232,11 +236,11 @@ class SelectorGridViewState<T extends SelectorEntry>
     }
   }
 
-  void _onItemTap(int index, T item) {
+  void _onItemTap(int index, SelectorEntry item) {
     // Clear custom input
     _clearAllInput();
     _unfocusAllInput();
-    widget.onItemTap(index, item);
+    widget.onChanged(index, item);
   }
 
   @override

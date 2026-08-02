@@ -1,8 +1,9 @@
 import '../selector_entry.dart';
 
-/// Callback invoked when an item in a list/grid is tapped.
-typedef ItemTapCallback<T extends SelectorEntry> = Function(int index, T entry);
-
-/// Callback invoked when a custom range entry is tapped.
-typedef CustomRangeListener = void Function(
-    String categoryId, String minValue, String maxValue);
+/// Generic callback invoked when an item in a selector view changes.
+///
+/// [index] is the position of the affected item within the list and [entry] is
+/// the corresponding data model. For custom range entries the view has already
+/// parsed and normalized the min/max values onto [entry] before invoking this
+/// callback, so the listener only needs to update selection state.
+typedef OnChanged<T extends SelectorEntry> = Function(int index, T entry);

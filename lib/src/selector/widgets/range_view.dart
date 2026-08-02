@@ -24,14 +24,14 @@ class SelectorRangeView extends StatefulWidget {
     this.category,
     required this.entries,
     this.selectedEntries,
-    this.toText = '-',
-    this.focusListener,
+    required this.onChanged,
     this.minController,
     this.maxController,
     this.minFocusNode,
     this.maxFocusNode,
     this.padding,
     this.showTitle = true,
+    this.toText = '-',
   });
 
   /// Whether to show the category's name as a title above the slider.
@@ -54,12 +54,11 @@ class SelectorRangeView extends StatefulWidget {
   /// entry's previous min/max on first build.
   final SelectorEntries? selectedEntries;
 
-  /// Text rendered between the two text fields (default: `'-'`).
-  final String toText;
-
-  /// Called when the range changes, mirroring the
-  /// [CustomRangeListener] signature used elsewhere in the package.
-  final CustomRangeListener? focusListener;
+  /// Called when the range changes. The view has already normalized the
+  /// current start/end onto the custom [SelectorRangeEntry] (writing `null`
+  /// for bounds that sit at the slider's extremes) before invoking this
+  /// callback, so the listener only needs to update selection state.
+  final OnChanged onChanged;
 
   /// Optional external controller for the min text field.
   final TextEditingController? minController;
@@ -75,6 +74,9 @@ class SelectorRangeView extends StatefulWidget {
 
   /// Padding around the whole view.
   final EdgeInsetsGeometry? padding;
+
+  /// Text rendered between the two text fields (default: `'-'`).
+  final String toText;
 
   @override
   State<SelectorRangeView> createState() => _SelectorRangeViewState();
@@ -277,19 +279,19 @@ class _SelectorRangeViewState extends State<SelectorRangeView> {
   }
 
   void _emit(RangeValues range) {
-    final cb = widget.focusListener;
-    if (cb == null) return;
-    cb(
-      widget.category?.id ?? '',
-      _toEmitText(range.start, _atMinExtreme),
-      _toEmitText(range.end, _atMaxExtreme),
-    );
+    final entry = _findEntry();
+    if (entry == null) return;
+    final atMin = range.start <= _min + _epsilon;
+    final atMax = range.end >= _max - _epsilon;
+    entry.min = atMin ? null : _toEntryValue(range.start);
+    entry.max = atMax ? null : _toEntryValue(range.end);
+    final index = widget.entries.indexOf(entry);
+    widget.onChanged.call(index < 0 ? 0 : index, entry);
   }
 
-  String _toEmitText(double v, bool atExtreme) {
-    if (atExtreme) return '';
-    return _format(v, atExtreme: false);
-  }
+  /// Projects a slider value to the entry's native numeric type (int when the
+  /// range is integral, otherwise double).
+  Object _toEntryValue(double v) => _isInt ? v.round() : v;
 
   RangeValues _roundRange(RangeValues r) {
     if (!_isInt) return r;

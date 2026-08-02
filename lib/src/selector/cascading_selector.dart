@@ -660,7 +660,7 @@ class CascadingSelectorState extends State<CascadingSelector> {
                 entries: widget.entries,
                 selectedCategories: selectedCategories,
                 focusedIndex: tempSelectedCategoryIndex,
-                onTap: (_, entry) =>
+                onChanged: (_, entry) =>
                     _onCategoryItemTap(entry as SelectorCategoryEntry),
               ),
               // Children lists (right)
@@ -677,7 +677,7 @@ class CascadingSelectorState extends State<CascadingSelector> {
                         entries: categoryHeader.children!.toList(),
                         selectedEntries: headerSelected,
                         variant: SelectorChipVariant.filled,
-                        onItemTap: (index, entry) => _onHeaderOrFooterItemTap
+                        onChanged: (index, entry) => _onHeaderOrFooterItemTap
                             .call(true, index, entry as SelectorChildEntry),
                       ),
                     Expanded(
@@ -726,7 +726,7 @@ class CascadingSelectorState extends State<CascadingSelector> {
                         entries: categoryFooter.children!.toList(),
                         selectedEntries: footerSelected,
                         variant: SelectorChipVariant.filled,
-                        onItemTap: (index, entry) => _onHeaderOrFooterItemTap
+                        onChanged: (index, entry) => _onHeaderOrFooterItemTap
                             .call(false, index, entry as SelectorChildEntry),
                       ),
                   ],

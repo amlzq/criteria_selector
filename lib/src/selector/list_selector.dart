@@ -86,24 +86,18 @@ class ListSelectorState extends State<ListSelector> {
       widget.entries.elementAtOrNull(_tempSelectedCategoryIndex)
           as SelectorCategoryEntry;
 
-  void _customItemSelection(
-      String categoryId, String minValue, String maxValue) {
-    var minInt = int.tryParse(minValue) ?? 0;
-    var maxInt = int.tryParse(maxValue) ?? 0;
-    if (minInt > maxInt) {
-      final temp = minInt;
-      minInt = maxInt;
-      maxInt = temp;
-    }
-    controller?.setCustomRangeForParent(
-      parentId: categoryId,
-      min: (minInt == 0) ? null : minInt,
-      max: (maxInt == 0) ? null : maxInt,
-      applyIfImmediate: true,
-    );
-  }
-
   void _onTerminalItemTap(SelectorChildEntry item) {
+    if (item is SelectorRangeEntry && item.isCustom) {
+      final hasRange = item.min != null || item.max != null;
+      if (hasRange) {
+        controller?.select(item.id, parentId: item.parentId);
+      } else {
+        controller?.unselect(item.id, parentId: item.parentId);
+      }
+      _setStateOrImmediateApply(item);
+      return;
+    }
+
     final isCategoryTree = widget.entries.firstOrNull is SelectorCategoryEntry;
     if (!isCategoryTree) {
       controller?.toggleFlatEntry(
@@ -190,12 +184,8 @@ class ListSelectorState extends State<ListSelector> {
                               showTitle: false,
                               entries: entries,
                               selectedEntries: selectedEntries,
-                              onItemTap: (index, item) => _onTerminalItemTap(
-                                  item as SelectorChildEntry),
-                              inputListener: (categoryId, minValue, maxValue) {
-                                _customItemSelection(categoryId ?? category.id,
-                                    minValue, maxValue);
-                              },
+                              onChanged: (_, entry) => _onTerminalItemTap(
+                                  entry as SelectorChildEntry),
                               toText: toText,
                             ),
                           SelectorGridLayout(
@@ -217,15 +207,8 @@ class ListSelectorState extends State<ListSelector> {
                               showTitle: false,
                               entries: entries,
                               selectedEntries: selectedEntries,
-                              onItemTap: (index, item) => _onTerminalItemTap(
-                                  item as SelectorChildEntry),
-                              focusListener: (categoryId, minValue, maxValue) {
-                                _customItemSelection(
-                                  categoryId,
-                                  minValue,
-                                  maxValue,
-                                );
-                              },
+                              onChanged: (_, entry) => _onTerminalItemTap(
+                                  entry as SelectorChildEntry),
                               toText: toText,
                             ),
                           SelectorChipLayout() => SelectorChipBar(
@@ -244,7 +227,7 @@ class ListSelectorState extends State<ListSelector> {
                               labelStyle: chipBarTheme?.labelStyle,
                               selectedLabelStyle:
                                   chipBarTheme?.selectedLabelStyle,
-                              onItemTap: (index, item) => _onTerminalItemTap(
+                              onChanged: (_, item) => _onTerminalItemTap(
                                   item as SelectorChildEntry),
                             ),
                           SelectorRangeLayout(:final toText) =>
@@ -255,13 +238,8 @@ class ListSelectorState extends State<ListSelector> {
                               toText: toText,
                               entries: entries,
                               selectedEntries: selectedEntries,
-                              focusListener: (categoryId, minValue, maxValue) {
-                                _customItemSelection(
-                                  categoryId,
-                                  minValue,
-                                  maxValue,
-                                );
-                              },
+                              onChanged: (_, entry) => _onTerminalItemTap(
+                                  entry as SelectorChildEntry),
                             ),
                         },
                       );
@@ -271,7 +249,7 @@ class ListSelectorState extends State<ListSelector> {
               : SelectorListView(
                   entries: widget.entries,
                   selectedEntries: controller?.selectedEntriesAtLevel(0) ?? {},
-                  onItemTap: (_, entry) =>
+                  onChanged: (_, entry) =>
                       _onTerminalItemTap(entry as SelectorChildEntry),
                   radioBuilder: delegate.radioBuilder,
                   checkboxBuilder: delegate.checkboxBuilder,
