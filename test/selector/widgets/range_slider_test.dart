@@ -132,7 +132,6 @@ void main() {
         ),
       );
       final sliderFinder = find.byType(SelectorRangeSlider);
-      final box = tester.getRect(sliderFinder);
       // Drag from a point that lands nearer the start thumb (~20%).
       final start = tester.getCenter(sliderFinder);
       await tester.dragFrom(start, const Offset(40, 0));
@@ -372,12 +371,13 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: SelectorRangeView(
+            body:             SelectorRangeView(
               category: category,
               entries: category.children!.toList(),
               selectedEntries: const <SelectorEntry>{},
               toText: const SelectorRangeLayout().toText,
               showTitle: true,
+              onChanged: (_, __) {},
             ),
           ),
         ),
@@ -404,12 +404,13 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: SelectorRangeView(
+            body:             SelectorRangeView(
               category: category,
               entries: category.children!.toList(),
               selectedEntries: const <SelectorEntry>{},
               toText: const SelectorRangeLayout().toText,
               showTitle: false,
+              onChanged: (_, __) {},
             ),
           ),
         ),
@@ -442,6 +443,7 @@ void main() {
               entries: category.children!.toList(),
               selectedEntries: const <SelectorEntry>{},
               toText: const SelectorRangeLayout().toText,
+              onChanged: (_, __) {},
             ),
           ),
         ),
@@ -492,6 +494,7 @@ void main() {
               entries: category.children!.toList(),
               selectedEntries: const <SelectorEntry>{},
               toText: const SelectorRangeLayout().toText,
+              onChanged: (_, __) {},
             ),
           ),
         ),
@@ -589,6 +592,7 @@ void main() {
         entries: category.children!.toList(),
         selectedEntries: const <SelectorEntry>{},
         toText: const SelectorRangeLayout().toText,
+        onChanged: (_, __) {},
       );
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: base)));
 
@@ -618,6 +622,7 @@ void main() {
           ),
         },
         toText: const SelectorRangeLayout().toText,
+        onChanged: (_, __) {},
       );
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: rebuilt)));
       await tester.pumpAndSettle();
@@ -706,6 +711,7 @@ void main() {
               entries: category.children!.toList(),
               selectedEntries: const <SelectorEntry>{},
               toText: const SelectorRangeLayout().toText,
+              onChanged: (_, __) {},
             ),
           ),
         ),
@@ -765,6 +771,7 @@ void main() {
               entries: category.children!.toList(),
               selectedEntries: const <SelectorEntry>{},
               toText: const SelectorRangeLayout().toText,
+              onChanged: (_, __) {},
             ),
           ),
         ),
