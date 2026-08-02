@@ -26,6 +26,12 @@ typedef DropdownSelectorBarWillToggleCallback = FutureOr<bool> Function(
 typedef DropdownSelectorBarToggleCallback = void Function(
     DropdownTabData tabData);
 
+/// Callback for selection change or apply events from a [DropdownSelectorBar].
+///
+/// Receives the tab metadata and the selected entries directly.
+typedef DropdownSelectorBarCallback = void Function(
+    DropdownTabData tabData, SelectorEntries selected);
+
 /// A tab bar that shows an overlay selector panel when a tab is tapped.
 ///
 /// Provide:
@@ -119,10 +125,10 @@ class DropdownSelectorBar extends StatefulWidget
   final DropdownSelectorBarWillToggleCallback? onSelectorWillHide;
 
   /// Fired whenever a selector reports a selection change.
-  final DropdownSelectorResultCallback? onChanged;
+  final DropdownSelectorBarCallback? onChanged;
 
   /// Fired when a selector is applied.
-  final DropdownSelectorResultCallback? onApplied;
+  final DropdownSelectorBarCallback? onApplied;
 
   /// Fired when reset is triggered.
   final VoidCallback? onReset;
@@ -504,14 +510,8 @@ class DropdownTab extends StatelessWidget {
   /// result.
   ///
   /// Receives only the selected entries; the canonical [SelectorLabelLoader]
-  /// form. To keep receiving the live tab metadata, use [legacyLabelGetter].
+  /// form.
   final SelectorLabelLoader? labelLoader;
-
-  /// @Deprecated('Use [labelLoader] (the canonical [SelectorLabelLoader] form). '
-  /// 'This legacy getter additionally received tab metadata; adapt it with '
-  /// 'fromTabLabelGetter if you must keep the (tabData, selected) signature. '
-  /// 'Will be removed in a future minor version.')
-  final DropdownTabLabelGetter? legacyLabelGetter;
 
   /// A custom widget displayed in the tab instead of [label].
   ///
@@ -527,7 +527,6 @@ class DropdownTab extends StatelessWidget {
     this.labelLoader,
     this.child,
     this.tag,
-    this.legacyLabelGetter,
   }) : assert(label == null || child == null,
             'Either provide a label or an child, not both.');
 
@@ -552,8 +551,7 @@ class DropdownTab extends StatelessWidget {
           index: info.index,
           originalLabel: label,
           tag: tag,
-          labelLoader: labelLoader,
-          legacyLabelGetter: legacyLabelGetter);
+          labelLoader: labelLoader);
       controller.labelStateMap[info.index] = tabData;
     }
 

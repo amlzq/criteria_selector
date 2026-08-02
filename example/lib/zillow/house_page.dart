@@ -137,25 +137,26 @@ class _HousePageState extends State<HousePage> {
     }
   }
 
-  HouseFilter? _dropdownSelectorResultParser(DropdownSelectorResult result) {
+  HouseFilter? _dropdownSelectorResultParser(
+      DropdownTabData tabData, SelectorEntries selected) {
     final filter = HouseFilter(cityId: userCityId);
-    if (result.tabIndex == 0) {
+    if (tabData.index == 0) {
       // Neighborhood filter
-      _filtersRepo.neighborhoodResult = result.selected;
-      filter.neighborhood = result
+      _filtersRepo.neighborhoodResult = selected;
+      filter.neighborhood = selected
           .cascadingPairsOf('neighborhood')
           .map((p) => {
                 "region_id": p.id,
                 "neighborhood_id": p.childIds,
               })
           .toList(growable: false);
-    } else if (result.tabIndex == 1) {
+    } else if (tabData.index == 1) {
       // Price filter
-      _filtersRepo.priceResult = result.selected;
-      final category = result.selected.firstOrNull;
+      _filtersRepo.priceResult = selected;
+      final category = selected.firstOrNull;
       if (category == null) return null;
       if (category.id == 'list_price') {
-        filter.listPrice = result
+        filter.listPrice = selected
             .childRangesOf('list_price')
             .map((e) => {
                   "id": e.id,
@@ -164,7 +165,7 @@ class _HousePageState extends State<HousePage> {
                 })
             .toList(growable: false);
       } else if (category.id == 'monthly_price') {
-        filter.monthlyPayment = result
+        filter.monthlyPayment = selected
             .childRangesOf('monthly_price')
             .map((e) => {
                   "id": e.id,
@@ -173,39 +174,40 @@ class _HousePageState extends State<HousePage> {
                 })
             .toList(growable: false);
       }
-    } else if (result.tabIndex == 2) {
+    } else if (tabData.index == 2) {
       // Rooms filter
-      _filtersRepo.roomsResult = result.selected;
-      filter.bedrooms = result.childIdsOf('bedrooms');
-      filter.bathrooms = result.childIdsOf('bathrooms');
-    } else if (result.tabIndex == 3) {
+      _filtersRepo.roomsResult = selected;
+      filter.bedrooms = selected.childIdsOf('bedrooms');
+      filter.bathrooms = selected.childIdsOf('bathrooms');
+    } else if (tabData.index == 3) {
       // More filter
-      _filtersRepo.moreResult = result.selected;
-      filter.homeType = result.childIdsOf('home_type');
-      filter.listsDetails = result.childIdsOf('lists_details');
-      filter.squareFeet = result.childIdsOf('square_feet');
-      filter.lotSize = result.childIdsOf('lot_size');
-      filter.homeFeatures = result.childIdsOf('home_features');
-      filter.commute = result.childIdsOf('commute');
-      filter.expandedSearch = result.childIdsOf('expanded_search');
-    } else if (result.tabIndex == 4) {
+      _filtersRepo.moreResult = selected;
+      filter.homeType = selected.childIdsOf('home_type');
+      filter.listsDetails = selected.childIdsOf('lists_details');
+      filter.squareFeet = selected.childIdsOf('square_feet');
+      filter.lotSize = selected.childIdsOf('lot_size');
+      filter.homeFeatures = selected.childIdsOf('home_features');
+      filter.commute = selected.childIdsOf('commute');
+      filter.expandedSearch = selected.childIdsOf('expanded_search');
+    } else if (tabData.index == 4) {
       // Sort filter
-      _filtersRepo.sortResult = result.selected;
-      filter.sort = result.firstSelectedId;
+      _filtersRepo.sortResult = selected;
+      filter.sort = selected.firstSelectedId;
     }
     return filter;
   }
 
-  void _handleSelectorChange(DropdownSelectorResult result) async {
+  void _handleSelectorChange(
+      DropdownTabData tabData, SelectorEntries selected) async {
     final l10n = AppLocalizations.of(context);
-    _filter = _dropdownSelectorResultParser(result);
+    _filter = _dropdownSelectorResultParser(tabData, selected);
     if (_filter == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n?.resultParseFailed ?? '')),
       );
       return;
     }
-    if (result.tabIndex == 3) {
+    if (tabData.index == 3) {
       _moreApplyTextDebounce?.cancel();
 
       final requestId = ++_moreApplyTextRequestId;
@@ -230,16 +232,16 @@ class _HousePageState extends State<HousePage> {
     }
   }
 
-  void _handleSelectorApply(DropdownSelectorResult result) {
+  void _handleSelectorApply(DropdownTabData tabData, SelectorEntries selected) {
     final l10n = AppLocalizations.of(context);
-    _filter = _dropdownSelectorResultParser(result);
+    _filter = _dropdownSelectorResultParser(tabData, selected);
     if (_filter == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n?.resultParseFailed ?? '')),
       );
       return;
     }
-    if (result.tabIndex == 3) {
+    if (tabData.index == 3) {
       final latestMoreFilterSelected = <String>[];
       if (_filter!.homeType != null) {
         latestMoreFilterSelected.addAll(_filter!.homeType!);
@@ -538,23 +540,19 @@ class _HousePageState extends State<HousePage> {
                 debugPrint('onHidden: ${tabData.label}');
               },
               onChanged: (tabData, selected) {
-                final result = DropdownSelectorResult(
-                    tabData: tabData, selected: selected);
-                largePrint('onChanged: $result');
-                _handleSelectorChange(result);
-                showDropdownSelectorResult(context, result);
+                largePrint('onChanged: tabData=$tabData, selected=$selected');
+                _handleSelectorChange(tabData, selected);
+                showSelectResult(context, selected);
               },
               onApplied: (tabData, selected) {
-                final result = DropdownSelectorResult(
-                    tabData: tabData, selected: selected);
-                largePrint('onApplied: $result');
-                _handleSelectorApply(result);
-                if (result.tabIndex == 3) {
+                largePrint('onApplied: tabData=$tabData, selected=$selected');
+                _handleSelectorApply(tabData, selected);
+                if (tabData.index == 3) {
                   _moreApplyTextDebounce?.cancel();
                   _moreApplyTextRequestId++;
                   _moreApplyText.value = l10n?.apply ?? '';
                 }
-                showDropdownSelectorResult(context, result);
+                showSelectResult(context, selected);
               },
               onReset: () {
                 debugPrint('onReset');

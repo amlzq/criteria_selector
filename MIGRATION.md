@@ -1,5 +1,7 @@
 # Migration Guide
 
+## Next
+
 ## MIGRATE TO 0.4.0
 
 ### Single `layout` replaces `listConfig` / `gridConfig` / `chipConfig`

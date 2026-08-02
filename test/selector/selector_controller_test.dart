@@ -38,7 +38,7 @@ SelectorCategoryEntry<dynamic> _category(
 }
 
 void main() {
-  group('SelectorController – bindState', () {
+  group('SelectorController - bindState', () {
     test('bindState notifies listeners on first bind', () {
       final controller =
           SelectorController(selectionMode: SelectionMode.single);
@@ -76,7 +76,7 @@ void main() {
     });
   });
 
-  group('SelectorController – select', () {
+  group('SelectorController - select', () {
     test('select a leaf entry in a category tree (path length 2)', () {
       final controller =
           SelectorController(selectionMode: SelectionMode.single);
@@ -217,7 +217,7 @@ void main() {
     });
   });
 
-  group('SelectorController – unselect', () {
+  group('SelectorController - unselect', () {
     test('unselect a leaf entry removes it from selection', () {
       final controller =
           SelectorController(selectionMode: SelectionMode.single);
@@ -295,7 +295,7 @@ void main() {
     });
   });
 
-  group('SelectorController – focusCategory', () {
+  group('SelectorController - focusCategory', () {
     test('focusCategory selects category in single mode', () {
       final controller =
           SelectorController(selectionMode: SelectionMode.single);
@@ -317,7 +317,7 @@ void main() {
     });
   });
 
-  group('SelectorController – selectHeaderChild / unselectHeaderChild', () {
+  group('SelectorController - selectHeaderChild / unselectHeaderChild', () {
     test('selectHeaderChild in single mode', () {
       final controller =
           SelectorController(selectionMode: SelectionMode.single);
@@ -417,7 +417,7 @@ void main() {
     });
   });
 
-  group('SelectorController – selectFooterChild / unselectFooterChild', () {
+  group('SelectorController - selectFooterChild / unselectFooterChild', () {
     test('selectFooterChild in single mode', () {
       final controller =
           SelectorController(selectionMode: SelectionMode.single);
@@ -458,7 +458,7 @@ void main() {
     });
   });
 
-  group('SelectorController – listeners', () {
+  group('SelectorController - listeners', () {
     test('addChangeListener returns an unregister function', () {
       final controller =
           SelectorController(selectionMode: SelectionMode.single);
@@ -550,7 +550,7 @@ void main() {
     });
   });
 
-  group('SelectorController – dispose', () {
+  group('SelectorController - dispose', () {
     test('dispose clears all listeners', () {
       final controller =
           SelectorController(selectionMode: SelectionMode.single);
@@ -579,7 +579,7 @@ void main() {
     });
   });
 
-  group('SelectorController – findEntry / findPath', () {
+  group('SelectorController - findEntry / findPath', () {
     test('findEntry delegates to stateTree', () {
       final controller =
           SelectorController(selectionMode: SelectionMode.single);
@@ -604,7 +604,7 @@ void main() {
     });
   });
 
-  group('SelectorController – snapshot', () {
+  group('SelectorController - snapshot', () {
     test('snapshot returns current selection state', () {
       final controller =
           SelectorController(selectionMode: SelectionMode.single);
@@ -619,7 +619,7 @@ void main() {
     });
   });
 
-  group('SelectorController – resetState', () {
+  group('SelectorController - resetState', () {
     test('resetState restores resetSelected and notifies', () {
       final controller = SelectorController(
         selectionMode: SelectionMode.single,
@@ -639,7 +639,7 @@ void main() {
     });
   });
 
-  group('SelectorController – trimSelectionLevels', () {
+  group('SelectorController - trimSelectionLevels', () {
     test('trimSelectionLevels trims and notifies', () {
       final controller =
           SelectorController(selectionMode: SelectionMode.single);
@@ -657,7 +657,7 @@ void main() {
     });
   });
 
-  group('SelectorController – _effectiveSelectorSelectionMode', () {
+  group('SelectorController - _effectiveSelectorSelectionMode', () {
     test('returns multiple when controller selectionMode is multiple', () {
       final controller =
           SelectorController(selectionMode: SelectionMode.multiple);

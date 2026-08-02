@@ -19,8 +19,7 @@ class SelectorLabelState {
   /// Optional custom label loader based on the current selection result.
   ///
   /// Receives only the selected entries; the canonical [SelectorLabelLoader]
-  /// form. For a [DropdownTabData], this is combined with the legacy
-  /// [DropdownTabData.legacyLabelGetter] via [resolvedLabelLoader].
+  /// form.
   SelectorLabelLoader? labelLoader;
 
   /// The currently displayed label: the result label when one has been applied,
@@ -31,9 +30,6 @@ class SelectorLabelState {
   bool get isResulted => originalLabel != label;
 
   /// The effective label loader applied to the current selection.
-  ///
-  /// For the base state this is just [labelLoader]. [DropdownTabData] overrides
-  /// it to also fall back to its legacy (tab-metadata) getter.
   SelectorLabelLoader? get resolvedLabelLoader => labelLoader;
 
   @override

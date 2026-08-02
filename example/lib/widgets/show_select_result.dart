@@ -67,11 +67,3 @@ void _showSnackBar(BuildContext context, SelectorEntries result) {
     ),
   );
 }
-
-/// Shows a snack bar that displays the selected result of a dropdown selector.
-void showDropdownSelectorResult(
-  BuildContext context,
-  DropdownSelectorResult result,
-) {
-  showSelectResult(context, result.selected);
-}

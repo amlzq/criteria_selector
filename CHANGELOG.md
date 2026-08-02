@@ -2,6 +2,12 @@
 
 * **FEATURE** `GridSelector` now consumes `SelectorCategoryEntry.layout` via an exhaustive `switch (layout)`, matching the behavior already present in `ListSelector`. Each category renders as a `SelectorListView`, `SelectorGridView`, `SelectorChipBar`, or `SelectorRangeView` depending on its layout. `GridSelectorDelegate` gains optional `radioBuilder` / `checkboxBuilder` parameters for the `SelectorListLayout` branch. When `layout` is null the default `SelectorListLayout` is used; when `layout` is `SelectorGridLayout`, its own grid parameters (`crossAxisCount` etc.) take precedence over the delegate-level defaults.
 
+* **BREAKING** remove the deprecated `CriteriaSelectorLocalizations` / `CriteriaSelectorLocalizationsDelegate` typedef aliases (introduced in 0.3.0). Use `SelectorLocalizations` / `SelectorLocalizationsDelegate` instead.
+
+* **BREAKING** remove the deprecated `DropdownSelectorResult` class, `DropdownSelectorController.onChanged` / `onApplied` / `onReset` fields, `DropdownTabLabelGetter` typedef, `legacyLabelGetter` fields on `DropdownTabData` and `DropdownTab`, and the `fromLegacyResultCallback` / `fromLegacyLabelGetter` / `fromTabLabelGetter` adapter functions (introduced in 0.3.0). Use the listener API (`addChangeListener` / `addApplyListener` / `addResetListener`) on `DropdownSelectorController`, the `(DropdownTabData tabData, SelectorEntries selected)` callback signature directly, and the `SelectorLabelLoader` / `labelLoader` for label building.
+
+* see [Migration guide](https://github.com/amlzq/criteria_selector/blob/main/MIGRATION.md#migrate-to-030).
+
 ## 0.4.0
 
 * **FEATURE** add `SelectorRangeLayout` as a new `SelectorLayout` sealed subclass. The existing `switch (layout)` in `ListSelector` now routes to `SelectorRangeView`, which composes `SelectorRangeSlider` + a paired two-text-field row with bidirectional sync and `focusListener` callback.

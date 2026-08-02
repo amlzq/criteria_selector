@@ -71,7 +71,7 @@ void main() {
     });
 
     testWidgets('applies selection and updates tab label', (tester) async {
-      DropdownSelectorResult? applied;
+      ({DropdownTabData tabData, SelectorEntries selected})? applied;
       final controller = DropdownSelectorController();
 
       await tester.pumpWidget(
@@ -89,8 +89,8 @@ void main() {
                   },
                 ),
               ],
-              onApplied: (tabData, selected) => applied =
-                  DropdownSelectorResult(tabData: tabData, selected: selected),
+              onApplied: (tabData, selected) =>
+                  applied = (tabData: tabData, selected: selected),
               controller: controller,
             ),
             body: const SizedBox.expand(),
@@ -116,7 +116,7 @@ void main() {
     });
 
     testWidgets('uses labelGetter when provided', (tester) async {
-      DropdownSelectorResult? applied;
+      ({DropdownTabData tabData, SelectorEntries selected})? applied;
       final controller = DropdownSelectorController();
 
       await tester.pumpWidget(
@@ -136,8 +136,8 @@ void main() {
                   },
                 ),
               ],
-              onApplied: (tabData, selected) => applied =
-                  DropdownSelectorResult(tabData: tabData, selected: selected),
+              onApplied: (tabData, selected) =>
+                  applied = (tabData: tabData, selected: selected),
               controller: controller,
             ),
             body: const SizedBox.expand(),
@@ -161,7 +161,7 @@ void main() {
 
     testWidgets('fires onChanged and onReset in multiple selection',
         (tester) async {
-      DropdownSelectorResult? changed;
+      ({DropdownTabData tabData, SelectorEntries selected})? changed;
       var resetCalled = false;
       final controller = DropdownSelectorController();
 
@@ -181,8 +181,8 @@ void main() {
                   },
                 ),
               ],
-              onChanged: (tabData, selected) => changed =
-                  DropdownSelectorResult(tabData: tabData, selected: selected),
+              onChanged: (tabData, selected) =>
+                  changed = (tabData: tabData, selected: selected),
               onReset: () => resetCalled = true,
               controller: controller,
             ),

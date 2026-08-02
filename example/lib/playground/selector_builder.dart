@@ -373,10 +373,10 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
                 DropdownTab(label: l10n.layoutList),
               ],
               selectorDelegates: tabDelegates,
-              onChanged: (tabData, selected) => _onChanged(
-                  DropdownSelectorResult(tabData: tabData, selected: selected)),
-              onApplied: (tabData, selected) => _onApplied(
-                  DropdownSelectorResult(tabData: tabData, selected: selected)),
+              onChanged: (tabData, selected) =>
+                  _onChanged((tabData: tabData, selected: selected)),
+              onApplied: (tabData, selected) =>
+                  _onApplied((tabData: tabData, selected: selected)),
             ),
           ),
           body: Column(

@@ -84,16 +84,17 @@ class _RentPageState extends State<RentPage> {
     super.dispose();
   }
 
-  HouseFilter? _dropdownSelectorResultParser(DropdownSelectorResult result) {
+  HouseFilter? _dropdownSelectorResultParser(
+      DropdownTabData tabData, SelectorEntries selected) {
     final filter = HouseFilter(cityId: userCityId);
-    if (result.tabIndex == 0) {
+    if (tabData.index == 0) {
       // 区域
-      _filtersRepo.regionResult = result.selected;
-      final category = result.selected.firstOrNull;
+      _filtersRepo.regionResult = selected;
+      final category = selected.firstOrNull;
       if (category == null) return null;
       if (category.id == 'region') {
         // 行政区
-        filter.district = result
+        filter.district = selected
             .cascadingPairsOf('region')
             .map((p) => {
                   "district_id": p.id,
@@ -102,7 +103,7 @@ class _RentPageState extends State<RentPage> {
             .toList(growable: false);
       } else if (category.id == 'metro') {
         // 地铁
-        filter.metro = result
+        filter.metro = selected
             .cascadingPairsOf('metro')
             .map((p) => {
                   "line_id": p.id,
@@ -112,18 +113,18 @@ class _RentPageState extends State<RentPage> {
       } else if (category.id == 'nearby') {
         // 附近
         final nearbyRadiusMeters =
-            result.findIdsAtLevel(category, 1).firstOrNull;
+            selected.findIdsAtLevel(category, 1).firstOrNull;
         filter.nearbyRadiusMeters = nearbyRadiusMeters;
         filter.userLatLon = userLatLon;
       }
-    } else if (result.tabIndex == 1) {
+    } else if (tabData.index == 1) {
       // 价格筛选
-      _filtersRepo.rentalResult = result.selected;
-      final category = result.selected.firstOrNull;
+      _filtersRepo.rentalResult = selected;
+      final category = selected.firstOrNull;
       if (category == null) return null;
       if (category.id == 'rent') {
         // 租金
-        filter.rent = result
+        filter.rent = selected
             .childRangesOf('rent')
             .map((e) => {
                   "id": e.id,
@@ -132,13 +133,13 @@ class _RentPageState extends State<RentPage> {
                 })
             .toList(growable: false);
       }
-    } else if (result.tabIndex == 2) {
+    } else if (tabData.index == 2) {
       // 户型筛选
-      _filtersRepo.floorPlanRentResult = result.selected;
-      filter.livingRoom = result.childIdsOf('living_room');
-      filter.bathroom = result.childIdsOf('bathroom');
-      filter.balcony = result.childIdsOf('balcony');
-      filter.area = result
+      _filtersRepo.floorPlanRentResult = selected;
+      filter.livingRoom = selected.childIdsOf('living_room');
+      filter.bathroom = selected.childIdsOf('bathroom');
+      filter.balcony = selected.childIdsOf('balcony');
+      filter.area = selected
           .childRangesOf('area')
           .map((e) => {
                 "id": e.id,
@@ -146,24 +147,25 @@ class _RentPageState extends State<RentPage> {
                 "max": e.max,
               })
           .toList(growable: false);
-    } else if (result.tabIndex == 3) {
+    } else if (tabData.index == 3) {
       // 排序筛选
-      _filtersRepo.sortRentResult = result.selected;
-      filter.sort = result.firstSelectedId;
+      _filtersRepo.sortRentResult = selected;
+      filter.sort = selected.firstSelectedId;
     }
     return filter;
   }
 
-  void _handleSelectorChange(DropdownSelectorResult result) async {
+  void _handleSelectorChange(
+      DropdownTabData tabData, SelectorEntries selected) async {
     final l10n = AppLocalizations.of(context);
-    _filter = _dropdownSelectorResultParser(result);
+    _filter = _dropdownSelectorResultParser(tabData, selected);
     if (_filter == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n?.resultParseFailed ?? '')),
       );
       return;
     }
-    if (result.tabIndex == 2) {
+    if (tabData.index == 2) {
       _floorPlanApplyTextDebounce?.cancel();
 
       final requestId = ++_floorPlanApplyTextRequestId;
@@ -189,9 +191,9 @@ class _RentPageState extends State<RentPage> {
     }
   }
 
-  void _handleSelectorApply(DropdownSelectorResult result) {
+  void _handleSelectorApply(DropdownTabData tabData, SelectorEntries selected) {
     final l10n = AppLocalizations.of(context);
-    _filter = _dropdownSelectorResultParser(result);
+    _filter = _dropdownSelectorResultParser(tabData, selected);
     if (_filter == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n?.resultParseFailed ?? '')),
@@ -320,23 +322,19 @@ class _RentPageState extends State<RentPage> {
                 largePrint('onHidden: ${tabData.label}');
               },
               onChanged: (tabData, selected) {
-                final result = DropdownSelectorResult(
-                    tabData: tabData, selected: selected);
-                largePrint('onChanged: $result');
-                _handleSelectorChange(result);
-                showDropdownSelectorResult(context, result);
+                largePrint('onChanged: tabData=$tabData, selected=$selected');
+                _handleSelectorChange(tabData, selected);
+                showSelectResult(context, selected);
               },
               onApplied: (tabData, selected) {
-                final result = DropdownSelectorResult(
-                    tabData: tabData, selected: selected);
-                largePrint('onApplied: $result');
-                _handleSelectorApply(result);
-                if (result.tabIndex == 2) {
+                largePrint('onApplied: tabData=$tabData, selected=$selected');
+                _handleSelectorApply(tabData, selected);
+                if (tabData.index == 2) {
                   _floorPlanApplyTextDebounce?.cancel();
                   _floorPlanApplyTextRequestId++;
                   _floorPlanApplyText.value = l10n?.apply ?? '';
                 }
-                showDropdownSelectorResult(context, result);
+                showSelectResult(context, selected);
               },
               onReset: () {
                 debugPrint('onReset');

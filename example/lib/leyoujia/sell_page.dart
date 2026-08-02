@@ -77,16 +77,16 @@ class _SellPageState extends State<SellPage> {
     super.dispose();
   }
 
-  void _handleSelectorApply(DropdownSelectorResult result) {
+  void _handleSelectorApply(DropdownTabData tabData, SelectorEntries selected) {
     _filter ??= HouseFilter(cityId: userCityId);
-    if (result.tabIndex == 0) {
+    if (tabData.index == 0) {
       // 区域筛选
-      _filtersRepo.regionResult = result.selected;
-      final category = result.selected.firstOrNull;
+      _filtersRepo.regionResult = selected;
+      final category = selected.firstOrNull;
       if (category == null) return;
       if (category.id == 'region') {
         // 行政区
-        _filter?.district = result
+        _filter?.district = selected
             .cascadingPairsOf('region')
             .map((p) => {
                   "district_id": p.id,
@@ -95,7 +95,7 @@ class _SellPageState extends State<SellPage> {
             .toList(growable: false);
       } else if (category.id == 'metro') {
         // 地铁
-        _filter?.metro = result
+        _filter?.metro = selected
             .cascadingPairsOf('metro')
             .map((p) => {
                   "line_id": p.id,
@@ -105,18 +105,18 @@ class _SellPageState extends State<SellPage> {
       } else if (category.id == 'nearby') {
         // 附近
         final nearbyRadiusMeters =
-            result.findIdsAtLevel(category, 1).firstOrNull;
+            selected.findIdsAtLevel(category, 1).firstOrNull;
         _filter?.nearbyRadiusMeters = nearbyRadiusMeters;
         _filter?.userLatLon = userLatLon;
       }
-    } else if (result.tabIndex == 1) {
+    } else if (tabData.index == 1) {
       // 价格筛选
-      _filtersRepo.sellPriceResult = result.selected;
-      final category = result.selected.firstOrNull;
+      _filtersRepo.sellPriceResult = selected;
+      final category = selected.firstOrNull;
       if (category == null) return;
       if (category.id == 'total') {
         // 总价
-        _filter?.totalPrice = result
+        _filter?.totalPrice = selected
             .childRangesOf('total')
             .map((e) => {
                   "id": e.id,
@@ -126,7 +126,7 @@ class _SellPageState extends State<SellPage> {
             .toList(growable: false);
       } else if (category.id == 'downpay') {
         // 首付
-        _filter?.unitPrice = result
+        _filter?.unitPrice = selected
             .childRangesOf('downpay')
             .map((e) => {
                   "id": e.id,
@@ -135,13 +135,13 @@ class _SellPageState extends State<SellPage> {
                 })
             .toList(growable: false);
       }
-    } else if (result.tabIndex == 2) {
+    } else if (tabData.index == 2) {
       // 户型筛选
-      _filtersRepo.floorPlanSellResult = result.selected;
-      _filter?.livingRoom = result.childIdsOf('living_room');
-      _filter?.bathroom = result.childIdsOf('bathroom');
-      _filter?.balcony = result.childIdsOf('balcony');
-      _filter?.area = result
+      _filtersRepo.floorPlanSellResult = selected;
+      _filter?.livingRoom = selected.childIdsOf('living_room');
+      _filter?.bathroom = selected.childIdsOf('bathroom');
+      _filter?.balcony = selected.childIdsOf('balcony');
+      _filter?.area = selected
           .childRangesOf('area')
           .map((e) => {
                 "id": e.id,
@@ -149,10 +149,10 @@ class _SellPageState extends State<SellPage> {
                 "max": e.max,
               })
           .toList(growable: false);
-    } else if (result.tabIndex == 3) {
+    } else if (tabData.index == 3) {
       // 排序筛选
-      _filtersRepo.sortSellResult = result.selected;
-      _filter?.sort = result.firstSelectedId;
+      _filtersRepo.sortSellResult = selected;
+      _filter?.sort = selected.firstSelectedId;
     }
     _repo.refreshData(_filter!);
   }
@@ -268,10 +268,8 @@ class _SellPageState extends State<SellPage> {
                 largePrint('onHidden: ${tabData.label}');
               },
               onChanged: (tabData, selected) {
-                final result = DropdownSelectorResult(
-                    tabData: tabData, selected: selected);
-                largePrint('onChanged: $result');
-                final conditions = '${result.selected.flatten()}';
+                largePrint('onChanged: tabData=$tabData, selected=$selected');
+                final conditions = '${selected.flatten()}';
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
@@ -281,11 +279,9 @@ class _SellPageState extends State<SellPage> {
                 );
               },
               onApplied: (tabData, selected) {
-                final result = DropdownSelectorResult(
-                    tabData: tabData, selected: selected);
-                largePrint('onApplied: $result');
-                _handleSelectorApply(result);
-                final conditions = '${result.selected.flatten()}';
+                largePrint('onApplied: tabData=$tabData, selected=$selected');
+                _handleSelectorApply(tabData, selected);
+                final conditions = '${selected.flatten()}';
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'dropdown_selector_result.dart';
 import 'dropdown_tab_data.dart';
 import 'selector/constants.dart';
 import 'selector/selector_controller.dart';
@@ -18,39 +17,6 @@ import 'selector_label_state.dart';
 class DropdownSelectorController extends ChangeNotifier {
   static const Duration _kOverlayAnimationDuration =
       Duration(milliseconds: 240);
-
-  /// Fired whenever a selector reports a selection change.
-  ///
-  /// Deprecated: register a listener via [addChangeListener] instead. This
-  /// field is kept for backwards compatibility and will be removed in a future
-  /// minor version. When set, it is invoked alongside any registered
-  /// [addChangeListener] listeners.
-  @Deprecated(
-    'Use addChangeListener instead. This field will be removed in a future minor version.',
-  )
-  void Function(DropdownSelectorResult)? onChanged;
-
-  /// Fired when a selector is applied.
-  ///
-  /// Deprecated: register a listener via [addApplyListener] instead. This
-  /// field is kept for backwards compatibility and will be removed in a future
-  /// minor version. When set, it is invoked alongside any registered
-  /// [addApplyListener] listeners.
-  @Deprecated(
-    'Use addApplyListener instead. This field will be removed in a future minor version.',
-  )
-  void Function(DropdownSelectorResult)? onApplied;
-
-  /// Fired when reset is triggered.
-  ///
-  /// Deprecated: register a listener via [addResetListener] instead. This
-  /// field is kept for backwards compatibility and will be removed in a future
-  /// minor version. When set, it is invoked alongside any registered
-  /// [addResetListener] listeners.
-  @Deprecated(
-    'Use addResetListener instead. This field will be removed in a future minor version.',
-  )
-  VoidCallback? onReset;
 
   final List<SelectorLabelChangeCallback> _changeListeners = [];
   final List<SelectorLabelChangeCallback> _applyListeners = [];
@@ -418,14 +384,6 @@ class DropdownSelectorController extends ChangeNotifier {
     if (_isDisposed) return;
     final labelState = labelStateMap[currentIndex];
     if (labelState == null) return;
-    final tabData = labelState is DropdownTabData ? labelState : null;
-    if (tabData != null) {
-      // ignore: deprecated_member_use_from_same_package
-      final result =
-          DropdownSelectorResult(tabData: tabData, selected: selected);
-      // ignore: deprecated_member_use_from_same_package
-      onChanged?.call(result);
-    }
     for (final listener in List.of(_changeListeners)) {
       listener(labelState, selected);
     }
@@ -444,14 +402,6 @@ class DropdownSelectorController extends ChangeNotifier {
     // keeps the initial `selectedEntriesLoader` value and the previous selection
     // is lost on reopen — even though `selectedEntriesLoader` was supplied.
     previousSelectorDelegate?.selectedData = selected;
-    final tabData = labelState is DropdownTabData ? labelState : null;
-    if (tabData != null) {
-      // ignore: deprecated_member_use_from_same_package
-      final result =
-          DropdownSelectorResult(tabData: tabData, selected: selected);
-      // ignore: deprecated_member_use_from_same_package
-      onApplied?.call(result);
-    }
     for (final listener in List.of(_applyListeners)) {
       listener(labelState, selected);
     }
@@ -464,8 +414,8 @@ class DropdownSelectorController extends ChangeNotifier {
   /// Programmatically applies selection ids to the tab at [tabIndex].
   ///
   /// This method does not open the selector panel. Instead, it resolves
-  /// [selectedEntryIds] against the selector data, builds a `DropdownSelectorResult`,
-  /// fires `onApplied`, updates the tab label, and notifies listeners.
+  /// [selectedEntryIds] against the selector data, fires apply listeners,
+  /// updates the tab label, and notifies listeners.
   ///
   /// Matching rules:
   /// - Matching is performed by entry id only.
@@ -512,16 +462,12 @@ class DropdownSelectorController extends ChangeNotifier {
     if (ctx.invalidCategoryHit) return false;
     if (ctx.invalidCustomHit) return false;
 
-    // ignore: deprecated_member_use_from_same_package
-    final result = DropdownSelectorResult(tabData: tabData, selected: selected);
-    // ignore: deprecated_member_use_from_same_package
-    onApplied?.call(result);
     for (final listener in List.of(_applyListeners)) {
       listener(tabData, selected);
     }
     final customLabel = tabData.resolvedLabelLoader?.call(selected);
-    tabData.resultLabel = customLabel ??
-        SelectorUtils.getResultLabel(result.selected, multipleText);
+    tabData.resultLabel =
+        customLabel ?? SelectorUtils.getResultLabel(selected, multipleText);
     notifyListeners();
     return true;
   }
@@ -694,9 +640,6 @@ class DropdownSelectorController extends ChangeNotifier {
   /// Dispatches a reset event.
   void handleReset() {
     if (_isDisposed) return;
-    // hideSelector();
-    // ignore: deprecated_member_use_from_same_package
-    onReset?.call();
     for (final listener in List.of(_resetListeners)) {
       listener();
     }

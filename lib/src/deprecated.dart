@@ -7,24 +7,7 @@ library;
 
 import 'package:flutter/foundation.dart';
 
-import 'i18n/localizations.dart';
-import 'i18n/localizations_delegate.dart';
 import 'selector/selector_layout.dart';
-
-/// Use [SelectorLocalizations] instead.
-@Deprecated(
-  'Renamed to SelectorLocalizations. The API and behavior are identical; '
-  'simply rename the type. This alias will be removed in a future minor version.',
-)
-typedef CriteriaSelectorLocalizations = SelectorLocalizations;
-
-/// Use [SelectorLocalizationsDelegate] instead.
-@Deprecated(
-  'Renamed to SelectorLocalizationsDelegate. The API and behavior are '
-  'identical; simply rename the type. This alias will be removed in a future '
-  'minor version.',
-)
-typedef CriteriaSelectorLocalizationsDelegate = SelectorLocalizationsDelegate;
 
 /// Deprecated layout configuration for the children of a [SelectorCategoryEntry].
 ///
