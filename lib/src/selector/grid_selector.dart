@@ -177,7 +177,13 @@ class GridSelectorState extends State<GridSelector> {
     final entries = category.children?.toList() ?? [];
     final selectedEntries =
         controller?.selectedEntriesForParent(category.id, level: 1) ?? {};
-    final layout = category.layout ?? const SelectorListLayout();
+    final layout = category.layout ??
+        SelectorGridLayout(
+          crossAxisCount: delegate.crossAxisCount,
+          childAspectRatio: delegate.childAspectRatio,
+          mainAxisSpacing: delegate.mainAxisSpacing,
+          crossAxisSpacing: delegate.crossAxisSpacing,
+        );
 
     return switch (layout) {
       SelectorListLayout(:final toText) => SelectorListView(
