@@ -142,7 +142,6 @@ class _HousePageState extends State<HousePage> {
     final filter = HouseFilter(cityId: userCityId);
     if (tabData.index == 0) {
       // Neighborhood filter
-      _filtersRepo.neighborhoodResult = selected;
       filter.neighborhood = selected
           .cascadingPairsOf('neighborhood')
           .map((p) => {
@@ -152,7 +151,6 @@ class _HousePageState extends State<HousePage> {
           .toList(growable: false);
     } else if (tabData.index == 1) {
       // Price filter
-      _filtersRepo.priceResult = selected;
       final category = selected.firstOrNull;
       if (category == null) return null;
       if (category.id == 'list_price') {
@@ -176,12 +174,10 @@ class _HousePageState extends State<HousePage> {
       }
     } else if (tabData.index == 2) {
       // Rooms filter
-      _filtersRepo.roomsResult = selected;
       filter.bedrooms = selected.childIdsOf('bedrooms');
       filter.bathrooms = selected.childIdsOf('bathrooms');
     } else if (tabData.index == 3) {
       // More filter
-      _filtersRepo.moreResult = selected;
       filter.homeType = selected.childIdsOf('home_type');
       filter.listsDetails = selected.childIdsOf('lists_details');
       filter.squareFeet = selected.childIdsOf('square_feet');
@@ -191,7 +187,6 @@ class _HousePageState extends State<HousePage> {
       filter.expandedSearch = selected.childIdsOf('expanded_search');
     } else if (tabData.index == 4) {
       // Sort filter
-      _filtersRepo.sortResult = selected;
       filter.sort = selected.firstSelectedId;
     }
     return filter;
@@ -234,6 +229,18 @@ class _HousePageState extends State<HousePage> {
 
   void _handleSelectorApply(DropdownTabData tabData, SelectorEntries selected) {
     final l10n = AppLocalizations.of(context);
+    // Persist the applied selection to the repo so it can be restored on reopen.
+    if (tabData.index == 0) {
+      _filtersRepo.neighborhoodResult = selected;
+    } else if (tabData.index == 1) {
+      _filtersRepo.priceResult = selected;
+    } else if (tabData.index == 2) {
+      _filtersRepo.roomsResult = selected;
+    } else if (tabData.index == 3) {
+      _filtersRepo.moreResult = selected;
+    } else if (tabData.index == 4) {
+      _filtersRepo.sortResult = selected;
+    }
     _filter = _dropdownSelectorResultParser(tabData, selected);
     if (_filter == null) {
       ScaffoldMessenger.of(context).showSnackBar(

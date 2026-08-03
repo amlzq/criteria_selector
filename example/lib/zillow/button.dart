@@ -35,7 +35,6 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
     final filter = HouseFilter(cityId: userCityId);
     if (domain == 'neighborhood') {
       // Neighborhood filter
-      _filtersRepo.neighborhoodResult = selected;
       filter.neighborhood = selected
           .cascadingPairsOf('neighborhood')
           .map((p) => {
@@ -45,7 +44,6 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
           .toList(growable: false);
     } else if (domain == 'price') {
       // Price filter
-      _filtersRepo.priceResult = selected;
       final category = selected.firstOrNull;
       if (category == null) return null;
       if (category.id == 'list_price') {
@@ -69,12 +67,10 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
       }
     } else if (domain == 'rooms') {
       // Rooms filter
-      _filtersRepo.roomsResult = selected;
       filter.bedrooms = selected.childIdsOf('bedrooms');
       filter.bathrooms = selected.childIdsOf('bathrooms');
     } else if (domain == 'more') {
       // More filter
-      _filtersRepo.moreResult = selected;
       filter.homeType = selected.childIdsOf('home_type');
       filter.listsDetails = selected.childIdsOf('lists_details');
       filter.squareFeet = selected.childIdsOf('square_feet');
@@ -84,7 +80,6 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
       filter.expandedSearch = selected.childIdsOf('expanded_search');
     } else if (domain == 'sort') {
       // Sort filter
-      _filtersRepo.sortResult = selected;
       filter.sort = selected.firstSelectedId;
     }
     return filter;
@@ -103,6 +98,18 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
 
   void _handleSelectorApply(String domain, SelectorEntries selected) {
     final l10n = AppLocalizations.of(context);
+    // Persist the applied selection to the repo so it can be restored on reopen.
+    if (domain == 'neighborhood') {
+      _filtersRepo.neighborhoodResult = selected;
+    } else if (domain == 'price') {
+      _filtersRepo.priceResult = selected;
+    } else if (domain == 'rooms') {
+      _filtersRepo.roomsResult = selected;
+    } else if (domain == 'more') {
+      _filtersRepo.moreResult = selected;
+    } else if (domain == 'sort') {
+      _filtersRepo.sortResult = selected;
+    }
     _filter = _parseFilter(domain, selected);
     if (_filter == null) {
       ScaffoldMessenger.of(context).showSnackBar(

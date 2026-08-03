@@ -136,7 +136,6 @@ class _BuyPageState extends State<BuyPage> {
     final filter = HouseFilter(cityId: userCityId);
     if (tabData.index == 0) {
       // 区域
-      _filtersRepo.regionResult = selected;
       final category = selected.firstOrNull;
       if (category == null) return null;
       if (category.id == 'region') {
@@ -166,7 +165,6 @@ class _BuyPageState extends State<BuyPage> {
       }
     } else if (tabData.index == 1) {
       // 价格筛选
-      _filtersRepo.buyPriceResult = selected;
       final category = selected.firstOrNull;
       if (category == null) return null;
       if (category.id == 'total') {
@@ -193,7 +191,6 @@ class _BuyPageState extends State<BuyPage> {
       }
     } else if (tabData.index == 2) {
       // 户型筛选
-      _filtersRepo.floorPlanBuyResult = selected;
       filter.livingRoom = selected.childIdsOf('living_room');
       filter.bathroom = selected.childIdsOf('bathroom');
       filter.balcony = selected.childIdsOf('balcony');
@@ -207,7 +204,6 @@ class _BuyPageState extends State<BuyPage> {
           .toList(growable: false);
     } else if (tabData.index == 3) {
       // 更多筛选
-      _filtersRepo.moreBuyResult = selected;
       filter.homeType = selected.childIdsOf('home_type');
       filter.saleStatus = selected.childIdsOf('sale_status');
       filter.openTime = selected.childIdsOf('open_time');
@@ -217,7 +213,6 @@ class _BuyPageState extends State<BuyPage> {
       filter.houseViewService = selected.childIdsOf('house_view_service');
     } else if (tabData.index == 4) {
       // 排序筛选
-      _filtersRepo.sortBuyResult = selected;
       filter.sort = selected.firstSelectedId;
     }
     return filter;
@@ -261,6 +256,18 @@ class _BuyPageState extends State<BuyPage> {
 
   void _handleSelectorApply(DropdownTabData tabData, SelectorEntries selected) {
     final l10n = AppLocalizations.of(context);
+    // Persist the applied selection to the repo so it can be restored on reopen.
+    if (tabData.index == 0) {
+      _filtersRepo.regionResult = selected;
+    } else if (tabData.index == 1) {
+      _filtersRepo.buyPriceResult = selected;
+    } else if (tabData.index == 2) {
+      _filtersRepo.floorPlanBuyResult = selected;
+    } else if (tabData.index == 3) {
+      _filtersRepo.moreBuyResult = selected;
+    } else if (tabData.index == 4) {
+      _filtersRepo.sortBuyResult = selected;
+    }
     _filter = _dropdownSelectorResultParser(tabData, selected);
     if (_filter == null) {
       if (tabData.index == 3) {

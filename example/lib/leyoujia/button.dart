@@ -35,7 +35,6 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
     final filter = HouseFilter(cityId: userCityId);
     if (domain == 'region') {
       // 区域
-      _filtersRepo.regionResult = selected;
       final category = selected.firstOrNull;
       if (category == null) return null;
       if (category.id == 'region') {
@@ -65,7 +64,6 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
       }
     } else if (domain == 'price') {
       // 价格筛选
-      _filtersRepo.buyPriceResult = selected;
       final category = selected.firstOrNull;
       if (category == null) return null;
       if (category.id == 'total') {
@@ -92,7 +90,6 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
       }
     } else if (domain == 'floorplan') {
       // 户型筛选
-      _filtersRepo.floorPlanBuyResult = selected;
       filter.livingRoom = selected.childIdsOf('living_room');
       filter.bathroom = selected.childIdsOf('bathroom');
       filter.balcony = selected.childIdsOf('balcony');
@@ -106,7 +103,6 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
           .toList(growable: false);
     } else if (domain == 'more') {
       // 更多筛选
-      _filtersRepo.moreBuyResult = selected;
       filter.homeType = selected.childIdsOf('home_type');
       filter.saleStatus = selected.childIdsOf('sale_status');
       filter.openTime = selected.childIdsOf('open_time');
@@ -116,7 +112,6 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
       filter.houseViewService = selected.childIdsOf('house_view_service');
     } else if (domain == 'sort') {
       // 排序筛选
-      _filtersRepo.sortBuyResult = selected;
       filter.sort = selected.firstSelectedId;
     }
     return filter;
@@ -135,6 +130,18 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
 
   void _handleSelectorApply(String domain, SelectorEntries selected) {
     final l10n = AppLocalizations.of(context);
+    // Persist the applied selection to the repo so it can be restored on reopen.
+    if (domain == 'region') {
+      _filtersRepo.regionResult = selected;
+    } else if (domain == 'price') {
+      _filtersRepo.buyPriceResult = selected;
+    } else if (domain == 'floorplan') {
+      _filtersRepo.floorPlanBuyResult = selected;
+    } else if (domain == 'more') {
+      _filtersRepo.moreBuyResult = selected;
+    } else if (domain == 'sort') {
+      _filtersRepo.sortBuyResult = selected;
+    }
     _filter = _parseFilter(domain, selected);
     if (_filter == null) {
       ScaffoldMessenger.of(context).showSnackBar(

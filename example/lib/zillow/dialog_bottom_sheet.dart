@@ -59,7 +59,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 );
                 if (result == null) return;
                 _filtersRepo.neighborhoodResult = result;
-                showSelectResult(context, result);
+                if (context.mounted) showSelectResult(context, result);
                 final first = result.firstSelectedId;
                 if (first != null) {
                   largePrint(
@@ -91,7 +91,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 );
                 if (result == null) return;
                 _filtersRepo.priceResult = result;
-                showSelectResult(context, result);
+                if (context.mounted) showSelectResult(context, result);
                 largePrint('price first: ${result.firstSelectedId}');
                 largePrint(
                     'price list ranges: ${result.childRangesOf('list_price')}');
@@ -125,7 +125,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 );
                 if (result == null) return;
                 _filtersRepo.roomsResult = result;
-                showSelectResult(context, result);
+                if (context.mounted) showSelectResult(context, result);
                 largePrint('result: $result');
               },
               child: const Text('Show Rooms Selector'),
@@ -158,7 +158,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 );
                 if (result == null) return;
                 _filtersRepo.moreResult = result;
-                showSelectResult(context, result);
+                if (context.mounted) showSelectResult(context, result);
                 largePrint('result: $result');
               },
               child: const Text('Show More Selector'),
@@ -193,7 +193,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
 
                 if (result == null) return;
                 _filtersRepo.sortResult = result;
-                showSelectResult(context, result);
+                if (context.mounted) showSelectResult(context, result);
                 largePrint('sort id: ${result.firstSelectedId}');
               },
               child: const Text('Show Sort Selector'),
@@ -224,7 +224,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 );
                 if (result == null) return;
                 _filtersRepo.neighborhoodResult = result;
-                showSelectResult(context, result);
+                if (context.mounted) showSelectResult(context, result);
                 final first = result.firstSelectedId;
                 if (first != null) {
                   largePrint(
@@ -256,7 +256,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 );
                 if (result == null) return;
                 _filtersRepo.priceResult = result;
-                showSelectResult(context, result);
+                if (context.mounted) showSelectResult(context, result);
                 largePrint('price first: ${result.firstSelectedId}');
                 largePrint(
                     'price list ranges: ${result.childRangesOf('list_price')}');
@@ -288,7 +288,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 );
                 if (result == null) return;
                 _filtersRepo.roomsResult = result;
-                showSelectResult(context, result);
+                if (context.mounted) showSelectResult(context, result);
                 largePrint('result: $result');
               },
               child: const Text('Show Rooms Selector'),
@@ -316,7 +316,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 );
                 if (result == null) return;
                 _filtersRepo.moreResult = result;
-                showSelectResult(context, result);
+                if (context.mounted) showSelectResult(context, result);
                 largePrint('result: $result');
               },
               child: const Text('Show More Selector'),
@@ -338,7 +338,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 );
                 if (result == null) return;
                 _filtersRepo.sortResult = result;
-                showSelectResult(context, result);
+                if (context.mounted) showSelectResult(context, result);
                 largePrint('sort id: ${result.firstSelectedId}');
               },
               child: const Text('Show Sort Selector'),

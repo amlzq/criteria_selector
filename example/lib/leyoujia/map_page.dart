@@ -63,7 +63,6 @@ class _MapPageState extends State<MapPage> {
     final filter = HouseFilter(cityId: userCityId);
     if (tabData.index == 0) {
       // 区域
-      _filtersRepo.regionResult = selected;
       final category = selected.firstOrNull;
       if (category == null) return null;
       if (category.id == 'region') {
@@ -93,7 +92,6 @@ class _MapPageState extends State<MapPage> {
       }
     } else if (tabData.index == 1) {
       // 价格筛选
-      _filtersRepo.buyPriceResult = selected;
       final category = selected.firstOrNull;
       if (category == null) return null;
       if (category.id == 'total') {
@@ -119,7 +117,6 @@ class _MapPageState extends State<MapPage> {
       }
     } else if (tabData.index == 2) {
       // 户型筛选
-      _filtersRepo.floorPlanBuyResult = selected;
       filter.livingRoom = selected.childIdsOf('living_room');
       filter.bathroom = selected.childIdsOf('bathroom');
       filter.balcony = selected.childIdsOf('balcony');
@@ -133,7 +130,6 @@ class _MapPageState extends State<MapPage> {
           .toList(growable: false);
     } else if (tabData.index == 3) {
       // 排序筛选
-      _filtersRepo.sortBuyResult = selected;
       filter.sort = selected.firstSelectedId;
     }
     return filter;
@@ -177,6 +173,17 @@ class _MapPageState extends State<MapPage> {
 
   void _handleSelectorApply(DropdownTabData tabData, SelectorEntries selected) {
     showSelectResult(context, selected);
+
+    // Persist the applied selection to the repo so it can be restored on reopen.
+    if (tabData.index == 0) {
+      _filtersRepo.regionResult = selected;
+    } else if (tabData.index == 1) {
+      _filtersRepo.buyPriceResult = selected;
+    } else if (tabData.index == 2) {
+      _filtersRepo.floorPlanBuyResult = selected;
+    } else if (tabData.index == 3) {
+      _filtersRepo.sortBuyResult = selected;
+    }
 
     final l10n = AppLocalizations.of(context);
     _filter = _dropdownSelectorResultParser(tabData, selected);
