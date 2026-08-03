@@ -1,4 +1,4 @@
-A highly customizable Flutter selector library. Supports SelectorBox, DropdownSelectorBar, DropdownSelectorButton, dialog, and bottom-sheet selectors.
+A highly customizable Flutter selector library. Supports SelectBox, DropdownSelectorBar, DropdownSelectorButton, dialog, and bottom-sheet selectors.
 
 [Playground](https://criteria-selector.zeaon.dev/)
 
@@ -6,7 +6,7 @@ A highly customizable Flutter selector library. Supports SelectorBox, DropdownSe
 
 Two layers work together: **entry points** decide *where* the selector appears, and **delegates** decide *how* entries are laid out — any delegate plugs into any entry point.
 
-- **Entry points** — five ways to show a selector: `SelectorBox` (inline), `DropdownSelectorBar` (tab bar), `DropdownSelectorButton` (single trigger), `showSelector` (dialog), `showModalBottomSelector` (bottom sheet).
+- **Entry points** — five ways to show a selector: `SelectBox` (inline), `DropdownSelectorBar` (tab bar), `DropdownSelectorButton` (single trigger), `showSelector` (dialog), `showModalBottomSelector` (bottom sheet).
 - **Delegates** — four layouts: `CascadingSelectorDelegate` (tree), `GridSelectorDelegate` (grid), `ListSelectorDelegate` (single column), `FlattenSelectorDelegate` (grid that keeps category grouping).
 - Single & multiple selection via `SelectionMode` (per category or as a delegate fallback).
 - Async data loading through `entriesLoader`.
@@ -85,12 +85,12 @@ The built-in delegates are:
 | `ListSelectorDelegate` | A single-column list (use `.name(...)` leaves for a flat list). | ![ListSelectorDelegate](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/list.jpg) |
 | `FlattenSelectorDelegate` | Renders children in a grid while keeping the category hierarchy. Best with `SelectionMode.multiple` and an "Any" entry. | ![FlattenSelectorDelegate](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/flatten.jpg) |
 
-#### SelectorBox
+#### SelectBox
 
-`SelectorBox` embeds a selector directly in a page or dialog body. Pass any `delegate` from the [Delegates](#delegates) section above — it controls both loading and rendering.
+`SelectBox` embeds a selector directly in a page or dialog body. Pass any `delegate` from the [Delegates](#delegates) section above — it controls both loading and rendering.
 
 ```dart
-SelectorBox(
+SelectBox(
   delegate: CascadingSelectorDelegate(entriesLoader: _fetchNeighborhood),
   onChanged: (selected) {
     // selected is the SelectorEntries when the selection changes
@@ -193,10 +193,10 @@ if (selected != null) {
 
 #### Theming
 
-**Per instance** — pass `selectorTheme` to any selector entry point (`SelectorBox`, `showSelector`, `showModalBottomSelector`, `DropdownSelectorBar`, `DropdownSelectorButton`):
+**Per instance** — pass `selectorTheme` to any selector entry point (`SelectBox`, `showSelector`, `showModalBottomSelector`, `DropdownSelectorBar`, `DropdownSelectorButton`):
 
 ```dart
-SelectorBox(
+SelectBox(
   delegate: ListSelectorDelegate(entriesLoader: _fetchSort),
   selectorTheme: SelectorThemeData(
     Theme.of(context),

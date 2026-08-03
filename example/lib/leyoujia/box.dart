@@ -123,7 +123,7 @@ class _BoxPageState extends State<BoxPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('SelectorBox')),
+      appBar: AppBar(title: const Text('SelectBox')),
       body: SafeArea(
         child: Scrollbar(
           child: SingleChildScrollView(
@@ -136,7 +136,7 @@ class _BoxPageState extends State<BoxPage> {
                   '选择区域',
                   style: TextStyle(fontSize: 20),
                 ),
-                SelectorBox(
+                SelectBox(
                   margin:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   delegate: CascadingSelectorDelegate(
@@ -162,7 +162,7 @@ class _BoxPageState extends State<BoxPage> {
                   '选择价格',
                   style: TextStyle(fontSize: 20),
                 ),
-                SelectorBox(
+                SelectBox(
                   margin:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   delegate: GridSelectorDelegate(
@@ -194,7 +194,7 @@ class _BoxPageState extends State<BoxPage> {
                   '选择户型',
                   style: TextStyle(fontSize: 20),
                 ),
-                SelectorBox(
+                SelectBox(
                   margin:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   delegate: FlattenSelectorDelegate(
@@ -220,7 +220,7 @@ class _BoxPageState extends State<BoxPage> {
                   '选择排序',
                   style: TextStyle(fontSize: 20),
                 ),
-                SelectorBox(
+                SelectBox(
                   margin:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   delegate: ListSelectorDelegate(

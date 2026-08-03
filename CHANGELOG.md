@@ -1,5 +1,7 @@
 ## Next
 
+* **RENAMED** `SelectorBox` is renamed to `SelectBox`, and the source file `lib/src/selector_box.dart` is renamed to `lib/src/select_box.dart`. `SelectorBox` is retained as a deprecated type alias (`typedef SelectorBox = SelectBox;`) that behaves identically and will be removed in a future minor version. Migrate call sites to `SelectBox` to clear the deprecation warning.
+
 * **FEATURE** `GridSelector` now consumes `SelectorCategoryEntry.layout` via an exhaustive `switch (layout)`, matching the behavior already present in `ListSelector`. Each category renders as a `SelectorListView`, `SelectorGridView`, `SelectorChipBar`, or `SelectorRangeView` depending on its layout. `GridSelectorDelegate` gains optional `radioBuilder` / `checkboxBuilder` parameters for the `SelectorListLayout` branch. When `layout` is null the default `SelectorListLayout` is used; when `layout` is `SelectorGridLayout`, its own grid parameters (`crossAxisCount` etc.) take precedence over the delegate-level defaults.
 
 * **BREAKING** remove the deprecated `CriteriaSelectorLocalizations` / `CriteriaSelectorLocalizationsDelegate` typedef aliases (introduced in 0.3.0). Use `SelectorLocalizations` / `SelectorLocalizationsDelegate` instead.
@@ -14,7 +16,7 @@
 
 * **DEPRECATION** `SelectorCategoryEntry` previously exposed three mutually-exclusive, nullable fields `listConfig` / `gridConfig` / `chipConfig`. They are replaced by a single `layout` property of the new sealed `SelectorLayout` type. The old fields remain available as deprecated getters/constructor parameters that map to `SelectorListLayout` / `SelectorGridLayout` / `SelectorChipLayout` and will be removed in a future minor version.
 
-* **DEPRECATION** rename `SelectorBox.onChangeTap` → `SelectorBox.onChanged`. The old `onChangeTap` argument and `onChangeTap` getter are retained as deprecated members for backward compatibility and will be removed in a future minor version. Passing both `onChanged` and `onChangeTap` triggers an assertion.
+* **DEPRECATION** rename `SelectBox.onChangeTap` → `SelectBox.onChanged`. The old `onChangeTap` argument and `onChangeTap` getter are retained as deprecated members for backward compatibility and will be removed in a future minor version. Passing both `onChanged` and `onChangeTap` triggers an assertion.
 
 * **BREAKING** remove the deprecated `Dropselect*` public API aliases (introduced in 0.2.0). Use the `Dropdown*` / `DropdownSelector*` names instead.
 

@@ -2,7 +2,7 @@ import 'package:criteria_selector/criteria_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// A minimal [SelectorDelegate] used to drive [SelectorBox] rendering and
+/// A minimal [SelectorDelegate] used to drive [SelectBox] rendering and
 /// to capture the active controller for assertions.
 class _TestDelegate extends SelectorDelegate {
   _TestDelegate({
@@ -30,12 +30,12 @@ class _TestDelegate extends SelectorDelegate {
 }
 
 void main() {
-  group('SelectorBox', () {
+  group('SelectBox', () {
     testWidgets('renders the body once data is available', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: SelectorBox(
+            body: SelectBox(
               delegate: _TestDelegate(
                 entriesLoader: () async => <SelectorEntry<dynamic>>{
                   SelectorTextEntry<dynamic>.name(id: 'a', name: 'A'),
@@ -60,7 +60,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: SelectorBox(
+            body: SelectBox(
               delegate: _TestDelegate(
                 entriesLoader: () async => <SelectorEntry<dynamic>>{},
                 bodyBuilder: (context, _, __) {
@@ -87,7 +87,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: SelectorBox(
+            body: SelectBox(
               delegate: _TestDelegate(
                 entriesLoader: () async => <SelectorEntry<dynamic>>{},
                 bodyBuilder: (context, _, __) {
@@ -113,7 +113,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: SelectorBox(
+            body: SelectBox(
               delegate: _TestDelegate(
                 entriesLoader: () async => <SelectorEntry<dynamic>>{},
                 bodyBuilder: (_, __, ___) => const SizedBox(),
@@ -137,7 +137,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: SelectorBox(
+            body: SelectBox(
               delegate: _TestDelegate(
                 entriesLoader: () async => <SelectorEntry<dynamic>>{},
                 selectedEntriesLoader: () => previous,
@@ -162,7 +162,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: SelectorBox(
+            body: SelectBox(
               delegate: _TestDelegate(
                 entriesLoader: () async => <SelectorEntry<dynamic>>{},
                 bodyBuilder: (_, __, ___) => const SizedBox(),
@@ -178,7 +178,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: SelectorBox(
+            body: SelectBox(
               delegate: _TestDelegate(
                 entriesLoader: () async => <SelectorEntry<dynamic>>{},
                 bodyBuilder: (_, __, ___) => const SizedBox(),
@@ -194,7 +194,7 @@ void main() {
     testWidgets('renders inside an unbounded context without throwing',
         (tester) async {
       // Regression: a Column(min) + Expanded body (as the CascadingSelector
-      // uses) requires a bounded height. Embedding SelectorBox in an
+      // uses) requires a bounded height. Embedding SelectBox in an
       // unbounded parent (Column with mainAxisSize.min) must not throw the
       // "non-zero flex but incoming height constraints are unbounded" error;
       // the internal ConstrainedBox caps the height so the Expanded can lay
@@ -207,7 +207,7 @@ void main() {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Text('header'),
-                  SelectorBox(
+                  SelectBox(
                     delegate: _TestDelegate(
                       entriesLoader: () async => <SelectorEntry<dynamic>>{
                         SelectorTextEntry<dynamic>.name(id: 'a', name: 'A'),
@@ -248,7 +248,7 @@ void main() {
           data: mediaQuery,
           child: MaterialApp(
             home: Scaffold(
-              body: SelectorBox(
+              body: SelectBox(
                 maxHeightFactor: 0.5,
                 delegate: _TestDelegate(
                   entriesLoader: () async => <SelectorEntry<dynamic>>{},
@@ -268,6 +268,35 @@ void main() {
           .where((w) => w is ConstrainedBox && w.constraints.maxHeight == 400)
           .isNotEmpty;
       expect(hasCap, isTrue);
+    });
+  });
+
+  group('SelectorBox (deprecated alias)', () {
+    testWidgets('is the same type as SelectBox and renders identically',
+        (tester) async {
+      // The deprecated alias must behave exactly like SelectBox so existing
+      // code keeps compiling and working until it is removed in a future minor
+      // version.
+      expect(SelectorBox, SelectBox);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SelectorBox(
+              delegate: _TestDelegate(
+                entriesLoader: () async => <SelectorEntry<dynamic>>{
+                  SelectorTextEntry<dynamic>.name(id: 'a', name: 'A'),
+                },
+                bodyBuilder: (context, entries, _) =>
+                    Text('entries:${entries.length}'),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+      expect(find.text('entries:1'), findsOneWidget);
     });
   });
 }

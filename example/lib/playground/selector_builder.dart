@@ -262,8 +262,8 @@ Widget buildPhoneScreen(
 /// footer panel ([_ResultPanel]) so playground users can inspect what each
 /// callback returns.
 ///
-/// [SelectorBox] applies immediately and hides the action bar, so its
-/// [SelectorBox.onChanged] is mirrored into both fields. [showSelector] /
+/// [SelectBox] applies immediately and hides the action bar, so its
+/// [SelectBox.onChanged] is mirrored into both fields. [showSelector] /
 /// [showModalBottomSelector] deliver their result through the returned
 /// [Future], which is shown as the applied value (no `onChanged` exists for
 /// these entry points).
@@ -327,7 +327,7 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
           body: Column(
             children: <Widget>[
               Expanded(
-                child: SelectorBox(
+                child: SelectBox(
                   // The box owns a [SelectorController] that is created once from
                   // the delegate and NOT re-created on delegate changes. Key it by
                   // the params that must reset that controller (language / delegate
@@ -345,7 +345,7 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
                   margin:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   onChanged: (selected) {
-                    // SelectorBox applies immediately: change == apply.
+                    // SelectBox applies immediately: change == apply.
                     _onChanged(selected);
                     _onApplied(selected);
                   },
