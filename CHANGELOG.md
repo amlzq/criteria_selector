@@ -1,6 +1,8 @@
 ## Next
 
-* **RENAMED** `SelectorBox` is renamed to `SelectBox`, and the source file `lib/src/selector_box.dart` is renamed to `lib/src/select_box.dart`. `SelectorBox` is retained as a deprecated type alias (`typedef SelectorBox = SelectBox;`) that behaves identically and will be removed in a future minor version. Migrate call sites to `SelectBox` to clear the deprecation warning.
+* **DEPRECATION** `SelectorBox` is renamed to `SelectBox`, and the source file `lib/src/selector_box.dart` is renamed to `lib/src/select_box.dart`. `SelectorBox` is retained as a deprecated type alias (`typedef SelectorBox = SelectBox;`) that behaves identically and will be removed in a future minor version. Migrate call sites to `SelectBox` to clear the deprecation warning.
+
+* **DEPRECATION** `showSelector` (dialog entry function) is renamed to `showSelect`. `showSelector` is retained as a deprecated backward-compatible alias that delegates to `showSelect` and will be removed in a future minor version. Migrate call sites to `showSelect` to clear the deprecation warning.
 
 * **FEATURE** `GridSelector` now consumes `SelectorCategoryEntry.layout` via an exhaustive `switch (layout)`, matching the behavior already present in `ListSelector`. Each category renders as a `SelectorListView`, `SelectorGridView`, `SelectorChipBar`, or `SelectorRangeView` depending on its layout. `GridSelectorDelegate` gains optional `radioBuilder` / `checkboxBuilder` parameters for the `SelectorListLayout` branch. When `layout` is null the default `SelectorListLayout` is used; when `layout` is `SelectorGridLayout`, its own grid parameters (`crossAxisCount` etc.) take precedence over the delegate-level defaults.
 

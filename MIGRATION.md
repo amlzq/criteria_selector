@@ -30,6 +30,22 @@ SelectBox(
 );
 ```
 
+### `showSelector` renamed to `showSelect`
+
+`showSelector` (the dialog entry function) has been renamed to `showSelect`. The
+old name is kept as a deprecated backward-compatible alias that delegates to
+`showSelect` and **will be removed in a future minor version**.
+
+Migration: replace `showSelector` with `showSelect` at every call site.
+
+```dart
+// Before
+final result = await showSelector(context: context, delegate: delegate);
+
+// After
+final result = await showSelect(context: context, delegate: delegate);
+```
+
 ## MIGRATE TO 0.4.0
 
 ### Single `layout` replaces `listConfig` / `gridConfig` / `chipConfig`

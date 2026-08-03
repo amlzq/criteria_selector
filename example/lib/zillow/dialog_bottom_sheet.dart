@@ -38,7 +38,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () async {
-                final result = await showSelector(
+                final result = await showSelect(
                   context: context,
                   delegate: CascadingSelectorDelegate(
                     entriesLoader: _filtersRepo.fetchNeighborhoodData,
@@ -70,7 +70,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
             ),
             ElevatedButton(
               onPressed: () async {
-                final result = await showSelector(
+                final result = await showSelect(
                   context: context,
                   delegate: GridSelectorDelegate(
                     entriesLoader: _filtersRepo.fetchPriceData,
@@ -102,7 +102,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
             ),
             ElevatedButton(
               onPressed: () async {
-                final result = await showSelector(
+                final result = await showSelect(
                   context: context,
                   delegate: FlattenSelectorDelegate(
                     entriesLoader: _filtersRepo.fetchRoomsData,
@@ -132,7 +132,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
             ),
             ElevatedButton(
               onPressed: () async {
-                final result = await showSelector(
+                final result = await showSelect(
                   context: context,
                   delegate: ListSelectorDelegate(
                     entriesLoader: _filtersRepo.fetchMoreData,
@@ -165,7 +165,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
             ),
             ElevatedButton(
               onPressed: () async {
-                final result = await showSelector(
+                final result = await showSelect(
                   context: context,
                   delegate: ListSelectorDelegate(
                     entriesLoader: _filtersRepo.fetchSortData,

@@ -21,7 +21,7 @@ class _DialogTestDelegate extends SelectorDelegate {
 }
 
 void main() {
-  group('showSelector', () {
+  group('showSelect', () {
     testWidgets('shows a dialog and returns null when dismissed',
         (WidgetTester tester) async {
       final navigatorKey = GlobalKey<NavigatorState>();
@@ -32,7 +32,7 @@ void main() {
         ),
       );
 
-      final future = showSelector(
+      final future = showSelect(
         context: navigatorKey.currentContext!,
         delegate: _DialogTestDelegate(),
       );
@@ -58,7 +58,7 @@ void main() {
         ),
       );
 
-      final future = showSelector(
+      final future = showSelect(
         context: navigatorKey.currentContext!,
         delegate: _DialogTestDelegate(),
       );
@@ -71,6 +71,33 @@ void main() {
 
       final SelectorEntries? result = await future;
       expect(result, selection);
+    });
+
+    testWidgets('deprecated showSelector alias behaves identically',
+        (WidgetTester tester) async {
+      final navigatorKey = GlobalKey<NavigatorState>();
+      await tester.pumpWidget(
+        MaterialApp(
+          navigatorKey: navigatorKey,
+          home: const Scaffold(body: Placeholder()),
+        ),
+      );
+
+      // ignore: deprecated_member_use
+      final future = showSelector(
+        context: navigatorKey.currentContext!,
+        delegate: _DialogTestDelegate(),
+      );
+
+      await tester.pumpAndSettle();
+
+      expect(find.byType(SelectorPanel), findsOneWidget);
+
+      // ignore: deprecated_member_use
+      Navigator.of(navigatorKey.currentContext!, rootNavigator: true).pop(null);
+
+      final SelectorEntries? result = await future;
+      expect(result, isNull);
     });
   });
 }

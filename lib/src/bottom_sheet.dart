@@ -4,7 +4,7 @@ import 'selector/selector_delegate.dart';
 import 'selector/selector_entry.dart';
 import 'selector/selector_panel.dart';
 
-/// Shows a criteria selector in a modal bottom sheet built with Flutter's
+/// Shows a selector in a modal bottom sheet built with Flutter's
 /// [showModalBottomSheet].
 ///
 /// Returns the selected [SelectorEntries] when the user applies the selection,
@@ -16,7 +16,8 @@ import 'selector/selector_panel.dart';
 /// entirely by the concrete [SelectorDelegate] passed via [delegate]. Any
 /// [SelectorDelegate] subclass works, so no separate functions are required.
 ///
-/// The interaction mirrors [showSelector]:
+/// The interaction mirrors [showSelect] (and its deprecated alias
+/// [showSelect] / [showSelector]):
 /// - In single-selection mode, tapping an item applies the selection
 ///   immediately and closes the sheet.
 /// - In multi-selection mode, the action bar's "Apply" button must be tapped

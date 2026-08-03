@@ -152,7 +152,7 @@ abstract class SelectorDelegate {
   ///
   /// When provided, this is merged into the ambient [SelectorThemeData] used by
   /// [SelectorPanel], so it applies to every host (inline [SelectBox],
-  /// [showSelector], [showModalBottomSelector] and the dropdown overlay). It is
+  /// [showSelect], [showModalBottomSelector] and the dropdown overlay). It is
   /// independent from the host-level decoration (e.g. [Dialog.elevation]).
   final SelectorPanelTheme? panelTheme;
 

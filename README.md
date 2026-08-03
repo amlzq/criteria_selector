@@ -6,7 +6,7 @@ A highly customizable Flutter selector library. Supports SelectBox, DropdownSele
 
 Two layers work together: **entry points** decide *where* the selector appears, and **delegates** decide *how* entries are laid out — any delegate plugs into any entry point.
 
-- **Entry points** — five ways to show a selector: `SelectBox` (inline), `DropdownSelectorBar` (tab bar), `DropdownSelectorButton` (single trigger), `showSelector` (dialog), `showModalBottomSelector` (bottom sheet).
+- **Entry points** — five ways to show a selector: `SelectBox` (inline), `DropdownSelectorBar` (tab bar), `DropdownSelectorButton` (single trigger), `showSelect` (dialog), `showModalBottomSelector` (bottom sheet).
 - **Delegates** — four layouts: `CascadingSelectorDelegate` (tree), `GridSelectorDelegate` (grid), `ListSelectorDelegate` (single column), `FlattenSelectorDelegate` (grid that keeps category grouping).
 - Single & multiple selection via `SelectionMode` (per category or as a delegate fallback).
 - Async data loading through `entriesLoader`.
@@ -151,12 +151,14 @@ DropdownSelectorButton.outlined(
 
 ![DropdownSelectorButton](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/button.gif)
 
-#### showSelector
+#### showSelect
 
 Shows a selector in a modal dialog. Returns the selected `SelectorEntries` when applied, or `null` when dismissed. In single-selection mode, tapping an item applies immediately; in multi-selection mode, "Apply" in the action bar confirms.
 
+> `showSelector` is retained as a deprecated alias of `showSelect` for backward compatibility and will be removed in a future minor version.
+
 ```dart
-final SelectorEntries? selected = await showSelector(
+final SelectorEntries? selected = await showSelect(
   context: context,
   delegate: FlattenSelectorDelegate(entriesLoader: _fetchRooms),
   title: const Text('Rooms'),
@@ -167,11 +169,11 @@ if (selected != null) {
 }
 ```
 
-![showSelector](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/dialog.gif)
+![showSelect](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/dialog.gif)
 
 #### showModalBottomSelector
 
-Shows a selector in a modal bottom sheet built on Flutter's `showModalBottomSheet`. Same interaction as `showSelector`. Standard sheet parameters (`isScrollControlled`, `isDismissible`, `enableDrag`, `showDragHandle`, `constraints`, etc.) are forwarded.
+Shows a selector in a modal bottom sheet built on Flutter's `showModalBottomSheet`. Same interaction as `showSelect` (and its deprecated alias `showSelector`). Standard sheet parameters (`isScrollControlled`, `isDismissible`, `enableDrag`, `showDragHandle`, `constraints`, etc.) are forwarded.
 
 ```dart
 final SelectorEntries? selected = await showModalBottomSelector(
@@ -193,7 +195,7 @@ if (selected != null) {
 
 #### Theming
 
-**Per instance** — pass `selectorTheme` to any selector entry point (`SelectBox`, `showSelector`, `showModalBottomSelector`, `DropdownSelectorBar`, `DropdownSelectorButton`):
+**Per instance** — pass `selectorTheme` to any selector entry point (`SelectBox`, `showSelect`, `showModalBottomSelector`, `DropdownSelectorBar`, `DropdownSelectorButton`):
 
 ```dart
 SelectBox(

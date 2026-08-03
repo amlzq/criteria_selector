@@ -4,7 +4,7 @@ import 'selector/selector_delegate.dart';
 import 'selector/selector_entry.dart';
 import 'selector/selector_panel.dart';
 
-/// Shows a criteria selector in a modal dialog.
+/// Shows a selector in a modal dialog.
 ///
 /// Returns the selected [SelectorEntries] when the user applies the selection,
 /// or `null` when the dialog is dismissed (for example by tapping the barrier
@@ -27,7 +27,7 @@ import 'selector/selector_panel.dart';
 /// [SelectorDelegate.panelTheme] (which decorates the panel background itself);
 /// use either layer, or both, depending on the desired look. All other styling
 /// (colors, per-widget themes) is carried by [delegate].
-Future<SelectorEntries?> showSelector({
+Future<SelectorEntries?> showSelect({
   required BuildContext context,
   required SelectorDelegate delegate,
   bool barrierDismissible = true,
@@ -63,7 +63,42 @@ Future<SelectorEntries?> showSelector({
       .push<SelectorEntries?>(route);
 }
 
-/// Modal route used by [showSelector].
+/// Shows a selector in a modal dialog.
+///
+/// @deprecated Use [showSelect] instead. This backward-compatible alias will be
+/// removed in a future minor version.
+@Deprecated(
+    'Use showSelect instead. This will be removed in a future minor version.')
+Future<SelectorEntries?> showSelector({
+  required BuildContext context,
+  required SelectorDelegate delegate,
+  bool barrierDismissible = true,
+  bool useRootNavigator = true,
+  Widget? title,
+  double? elevation,
+  ShapeBorder? shape,
+  Clip? clipBehavior,
+  TransitionBuilder? builder,
+  Color? barrierColor,
+  RouteSettings? routeSettings,
+  Offset? anchorPoint,
+}) =>
+    showSelect(
+      context: context,
+      delegate: delegate,
+      barrierDismissible: barrierDismissible,
+      useRootNavigator: useRootNavigator,
+      title: title,
+      elevation: elevation,
+      shape: shape,
+      clipBehavior: clipBehavior,
+      builder: builder,
+      barrierColor: barrierColor,
+      routeSettings: routeSettings,
+      anchorPoint: anchorPoint,
+    );
+
+/// Modal route used by [showSelect].
 ///
 /// Mirrors the structure of Flutter's `_TimePickerDialogRoute`: it builds the
 /// page via [pageBuilder] and applies a fade + scale transition.

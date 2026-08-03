@@ -58,7 +58,7 @@ extension SelectorEntriesExtension on SelectorEntries {
   ///
   /// This is the entry point for most of the convenience query helpers below.
   /// Because it lives on this extension it is available on a bare
-  /// [SelectorEntries] — e.g. the return value of `showSelector` /
+  /// [SelectorEntries] — e.g. the return value of `showSelect` /
   /// `showModalBottomSelector`.
   SelectorEntry? findCategory(String categoryId) =>
       where((e) => e.id == categoryId).firstOrNull;
