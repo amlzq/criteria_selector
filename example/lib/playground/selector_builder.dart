@@ -262,8 +262,8 @@ Widget buildPhoneScreen(
 /// footer panel ([_ResultPanel]) so playground users can inspect what each
 /// callback returns.
 ///
-/// [SelectBox] applies immediately and hides the action bar, so its
-/// [SelectBox.onChanged] is mirrored into both fields. [showSelect] /
+/// [SelectView] applies immediately and hides the action bar, so its
+/// [SelectView.onChanged] is mirrored into both fields. [showSelect] /
 /// [showModalBottomSelect] deliver their result through the returned
 /// [Future], which is shown as the applied value (no `onChanged` exists for
 /// these entry points).
@@ -327,16 +327,16 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
           body: Column(
             children: <Widget>[
               Expanded(
-                child: SelectBox(
-                  // The box owns a [SelectorController] that is created once from
+                child: SelectView(
+                  // The view owns a [SelectorController] that is created once from
                   // the delegate and NOT re-created on delegate changes. Key it by
                   // the params that must reset that controller (language / delegate
                   // / selection mode / tile variant). Columns / aspect ratio /
                   // spacing are deliberately excluded: those now live in the
                   // delegate cache key, so changing them yields a *new* delegate
-                  // object while the box stays mounted — `widget.delegate` updates
+                  // object while the view stays mounted — `widget.delegate` updates
                   // live and [SelectorPanel] rebuilds with the new grid, and the
-                  // box keeps its in-progress selection instead of losing it.
+                  // view keeps its in-progress selection instead of losing it.
                   key: ValueKey(
                     '${l10n.language}|${p.delegate}|${p.selectionMode}|'
                     '${p.tileVariant}',
@@ -345,7 +345,7 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
                   margin:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   onChanged: (selected) {
-                    // SelectBox applies immediately: change == apply.
+                    // SelectView applies immediately: change == apply.
                     _onChanged(selected);
                     _onApplied(selected);
                   },

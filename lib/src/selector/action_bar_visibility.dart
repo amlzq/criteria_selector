@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 /// Declares whether the reset/apply action bar should be hidden for the
 /// selector widgets in [child]'s subtree.
 ///
-/// [SelectBox] wraps its panel with [hidden] set to `true` so that inline
+/// [SelectView] wraps its panel with [hidden] set to `true` so that inline
 /// selectors omit the action bar; modal hosts (dialogs and bottom sheets) do
 /// not provide this widget, so the action bar remains visible there.
 ///

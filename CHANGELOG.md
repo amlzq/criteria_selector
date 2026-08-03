@@ -1,6 +1,6 @@
 ## Next
 
-* **DEPRECATION** `SelectorBox` is renamed to `SelectBox`, and the source file `lib/src/selector_box.dart` is renamed to `lib/src/select_box.dart`. `SelectorBox` is retained as a deprecated type alias (`typedef SelectorBox = SelectBox;`) that behaves identically and will be removed in a future minor version. Migrate call sites to `SelectBox` to clear the deprecation warning.
+* **DEPRECATION** `SelectorBox` is renamed to `SelectView`, and the source file `lib/src/selector_box.dart` is renamed to `lib/src/select_view.dart`. `SelectorBox` is retained as a deprecated type alias (`typedef SelectorBox = SelectView;`) that behaves identically and will be removed in a future minor version. Migrate call sites to `SelectView`.
 
 * **DEPRECATION** `showSelector` (dialog entry function) is renamed to `showSelect`. `showSelector` is retained as a deprecated backward-compatible alias that delegates to `showSelect` and will be removed in a future minor version. Migrate call sites to `showSelect` to clear the deprecation warning.
 

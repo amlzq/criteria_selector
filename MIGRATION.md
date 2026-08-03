@@ -2,19 +2,19 @@
 
 ## Next
 
-### `SelectorBox` renamed to `SelectBox`
+### `SelectorBox` renamed to `SelectView`
 
-`SelectorBox` has been renamed to `SelectBox`. The old name is kept as a
-deprecated type alias (`typedef SelectorBox = SelectBox;`) for backward
-compatibility and **will be removed in a future minor version**.
+`SelectorBox` has been renamed to `SelectView`. The old name `SelectorBox` is
+kept as a deprecated type alias (`typedef SelectorBox = SelectView;`) for
+backward compatibility and **will be removed in a future minor version**.
 
-- The source file was also renamed: `lib/src/selector_box.dart` is now
-  `lib/src/select_box.dart`. The public export is updated, so no import change
-  is required.
-- `SelectorBox` is the exact same type as `SelectBox` (a `typedef`), so this is
+- The source file was renamed along the way (`lib/src/selector_box.dart` →
+  `lib/src/select_box.dart` → `lib/src/select_view.dart`). The public export is
+  updated, so no import change is required.
+- `SelectorBox` is the exact same type as `SelectView` (a `typedef`), so this is
   a pure rename — no behavior changes.
 
-Migration: replace `SelectorBox` with `SelectBox` at every call site.
+Migration: replace `SelectorBox` with `SelectView` at every call site.
 
 ```dart
 // Before
@@ -24,7 +24,7 @@ SelectorBox(
 );
 
 // After
-SelectBox(
+SelectView(
   delegate: delegate,
   onChanged: (selected) { /* ... */ },
 );

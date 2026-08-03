@@ -141,7 +141,7 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
             MaterialPage<void>(
               // Keep a constant key so switching the playground theme does NOT
               // tear down and rebuild the base route: a changing key would
-              // dispose the SelectBox / DropdownSelectorBar subtrees, drop
+              // dispose the SelectView / DropdownSelectorBar subtrees, drop
               // their controllers and re-fetch selector data (showing a skeleton
               // flash) — a visible hitch. Instead the theme is applied *inside*
               // this page via the [Theme] below, whose dependents rebuild in

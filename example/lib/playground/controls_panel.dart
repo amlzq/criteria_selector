@@ -35,7 +35,7 @@ class ControlsPanel extends StatelessWidget {
         _EnumDropdown<EntryPoint>(
           value: params.entryPoint,
           items: const {
-            EntryPoint.box: 'SelectBox',
+            EntryPoint.box: 'SelectView',
             EntryPoint.dropdownBar: 'DropdownSelectorBar',
             EntryPoint.dropdownButton: 'DropdownSelectorButton',
             EntryPoint.dialog: 'showSelect',

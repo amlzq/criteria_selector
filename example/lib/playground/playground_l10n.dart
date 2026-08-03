@@ -82,7 +82,7 @@ class PlaygroundL10n {
   String get layoutList => _t('List', '列表');
 
   // Phone screen titles & labels.
-  String get phoneBoxTitle => 'SelectBox';
+  String get phoneBoxTitle => 'SelectView';
   String get phoneDropdownBarTitle => _t('Dropdown Bar', '下拉筛选栏');
   String get phoneDropdownButtonTitle => _t('Dropdown Button', '下拉筛选按钮');
   String get phoneDialogTitle => _t('Dialog', '对话框');

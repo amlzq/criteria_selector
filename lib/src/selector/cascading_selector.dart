@@ -85,7 +85,7 @@ class CascadingSelectorState extends State<CascadingSelector> {
   void didUpdateWidget(covariant CascadingSelector oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Only rebuild the selection state when the data actually changes.
-    // In playground's SelectBox mode, the ancestor EntryPointScreen calls
+    // In playground's SelectView mode, the ancestor EntryPointScreen calls
     // setState on every onChanged, which causes didUpdateWidget to fire on
     // every tap — even though entries and previousSelected are unchanged.
     // Unconditionally calling _updateSelectorController (which calls

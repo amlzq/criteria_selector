@@ -8,30 +8,30 @@ import 'selector/selector_panel.dart';
 
 /// A high-level, ready-to-use selector.
 ///
-/// [SelectBox] is the public entry point for embedding a selector
+/// [SelectView] is the public entry point for embedding a selector
 /// directly in a page or dialog body. It wraps [SelectorPanel] — now an
 /// internal implementation detail that is no longer exported — and takes care
 /// of the controller lifecycle so callers get a complete, styled component
 /// without extra wiring.
 ///
-/// Inline selectors do not show the apply/reset action bar: [SelectBox]
+/// Inline selectors do not show the apply/reset action bar: [SelectView]
 /// wraps its panel in a [SelectorActionBarVisibility] scope that hides it, so
 /// selections apply immediately through [onChanged]. The action bar is still
 /// shown by the modal hosts ([showSelect] / [showModalBottomSelect]), which
 /// do not provide that scope. The [delegate]'s
 /// [SelectorDelegate.actionBarBuilder] only customizes the bar's UI and has no
-/// effect inside a [SelectBox].
+/// effect inside a [SelectView].
 ///
 /// Styling is carried entirely by the [delegate] (colors, per-widget themes
 /// and the panel decoration via [SelectorDelegate.panelTheme]). When a selector
 /// is the only one in its host, a separate `selectorTheme` parameter is
 /// unnecessary.
 ///
-/// If [controller] is omitted, [SelectBox] creates and owns an internal
+/// If [controller] is omitted, [SelectView] creates and owns an internal
 /// [SelectorController]; otherwise the caller-provided controller is used and
 /// remains owned by the caller.
 ///
-/// In addition to selector-specific options, [SelectBox] accepts the same
+/// In addition to selector-specific options, [SelectView] accepts the same
 /// sizing and decorating parameters as [Container] — [width], [height],
 /// [constraints], [padding], [margin] and [decoration]. These surround the
 /// [SelectorPanel] exactly as [Container] surrounds its child: the panel is
@@ -41,12 +41,12 @@ import 'selector/selector_panel.dart';
 /// surrounds everything. The [maxHeightFactor] still caps the height in
 /// unbounded contexts; a smaller bound from [width]/[height]/[constraints]
 /// always wins.
-class SelectBox extends StatefulWidget {
+class SelectView extends StatefulWidget {
   /// Creates a selector box.
   ///
   /// The [width] and [height] values include the [padding] (but not the
   /// [margin]), mirroring [Container].
-  SelectBox({
+  SelectView({
     super.key,
     required this.delegate,
     this.controller,
@@ -85,7 +85,7 @@ class SelectBox extends StatefulWidget {
   /// When provided, callers can drive the selection programmatically (for
   /// example with [SelectorController.select]); the caller still owns it and is
   /// responsible for disposing it. When omitted, an internal controller is
-  /// created and disposed by [SelectBox].
+  /// created and disposed by [SelectView].
   final SelectorController? controller;
 
   /// Fired when the selection changes.
@@ -155,10 +155,10 @@ class SelectBox extends StatefulWidget {
   }
 
   @override
-  State<SelectBox> createState() => _SelectBoxState();
+  State<SelectView> createState() => _SelectViewState();
 }
 
-class _SelectBoxState extends State<SelectBox> {
+class _SelectViewState extends State<SelectView> {
   SelectorController? _internalController;
 
   SelectorController get _controller =>
@@ -181,7 +181,7 @@ class _SelectBoxState extends State<SelectBox> {
   }
 
   @override
-  void didUpdateWidget(covariant SelectBox oldWidget) {
+  void didUpdateWidget(covariant SelectView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.controller != oldWidget.controller) {
       if (oldWidget.controller == null) {
@@ -201,9 +201,9 @@ class _SelectBoxState extends State<SelectBox> {
     super.dispose();
   }
 
-  /// Combines [SelectBox.constraints] (already merged with
-  /// [SelectBox.width]/[height] by the constructor) with the
-  /// [SelectBox.maxHeightFactor] cap. A smaller bound always wins, and
+  /// Combines [SelectView.constraints] (already merged with
+  /// [SelectView.width]/[height] by the constructor) with the
+  /// [SelectView.maxHeightFactor] cap. A smaller bound always wins, and
   /// unbounded contexts are still protected when no explicit size is given.
   BoxConstraints _effectiveConstraints(BuildContext context) {
     final BoxConstraints? sizeConstraints = widget.constraints;
@@ -265,13 +265,13 @@ class _SelectBoxState extends State<SelectBox> {
   }
 }
 
-/// The deprecated alias for [SelectBox].
+/// The deprecated alias for [SelectView].
 ///
-/// `SelectorBox` is the former name of [SelectBox]. It is kept as a type alias
+/// `SelectorBox` is the former name of [SelectView]. It is kept as a type alias
 /// solely for backward compatibility and **will be removed in a future minor
-/// version**. Migrate all call sites to [SelectBox] to clear the deprecation
-/// warning — `SelectorBox` is the exact same type as [SelectBox], so this is a
+/// version**. Migrate all call sites to [SelectView] to clear the deprecation
+/// warning — `SelectorBox` is the exact same type as [SelectView], so this is a
 /// pure rename.
 @Deprecated(
-    'Use SelectBox instead. This alias will be removed in a future minor version.')
-typedef SelectorBox = SelectBox;
+    'Use SelectView instead. This alias will be removed in a future minor version.')
+typedef SelectorBox = SelectView;
