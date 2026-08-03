@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../constants.dart';
 import '../selector_theme.dart';
+import 'constants.dart';
 
 /// Theme configuration for [SelectorListTile], including toggle builders.
 @immutable

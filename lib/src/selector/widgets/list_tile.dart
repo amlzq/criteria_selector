@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../constants.dart';
 import '../selector_theme.dart';
 import '../selector_theme_data.dart';
+import 'constants.dart';
 import 'list_tile_theme.dart';
 
 /// Default height for [SelectorListTile].

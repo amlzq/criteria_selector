@@ -421,11 +421,13 @@ class SelectorUtils {
       // Filter the next-level selection to entries that actually belong to
       // `item`'s subtree before recursing, so clipping only removes nodes that
       // are not selected under this specific parent.
-      final filteredPerLevel = List<SelectorEntries>.from(selectedItemsPerLevel);
+      final filteredPerLevel =
+          List<SelectorEntries>.from(selectedItemsPerLevel);
       final nextLevel = level + 1;
       if (nextLevel < filteredPerLevel.length) {
         filteredPerLevel[nextLevel] = filteredPerLevel[nextLevel]
-            .where((e) => e is SelectorCategoryEntry ||
+            .where((e) =>
+                e is SelectorCategoryEntry ||
                 (e is SelectorChildEntry && e.parentId == item.id))
             .toSet();
       }
@@ -458,7 +460,8 @@ class SelectorUtils {
       final all = selectedItemsPerLevel.elementAtOrNull(level);
       if (all == null || all.isEmpty) return {};
       return all
-          .where((e) => e is SelectorCategoryEntry ||
+          .where((e) =>
+              e is SelectorCategoryEntry ||
               (e is SelectorChildEntry && e.parentId == parent.id))
           .toSet();
     }

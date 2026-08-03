@@ -1,4 +1,11 @@
-import 'selector/constants.dart';
+import 'selector/selector_entry.dart';
+
+/// Builds a custom label for a selector / tab from the applied selection.
+///
+/// Receives only the [selected] entries. This is the canonical label-loader type
+/// and is used by [DropdownTabData.labelLoader] / [DropdownTab.labelLoader] /
+/// [DropdownSelectorButton.labelLoader].
+typedef SelectorLabelLoader = String Function(SelectorEntries selected);
 
 /// Tab-agnostic label / selection state shared by [DropdownSelectorBar]
 /// (via [DropdownTabData]) and [DropdownSelectorButton].

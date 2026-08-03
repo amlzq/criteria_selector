@@ -7,7 +7,6 @@ import 'dropdown_overlay_style.dart';
 import 'dropdown_selector_button_theme.dart';
 import 'dropdown_selector_controller.dart';
 import 'i18n/localizations.dart';
-import 'selector/constants.dart';
 import 'selector/selector_delegate.dart';
 import 'selector/selector_entry.dart';
 import 'selector_label_state.dart';

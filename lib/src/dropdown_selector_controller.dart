@@ -1,12 +1,42 @@
 import 'package:flutter/material.dart';
 
-import 'dropdown_tab_data.dart';
-import 'selector/constants.dart';
 import 'selector/selector_controller.dart';
 import 'selector/selector_delegate.dart';
 import 'selector/selector_entry.dart';
 import 'selector/selector_utils.dart';
 import 'selector_label_state.dart';
+
+/// Tab label data for [DropdownSelectorBar].
+///
+/// Extends [SelectorLabelState] (which carries the label / result state shared
+/// with [DropdownSelectorButton]) by adding the tab identity ([index] / [tag]).
+/// A standalone [DropdownSelectorButton] never creates a [DropdownTabData]; it
+/// uses [SelectorLabelState] directly.
+class DropdownTabData extends SelectorLabelState {
+  /// Tab index in the [DropdownSelectorBar].
+  final int index;
+
+  /// Optional tag for identifying the tab.
+  final String? tag;
+
+  DropdownTabData({
+    required this.index,
+    super.originalLabel,
+    this.tag,
+    super.labelLoader,
+  });
+
+  @override
+  String toString() =>
+      'DropdownTabData(index: $index, originalLabel: $originalLabel)';
+}
+
+/// Tab-agnostic change callback used internally by [DropdownSelectorController].
+///
+/// Suitable for [DropdownSelectorButton], which has no tab concept, as well as
+/// multi-tab [DropdownSelectorBar].
+typedef SelectorLabelChangeCallback = void Function(
+    SelectorLabelState labelState, SelectorEntries selected);
 
 /// Controller for [DropdownSelectorBar] and its selector overlay.
 ///

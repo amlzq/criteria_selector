@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import '../selector_entry.dart';
 
 /// Generic callback invoked when an item in a selector view changes.
@@ -7,3 +9,7 @@ import '../selector_entry.dart';
 /// parsed and normalized the min/max values onto [entry] before invoking this
 /// callback, so the listener only needs to update selection state.
 typedef OnChanged<T extends SelectorEntry> = Function(int index, T entry);
+
+/// Builds a custom toggle widget (radio/checkbox).
+typedef ToggleWidgetBuilder = Widget Function(
+    BuildContext context, bool selected);
