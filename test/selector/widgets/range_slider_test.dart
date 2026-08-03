@@ -371,7 +371,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body:             SelectorRangeView(
+            body: SelectorRangeView(
               category: category,
               entries: category.children!.toList(),
               selectedEntries: const <SelectorEntry>{},
@@ -404,7 +404,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body:             SelectorRangeView(
+            body: SelectorRangeView(
               category: category,
               entries: category.children!.toList(),
               selectedEntries: const <SelectorEntry>{},

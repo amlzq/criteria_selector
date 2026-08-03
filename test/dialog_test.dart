@@ -43,15 +43,13 @@ void main() {
       expect(find.byType(SelectorPanel), findsOneWidget);
 
       // Simulate a barrier dismiss (returns null).
-      Navigator.of(navigatorKey.currentContext!, rootNavigator: true)
-          .pop(null);
+      Navigator.of(navigatorKey.currentContext!, rootNavigator: true).pop(null);
 
       final SelectorEntries? result = await future;
       expect(result, isNull);
     });
 
-    testWidgets('returns the popped selection',
-        (WidgetTester tester) async {
+    testWidgets('returns the popped selection', (WidgetTester tester) async {
       final navigatorKey = GlobalKey<NavigatorState>();
       await tester.pumpWidget(
         MaterialApp(

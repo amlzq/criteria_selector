@@ -1,4 +1,3 @@
-import 'package:criteria_selector/src/selector/constants.dart';
 import 'package:criteria_selector/src/selector/selector_entry.dart';
 import 'package:flutter_test/flutter_test.dart';
 
