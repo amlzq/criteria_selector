@@ -150,8 +150,15 @@ class SelectorListViewState extends State<SelectorListView>
     final selectedCustom = _selectedEntries
         .whereType<SelectorRangeEntry>()
         .firstWhereOrNull((e) => e.isCustom);
+    // Temporarily remove listeners to avoid triggering _inputListener during
+    // build phase (e.g. when called from didUpdateWidget), which would cause
+    // setState() or markNeedsBuild() called during build.
+    _minController?.removeListener(_inputListener);
+    _maxController?.removeListener(_inputListener);
     _minController?.text = selectedCustom?.min?.toString() ?? '';
     _maxController?.text = selectedCustom?.max?.toString() ?? '';
+    _minController?.addListener(_inputListener);
+    _maxController?.addListener(_inputListener);
   }
 
   @override
@@ -229,8 +236,12 @@ class SelectorListViewState extends State<SelectorListView>
 
   void _clearAllInput() {
     if (inputNotEmpty) {
+      _minController?.removeListener(_inputListener);
+      _maxController?.removeListener(_inputListener);
       _minController?.clear();
       _maxController?.clear();
+      _minController?.addListener(_inputListener);
+      _maxController?.addListener(_inputListener);
     }
   }
 
