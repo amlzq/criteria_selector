@@ -84,7 +84,24 @@ class CascadingSelectorState extends State<CascadingSelector> {
   @override
   void didUpdateWidget(covariant CascadingSelector oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _updateSelectorController(context);
+    // Only rebuild the selection state when the data actually changes.
+    // In playground's SelectorBox mode, the ancestor EntryPointScreen calls
+    // setState on every onChanged, which causes didUpdateWidget to fire on
+    // every tap — even though entries and previousSelected are unchanged.
+    // Unconditionally calling _updateSelectorController (which calls
+    // _rebuildSelectionState) discards the in-memory focused-path state
+    // (_tempSelectedEntryPerLevel) and rebuilds it from the state tree.
+    // While that rebuild is usually correct, it is unnecessary work and can
+    // cause the UI to jump to a different category under certain timing
+    // conditions. Guarding the call avoids the extra rebuild.
+    final sameEntries = const ListEquality<SelectorEntry>()
+        .equals(widget.entries, oldWidget.entries);
+    final samePrevious = const SetEquality<SelectorEntry>().equals(
+        widget.previousSelected ?? const {},
+        oldWidget.previousSelected ?? const {});
+    if (!sameEntries || !samePrevious) {
+      _updateSelectorController(context);
+    }
   }
 
   void _updateSelectorController(BuildContext context) {
