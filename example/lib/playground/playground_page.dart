@@ -92,7 +92,7 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
     );
 
     // Add the playground theme *above* the scoped [Navigator] so that routes
-    // pushed by [showSelect] / [showModalBottomSelector] /
+    // pushed by [showSelect] / [showModalBottomSelect] /
     // [DropdownSelectorBar] / [DropdownSelectorButton] (which all use the
     // scoped navigator via `useRootNavigator: false`) also inherit this theme.
     // If the [Theme] is placed *inside* the navigator's base page, only the

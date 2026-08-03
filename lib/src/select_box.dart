@@ -17,7 +17,7 @@ import 'selector/selector_panel.dart';
 /// Inline selectors do not show the apply/reset action bar: [SelectBox]
 /// wraps its panel in a [SelectorActionBarVisibility] scope that hides it, so
 /// selections apply immediately through [onChanged]. The action bar is still
-/// shown by the modal hosts ([showSelect] / [showModalBottomSelector]), which
+/// shown by the modal hosts ([showSelect] / [showModalBottomSelect]), which
 /// do not provide that scope. The [delegate]'s
 /// [SelectorDelegate.actionBarBuilder] only customizes the bar's UI and has no
 /// effect inside a [SelectBox].
@@ -112,7 +112,7 @@ class SelectBox extends StatefulWidget {
   /// When [width], [height] or [constraints] are provided, they are combined
   /// with this cap (a tighter bound still wins); see [constraints].
   ///
-  /// It has no effect on the modal [showSelect] / [showModalBottomSelector],
+  /// It has no effect on the modal [showSelect] / [showModalBottomSelect],
   /// which use [SelectorPanel] directly with their own height constraints.
   final double maxHeightFactor;
 

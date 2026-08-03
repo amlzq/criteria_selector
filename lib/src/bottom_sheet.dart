@@ -16,8 +16,7 @@ import 'selector/selector_panel.dart';
 /// entirely by the concrete [SelectorDelegate] passed via [delegate]. Any
 /// [SelectorDelegate] subclass works, so no separate functions are required.
 ///
-/// The interaction mirrors [showSelect] (and its deprecated alias
-/// [showSelect] / [showSelector]):
+/// The interaction mirrors [showSelect]:
 /// - In single-selection mode, tapping an item applies the selection
 ///   immediately and closes the sheet.
 /// - In multi-selection mode, the action bar's "Apply" button must be tapped
@@ -38,7 +37,7 @@ import 'selector/selector_panel.dart';
 ///
 /// Styling (colors, per-widget themes and the panel decoration via
 /// [SelectorDelegate.panelTheme]) is carried entirely by [delegate].
-Future<SelectorEntries?> showModalBottomSelector({
+Future<SelectorEntries?> showModalBottomSelect({
   required BuildContext context,
   required SelectorDelegate delegate,
   bool isScrollControlled = false,
@@ -87,6 +86,52 @@ Future<SelectorEntries?> showModalBottomSelector({
     ),
   );
 }
+
+/// Shows a selector in a modal bottom sheet built with Flutter's
+/// [showModalBottomSheet].
+///
+/// @deprecated Use [showModalBottomSelect] instead. This backward-compatible
+/// alias will be removed in a future minor version.
+@Deprecated(
+    'Use showModalBottomSelect instead. This will be removed in a future minor version.')
+Future<SelectorEntries?> showModalBottomSelector({
+  required BuildContext context,
+  required SelectorDelegate delegate,
+  bool isScrollControlled = false,
+  bool useRootNavigator = false,
+  bool isDismissible = true,
+  bool useSafeArea = false,
+  Widget? title,
+  Color? backgroundColor,
+  double? elevation,
+  ShapeBorder? shape,
+  Clip? clipBehavior,
+  BoxConstraints? constraints,
+  Color? barrierColor,
+  bool enableDrag = true,
+  bool? showDragHandle,
+  RouteSettings? routeSettings,
+  Offset? anchorPoint,
+}) =>
+    showModalBottomSelect(
+      context: context,
+      delegate: delegate,
+      isScrollControlled: isScrollControlled,
+      useRootNavigator: useRootNavigator,
+      isDismissible: isDismissible,
+      useSafeArea: useSafeArea,
+      title: title,
+      backgroundColor: backgroundColor,
+      elevation: elevation,
+      shape: shape,
+      clipBehavior: clipBehavior,
+      constraints: constraints,
+      barrierColor: barrierColor,
+      enableDrag: enableDrag,
+      showDragHandle: showDragHandle,
+      routeSettings: routeSettings,
+      anchorPoint: anchorPoint,
+    );
 
 /// The bottom-sheet body rendered by [showModalBottomSheet].
 ///

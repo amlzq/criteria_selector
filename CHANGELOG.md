@@ -4,6 +4,8 @@
 
 * **DEPRECATION** `showSelector` (dialog entry function) is renamed to `showSelect`. `showSelector` is retained as a deprecated backward-compatible alias that delegates to `showSelect` and will be removed in a future minor version. Migrate call sites to `showSelect` to clear the deprecation warning.
 
+* **DEPRECATION** `showModalBottomSelector` (bottom sheet entry function) is renamed to `showModalBottomSelect`. `showModalBottomSelector` is retained as a deprecated backward-compatible alias that delegates to `showModalBottomSelect` and will be removed in a future minor version. Migrate call sites to `showModalBottomSelect` to clear the deprecation warning.
+
 * **FEATURE** `GridSelector` now consumes `SelectorCategoryEntry.layout` via an exhaustive `switch (layout)`, matching the behavior already present in `ListSelector`. Each category renders as a `SelectorListView`, `SelectorGridView`, `SelectorChipBar`, or `SelectorRangeView` depending on its layout. `GridSelectorDelegate` gains optional `radioBuilder` / `checkboxBuilder` parameters for the `SelectorListLayout` branch. When `layout` is null the default `SelectorListLayout` is used; when `layout` is `SelectorGridLayout`, its own grid parameters (`crossAxisCount` etc.) take precedence over the delegate-level defaults.
 
 * **BREAKING** remove the deprecated `CriteriaSelectorLocalizations` / `CriteriaSelectorLocalizationsDelegate` typedef aliases (introduced in 0.3.0). Use `SelectorLocalizations` / `SelectorLocalizationsDelegate` instead.

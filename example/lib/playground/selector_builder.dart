@@ -232,7 +232,7 @@ SelectorDelegate _createDelegate(
 /// `onApplied` values can be captured and displayed in a footer panel.
 ///
 /// Dialog / bottom-sheet triggers use a nested [Builder] context so that
-/// [showSelect] / [showModalBottomSelector] pick up the phone's local
+/// [showSelect] / [showModalBottomSelect] pick up the phone's local
 /// (parameter-driven) theme rather than the surrounding app theme.
 Widget buildPhoneScreen(
   PlaygroundParams p,
@@ -264,7 +264,7 @@ Widget buildPhoneScreen(
 ///
 /// [SelectBox] applies immediately and hides the action bar, so its
 /// [SelectBox.onChanged] is mirrored into both fields. [showSelect] /
-/// [showModalBottomSelector] deliver their result through the returned
+/// [showModalBottomSelect] deliver their result through the returned
 /// [Future], which is shown as the applied value (no `onChanged` exists for
 /// these entry points).
 class EntryPointScreen extends StatefulWidget {
@@ -441,7 +441,7 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
                   child: Builder(
                     builder: (ctx) => FilledButton(
                       onPressed: () async {
-                        final result = await showModalBottomSelector(
+                        final result = await showModalBottomSelect(
                           context: ctx,
                           delegate: widget.delegate,
                         );

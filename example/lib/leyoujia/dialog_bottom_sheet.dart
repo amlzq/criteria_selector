@@ -205,7 +205,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () async {
-                final result = await showModalBottomSelector(
+                final result = await showModalBottomSelect(
                   context: context,
                   delegate: CascadingSelectorDelegate(
                     entriesLoader: _filtersRepo.fetchRegionData,
@@ -235,7 +235,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
             ),
             ElevatedButton(
               onPressed: () async {
-                final result = await showModalBottomSelector(
+                final result = await showModalBottomSelect(
                   context: context,
                   delegate: GridSelectorDelegate(
                     entriesLoader: _filtersRepo.fetchBuyPriceData,
@@ -269,7 +269,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
             ),
             ElevatedButton(
               onPressed: () async {
-                final result = await showModalBottomSelector(
+                final result = await showModalBottomSelect(
                   context: context,
                   delegate: FlattenSelectorDelegate(
                     entriesLoader: _filtersRepo.fetchFloorPlanBuyData,
@@ -299,7 +299,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
             ),
             ElevatedButton(
               onPressed: () async {
-                final result = await showModalBottomSelector(
+                final result = await showModalBottomSelect(
                   context: context,
                   delegate: FlattenSelectorDelegate(
                     entriesLoader: _filtersRepo.fetchMoreBuyData,
@@ -331,7 +331,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
             ),
             ElevatedButton(
               onPressed: () async {
-                final result = await showModalBottomSelector(
+                final result = await showModalBottomSelect(
                   context: context,
                   delegate: ListSelectorDelegate(
                     entriesLoader: _filtersRepo.fetchSortBuyData,

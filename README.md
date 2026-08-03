@@ -6,7 +6,7 @@ A highly customizable Flutter selector library. Supports SelectBox, DropdownSele
 
 Two layers work together: **entry points** decide *where* the selector appears, and **delegates** decide *how* entries are laid out — any delegate plugs into any entry point.
 
-- **Entry points** — five ways to show a selector: `SelectBox` (inline), `DropdownSelectorBar` (tab bar), `DropdownSelectorButton` (single trigger), `showSelect` (dialog), `showModalBottomSelector` (bottom sheet).
+- **Entry points** — five ways to show a selector: `SelectBox` (inline), `DropdownSelectorBar` (tab bar), `DropdownSelectorButton` (single trigger), `showSelect` (dialog), `showModalBottomSelect` (bottom sheet).
 - **Delegates** — four layouts: `CascadingSelectorDelegate` (tree), `GridSelectorDelegate` (grid), `ListSelectorDelegate` (single column), `FlattenSelectorDelegate` (grid that keeps category grouping).
 - Single & multiple selection via `SelectionMode` (per category or as a delegate fallback).
 - Async data loading through `entriesLoader`.
@@ -171,12 +171,12 @@ if (selected != null) {
 
 ![showSelect](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/dialog.gif)
 
-#### showModalBottomSelector
+#### showModalBottomSelect
 
 Shows a selector in a modal bottom sheet built on Flutter's `showModalBottomSheet`. Same interaction as `showSelect` (and its deprecated alias `showSelector`). Standard sheet parameters (`isScrollControlled`, `isDismissible`, `enableDrag`, `showDragHandle`, `constraints`, etc.) are forwarded.
 
 ```dart
-final SelectorEntries? selected = await showModalBottomSelector(
+final SelectorEntries? selected = await showModalBottomSelect(
   context: context,
   delegate: ListSelectorDelegate(
     crossAxisCount: 3,
@@ -191,11 +191,11 @@ if (selected != null) {
 }
 ```
 
-![showModalBottomSelector](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/bottom_sheet.gif)
+![showModalBottomSelect](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/bottom_sheet.gif)
 
 #### Theming
 
-**Per instance** — pass `selectorTheme` to any selector entry point (`SelectBox`, `showSelect`, `showModalBottomSelector`, `DropdownSelectorBar`, `DropdownSelectorButton`):
+**Per instance** — pass `selectorTheme` to any selector entry point (`SelectBox`, `showSelect`, `showModalBottomSelect`, `DropdownSelectorBar`, `DropdownSelectorButton`):
 
 ```dart
 SelectBox(

@@ -427,7 +427,7 @@ class DropdownSelectorController extends ChangeNotifier {
     hideSelector();
     // Persist the applied selection back onto the delegate so that reopening
     // the selector (DropdownSelectorBar / DropdownSelectorButton / showSelect
-    // / showModalBottomSelector) reconstructs its SelectorController with
+    // / showModalBottomSelect) reconstructs its SelectorController with
     // `previousSelected = selected`. Without this write-back, `selectedData`
     // keeps the initial `selectedEntriesLoader` value and the previous selection
     // is lost on reopen — even though `selectedEntriesLoader` was supplied.

@@ -38,7 +38,7 @@ SelectorCategoryEntry<dynamic> _category(
 }
 
 /// Shared selection set used to verify that the bare `SelectorEntries` query
-/// helpers (e.g. for `showSelect` / `showModalBottomSelector` return values)
+/// helpers (e.g. for `showSelect` / `showModalBottomSelect` return values)
 /// work correctly.
 final SelectorEntries _sharedSelected = {
   _category('text', children: {
@@ -63,7 +63,7 @@ final SelectorEntries _sharedSelected = {
 
 void main() {
   // Query helpers on a bare `SelectorEntries` — the type returned by
-  // `showSelect` / `showModalBottomSelector` — to prove the
+  // `showSelect` / `showModalBottomSelect` — to prove the
   // dialog/bottom-sheet path can query results without a wrapper.
   group('SelectorEntries query helpers (bare set, dialog/bottom-sheet path)',
       () {

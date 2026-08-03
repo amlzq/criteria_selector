@@ -39,7 +39,7 @@ class ControlsPanel extends StatelessWidget {
             EntryPoint.dropdownBar: 'DropdownSelectorBar',
             EntryPoint.dropdownButton: 'DropdownSelectorButton',
             EntryPoint.dialog: 'showSelect',
-            EntryPoint.bottomSheet: 'showModalBottomSelector',
+            EntryPoint.bottomSheet: 'showModalBottomSelect',
           },
           onChanged: (v) => onChanged(params.copyWith(entryPoint: v)),
         ),

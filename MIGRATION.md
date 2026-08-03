@@ -46,6 +46,24 @@ final result = await showSelector(context: context, delegate: delegate);
 final result = await showSelect(context: context, delegate: delegate);
 ```
 
+### `showModalBottomSelector` renamed to `showModalBottomSelect`
+
+`showModalBottomSelector` (the bottom sheet entry function) has been renamed to
+`showModalBottomSelect`. The old name is kept as a deprecated backward-compatible
+alias that delegates to `showModalBottomSelect` and **will be removed in a future
+minor version**.
+
+Migration: replace `showModalBottomSelector` with `showModalBottomSelect` at
+every call site.
+
+```dart
+// Before
+final result = await showModalBottomSelector(context: context, delegate: delegate);
+
+// After
+final result = await showModalBottomSelect(context: context, delegate: delegate);
+```
+
 ## MIGRATE TO 0.4.0
 
 ### Single `layout` replaces `listConfig` / `gridConfig` / `chipConfig`
