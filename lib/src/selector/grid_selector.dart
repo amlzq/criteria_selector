@@ -186,7 +186,7 @@ class GridSelectorState extends State<GridSelector> {
         );
 
     return switch (layout) {
-      SelectListLayout(:final toText) => SelectorListView(
+      SelectListLayout(:final toText) => SelectListView(
           key: ValueKey('category_$index'),
           category: category,
           showTitle: false,
@@ -237,7 +237,7 @@ class GridSelectorState extends State<GridSelector> {
           selectedLabelStyle: delegate.chipBarTheme?.selectedLabelStyle,
           onChanged: (_, item) => _onTerminalItemTap(item as SelectChildEntry),
         ),
-      SelectRangeLayout(:final toText) => SelectorRangeView(
+      SelectRangeLayout(:final toText) => SelectRangeView(
           key: ValueKey('category_$index'),
           category: category,
           showTitle: false,
@@ -260,7 +260,7 @@ class GridSelectorState extends State<GridSelector> {
       mainAxisSize: MainAxisSize.min,
       children: [
         if (widget.entries.length > 1)
-          SelectorTabBar(
+          SelectTabBar(
             isScrollable: false,
             onChanged: (_, item) =>
                 _onCategoryItemTap(item as SelectCategoryEntry),
@@ -319,7 +319,7 @@ class GridSelectorSkeleton extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const SelectorTabBarSkeleton(),
+        const SelectTabBarSkeleton(),
         Flexible(
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),

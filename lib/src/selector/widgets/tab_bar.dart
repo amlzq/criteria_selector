@@ -7,13 +7,13 @@ import 'constants.dart';
 import 'skeleton_box.dart';
 import 'tab_bar_theme.dart';
 
-enum SelectorTabBarIndicatorSize {
+enum SelectTabBarIndicatorSize {
   tab,
   label,
 }
 
-class SelectorTabBar extends StatelessWidget {
-  const SelectorTabBar({
+class SelectTabBar extends StatelessWidget {
+  const SelectTabBar({
     super.key,
     required this.entries,
     required this.selectedCategories,
@@ -52,7 +52,7 @@ class SelectorTabBar extends StatelessWidget {
 
   /// The padding around the whole tab bar.
   ///
-  /// If null, [SelectorTabBarTheme.padding] is used. If that is also null, the
+  /// If null, [SelectTabBarTheme.padding] is used. If that is also null, the
   /// value is [EdgeInsets.zero]. When [isScrollable] is true, this padding is
   /// ignored in favor of the inner scroll view's padding.
   final EdgeInsetsGeometry? padding;
@@ -66,56 +66,56 @@ class SelectorTabBar extends StatelessWidget {
 
   /// The color of the tab bar itself.
   ///
-  /// If null, [SelectorTabBarTheme.backgroundColor] is used. If that is also
+  /// If null, [SelectTabBarTheme.backgroundColor] is used. If that is also
   /// null, the value is [SelectThemeData.backgroundColor].
   final Color? backgroundColor;
 
   /// The color of the tab labels and indicator when a tab is selected.
   ///
-  /// If null, [SelectorTabBarTheme.selectedColor] is used. If that is also
+  /// If null, [SelectTabBarTheme.selectedColor] is used. If that is also
   /// null, the value is [SelectThemeData.selectedColor].
   final Color? selectedColor;
 
   /// The text style of the tab labels when not selected.
   ///
-  /// If null, [SelectorTabBarTheme.labelStyle] is used. If that is also null,
+  /// If null, [SelectTabBarTheme.labelStyle] is used. If that is also null,
   /// the value is [TextTheme.titleSmall].
   final TextStyle? labelStyle;
 
   /// The text style of the tab labels when selected.
   ///
-  /// If null, [SelectorTabBarTheme.selectedLabelStyle] is used. If that is also
+  /// If null, [SelectTabBarTheme.selectedLabelStyle] is used. If that is also
   /// null, the value defaults to [TextTheme.titleSmall] colored with
   /// [selectedColor].
   final TextStyle? selectedLabelStyle;
 
   /// The color of the line that appears below the selected tab.
   ///
-  /// If null, [SelectorTabBarTheme.indicatorColor] is used. If that is also
+  /// If null, [SelectTabBarTheme.indicatorColor] is used. If that is also
   /// null, the value is [selectedColor].
   final Color? indicatorColor;
 
   /// The thickness of the selected tab indicator line.
   ///
-  /// If null, [SelectorTabBarTheme.indicatorHeight] is used. If that is also
+  /// If null, [SelectTabBarTheme.indicatorHeight] is used. If that is also
   /// null, the default is 2.0.
   final double? indicatorHeight;
 
   /// The padding used to inset the indicator from the tab edges.
   ///
-  /// If null, [SelectorTabBarTheme.indicatorPadding] is used. If that is also
+  /// If null, [SelectTabBarTheme.indicatorPadding] is used. If that is also
   /// null, the value is [EdgeInsets.zero].
   final EdgeInsetsGeometry? indicatorPadding;
 
   /// Defines how the selected tab indicator's size is computed.
   ///
-  /// If null, [SelectorTabBarTheme.indicatorSize] is used. If that is also
-  /// null, the default is [SelectorTabBarIndicatorSize.tab].
-  final SelectorTabBarIndicatorSize? indicatorSize;
+  /// If null, [SelectTabBarTheme.indicatorSize] is used. If that is also
+  /// null, the default is [SelectTabBarIndicatorSize.tab].
+  final SelectTabBarIndicatorSize? indicatorSize;
 
   /// The duration of the indicator's size animation when the selection changes.
   ///
-  /// If null, [SelectorTabBarTheme.indicatorAnimationDuration] is used. If that
+  /// If null, [SelectTabBarTheme.indicatorAnimationDuration] is used. If that
   /// is also null, the default is 200ms.
   final Duration? indicatorAnimationDuration;
 
@@ -137,8 +137,8 @@ class SelectorTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final SelectorTabBarTheme defaults = _SelectorTabBarDefaults(context);
-    final theme = SelectorTabBarTheme.of(context);
+    final SelectTabBarTheme defaults = _SelectTabBarDefaults(context);
+    final theme = SelectTabBarTheme.of(context);
 
     final effectivePadding = padding ?? theme.padding ?? defaults.padding!;
     final containerPadding = isScrollable ? EdgeInsets.zero : effectivePadding;
@@ -264,7 +264,7 @@ class _Tab extends StatelessWidget {
 
   final EdgeInsetsGeometry indicatorPadding;
 
-  final SelectorTabBarIndicatorSize indicatorSize;
+  final SelectTabBarIndicatorSize indicatorSize;
 
   final Duration indicatorAnimationDuration;
 
@@ -303,7 +303,7 @@ class _Tab extends StatelessWidget {
           ).clamp(0.0, maxIndicatorWidth).toDouble();
 
           final double indicatorWidth =
-              indicatorSize == SelectorTabBarIndicatorSize.label
+              indicatorSize == SelectTabBarIndicatorSize.label
                   ? labelIndicatorWidth
                   : maxIndicatorWidth;
 
@@ -350,9 +350,9 @@ class _Tab extends StatelessWidget {
   }
 }
 
-/// Loading skeleton for [SelectorTabBar].
-class SelectorTabBarSkeleton extends StatelessWidget {
-  const SelectorTabBarSkeleton({
+/// Loading skeleton for [SelectTabBar].
+class SelectTabBarSkeleton extends StatelessWidget {
+  const SelectTabBarSkeleton({
     super.key,
     this.padding,
     this.backgroundColor,
@@ -360,20 +360,20 @@ class SelectorTabBarSkeleton extends StatelessWidget {
 
   /// The padding around the skeleton.
   ///
-  /// If null, [SelectorTabBarTheme.padding] is used. If that is also null, the
+  /// If null, [SelectTabBarTheme.padding] is used. If that is also null, the
   /// value is [EdgeInsets.zero].
   final EdgeInsetsGeometry? padding;
 
   /// The background color of the skeleton.
   ///
-  /// If null, [SelectorTabBarTheme.backgroundColor] is used. If that is also
+  /// If null, [SelectTabBarTheme.backgroundColor] is used. If that is also
   /// null, the value is [SelectThemeData.backgroundColor].
   final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
-    final SelectorTabBarTheme defaults = _SelectorTabBarDefaults(context);
-    final theme = SelectorTabBarTheme.of(context);
+    final SelectTabBarTheme defaults = _SelectTabBarDefaults(context);
+    final theme = SelectTabBarTheme.of(context);
 
     final effectivePadding = padding ?? theme.padding ?? defaults.padding!;
 
@@ -408,8 +408,8 @@ class SelectorTabBarSkeleton extends StatelessWidget {
   }
 }
 
-class _SelectorTabBarDefaults extends SelectorTabBarTheme {
-  _SelectorTabBarDefaults(this.context) : super();
+class _SelectTabBarDefaults extends SelectTabBarTheme {
+  _SelectTabBarDefaults(this.context) : super();
 
   final BuildContext context;
   late final SelectThemeData _theme = SelectTheme.of(context);
@@ -441,8 +441,8 @@ class _SelectorTabBarDefaults extends SelectorTabBarTheme {
   EdgeInsetsGeometry? get indicatorPadding => EdgeInsets.zero;
 
   @override
-  SelectorTabBarIndicatorSize? get indicatorSize =>
-      SelectorTabBarIndicatorSize.tab;
+  SelectTabBarIndicatorSize? get indicatorSize =>
+      SelectTabBarIndicatorSize.tab;
 
   @override
   Duration? get indicatorAnimationDuration => const Duration(milliseconds: 200);

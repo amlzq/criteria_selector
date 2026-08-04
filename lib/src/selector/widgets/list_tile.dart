@@ -5,16 +5,16 @@ import '../select_theme_data.dart';
 import 'constants.dart';
 import 'list_tile_theme.dart';
 
-/// Default height for [SelectorListTile].
-const kSelectorListTileHeight = 44.0;
+/// Default height for [SelectListTile].
+const kSelectListTileHeight = 44.0;
 
 /// Base list tile used by selector views.
 ///
 /// This tile supports a selected state, optional badge, and optional trailing
-/// toggle widgets (radio/checkbox) used by [SelectorRadioListTile] and
-/// [SelectorCheckboxListTile].
-class SelectorListTile extends StatelessWidget {
-  const SelectorListTile({
+/// toggle widgets (radio/checkbox) used by [SelectRadioListTile] and
+/// [SelectCheckboxListTile].
+class SelectListTile extends StatelessWidget {
+  const SelectListTile({
     super.key,
     this.leading,
     required this.label,
@@ -50,16 +50,16 @@ class SelectorListTile extends StatelessWidget {
   /// Defines the text color for the [label], [sublabel], [leading], and [trailing].
   final Color? textColor;
 
-  /// The text style for SelectorListTile's [label].
+  /// The text style for SelectListTile's [label].
   final TextStyle? labelStyle;
 
-  /// The text style for SelectorListTile's [sublabel].
+  /// The text style for SelectListTile's [sublabel].
   final TextStyle? sublabelStyle;
 
-  /// Defines the background color of `SelectorListTile` when [selected] is false.
+  /// Defines the background color of `SelectListTile` when [selected] is false.
   final Color? tileColor;
 
-  /// Defines the background color of `SelectorListTile` when [selected] is true.
+  /// Defines the background color of `SelectListTile` when [selected] is true.
   final Color? selectedTileColor;
 
   /// A widget to display top-trailing.
@@ -78,8 +78,8 @@ class SelectorListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final SelectorListTileTheme defaults = _SelectorLisTileDefaults(context);
-    final theme = SelectorListTileTheme.of(context);
+    final SelectListTileTheme defaults = _SelectListTileDefaults(context);
+    final theme = SelectListTileTheme.of(context);
 
     final effectiveSelectedColor =
         selectedColor ?? theme.selectedColor ?? defaults.selectedColor;
@@ -135,7 +135,7 @@ class SelectorListTile extends StatelessWidget {
     return InkWell(
       onTap: enabled ? onTap : null,
       child: Container(
-        height: kSelectorListTileHeight,
+        height: kSelectListTileHeight,
         alignment: Alignment.center,
         padding: const EdgeInsets.symmetric(horizontal: 10),
         color: selected ? selectedTileColor : tileColor,
@@ -152,8 +152,8 @@ class SelectorListTile extends StatelessWidget {
   }
 }
 
-class _SelectorLisTileDefaults extends SelectorListTileTheme {
-  _SelectorLisTileDefaults(this.context) : super();
+class _SelectListTileDefaults extends SelectListTileTheme {
+  _SelectListTileDefaults(this.context) : super();
 
   final BuildContext context;
   late final SelectThemeData _theme = SelectTheme.of(context);
@@ -197,7 +197,7 @@ class _SelectorLisTileDefaults extends SelectorListTileTheme {
 }
 
 /// A selector list tile with a checkbox trailing widget.
-class SelectorCheckboxListTile extends StatelessWidget {
+class SelectCheckboxListTile extends StatelessWidget {
   final String label;
   final String? sublabel;
 
@@ -213,7 +213,7 @@ class SelectorCheckboxListTile extends StatelessWidget {
   /// Inoperative if [enabled] is false.
   final GestureTapCallback? onTap;
 
-  const SelectorCheckboxListTile({
+  const SelectCheckboxListTile({
     super.key,
     required this.label,
     this.sublabel,
@@ -226,14 +226,14 @@ class SelectorCheckboxListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final SelectorListTileTheme defaults = _SelectorLisTileDefaults(context);
-    final theme = SelectorListTileTheme.of(context);
+    final SelectListTileTheme defaults = _SelectListTileDefaults(context);
+    final theme = SelectListTileTheme.of(context);
 
     final effectiveCheckbox = checkboxBuilder?.call(context, checked) ??
         theme.checkboxBuilder?.call(context, checked) ??
         defaults.checkboxBuilder!(context, checked);
 
-    return SelectorListTile(
+    return SelectListTile(
       label: label,
       sublabel: sublabel,
       enabled: enabled,
@@ -244,7 +244,7 @@ class SelectorCheckboxListTile extends StatelessWidget {
 }
 
 /// A selector list tile with a radio trailing widget.
-class SelectorRadioListTile extends StatelessWidget {
+class SelectRadioListTile extends StatelessWidget {
   final String label;
   final String? sublabel;
 
@@ -258,7 +258,7 @@ class SelectorRadioListTile extends StatelessWidget {
   /// Inoperative if [enabled] is false.
   final GestureTapCallback? onTap;
 
-  const SelectorRadioListTile({
+  const SelectRadioListTile({
     super.key,
     required this.label,
     this.sublabel,
@@ -270,14 +270,14 @@ class SelectorRadioListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final SelectorListTileTheme defaults = _SelectorLisTileDefaults(context);
-    final theme = SelectorListTileTheme.of(context);
+    final SelectListTileTheme defaults = _SelectListTileDefaults(context);
+    final theme = SelectListTileTheme.of(context);
 
     final effectiveRadio = radioBuilder?.call(context, selected) ??
         theme.radioBuilder?.call(context, selected) ??
         defaults.radioBuilder!(context, selected);
 
-    return SelectorListTile(
+    return SelectListTile(
       label: label,
       sublabel: sublabel,
       enabled: enabled,

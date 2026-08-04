@@ -203,7 +203,7 @@ class CascadingSelectorState extends State<CascadingSelector> {
       final selectedIndex = entries.indexWhere((e) => sameEntry(e, target!));
       if (selectedIndex == -1) continue;
 
-      const itemExtent = kSelectorListTileHeight;
+      const itemExtent = kSelectListTileHeight;
       final itemTop = selectedIndex * itemExtent;
       final itemBottom = itemTop + itemExtent;
       final viewportTop = scrollController.offset;
@@ -576,7 +576,7 @@ class CascadingSelectorState extends State<CascadingSelector> {
           if (!entry.hasChildren && entry.enabled) {
             final selected = selectedEntries.contains(entry);
             if (SelectionMode.single == childrenSelectionMode) {
-              return SelectorRadioListTile(
+              return SelectRadioListTile(
                 label: entry.name ?? '',
                 selected: selected,
                 radioBuilder: delegate.radioBuilder,
@@ -586,7 +586,7 @@ class CascadingSelectorState extends State<CascadingSelector> {
                 },
               );
             } else {
-              return SelectorCheckboxListTile(
+              return SelectCheckboxListTile(
                 label: entry.name ?? '',
                 checked: selected,
                 checkboxBuilder: delegate.checkboxBuilder,
@@ -602,7 +602,7 @@ class CascadingSelectorState extends State<CascadingSelector> {
                         (e) => e is SelectChildEntry && e.parentId == entry.id)
                     .length ??
                 0;
-            return SelectorListTile(
+            return SelectListTile(
               label: entry.name ?? '',
               selected: selected,
               selectedTileColor: selectedColor,
@@ -668,7 +668,7 @@ class CascadingSelectorState extends State<CascadingSelector> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Category list (left)
-              SelectorSideBar(
+              SelectSideBar(
                 isScrollable: true,
                 width: delegate.sideBarTheme?.width,
                 backgroundColor: categoryBackgroundColor,
@@ -823,7 +823,7 @@ class CascadingSelectorSkeleton extends StatelessWidget {
                     itemCount: 6,
                     itemBuilder: (context, index) {
                       return SkeletonTile(
-                        height: kSelectorListTileHeight,
+                        height: kSelectListTileHeight,
                         borderRadius: BorderRadius.circular(4),
                       );
                     },
@@ -849,7 +849,7 @@ class CascadingSelectorSkeleton extends StatelessWidget {
                         return SkeletonTile(
                           random: random,
                           widthUsed: kSelectorCategoryTileWidth + 30,
-                          height: kSelectorListTileHeight,
+                          height: kSelectListTileHeight,
                           borderRadius: BorderRadius.circular(4),
                         );
                       },

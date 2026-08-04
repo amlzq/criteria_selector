@@ -78,12 +78,12 @@ void main() {
     });
   });
 
-  group('SelectorRangeSlider', () {
+  group('SelectRangeSlider', () {
     testWidgets('renders end labels when provided', (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
-            body: SelectorRangeSlider(
+            body: SelectRangeSlider(
               min: 0,
               max: 1000,
               values: RangeValues(250, 750),
@@ -102,7 +102,7 @@ void main() {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
-            body: SelectorRangeSlider(
+            body: SelectRangeSlider(
               min: 0,
               max: 1000,
               values: RangeValues(250, 750),
@@ -111,7 +111,7 @@ void main() {
           ),
         ),
       );
-      expect(find.byType(SelectorRangeSlider), findsOneWidget);
+      expect(find.byType(SelectRangeSlider), findsOneWidget);
     });
 
     testWidgets('emits onChanged when a thumb is dragged', (tester) async {
@@ -121,7 +121,7 @@ void main() {
           home: Scaffold(
             body: SizedBox(
               width: 300,
-              child: SelectorRangeSlider(
+              child: SelectRangeSlider(
                 min: 0,
                 max: 100,
                 values: const RangeValues(20, 80),
@@ -131,7 +131,7 @@ void main() {
           ),
         ),
       );
-      final sliderFinder = find.byType(SelectorRangeSlider);
+      final sliderFinder = find.byType(SelectRangeSlider);
       // Drag from a point that lands nearer the start thumb (~20%).
       final start = tester.getCenter(sliderFinder);
       await tester.dragFrom(start, const Offset(40, 0));
@@ -149,7 +149,7 @@ void main() {
           home: Scaffold(
             body: SizedBox(
               width: 300,
-              child: SelectorRangeSlider(
+              child: SelectRangeSlider(
                 min: 0,
                 max: 100,
                 values: const RangeValues(20, 80),
@@ -163,7 +163,7 @@ void main() {
       );
       // Drag the right thumb a small amount; the end value should snap to
       // the nearest multiple of (100/10)=10.
-      final center = tester.getCenter(find.byType(SelectorRangeSlider));
+      final center = tester.getCenter(find.byType(SelectRangeSlider));
       await tester.dragFrom(center, const Offset(5, 0));
       await tester.pumpAndSettle();
       expect(changeEnd, isNotNull);
@@ -183,7 +183,7 @@ void main() {
           home: Scaffold(
             body: SizedBox(
               width: 300,
-              child: SelectorRangeSlider(
+              child: SelectRangeSlider(
                 min: 0,
                 max: 100,
                 values: const RangeValues(20, 80),
@@ -196,7 +196,7 @@ void main() {
       );
       // Drag the left thumb to the right; the start value should move in
       // discrete steps of 10 during the drag, not only after release.
-      final center = tester.getCenter(find.byType(SelectorRangeSlider));
+      final center = tester.getCenter(find.byType(SelectRangeSlider));
       final gesture = await tester.startGesture(center);
       for (var i = 0; i < 12; i++) {
         await gesture.moveBy(const Offset(10, 0));
@@ -223,7 +223,7 @@ void main() {
           home: Scaffold(
             body: SizedBox(
               width: 300,
-              child: SelectorRangeSlider(
+              child: SelectRangeSlider(
                 min: 0,
                 max: 100,
                 values: const RangeValues(20, 80),
@@ -238,7 +238,7 @@ void main() {
       // accumulated on top of an already-snapped base, each sub-step move
       // would round back and the thumb would feel stuck (resistant). It must
       // instead advance proportionally to the total finger travel.
-      final center = tester.getCenter(find.byType(SelectorRangeSlider));
+      final center = tester.getCenter(find.byType(SelectRangeSlider));
       final gesture = await tester.startGesture(center);
       for (var i = 0; i < 30; i++) {
         await gesture.moveBy(const Offset(1, 0));
@@ -261,7 +261,7 @@ void main() {
           home: Scaffold(
             body: SizedBox(
               width: 300,
-              child: SelectorRangeSlider(
+              child: SelectRangeSlider(
                 min: 0,
                 max: 100,
                 values: const RangeValues(0, 100),
@@ -272,9 +272,9 @@ void main() {
           ),
         ),
       );
-      final sliderLeft = tester.getTopLeft(find.byType(SelectorRangeSlider)).dx;
+      final sliderLeft = tester.getTopLeft(find.byType(SelectRangeSlider)).dx;
       final sliderRight =
-          tester.getTopRight(find.byType(SelectorRangeSlider)).dx;
+          tester.getTopRight(find.byType(SelectRangeSlider)).dx;
       final thumbs = tester
           .widgetList<AnimatedScale>(
             find.byWidgetPredicate((w) => w is AnimatedScale),
@@ -295,7 +295,7 @@ void main() {
           home: Scaffold(
             body: SizedBox(
               width: 300,
-              child: SelectorRangeSlider(
+              child: SelectRangeSlider(
                 min: 0,
                 max: 100,
                 values: const RangeValues(20, 80),
@@ -316,7 +316,7 @@ void main() {
       // At rest, both thumbs are at their normal size.
       expect(scalesOf().every((s) => s == 1.0), isTrue);
 
-      final center = tester.getCenter(find.byType(SelectorRangeSlider));
+      final center = tester.getCenter(find.byType(SelectRangeSlider));
       final gesture = await tester.startGesture(center);
       await tester.pump();
       // Move well past the touch slop so the pan (and the active-thumb zoom)
@@ -351,7 +351,7 @@ void main() {
     });
   });
 
-  group('SelectorRangeView', () {
+  group('SelectRangeView', () {
     testWidgets('renders the category name as title when showTitle is true',
         (tester) async {
       final category = SelectCategoryEntry<dynamic>(
@@ -371,7 +371,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: SelectorRangeView(
+            body: SelectRangeView(
               category: category,
               entries: category.children!.toList(),
               selectedEntries: const <SelectEntry>{},
@@ -404,7 +404,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: SelectorRangeView(
+            body: SelectRangeView(
               category: category,
               entries: category.children!.toList(),
               selectedEntries: const <SelectEntry>{},
@@ -438,7 +438,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: SelectorRangeView(
+            body: SelectRangeView(
               category: category,
               entries: category.children!.toList(),
               selectedEntries: const <SelectEntry>{},
@@ -489,7 +489,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: SelectorRangeView(
+            body: SelectRangeView(
               category: category,
               entries: category.children!.toList(),
               selectedEntries: const <SelectEntry>{},
@@ -528,7 +528,7 @@ void main() {
             body: Center(
               child: SizedBox(
                 width: 300,
-                child: SelectorRangeView(
+                child: SelectRangeView(
                   category: category,
                   entries: category.children!.toList(),
                   selectedEntries: const <SelectEntry>{},
@@ -548,9 +548,9 @@ void main() {
       // The slider's gesture detector picks the closer thumb at start,
       // then moves it; on release it emits onChangeEnd. The gesture
       // detector wraps the inner slider area (find the inner GestureDetector
-      // inside the SelectorRangeSlider).
+      // inside the SelectRangeSlider).
       final gestures = find.descendant(
-        of: find.byType(SelectorRangeSlider),
+        of: find.byType(SelectRangeSlider),
         matching: find.byType(GestureDetector),
       );
       expect(gestures, findsOneWidget,
@@ -587,7 +587,7 @@ void main() {
         children: {customEntry},
         layout: const SelectRangeLayout(),
       );
-      final base = SelectorRangeView(
+      final base = SelectRangeView(
         category: category,
         entries: category.children!.toList(),
         selectedEntries: const <SelectEntry>{},
@@ -611,7 +611,7 @@ void main() {
       // Simulate a parent rebuild that now reports the custom range as
       // selected (the focusListener round-trips to the controller and the
       // parent re-renders the view). The user's input must be preserved.
-      final rebuilt = SelectorRangeView(
+      final rebuilt = SelectRangeView(
         category: category,
         entries: category.children!.toList(),
         selectedEntries: {
@@ -648,7 +648,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: SelectorRangeView(
+            body: SelectRangeView(
               category: category,
               entries: category.children!.toList(),
               selectedEntries: const <SelectEntry>{},
@@ -706,7 +706,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: SelectorRangeView(
+            body: SelectRangeView(
               category: category,
               entries: category.children!.toList(),
               selectedEntries: const <SelectEntry>{},
@@ -720,7 +720,7 @@ void main() {
       // Initial slider range is the full bounds.
       expect(
         tester
-            .widget<SelectorRangeSlider>(find.byType(SelectorRangeSlider))
+            .widget<SelectRangeSlider>(find.byType(SelectRangeSlider))
             .values,
         const RangeValues(0, 1000),
       );
@@ -731,7 +731,7 @@ void main() {
       // The slider must not have moved while typing.
       expect(
         tester
-            .widget<SelectorRangeSlider>(find.byType(SelectorRangeSlider))
+            .widget<SelectRangeSlider>(find.byType(SelectRangeSlider))
             .values,
         const RangeValues(0, 1000),
       );
@@ -741,7 +741,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(
         tester
-            .widget<SelectorRangeSlider>(find.byType(SelectorRangeSlider))
+            .widget<SelectRangeSlider>(find.byType(SelectRangeSlider))
             .values,
         const RangeValues(250, 1000),
       );
@@ -766,7 +766,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: SelectorRangeView(
+            body: SelectRangeView(
               category: category,
               entries: category.children!.toList(),
               selectedEntries: const <SelectEntry>{},
@@ -791,7 +791,7 @@ void main() {
       // The typed max (50) is below the min (100) => the bounds auto-swap.
       expect(
         tester
-            .widget<SelectorRangeSlider>(find.byType(SelectorRangeSlider))
+            .widget<SelectRangeSlider>(find.byType(SelectRangeSlider))
             .values,
         const RangeValues(50, 100),
       );

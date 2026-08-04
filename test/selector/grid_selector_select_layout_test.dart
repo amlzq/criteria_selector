@@ -164,8 +164,8 @@ void main() {
       await tester.pumpWidget(_buildGridSelector([category]));
       await tester.pumpAndSettle();
 
-      // The range view should render a SelectorRangeSlider
-      expect(find.byType(SelectorRangeSlider), findsOneWidget);
+      // The range view should render a SelectRangeSlider
+      expect(find.byType(SelectRangeSlider), findsOneWidget);
     });
 
     testWidgets('switches between tabs with different layouts', (tester) async {

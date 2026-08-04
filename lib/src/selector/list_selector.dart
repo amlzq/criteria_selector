@@ -178,7 +178,7 @@ class ListSelectorState extends State<ListSelector> {
                         titlePadding: const EdgeInsets.symmetric(vertical: 10),
                         initiallyExpanded: true,
                         child: switch (layout) {
-                          SelectListLayout(:final toText) => SelectorListView(
+                          SelectListLayout(:final toText) => SelectListView(
                               key: ValueKey('category_$index'),
                               category: category,
                               showTitle: false,
@@ -230,7 +230,7 @@ class ListSelectorState extends State<ListSelector> {
                               onChanged: (_, item) =>
                                   _onTerminalItemTap(item as SelectChildEntry),
                             ),
-                          SelectRangeLayout(:final toText) => SelectorRangeView(
+                          SelectRangeLayout(:final toText) => SelectRangeView(
                               key: ValueKey('category_$index'),
                               category: category,
                               showTitle: false,
@@ -245,7 +245,7 @@ class ListSelectorState extends State<ListSelector> {
                     }),
                   ),
                 )
-              : SelectorListView(
+              : SelectListView(
                   entries: widget.entries,
                   selectedEntries: controller?.selectedEntriesAtLevel(0) ?? {},
                   onChanged: (_, entry) =>
@@ -287,7 +287,7 @@ class ListSelectorSkeleton extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Flexible(child: SelectorListSkeleton(itemCount: 6)),
+        const Flexible(child: SelectListSkeleton(itemCount: 6)),
         if (SelectionMode.multiple == selectionMode)
           const SelectActionBarSkeleton(),
       ],

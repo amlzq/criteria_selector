@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import '../select_theme.dart';
 import 'side_bar.dart';
 
-/// Defines a theme for [SelectorSideBar] widgets.
+/// Defines a theme for [SelectSideBar] widgets.
 @immutable
-class SelectorSideBarTheme with Diagnosticable {
-  const SelectorSideBarTheme({
+class SelectSideBarTheme with Diagnosticable {
+  const SelectSideBarTheme({
     this.backgroundColor,
     this.width,
     this.padding,
@@ -23,41 +23,41 @@ class SelectorSideBarTheme with Diagnosticable {
     this.indicatorAnimationDuration,
   });
 
-  /// Overrides the default value of [SelectorSideBar.selectedColor].
+  /// Overrides the default value of [SelectSideBar.selectedColor].
   final Color? backgroundColor;
 
-  /// Overrides the default value of [SelectorSideBar.width].
+  /// Overrides the default value of [SelectSideBar.width].
   final double? width;
 
-  /// Overrides the default value of [SelectorSideBar.padding].
+  /// Overrides the default value of [SelectSideBar.padding].
   final EdgeInsetsGeometry? padding;
 
-  /// Overrides the default value of [SelectorSideBar.selectedColor].
+  /// Overrides the default value of [SelectSideBar.selectedColor].
   final Color? selectedColor;
 
-  /// Overrides the default value of [SelectorSideBar.labelStyle].
+  /// Overrides the default value of [SelectSideBar.labelStyle].
   final TextStyle? labelStyle;
 
-  /// Overrides the default value of [SelectorSideBar.selectedLabelStyle].
+  /// Overrides the default value of [SelectSideBar.selectedLabelStyle].
   final TextStyle? selectedLabelStyle;
 
-  /// Overrides the default value of [SelectorSideBar.selectedTileColor].
+  /// Overrides the default value of [SelectSideBar.selectedTileColor].
   final Color? selectedTileColor;
 
-  /// Overrides the default value of [SelectorSideBar.indicatorColor].
+  /// Overrides the default value of [SelectSideBar.indicatorColor].
   final Color? indicatorColor;
 
-  /// Overrides the default value of [SelectorSideBar.indicatorHeight].
+  /// Overrides the default value of [SelectSideBar.indicatorHeight].
   final double? indicatorHeight;
 
-  /// Overrides the default value of [SelectorSideBar.indicatorPadding].
+  /// Overrides the default value of [SelectSideBar.indicatorPadding].
   final EdgeInsetsGeometry? indicatorPadding;
 
-  /// Overrides the default value of [SelectorSideBar.indicatorAnimationDuration].
+  /// Overrides the default value of [SelectSideBar.indicatorAnimationDuration].
   final Duration? indicatorAnimationDuration;
 
   /// Returns a copy of this theme with the given fields replaced.
-  SelectorSideBarTheme copyWith({
+  SelectSideBarTheme copyWith({
     Color? backgroundColor,
     double? width,
     EdgeInsetsGeometry? padding,
@@ -70,7 +70,7 @@ class SelectorSideBarTheme with Diagnosticable {
     EdgeInsetsGeometry? indicatorPadding,
     Duration? indicatorAnimationDuration,
   }) {
-    return SelectorSideBarTheme(
+    return SelectSideBarTheme(
       backgroundColor: backgroundColor ?? this.backgroundColor,
       width: width ?? this.width,
       padding: padding ?? this.padding,
@@ -86,17 +86,17 @@ class SelectorSideBarTheme with Diagnosticable {
     );
   }
 
-  static SelectorSideBarTheme of(BuildContext context) {
+  static SelectSideBarTheme of(BuildContext context) {
     return SelectTheme.of(context).sideBarTheme;
   }
 
   /// Linearly interpolates between two category bar themes.
-  static SelectorSideBarTheme lerp(
-      SelectorSideBarTheme? a, SelectorSideBarTheme? b, double t) {
+  static SelectSideBarTheme lerp(
+      SelectSideBarTheme? a, SelectSideBarTheme? b, double t) {
     if (identical(a, b) && a != null) {
       return a;
     }
-    return SelectorSideBarTheme(
+    return SelectSideBarTheme(
       backgroundColor: Color.lerp(a?.backgroundColor, b?.backgroundColor, t),
       width: lerpDouble(a?.width, b?.width, t),
       padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
@@ -145,7 +145,7 @@ class SelectorSideBarTheme with Diagnosticable {
     if (other.runtimeType != runtimeType) {
       return false;
     }
-    return other is SelectorSideBarTheme &&
+    return other is SelectSideBarTheme &&
         other.backgroundColor == backgroundColor &&
         other.width == width &&
         other.padding == padding &&

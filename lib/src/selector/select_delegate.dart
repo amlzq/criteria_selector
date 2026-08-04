@@ -128,16 +128,16 @@ abstract class SelectDelegate {
   final SelectActionBarTheme? actionBarTheme;
 
   /// Theme overrides for the tab bar (horizontal category bar).
-  final SelectorTabBarTheme? tabBarTheme;
+  final SelectTabBarTheme? tabBarTheme;
 
   /// Theme overrides for the side bar (vertical category bar).
-  final SelectorSideBarTheme? sideBarTheme;
+  final SelectSideBarTheme? sideBarTheme;
 
   /// Theme overrides for grid tiles.
   final SelectGridTileTheme? gridTileTheme;
 
   /// Theme overrides for list tiles.
-  final SelectorListTileTheme? listTileTheme;
+  final SelectListTileTheme? listTileTheme;
 
   /// Theme overrides for range field tiles.
   final SelectFieldTileTheme? fieldTileTheme;

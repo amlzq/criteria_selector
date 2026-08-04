@@ -46,7 +46,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                         _filtersRepo.fetchNeighborhoodSelectedData,
                     resetEntriesLoader: _filtersRepo.fetchNeighborhoodResetData,
                     selectionMode: SelectionMode.multiple,
-                    sideBarTheme: const SelectorSideBarTheme(width: 150),
+                    sideBarTheme: const SelectSideBarTheme(width: 150),
                     isScrollable: true,
                     radioBuilder: (context, selected) {
                       return MyRadio(value: selected);
@@ -112,7 +112,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                     childAspectRatio: 2.5,
                     crossAxisSpacing: 8,
                     mainAxisSpacing: 8,
-                    sideBarTheme: const SelectorSideBarTheme(width: 90),
+                    sideBarTheme: const SelectSideBarTheme(width: 90),
                     panelTheme: const SelectPanelTheme(
                       elevation: 8,
                       shape: RoundedRectangleBorder(
@@ -211,7 +211,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                         _filtersRepo.fetchNeighborhoodSelectedData,
                     resetEntriesLoader: _filtersRepo.fetchNeighborhoodResetData,
                     selectionMode: SelectionMode.multiple,
-                    sideBarTheme: const SelectorSideBarTheme(width: 150),
+                    sideBarTheme: const SelectSideBarTheme(width: 150),
                     isScrollable: true,
                     radioBuilder: (context, selected) {
                       return MyRadio(value: selected);
@@ -277,7 +277,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                     childAspectRatio: 2.5,
                     crossAxisSpacing: 8,
                     mainAxisSpacing: 8,
-                    sideBarTheme: const SelectorSideBarTheme(width: 90),
+                    sideBarTheme: const SelectSideBarTheme(width: 90),
                   ),
                   elevation: 12,
                   shape: const RoundedRectangleBorder(

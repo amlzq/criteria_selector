@@ -462,7 +462,7 @@ class _HousePageState extends State<HousePage> {
                       _filtersRepo.fetchNeighborhoodSelectedData,
                   resetEntriesLoader: _filtersRepo.fetchNeighborhoodResetData,
                   selectionMode: SelectionMode.multiple,
-                  sideBarTheme: const SelectorSideBarTheme(width: 150),
+                  sideBarTheme: const SelectSideBarTheme(width: 150),
                   isScrollable: true,
                 ),
                 GridSelectDelegate(

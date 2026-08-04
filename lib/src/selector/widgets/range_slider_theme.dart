@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 
 import '../select_theme.dart';
 
-/// Theme configuration for [SelectorRangeSlider].
+/// Theme configuration for [SelectRangeSlider].
 @immutable
-class SelectorRangeSliderTheme with Diagnosticable {
-  const SelectorRangeSliderTheme({
+class SelectRangeSliderTheme with Diagnosticable {
+  const SelectRangeSliderTheme({
     this.endLabelStyle,
     this.activeTrackColor,
     this.inactiveTrackColor,
@@ -42,7 +42,7 @@ class SelectorRangeSliderTheme with Diagnosticable {
   /// Overrides the thumb radius in logical pixels.
   final double? thumbRadius;
 
-  SelectorRangeSliderTheme copyWith({
+  SelectRangeSliderTheme copyWith({
     TextStyle? endLabelStyle,
     Color? activeTrackColor,
     Color? inactiveTrackColor,
@@ -52,7 +52,7 @@ class SelectorRangeSliderTheme with Diagnosticable {
     double? trackHeight,
     double? thumbRadius,
   }) {
-    return SelectorRangeSliderTheme(
+    return SelectRangeSliderTheme(
       endLabelStyle: endLabelStyle ?? this.endLabelStyle,
       activeTrackColor: activeTrackColor ?? this.activeTrackColor,
       inactiveTrackColor: inactiveTrackColor ?? this.inactiveTrackColor,
@@ -64,17 +64,17 @@ class SelectorRangeSliderTheme with Diagnosticable {
     );
   }
 
-  static SelectorRangeSliderTheme of(BuildContext context) {
+  static SelectRangeSliderTheme of(BuildContext context) {
     return SelectTheme.of(context).rangeSliderTheme;
   }
 
-  static SelectorRangeSliderTheme lerp(
-    SelectorRangeSliderTheme? a,
-    SelectorRangeSliderTheme? b,
+  static SelectRangeSliderTheme lerp(
+    SelectRangeSliderTheme? a,
+    SelectRangeSliderTheme? b,
     double t,
   ) {
     if (identical(a, b) && a != null) return a;
-    return SelectorRangeSliderTheme(
+    return SelectRangeSliderTheme(
       endLabelStyle: TextStyle.lerp(a?.endLabelStyle, b?.endLabelStyle, t),
       activeTrackColor: Color.lerp(a?.activeTrackColor, b?.activeTrackColor, t),
       inactiveTrackColor:
@@ -107,7 +107,7 @@ class SelectorRangeSliderTheme with Diagnosticable {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other.runtimeType != runtimeType) return false;
-    return other is SelectorRangeSliderTheme &&
+    return other is SelectRangeSliderTheme &&
         other.endLabelStyle == endLabelStyle &&
         other.activeTrackColor == activeTrackColor &&
         other.inactiveTrackColor == inactiveTrackColor &&

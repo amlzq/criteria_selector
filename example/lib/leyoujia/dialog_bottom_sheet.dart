@@ -117,7 +117,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                     childAspectRatio: 2.5,
                     crossAxisSpacing: 8,
                     mainAxisSpacing: 8,
-                    sideBarTheme: const SelectorSideBarTheme(width: 90),
+                    sideBarTheme: const SelectSideBarTheme(width: 90),
                     panelTheme: const SelectPanelTheme(
                       elevation: 8,
                       shape: RoundedRectangleBorder(
@@ -149,7 +149,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                     childAspectRatio: 2.5,
                     crossAxisSpacing: 8,
                     mainAxisSpacing: 8,
-                    sideBarTheme: const SelectorSideBarTheme(width: 98),
+                    sideBarTheme: const SelectSideBarTheme(width: 98),
                   ),
                   elevation: 12,
                   shape: const RoundedRectangleBorder(
@@ -281,7 +281,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                     childAspectRatio: 2.5,
                     crossAxisSpacing: 8,
                     mainAxisSpacing: 8,
-                    sideBarTheme: const SelectorSideBarTheme(width: 90),
+                    sideBarTheme: const SelectSideBarTheme(width: 90),
                   ),
                   elevation: 12,
                   shape: const RoundedRectangleBorder(
@@ -311,7 +311,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                     childAspectRatio: 2.5,
                     crossAxisSpacing: 8,
                     mainAxisSpacing: 8,
-                    sideBarTheme: const SelectorSideBarTheme(width: 98),
+                    sideBarTheme: const SelectSideBarTheme(width: 98),
                     panelTheme: const SelectPanelTheme(
                       elevation: 6,
                       shape: RoundedRectangleBorder(

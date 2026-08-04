@@ -174,7 +174,7 @@ class SelectRangeEntry<N, E> extends SelectChildEntry<E> {
 
   /// Optional step count for range-slider UIs.
   ///
-  /// When set, [SelectorRangeSlider] snaps the released handle positions
+  /// When set, [SelectRangeSlider] snaps the released handle positions
   /// to the nearest multiple of `(max - min) / divisions`. The track is
   /// **not** decorated with tick marks regardless of this value.
   ///

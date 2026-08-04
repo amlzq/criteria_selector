@@ -2,6 +2,67 @@
 
 ## Next
 
+### `SelectorListTile` / `SelectorListView` / `SelectorRange*` / `SelectorSideBar` / `SelectorTabBar` renamed to `Select*`
+
+The list, range, sidebar, and tab bar widgets and their themes have been renamed
+to drop the redundant `Selector` prefix. The old names are kept as deprecated
+type aliases (e.g. `typedef SelectorListTile = SelectListTile;`) and a deprecated
+constant for backward compatibility and **will be removed in a future minor
+version**. Since the aliases are exact `typedef`s, this is a pure rename — no
+behavior changes.
+
+| Old name | New name | Deprecated alias? |
+| --- | --- | --- |
+| `SelectorListTile` | `SelectListTile` | yes |
+| `SelectorListTileTheme` | `SelectListTileTheme` | yes |
+| `SelectorCheckboxListTile` | `SelectCheckboxListTile` | yes |
+| `SelectorRadioListTile` | `SelectRadioListTile` | yes |
+| `SelectorListView` | `SelectListView` | yes |
+| `SelectorListViewState` | `SelectListViewState` | yes |
+| `SelectorListSkeleton` | `SelectListSkeleton` | yes |
+| `SelectorRangeSlider` | `SelectRangeSlider` | yes |
+| `SelectorRangeSliderTheme` | `SelectRangeSliderTheme` | yes |
+| `SelectorRangeView` | `SelectRangeView` | yes |
+| `SelectorSideBar` | `SelectSideBar` | yes |
+| `SelectorSideBarTheme` | `SelectSideBarTheme` | yes |
+| `SelectorSideBarSkeleton` | `SelectSideBarSkeleton` | yes |
+| `SelectorTabBar` | `SelectTabBar` | yes |
+| `SelectorTabBarTheme` | `SelectTabBarTheme` | yes |
+| `SelectorTabBarIndicatorSize` | `SelectTabBarIndicatorSize` | yes |
+| `SelectorTabBarSkeleton` | `SelectTabBarSkeleton` | yes |
+| `kSelectorListTileHeight` | `kSelectListTileHeight` | yes (deprecated constant) |
+
+The public export is updated, so no import change is required when using the
+package barrel.
+
+Migration: replace each old name with its new counterpart at every call site.
+
+```dart
+// Before
+SelectorListView(
+  entries: entries,
+  selectedEntries: selected,
+  onChanged: onChanged,
+);
+
+// After
+SelectListView(
+  entries: entries,
+  selectedEntries: selected,
+  onChanged: onChanged,
+);
+```
+
+```dart
+// Before
+const SelectorSideBarTheme(width: 150);
+const SelectorListTileTheme();
+
+// After
+const SelectSideBarTheme(width: 150);
+const SelectListTileTheme();
+```
+
 ### `DropdownOverlay*` / `SelectorLabel*` renamed to `Select*`
 
 The overlay and label types have been renamed to a consistent `Select*` naming

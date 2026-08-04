@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import '../select_theme.dart';
 import 'tab_bar.dart';
 
-/// Defines a theme for [SelectorTabBar] widgets.
+/// Defines a theme for [SelectTabBar] widgets.
 @immutable
-class SelectorTabBarTheme with Diagnosticable {
-  const SelectorTabBarTheme({
+class SelectTabBarTheme with Diagnosticable {
+  const SelectTabBarTheme({
     this.backgroundColor,
     this.padding,
     this.selectedColor,
@@ -22,38 +22,38 @@ class SelectorTabBarTheme with Diagnosticable {
     this.indicatorAnimationDuration,
   });
 
-  /// Overrides the default value of [SelectorTabBar.selectedColor].
+  /// Overrides the default value of [SelectTabBar.selectedColor].
   final Color? backgroundColor;
 
-  /// Overrides the default value of [SelectorTabBar.padding].
+  /// Overrides the default value of [SelectTabBar.padding].
   final EdgeInsetsGeometry? padding;
 
-  /// Overrides the default value of [SelectorTabBar.selectedColor].
+  /// Overrides the default value of [SelectTabBar.selectedColor].
   final Color? selectedColor;
 
-  /// Overrides the default value of [SelectorTabBar.labelStyle].
+  /// Overrides the default value of [SelectTabBar.labelStyle].
   final TextStyle? labelStyle;
 
-  /// Overrides the default value of [SelectorTabBar.selectedLabelStyle].
+  /// Overrides the default value of [SelectTabBar.selectedLabelStyle].
   final TextStyle? selectedLabelStyle;
 
-  /// Overrides the default value of [SelectorTabBar.indicatorColor].
+  /// Overrides the default value of [SelectTabBar.indicatorColor].
   final Color? indicatorColor;
 
-  /// Overrides the default value of [SelectorTabBar.indicatorHeight].
+  /// Overrides the default value of [SelectTabBar.indicatorHeight].
   final double? indicatorHeight;
 
-  /// Overrides the default value of [SelectorTabBar.indicatorPadding].
+  /// Overrides the default value of [SelectTabBar.indicatorPadding].
   final EdgeInsetsGeometry? indicatorPadding;
 
-  /// Overrides the default value of [SelectorTabBar.indicatorSize].
-  final SelectorTabBarIndicatorSize? indicatorSize;
+  /// Overrides the default value of [SelectTabBar.indicatorSize].
+  final SelectTabBarIndicatorSize? indicatorSize;
 
-  /// Overrides the default value of [SelectorTabBar.indicatorAnimationDuration].
+  /// Overrides the default value of [SelectTabBar.indicatorAnimationDuration].
   final Duration? indicatorAnimationDuration;
 
   /// Returns a copy of this theme with the given fields replaced.
-  SelectorTabBarTheme copyWith({
+  SelectTabBarTheme copyWith({
     Color? backgroundColor,
     double? size,
     EdgeInsetsGeometry? padding,
@@ -64,10 +64,10 @@ class SelectorTabBarTheme with Diagnosticable {
     Color? indicatorColor,
     double? indicatorHeight,
     EdgeInsetsGeometry? indicatorPadding,
-    SelectorTabBarIndicatorSize? indicatorSize,
+    SelectTabBarIndicatorSize? indicatorSize,
     Duration? indicatorAnimationDuration,
   }) {
-    return SelectorTabBarTheme(
+    return SelectTabBarTheme(
       backgroundColor: backgroundColor ?? this.backgroundColor,
       padding: padding ?? this.padding,
       selectedColor: selectedColor ?? this.selectedColor,
@@ -82,17 +82,17 @@ class SelectorTabBarTheme with Diagnosticable {
     );
   }
 
-  static SelectorTabBarTheme of(BuildContext context) {
+  static SelectTabBarTheme of(BuildContext context) {
     return SelectTheme.of(context).tabBarTheme;
   }
 
   /// Linearly interpolates between two tab bar themes.
-  static SelectorTabBarTheme lerp(
-      SelectorTabBarTheme? a, SelectorTabBarTheme? b, double t) {
+  static SelectTabBarTheme lerp(
+      SelectTabBarTheme? a, SelectTabBarTheme? b, double t) {
     if (identical(a, b) && a != null) {
       return a;
     }
-    return SelectorTabBarTheme(
+    return SelectTabBarTheme(
       backgroundColor: Color.lerp(a?.backgroundColor, b?.backgroundColor, t),
       padding: EdgeInsetsGeometry.lerp(a?.padding, b?.padding, t),
       selectedColor: Color.lerp(a?.selectedColor, b?.selectedColor, t),
@@ -135,7 +135,7 @@ class SelectorTabBarTheme with Diagnosticable {
     if (other.runtimeType != runtimeType) {
       return false;
     }
-    return other is SelectorTabBarTheme &&
+    return other is SelectTabBarTheme &&
         other.backgroundColor == backgroundColor &&
         other.padding == padding &&
         other.selectedColor == selectedColor &&

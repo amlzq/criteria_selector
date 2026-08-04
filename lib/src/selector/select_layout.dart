@@ -88,7 +88,7 @@ class SelectChipLayout extends SelectLayout {
 ///
 /// Use this layout when a category owns a single custom [SelectRangeEntry]
 /// and you want to render it as a "price-range" style control: a
-/// [SelectorRangeSlider] on top of two synced text fields.
+/// [SelectRangeSlider] on top of two synced text fields.
 ///
 /// The category is expected to expose exactly one
 /// [SelectRangeEntry.firstCustomOrNull]; if none is found, the view falls

@@ -17,8 +17,8 @@ import 'range_slider_theme.dart';
 /// [values]; updates are reported back through [onChanged] (while dragging,
 /// snapped to the nearest division step when [divisions] is set) and
 /// [onChangeEnd] (on release, with the final snap-to-step).
-class SelectorRangeSlider extends StatefulWidget {
-  const SelectorRangeSlider({
+class SelectRangeSlider extends StatefulWidget {
+  const SelectRangeSlider({
     super.key,
     required this.min,
     required this.max,
@@ -90,10 +90,10 @@ class SelectorRangeSlider extends StatefulWidget {
   final double? thumbRadius;
 
   @override
-  State<SelectorRangeSlider> createState() => _SelectorRangeSliderState();
+  State<SelectRangeSlider> createState() => _SelectRangeSliderState();
 }
 
-class _SelectorRangeSliderState extends State<SelectorRangeSlider> {
+class _SelectRangeSliderState extends State<SelectRangeSlider> {
   _ActiveThumb? _activeThumb;
 
   /// Effective thumb radius, cached from [build] so the pan handlers can use
@@ -114,8 +114,8 @@ class _SelectorRangeSliderState extends State<SelectorRangeSlider> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = SelectorRangeSliderTheme.of(context);
-    final defaults = _SelectorRangeSliderDefaults(context);
+    final theme = SelectRangeSliderTheme.of(context);
+    final defaults = _SelectRangeSliderDefaults(context);
 
     final effectiveTrackHeight =
         widget.trackHeight ?? theme.trackHeight ?? defaults.trackHeight ?? 4.0;
@@ -401,13 +401,13 @@ class _Thumb extends StatelessWidget {
   }
 }
 
-/// Computes theme-aware default values for [SelectorRangeSlider].
+/// Computes theme-aware default values for [SelectRangeSlider].
 ///
 /// Mirrors the pattern used by [SelectGridTile] / [SelectFieldTile]:
 /// fall back to Material brightness-aware colors when neither the widget
 /// props nor the merged theme provide an explicit value.
-class _SelectorRangeSliderDefaults extends SelectorRangeSliderTheme {
-  _SelectorRangeSliderDefaults(this.context);
+class _SelectRangeSliderDefaults extends SelectRangeSliderTheme {
+  _SelectRangeSliderDefaults(this.context);
 
   final BuildContext context;
 

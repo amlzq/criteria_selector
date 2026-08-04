@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import '../select_theme.dart';
 import 'constants.dart';
 
-/// Theme configuration for [SelectorListTile], including toggle builders.
+/// Theme configuration for [SelectListTile], including toggle builders.
 @immutable
-class SelectorListTileTheme with Diagnosticable {
-  const SelectorListTileTheme({
+class SelectListTileTheme with Diagnosticable {
+  const SelectListTileTheme({
     this.selectedColor,
     this.textColor,
     this.tileColor,
@@ -18,32 +18,32 @@ class SelectorListTileTheme with Diagnosticable {
     this.checkboxBuilder,
   });
 
-  /// Overrides the default value of [SelectorListTile.selectedColor].
+  /// Overrides the default value of [SelectListTile.selectedColor].
   final Color? selectedColor;
 
-  /// Overrides the default value of [SelectorListTile.textColor].
+  /// Overrides the default value of [SelectListTile.textColor].
   final Color? textColor;
 
-  /// Overrides the default value of [SelectorListTile.tileColor].
+  /// Overrides the default value of [SelectListTile.tileColor].
   final Color? tileColor;
 
-  /// Overrides the default value of [SelectorListTile.selectedTileColor].
+  /// Overrides the default value of [SelectListTile.selectedTileColor].
   final Color? selectedTileColor;
 
-  /// Overrides the default value of [SelectorListTile.labelStyle].
+  /// Overrides the default value of [SelectListTile.labelStyle].
   final TextStyle? labelStyle;
 
-  /// Overrides the default value of [SelectorListTile.sublabelStyle].
+  /// Overrides the default value of [SelectListTile.sublabelStyle].
   final TextStyle? sublabelStyle;
 
-  /// Overrides the default value of [SelectorListTile.radioBuilder].
+  /// Overrides the default value of [SelectListTile.radioBuilder].
   final ToggleWidgetBuilder? radioBuilder;
 
-  /// Overrides the default value of [SelectorListTile.checkboxBuilder].
+  /// Overrides the default value of [SelectListTile.checkboxBuilder].
   final ToggleWidgetBuilder? checkboxBuilder;
 
   /// Returns a copy of this theme with the given fields replaced.
-  SelectorListTileTheme copyWith({
+  SelectListTileTheme copyWith({
     Color? selectedColor,
     Color? textColor,
     Color? tileColor,
@@ -53,7 +53,7 @@ class SelectorListTileTheme with Diagnosticable {
     ToggleWidgetBuilder? radioBuilder,
     ToggleWidgetBuilder? checkboxBuilder,
   }) {
-    return SelectorListTileTheme(
+    return SelectListTileTheme(
       selectedColor: selectedColor ?? this.selectedColor,
       textColor: textColor ?? this.textColor,
       tileColor: tileColor ?? this.tileColor,
@@ -65,17 +65,17 @@ class SelectorListTileTheme with Diagnosticable {
     );
   }
 
-  static SelectorListTileTheme of(BuildContext context) {
+  static SelectListTileTheme of(BuildContext context) {
     return SelectTheme.of(context).listTileTheme;
   }
 
   /// Linearly interpolates between two list tile themes.
-  static SelectorListTileTheme lerp(
-      SelectorListTileTheme? a, SelectorListTileTheme? b, double t) {
+  static SelectListTileTheme lerp(
+      SelectListTileTheme? a, SelectListTileTheme? b, double t) {
     if (identical(a, b) && a != null) {
       return a;
     }
-    return SelectorListTileTheme(
+    return SelectListTileTheme(
       selectedColor: Color.lerp(a?.selectedColor, b?.selectedColor, t),
       textColor: Color.lerp(a?.textColor, b?.textColor, t),
       tileColor: Color.lerp(a?.tileColor, b?.tileColor, t),
@@ -108,7 +108,7 @@ class SelectorListTileTheme with Diagnosticable {
     if (other.runtimeType != runtimeType) {
       return false;
     }
-    return other is SelectorListTileTheme &&
+    return other is SelectListTileTheme &&
         other.selectedColor == selectedColor &&
         other.textColor == textColor &&
         other.tileColor == tileColor &&

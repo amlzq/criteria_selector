@@ -9,8 +9,8 @@ import 'list_tile.dart';
 import 'side_bar_theme.dart';
 import 'skeleton_box.dart';
 
-class SelectorSideBar extends StatelessWidget {
-  const SelectorSideBar({
+class SelectSideBar extends StatelessWidget {
+  const SelectSideBar({
     super.key,
     required this.entries,
     required this.selectedCategories,
@@ -27,7 +27,7 @@ class SelectorSideBar extends StatelessWidget {
 
   /// The category entries to display as tiles in this sidebar.
   ///
-  /// Each entry renders a [SelectorListTile]; the number of tiles equals the
+  /// Each entry renders a [SelectListTile]; the number of tiles equals the
   /// length of this list.
   final List<SelectEntry> entries;
 
@@ -45,19 +45,19 @@ class SelectorSideBar extends StatelessWidget {
 
   /// The width of the sidebar.
   ///
-  /// If null, [SelectorSideBarTheme.width] is used. If that is also null, the
+  /// If null, [SelectSideBarTheme.width] is used. If that is also null, the
   /// default is 80.0.
   final double? width;
 
   /// The color of the sidebar itself.
   ///
-  /// If null, [SelectorSideBarTheme.backgroundColor] is used. If that is also
+  /// If null, [SelectSideBarTheme.backgroundColor] is used. If that is also
   /// null, the value is [SelectThemeData.backgroundColor].
   final Color? backgroundColor;
 
   /// The padding around the sidebar's tiles.
   ///
-  /// If null, [SelectorSideBarTheme.padding] is used. If that is also null, the
+  /// If null, [SelectSideBarTheme.padding] is used. If that is also null, the
   /// value is [EdgeInsets.zero]. When [isScrollable] is true, this padding is
   /// ignored in favor of the inner scroll view's padding.
   final EdgeInsetsGeometry? padding;
@@ -71,19 +71,19 @@ class SelectorSideBar extends StatelessWidget {
 
   /// The color of the tile labels and badge when a tile is selected.
   ///
-  /// If null, [SelectorSideBarTheme.selectedColor] is used. If that is also
+  /// If null, [SelectSideBarTheme.selectedColor] is used. If that is also
   /// null, the value is [SelectThemeData.selectedColor].
   final Color? selectedColor;
 
   /// The text style of the tile labels.
   ///
-  /// If null, [SelectorSideBarTheme.labelStyle] is used. If that is also null,
+  /// If null, [SelectSideBarTheme.labelStyle] is used. If that is also null,
   /// the value is [TextTheme.bodyLarge].
   final TextStyle? labelStyle;
 
   /// The background color of the selected tile.
   ///
-  /// If null, [SelectorSideBarTheme.selectedTileColor] is used. If that is also
+  /// If null, [SelectSideBarTheme.selectedTileColor] is used. If that is also
   /// null, no tile background is applied.
   final Color? selectedTileColor;
 
@@ -94,8 +94,8 @@ class SelectorSideBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final SelectorSideBarTheme defaults = _SelectorSideBarDefaults(context);
-    final theme = SelectorSideBarTheme.of(context);
+    final SelectSideBarTheme defaults = _SelectSideBarDefaults(context);
+    final theme = SelectSideBarTheme.of(context);
 
     final effectiveBackgroundColor =
         backgroundColor ?? theme.backgroundColor ?? defaults.backgroundColor!;
@@ -119,7 +119,7 @@ class SelectorSideBar extends StatelessWidget {
       final entry = entries[index];
       final selected = selectedCategories.contains(entry);
       final focused = focusedIndex == index;
-      return SelectorListTile(
+      return SelectListTile(
         label: entry.name ?? '',
         selected: focused,
         labelStyle: effectiveLabelStyle,
@@ -163,9 +163,9 @@ class SelectorSideBar extends StatelessWidget {
   }
 }
 
-/// Loading skeleton for [SelectorSideBar].
-class SelectorSideBarSkeleton extends StatelessWidget {
-  const SelectorSideBarSkeleton({
+/// Loading skeleton for [SelectSideBar].
+class SelectSideBarSkeleton extends StatelessWidget {
+  const SelectSideBarSkeleton({
     super.key,
     this.width,
     this.padding,
@@ -174,26 +174,26 @@ class SelectorSideBarSkeleton extends StatelessWidget {
 
   /// The width of the skeleton sidebar.
   ///
-  /// If null, [SelectorSideBarTheme.width] is used. If that is also null, the
+  /// If null, [SelectSideBarTheme.width] is used. If that is also null, the
   /// default is 80.0.
   final double? width;
 
   /// The padding around the skeleton's tiles.
   ///
-  /// If null, [SelectorSideBarTheme.padding] is used. If that is also null, the
+  /// If null, [SelectSideBarTheme.padding] is used. If that is also null, the
   /// value is [EdgeInsets.zero].
   final EdgeInsetsGeometry? padding;
 
   /// The background color of the skeleton sidebar.
   ///
-  /// If null, [SelectorSideBarTheme.backgroundColor] is used. If that is also
+  /// If null, [SelectSideBarTheme.backgroundColor] is used. If that is also
   /// null, the value is [SelectThemeData.backgroundColor].
   final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
-    final SelectorSideBarTheme defaults = _SelectorSideBarDefaults(context);
-    final theme = SelectorSideBarTheme.of(context);
+    final SelectSideBarTheme defaults = _SelectSideBarDefaults(context);
+    final theme = SelectSideBarTheme.of(context);
 
     final effctiveWidth = width ?? theme.width ?? defaults.width!;
 
@@ -243,8 +243,8 @@ class SelectorSideBarSkeleton extends StatelessWidget {
   }
 }
 
-class _SelectorSideBarDefaults extends SelectorSideBarTheme {
-  _SelectorSideBarDefaults(this.context) : super();
+class _SelectSideBarDefaults extends SelectSideBarTheme {
+  _SelectSideBarDefaults(this.context) : super();
 
   final BuildContext context;
   late final SelectThemeData _theme = SelectTheme.of(context);

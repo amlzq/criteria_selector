@@ -207,7 +207,7 @@ class _BoxPageState extends State<BoxPage> {
                     childAspectRatio: 2.5,
                     crossAxisSpacing: 8,
                     mainAxisSpacing: 8,
-                    sideBarTheme: const SelectorSideBarTheme(width: 98),
+                    sideBarTheme: const SelectSideBarTheme(width: 98),
                   ),
                   onChanged: (selected) {
                     largePrint('onChangeTap: $selected');

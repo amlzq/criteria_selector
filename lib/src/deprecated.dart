@@ -300,3 +300,129 @@ typedef SelectorGridViewState = SelectGridViewState;
   'minor version.',
 )
 typedef SelectorGridSkeleton = SelectGridSkeleton;
+
+/// Deprecated alias for [SelectListTile].
+@Deprecated(
+  'Use SelectListTile instead. This alias will be removed in a future minor '
+  'version.',
+)
+typedef SelectorListTile = SelectListTile;
+
+/// Deprecated alias for [SelectListTileTheme].
+@Deprecated(
+  'Use SelectListTileTheme instead. This alias will be removed in a future '
+  'minor version.',
+)
+typedef SelectorListTileTheme = SelectListTileTheme;
+
+/// Deprecated alias for [SelectCheckboxListTile].
+@Deprecated(
+  'Use SelectCheckboxListTile instead. This alias will be removed in a future '
+  'minor version.',
+)
+typedef SelectorCheckboxListTile = SelectCheckboxListTile;
+
+/// Deprecated alias for [SelectRadioListTile].
+@Deprecated(
+  'Use SelectRadioListTile instead. This alias will be removed in a future '
+  'minor version.',
+)
+typedef SelectorRadioListTile = SelectRadioListTile;
+
+/// Deprecated alias for [SelectListView].
+@Deprecated(
+  'Use SelectListView instead. This alias will be removed in a future minor '
+  'version.',
+)
+typedef SelectorListView = SelectListView;
+
+/// Deprecated alias for [SelectListViewState].
+@Deprecated(
+  'Use SelectListViewState instead. This alias will be removed in a future '
+  'minor version.',
+)
+typedef SelectorListViewState = SelectListViewState;
+
+/// Deprecated alias for [SelectListSkeleton].
+@Deprecated(
+  'Use SelectListSkeleton instead. This alias will be removed in a future '
+  'minor version.',
+)
+typedef SelectorListSkeleton = SelectListSkeleton;
+
+/// Deprecated alias for [SelectRangeSlider].
+@Deprecated(
+  'Use SelectRangeSlider instead. This alias will be removed in a future minor '
+  'version.',
+)
+typedef SelectorRangeSlider = SelectRangeSlider;
+
+/// Deprecated alias for [SelectRangeSliderTheme].
+@Deprecated(
+  'Use SelectRangeSliderTheme instead. This alias will be removed in a future '
+  'minor version.',
+)
+typedef SelectorRangeSliderTheme = SelectRangeSliderTheme;
+
+/// Deprecated alias for [SelectRangeView].
+@Deprecated(
+  'Use SelectRangeView instead. This alias will be removed in a future minor '
+  'version.',
+)
+typedef SelectorRangeView = SelectRangeView;
+
+/// Deprecated alias for [SelectSideBar].
+@Deprecated(
+  'Use SelectSideBar instead. This alias will be removed in a future minor '
+  'version.',
+)
+typedef SelectorSideBar = SelectSideBar;
+
+/// Deprecated alias for [SelectSideBarTheme].
+@Deprecated(
+  'Use SelectSideBarTheme instead. This alias will be removed in a future '
+  'minor version.',
+)
+typedef SelectorSideBarTheme = SelectSideBarTheme;
+
+/// Deprecated alias for [SelectSideBarSkeleton].
+@Deprecated(
+  'Use SelectSideBarSkeleton instead. This alias will be removed in a future '
+  'minor version.',
+)
+typedef SelectorSideBarSkeleton = SelectSideBarSkeleton;
+
+/// Deprecated alias for [SelectTabBar].
+@Deprecated(
+  'Use SelectTabBar instead. This alias will be removed in a future minor '
+  'version.',
+)
+typedef SelectorTabBar = SelectTabBar;
+
+/// Deprecated alias for [SelectTabBarTheme].
+@Deprecated(
+  'Use SelectTabBarTheme instead. This alias will be removed in a future '
+  'minor version.',
+)
+typedef SelectorTabBarTheme = SelectTabBarTheme;
+
+/// Deprecated alias for [SelectTabBarIndicatorSize].
+@Deprecated(
+  'Use SelectTabBarIndicatorSize instead. This alias will be removed in a '
+  'future minor version.',
+)
+typedef SelectorTabBarIndicatorSize = SelectTabBarIndicatorSize;
+
+/// Deprecated alias for [SelectTabBarSkeleton].
+@Deprecated(
+  'Use SelectTabBarSkeleton instead. This alias will be removed in a future '
+  'minor version.',
+)
+typedef SelectorTabBarSkeleton = SelectTabBarSkeleton;
+
+/// Deprecated constant for [kSelectListTileHeight].
+@Deprecated(
+  'Use kSelectListTileHeight instead. This alias will be removed in a future '
+  'minor version.',
+)
+const kSelectorListTileHeight = kSelectListTileHeight;

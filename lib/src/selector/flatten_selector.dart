@@ -315,7 +315,7 @@ class FlattenSelectorState extends State<FlattenSelector> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Left category list
-              SelectorSideBar(
+              SelectSideBar(
                 isScrollable: true,
                 width: delegate.sideBarTheme?.width,
                 backgroundColor: categoryBackgroundColor,
@@ -429,7 +429,7 @@ class PlattenSelectorSkeleton extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SelectorSideBarSkeleton(
+                SelectSideBarSkeleton(
                   width: sideBarWidth,
                   backgroundColor: categoryBackgroundColor,
                 ),

@@ -524,7 +524,7 @@ class _BuyPageState extends State<BuyPage> {
                   childAspectRatio: 2.5,
                   crossAxisSpacing: 8,
                   mainAxisSpacing: 8,
-                  sideBarTheme: const SelectorSideBarTheme(width: 98),
+                  sideBarTheme: const SelectSideBarTheme(width: 98),
                   actionBarBuilder: (
                     context, {
                     required onResetTap,
@@ -546,7 +546,7 @@ class _BuyPageState extends State<BuyPage> {
                   childAspectRatio: 2.5,
                   crossAxisSpacing: 8,
                   mainAxisSpacing: 8,
-                  sideBarTheme: const SelectorSideBarTheme(width: 98),
+                  sideBarTheme: const SelectSideBarTheme(width: 98),
                   actionBarBuilder: (
                     context, {
                     required onResetTap,

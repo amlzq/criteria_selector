@@ -30,13 +30,13 @@ class SelectThemeData with Diagnosticable {
     Color? backgroundColorHighest,
     Color? onBackgroundColorHighest,
     SelectActionBarTheme? actionBarTheme,
-    SelectorTabBarTheme? tabBarTheme,
-    SelectorSideBarTheme? sideBarTheme,
+    SelectTabBarTheme? tabBarTheme,
+    SelectSideBarTheme? sideBarTheme,
     SelectGridTileTheme? gridTileTheme,
-    SelectorListTileTheme? listTileTheme,
+    SelectListTileTheme? listTileTheme,
     SelectFieldTileTheme? fieldTileTheme,
     SelectExpansionTileTheme? expansionTileTheme,
-    SelectorRangeSliderTheme? rangeSliderTheme,
+    SelectRangeSliderTheme? rangeSliderTheme,
     RadioThemeData? radioTheme,
     CheckboxThemeData? checkboxTheme,
     SelectChipBarTheme? chipBarThemeData,
@@ -54,14 +54,14 @@ class SelectThemeData with Diagnosticable {
       onBackgroundColorHighest:
           onBackgroundColorHighest ?? theme.colorScheme.onSurfaceVariant,
       actionBarTheme: actionBarTheme ?? const SelectActionBarTheme(),
-      tabBarTheme: tabBarTheme ?? const SelectorTabBarTheme(),
-      sideBarTheme: sideBarTheme ?? const SelectorSideBarTheme(),
+      tabBarTheme: tabBarTheme ?? const SelectTabBarTheme(),
+      sideBarTheme: sideBarTheme ?? const SelectSideBarTheme(),
       gridTileTheme: gridTileTheme ?? const SelectGridTileTheme(),
-      listTileTheme: listTileTheme ?? const SelectorListTileTheme(),
+      listTileTheme: listTileTheme ?? const SelectListTileTheme(),
       fieldTileTheme: fieldTileTheme ?? const SelectFieldTileTheme(),
       expansionTileTheme:
           expansionTileTheme ?? const SelectExpansionTileTheme(),
-      rangeSliderTheme: rangeSliderTheme ?? const SelectorRangeSliderTheme(),
+      rangeSliderTheme: rangeSliderTheme ?? const SelectRangeSliderTheme(),
       radioTheme: radioTheme ?? const RadioThemeData(),
       checkboxTheme: checkboxTheme ?? const CheckboxThemeData(),
       chipBarThemeData: chipBarThemeData ?? const SelectChipBarTheme(),
@@ -120,16 +120,16 @@ class SelectThemeData with Diagnosticable {
   final SelectActionBarTheme actionBarTheme;
 
   /// Theme overrides for the tab bar widget.
-  final SelectorTabBarTheme tabBarTheme;
+  final SelectTabBarTheme tabBarTheme;
 
   /// Theme overrides for the side bar widget.
-  final SelectorSideBarTheme sideBarTheme;
+  final SelectSideBarTheme sideBarTheme;
 
   /// Theme overrides for grid tiles.
   final SelectGridTileTheme gridTileTheme;
 
   /// Theme overrides for list tiles.
-  final SelectorListTileTheme listTileTheme;
+  final SelectListTileTheme listTileTheme;
 
   /// Theme overrides for range field tiles.
   final SelectFieldTileTheme fieldTileTheme;
@@ -137,7 +137,7 @@ class SelectThemeData with Diagnosticable {
   final SelectExpansionTileTheme expansionTileTheme;
 
   /// Theme overrides for the range slider widget.
-  final SelectorRangeSliderTheme rangeSliderTheme;
+  final SelectRangeSliderTheme rangeSliderTheme;
 
   /// Theme used for radio controls when rendered by selector widgets.
   final RadioThemeData radioTheme;
@@ -161,13 +161,13 @@ class SelectThemeData with Diagnosticable {
     Color? backgroundColorHighest,
     Color? onBackgroundColorHighest,
     SelectActionBarTheme? actionBarTheme,
-    SelectorTabBarTheme? tabBarTheme,
-    SelectorSideBarTheme? sideBarTheme,
+    SelectTabBarTheme? tabBarTheme,
+    SelectSideBarTheme? sideBarTheme,
     SelectGridTileTheme? gridTileTheme,
-    SelectorListTileTheme? listTileTheme,
+    SelectListTileTheme? listTileTheme,
     SelectFieldTileTheme? fieldTileTheme,
     SelectExpansionTileTheme? expansionTileTheme,
-    SelectorRangeSliderTheme? rangeSliderTheme,
+    SelectRangeSliderTheme? rangeSliderTheme,
     RadioThemeData? radioTheme,
     CheckboxThemeData? checkboxTheme,
     SelectChipBarTheme? chipBarThemeData,
@@ -218,18 +218,18 @@ class SelectThemeData with Diagnosticable {
           a?.onBackgroundColorHighest, b?.onBackgroundColorHighest, t)!,
       actionBarTheme:
           SelectActionBarTheme.lerp(a?.actionBarTheme, b?.actionBarTheme, t),
-      tabBarTheme: SelectorTabBarTheme.lerp(a?.tabBarTheme, b?.tabBarTheme, t),
+      tabBarTheme: SelectTabBarTheme.lerp(a?.tabBarTheme, b?.tabBarTheme, t),
       sideBarTheme:
-          SelectorSideBarTheme.lerp(a?.sideBarTheme, b?.sideBarTheme, t),
+          SelectSideBarTheme.lerp(a?.sideBarTheme, b?.sideBarTheme, t),
       gridTileTheme:
           SelectGridTileTheme.lerp(a?.gridTileTheme, b?.gridTileTheme, t),
       listTileTheme:
-          SelectorListTileTheme.lerp(a?.listTileTheme, b?.listTileTheme, t),
+          SelectListTileTheme.lerp(a?.listTileTheme, b?.listTileTheme, t),
       fieldTileTheme:
           SelectFieldTileTheme.lerp(a?.fieldTileTheme, b?.fieldTileTheme, t),
       expansionTileTheme: SelectExpansionTileTheme.lerp(
           a?.expansionTileTheme, b?.expansionTileTheme, t),
-      rangeSliderTheme: SelectorRangeSliderTheme.lerp(
+      rangeSliderTheme: SelectRangeSliderTheme.lerp(
           a?.rangeSliderTheme, b?.rangeSliderTheme, t),
       radioTheme: RadioThemeData.lerp(a?.radioTheme, b?.radioTheme, t),
       checkboxTheme:

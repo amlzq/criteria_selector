@@ -122,7 +122,7 @@ class _BoxPageState extends State<BoxPage> {
                         _filtersRepo.fetchNeighborhoodSelectedData,
                     resetEntriesLoader: _filtersRepo.fetchNeighborhoodResetData,
                     selectionMode: SelectionMode.multiple,
-                    sideBarTheme: const SelectorSideBarTheme(width: 150),
+                    sideBarTheme: const SelectSideBarTheme(width: 150),
                     isScrollable: true,
                     radioBuilder: (context, selected) {
                       return MyRadio(value: selected);
@@ -204,7 +204,7 @@ class _BoxPageState extends State<BoxPage> {
                     childAspectRatio: 3,
                     crossAxisSpacing: 8,
                     mainAxisSpacing: 8,
-                    sideBarTheme: const SelectorSideBarTheme(width: 110),
+                    sideBarTheme: const SelectSideBarTheme(width: 110),
                   ),
                   onChanged: (selected) {
                     largePrint('onChangeTap: $selected');

@@ -134,7 +134,7 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
               selectedEntriesLoader: _filtersRepo.fetchNeighborhoodSelectedData,
               resetEntriesLoader: _filtersRepo.fetchNeighborhoodResetData,
               selectionMode: SelectionMode.multiple,
-              sideBarTheme: const SelectorSideBarTheme(width: 150),
+              sideBarTheme: const SelectSideBarTheme(width: 150),
               isScrollable: true,
               radioBuilder: (context, selected) {
                 return MyRadio(value: selected);
@@ -203,7 +203,7 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                 childAspectRatio: 2.5,
                 crossAxisSpacing: 8,
                 mainAxisSpacing: 8,
-                sideBarTheme: const SelectorSideBarTheme(width: 98),
+                sideBarTheme: const SelectSideBarTheme(width: 98),
                 panelTheme: const SelectPanelTheme(
                   elevation: 8,
                   shape: RoundedRectangleBorder(

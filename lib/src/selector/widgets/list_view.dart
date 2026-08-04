@@ -13,8 +13,8 @@ import 'skeleton_box.dart';
 /// A list view that can include a single input item.
 /// Must be a terminal-node list.
 /// Only used in tabs or flatten; uses AutomaticKeepAliveClientMixin.
-class SelectorListView extends StatefulWidget {
-  const SelectorListView({
+class SelectListView extends StatefulWidget {
+  const SelectListView({
     super.key,
     this.category,
     required this.entries,
@@ -81,10 +81,10 @@ class SelectorListView extends StatefulWidget {
   final String toText;
 
   @override
-  State<SelectorListView> createState() => SelectorListViewState();
+  State<SelectListView> createState() => SelectListViewState();
 }
 
-class SelectorListViewState extends State<SelectorListView>
+class SelectListViewState extends State<SelectListView>
     with AutomaticKeepAliveClientMixin {
   SelectRangeEntry? firstCustomEntry;
   SelectRangeEntry? lastCustomEntry;
@@ -117,7 +117,7 @@ class SelectorListViewState extends State<SelectorListView>
   }
 
   @override
-  void didUpdateWidget(covariant SelectorListView oldWidget) {
+  void didUpdateWidget(covariant SelectListView oldWidget) {
     super.didUpdateWidget(oldWidget);
     _selectedEntries = widget.selectedEntries ?? {};
 
@@ -305,14 +305,14 @@ class SelectorListViewState extends State<SelectorListView>
               final entry = entriesWithoutCustom[index];
               final selected = widget.selectedEntries?.contains(entry) ?? false;
               if (SelectionMode.single == widget.selectionMode) {
-                return SelectorRadioListTile(
+                return SelectRadioListTile(
                   onTap: () => _onItemTap(index, entry),
                   label: entry.name ?? '',
                   selected: selected,
                   radioBuilder: widget.radioBuilder,
                 );
               } else {
-                return SelectorCheckboxListTile(
+                return SelectCheckboxListTile(
                   onTap: () => _onItemTap(index, entry),
                   label: entry.name ?? '',
                   checked: selected,
@@ -344,9 +344,9 @@ class SelectorListViewState extends State<SelectorListView>
   bool get wantKeepAlive => true;
 }
 
-/// Loading skeleton for [SelectorListView].
-class SelectorListSkeleton extends StatelessWidget {
-  const SelectorListSkeleton({super.key, required this.itemCount});
+/// Loading skeleton for [SelectListView].
+class SelectListSkeleton extends StatelessWidget {
+  const SelectListSkeleton({super.key, required this.itemCount});
 
   /// The number of placeholder items to render in the skeleton.
   final int itemCount;
@@ -364,7 +364,7 @@ class SelectorListSkeleton extends StatelessWidget {
           return SkeletonTile(
             random: random,
             widthUsed: 30,
-            height: kSelectorListTileHeight,
+            height: kSelectListTileHeight,
             borderRadius: BorderRadius.circular(4),
           );
         },

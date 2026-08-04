@@ -5,7 +5,7 @@ import 'constants.dart';
 import 'field_tile.dart';
 import 'range_slider.dart';
 
-/// A composite view that renders a [SelectorRangeSlider] above a
+/// A composite view that renders a [SelectRangeSlider] above a
 /// [SelectFieldTile], keeping both in sync with a single source of truth.
 ///
 /// This is the canonical render target for
@@ -18,8 +18,8 @@ import 'range_slider.dart';
 ///   precise input.
 /// * When a handle touches an extreme ([min] / [max]) the corresponding
 ///   field shows the entry's `minHintText` / `maxHintText` as a placeholder.
-class SelectorRangeView extends StatefulWidget {
-  const SelectorRangeView({
+class SelectRangeView extends StatefulWidget {
+  const SelectRangeView({
     super.key,
     this.category,
     required this.entries,
@@ -79,10 +79,10 @@ class SelectorRangeView extends StatefulWidget {
   final String toText;
 
   @override
-  State<SelectorRangeView> createState() => _SelectorRangeViewState();
+  State<SelectRangeView> createState() => _SelectRangeViewState();
 }
 
-class _SelectorRangeViewState extends State<SelectorRangeView> {
+class _SelectRangeViewState extends State<SelectRangeView> {
   late TextEditingController _minController;
   late TextEditingController _maxController;
   late FocusNode _minFocusNode;
@@ -126,7 +126,7 @@ class _SelectorRangeViewState extends State<SelectorRangeView> {
   }
 
   @override
-  void didUpdateWidget(covariant SelectorRangeView oldWidget) {
+  void didUpdateWidget(covariant SelectRangeView oldWidget) {
     super.didUpdateWidget(oldWidget);
     // The slider bounds (_min / _max / divisions / hints) are fixed for the
     // lifetime of this view and loaded once in [initState]. Re-reading them
@@ -229,7 +229,7 @@ class _SelectorRangeViewState extends State<SelectorRangeView> {
 
   /// Finalizes the value of one field. Called when the field is submitted
   /// (e.g. "done") or loses focus. This is the *only* path that updates the
-  /// [SelectorRangeSlider] from the text fields.
+  /// [SelectRangeSlider] from the text fields.
   void _commitField(bool isMin, String text) {
     final parsed = _parseNum(text);
     if (parsed == null) {
@@ -361,7 +361,7 @@ class _SelectorRangeViewState extends State<SelectorRangeView> {
                 child: Text(widget.category?.name ?? ''),
               ),
             ),
-          SelectorRangeSlider(
+          SelectRangeSlider(
             min: _min,
             max: _max,
             values: _currentRange,
