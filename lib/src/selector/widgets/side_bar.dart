@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../select_entry.dart';
-import '../selector_theme.dart';
-import '../selector_theme_data.dart';
+import '../select_theme.dart';
+import '../select_theme_data.dart';
 import 'badge.dart';
 import 'constants.dart';
 import 'list_tile.dart';
@@ -52,7 +52,7 @@ class SelectorSideBar extends StatelessWidget {
   /// The color of the sidebar itself.
   ///
   /// If null, [SelectorSideBarTheme.backgroundColor] is used. If that is also
-  /// null, the value is [SelectorThemeData.backgroundColor].
+  /// null, the value is [SelectThemeData.backgroundColor].
   final Color? backgroundColor;
 
   /// The padding around the sidebar's tiles.
@@ -72,7 +72,7 @@ class SelectorSideBar extends StatelessWidget {
   /// The color of the tile labels and badge when a tile is selected.
   ///
   /// If null, [SelectorSideBarTheme.selectedColor] is used. If that is also
-  /// null, the value is [SelectorThemeData.selectedColor].
+  /// null, the value is [SelectThemeData.selectedColor].
   final Color? selectedColor;
 
   /// The text style of the tile labels.
@@ -187,7 +187,7 @@ class SelectorSideBarSkeleton extends StatelessWidget {
   /// The background color of the skeleton sidebar.
   ///
   /// If null, [SelectorSideBarTheme.backgroundColor] is used. If that is also
-  /// null, the value is [SelectorThemeData.backgroundColor].
+  /// null, the value is [SelectThemeData.backgroundColor].
   final Color? backgroundColor;
 
   @override
@@ -247,7 +247,7 @@ class _SelectorSideBarDefaults extends SelectorSideBarTheme {
   _SelectorSideBarDefaults(this.context) : super();
 
   final BuildContext context;
-  late final SelectorThemeData _theme = SelectorTheme.of(context);
+  late final SelectThemeData _theme = SelectTheme.of(context);
   late final TextTheme _textTheme = Theme.of(context).textTheme;
 
   @override

@@ -56,7 +56,7 @@ void main() {
       expect(controller.currentIndex, 0);
       // The panel binds to tab 0's delegate and renders its entries.
       expect(find.text('A0'), findsOneWidget);
-      expect(controller.selectorController, isNotNull);
+      expect(controller.selectController, isNotNull);
     });
 
     testWidgets(

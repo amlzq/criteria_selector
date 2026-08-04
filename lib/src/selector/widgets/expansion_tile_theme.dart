@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../selector_theme.dart';
+import '../select_theme.dart';
 
 @immutable
 class SelectorExpansionTileTheme with Diagnosticable {
@@ -57,7 +57,7 @@ class SelectorExpansionTileTheme with Diagnosticable {
   }
 
   static SelectorExpansionTileTheme of(BuildContext context) {
-    return SelectorTheme.of(context).expansionTileTheme;
+    return SelectTheme.of(context).expansionTileTheme;
   }
 
   static SelectorExpansionTileTheme lerp(

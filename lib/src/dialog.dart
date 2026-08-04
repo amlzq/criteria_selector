@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'selector/select_entry.dart';
 import 'selector/select_delegate.dart';
-import 'selector/selector_panel.dart';
+import 'selector/select_entry.dart';
+import 'selector/select_panel.dart';
 
 /// Shows a selector in a modal dialog.
 ///
@@ -140,7 +140,7 @@ class _SelectorDialogRoute<T> extends RawDialogRoute<T> {
 
 /// The dialog body rendered by [_SelectorDialogRoute].
 ///
-/// Wraps a [SelectorPanel] and closes the route (returning the selection) when
+/// Wraps a [SelectPanel] and closes the route (returning the selection) when
 /// the panel fires its apply callback.
 class _SelectorDialog extends StatefulWidget {
   const _SelectorDialog({
@@ -174,7 +174,7 @@ class _SelectorDialogState extends State<_SelectorDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final panel = SelectorPanel(
+    final panel = SelectPanel(
       delegate: widget.delegate,
       onApplyTap: (selected) => _popWith(selected),
       // Reset is handled internally by the selector widget; the dialog stays

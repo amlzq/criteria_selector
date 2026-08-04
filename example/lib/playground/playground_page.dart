@@ -101,10 +101,10 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
     final paramThemeWithExtensions = paramTheme.copyWith(
       extensions: <ThemeExtension<dynamic>>[
         PopupSelectBarTheme(
-          selectorTheme: SelectorThemeData(paramTheme),
+          selectTheme: SelectThemeData(paramTheme),
         ),
         PopupSelectButtonTheme(
-          selectorTheme: SelectorThemeData(paramTheme),
+          selectTheme: SelectThemeData(paramTheme),
         ),
       ],
     );

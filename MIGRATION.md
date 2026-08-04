@@ -212,6 +212,91 @@ final result = await showModalBottomSelector(context: context, delegate: delegat
 final result = await showModalBottomSelect(context: context, delegate: delegate);
 ```
 
+### `SelectorController` / `SelectorThemeData` renamed to `Select*`
+
+The controller, callback and theme types have been renamed to drop the
+redundant `Selector` prefix. The old names are kept as deprecated type aliases
+(e.g. `typedef SelectorThemeData = SelectThemeData;`) for backward compatibility
+and **will be removed in a future minor version**. Since the aliases are exact
+`typedef`s, this is a pure rename — no behavior changes.
+
+> `SelectPanel` is an unpublished (internal) widget, so it is renamed cleanly
+> without a deprecated alias.
+
+| Old name | New name |
+| --- | --- |
+| `SelectorController` | `SelectController` |
+| `SelectorControllerProvider` | `SelectControllerProvider` |
+| `SelectorCallback` | `SelectCallback` |
+| `SelectorThemeData` | `SelectThemeData` |
+| `SelectorTheme` | `SelectTheme` |
+| `SelectorPanelTheme` | `SelectPanelTheme` |
+
+The source files were renamed along the way
+(`lib/src/selector/selector_panel.dart` → `lib/src/selector/select_panel.dart`,
+`lib/src/selector/selector_controller.dart` →
+`lib/src/selector/select_controller.dart`,
+`lib/src/selector/selector_theme_data.dart` →
+`lib/src/selector/select_theme_data.dart`,
+`lib/src/selector/selector_theme.dart` →
+`lib/src/selector/select_theme.dart`, and
+`lib/src/selector/selector_panel_theme.dart` →
+`lib/src/selector/select_panel_theme.dart`), and the unit tests were renamed
+along the way (`test/selector/selector_panel_test.dart` →
+`test/selector/select_panel_test.dart`, `test/selector/selector_controller_test.dart`
+→ `test/selector/select_controller_test.dart`, and
+`test/selector/selector_panel_theme_test.dart` →
+`test/selector/select_panel_theme_test.dart`). The public export is updated, so
+no import change is required when using the package barrel.
+
+The public member that carried the `selectorController` spelling was renamed as
+well. The old name is retained as a deprecated property for backward
+compatibility and will be removed in a future minor version:
+
+| Old member | New member |
+| --- | --- |
+| `PopupSelectController.selectorController` | `PopupSelectController.selectController` |
+
+Migration: replace each old name with its new counterpart at every call site.
+
+```dart
+// Before
+SelectorController.of(context);
+final theme = SelectorThemeData(Theme.of(context));
+
+// After
+SelectController.of(context);
+final theme = SelectThemeData(Theme.of(context));
+```
+
+### `selectorTheme` parameter renamed to `selectTheme`
+
+The `selectorTheme` parameter / field on the public entry points
+([`PopupSelectBar`], [`PopupSelectBarTheme`], and [`PopupSelectButtonTheme`])
+has been renamed to `selectTheme`. The old `selectorTheme` constructor parameter
+and getter are kept as deprecated backward-compatible aliases that delegate to
+`selectTheme` and **will be removed in a future minor version**. No behavior
+changes.
+
+The same parameter on the unpublished `SelectPanel` widget is also renamed to
+`selectTheme`, but without a deprecated alias.
+
+```dart
+// Before
+PopupSelectBar(
+  selectorTheme: SelectThemeData(Theme.of(context)),
+);
+
+// After
+PopupSelectBar(
+  selectTheme: SelectThemeData(Theme.of(context)),
+);
+```
+
+Passing both the old and the new parameter at the same call site triggers an
+`assert`, mirroring the existing `selectDelegates` / `selectorDelegates`
+pattern.
+
 ### `DropdownSelector*` renamed to `PopupSelect*`
 
 The `DropdownSelector*` widgets and their related types have been renamed to the

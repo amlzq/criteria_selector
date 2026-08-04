@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../selector_theme.dart';
-import '../selector_theme_data.dart';
+import '../select_theme.dart';
+import '../select_theme_data.dart';
 import 'constants.dart';
 import 'list_tile_theme.dart';
 
@@ -156,7 +156,7 @@ class _SelectorLisTileDefaults extends SelectorListTileTheme {
   _SelectorLisTileDefaults(this.context) : super();
 
   final BuildContext context;
-  late final SelectorThemeData _theme = SelectorTheme.of(context);
+  late final SelectThemeData _theme = SelectTheme.of(context);
   late final TextTheme _textTheme = Theme.of(context).textTheme;
 
   @override

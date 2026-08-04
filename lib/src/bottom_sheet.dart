@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'selector/select_entry.dart';
 import 'selector/select_delegate.dart';
-import 'selector/selector_panel.dart';
+import 'selector/select_entry.dart';
+import 'selector/select_panel.dart';
 
 /// Shows a selector in a modal bottom sheet built with Flutter's
 /// [showModalBottomSheet].
@@ -135,7 +135,7 @@ Future<SelectEntries?> showModalBottomSelector({
 
 /// The bottom-sheet body rendered by [showModalBottomSheet].
 ///
-/// Wraps a [SelectorPanel] and closes the sheet (returning the selection) when
+/// Wraps a [SelectPanel] and closes the sheet (returning the selection) when
 /// the panel fires its apply callback.
 class _ModalBottomSheetContent extends StatefulWidget {
   const _ModalBottomSheetContent({
@@ -164,7 +164,7 @@ class _ModalBottomSheetContentState extends State<_ModalBottomSheetContent> {
 
   @override
   Widget build(BuildContext context) {
-    final panel = SelectorPanel(
+    final panel = SelectPanel(
       delegate: widget.delegate,
       onApplyTap: (selected) => _popWith(selected),
       // Reset is handled internally by the selector widget; the sheet stays

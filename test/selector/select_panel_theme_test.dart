@@ -10,9 +10,9 @@ const _shapeB = RoundedRectangleBorder(
 );
 
 void main() {
-  group('SelectorPanelTheme', () {
+  group('SelectPanelTheme', () {
     test('copyWith replaces only non-null fields', () {
-      const base = SelectorPanelTheme(
+      const base = SelectPanelTheme(
         elevation: 1,
         clipBehavior: Clip.antiAlias,
       );
@@ -24,74 +24,73 @@ void main() {
     });
 
     test('lerp interpolates elevation, colors and shape', () {
-      const a = SelectorPanelTheme(
+      const a = SelectPanelTheme(
         elevation: 0,
         shadowColor: Color(0x00000000),
         surfaceTintColor: Color(0x00000000),
         shape: _shapeA,
         clipBehavior: Clip.none,
       );
-      const b = SelectorPanelTheme(
+      const b = SelectPanelTheme(
         elevation: 10,
         shadowColor: Color(0xff000000),
         surfaceTintColor: Color(0xffffffff),
         shape: _shapeB,
         clipBehavior: Clip.antiAlias,
       );
-      final mid = SelectorPanelTheme.lerp(a, b, 0.5);
+      final mid = SelectPanelTheme.lerp(a, b, 0.5);
       expect(mid.elevation, 5);
       // Flutter convention: at t >= 0.5 the end value wins.
       expect(mid.clipBehavior, Clip.antiAlias);
-      final quarter = SelectorPanelTheme.lerp(a, b, 0.25);
+      final quarter = SelectPanelTheme.lerp(a, b, 0.25);
       expect(quarter.clipBehavior, Clip.none);
-      final end = SelectorPanelTheme.lerp(a, b, 1);
+      final end = SelectPanelTheme.lerp(a, b, 1);
       expect(end.elevation, 10);
       expect(end.clipBehavior, Clip.antiAlias);
     });
 
     test('lerp returns identical non-null theme when a and b are identical',
         () {
-      const a = SelectorPanelTheme(elevation: 4);
-      expect(SelectorPanelTheme.lerp(a, a, 0.3), same(a));
+      const a = SelectPanelTheme(elevation: 4);
+      expect(SelectPanelTheme.lerp(a, a, 0.3), same(a));
     });
 
     test('equality and hashCode', () {
-      const a = SelectorPanelTheme(elevation: 2, shape: _shapeA);
-      const b = SelectorPanelTheme(elevation: 2, shape: _shapeA);
-      const c = SelectorPanelTheme(elevation: 3, shape: _shapeA);
+      const a = SelectPanelTheme(elevation: 2, shape: _shapeA);
+      const b = SelectPanelTheme(elevation: 2, shape: _shapeA);
+      const c = SelectPanelTheme(elevation: 3, shape: _shapeA);
       expect(a, equals(b));
       expect(a.hashCode, b.hashCode);
       expect(a, isNot(equals(c)));
     });
   });
 
-  group('SelectorThemeData.panelTheme', () {
-    test('default is a const SelectorPanelTheme', () {
-      final theme = SelectorThemeData(ThemeData.light());
-      expect(theme.panelTheme, const SelectorPanelTheme());
+  group('SelectThemeData.panelTheme', () {
+    test('default is a const SelectPanelTheme', () {
+      final theme = SelectThemeData(ThemeData.light());
+      expect(theme.panelTheme, const SelectPanelTheme());
     });
 
     test('copyWith and lerp propagate panelTheme', () {
-      const themeA = SelectorPanelTheme(elevation: 0);
-      const themeB = SelectorPanelTheme(elevation: 8, shape: _shapeB);
-      final dataA = SelectorThemeData(ThemeData.light(), panelTheme: themeA);
-      final dataB = SelectorThemeData(ThemeData.light(), panelTheme: themeB);
+      const themeA = SelectPanelTheme(elevation: 0);
+      const themeB = SelectPanelTheme(elevation: 8, shape: _shapeB);
+      final dataA = SelectThemeData(ThemeData.light(), panelTheme: themeA);
+      final dataB = SelectThemeData(ThemeData.light(), panelTheme: themeB);
 
       final copied = dataA.copyWith(panelTheme: themeB);
       expect(copied.panelTheme, themeB);
 
-      final lerped = SelectorThemeData.lerp(dataA, dataB, 1)!;
+      final lerped = SelectThemeData.lerp(dataA, dataB, 1)!;
       expect(lerped.panelTheme.elevation, 8);
     });
 
-    testWidgets('SelectView renders Material when decorated',
-        (tester) async {
+    testWidgets('SelectView renders Material when decorated', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: SelectView(
               delegate: _EmptyDelegate(
-                panelTheme: const SelectorPanelTheme(
+                panelTheme: const SelectPanelTheme(
                   elevation: 6,
                   shape: _shapeA,
                   clipBehavior: Clip.antiAlias,
@@ -134,14 +133,14 @@ void main() {
       expect(find.byType(ColoredBox), findsOneWidget);
     });
 
-    testWidgets('delegate.panelTheme is applied without a selectorTheme',
+    testWidgets('delegate.panelTheme is applied without a selectTheme',
         (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: SelectView(
               delegate: _EmptyDelegate(
-                panelTheme: const SelectorPanelTheme(
+                panelTheme: const SelectPanelTheme(
                   elevation: 4,
                   shape: _shapeB,
                 ),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'selector/select_entry.dart';
-import 'selector/selector_controller.dart';
+import 'selector/select_controller.dart';
 import 'selector/select_delegate.dart';
+import 'selector/select_entry.dart';
 import 'selector/selector_utils.dart';
 import 'selector_label_state.dart';
 
@@ -182,13 +182,23 @@ class PopupSelectController extends ChangeNotifier {
   set previousSelectorDelegate(SelectDelegate? value) =>
       _previousSelectDelegate = value;
 
-  /// The [SelectorController] for the currently active selector panel, if any.
+  /// The [SelectController] for the currently active selector panel, if any.
   ///
   /// Created when a selector is shown (see [_showSelector]) and disposed when
   /// the overlay is hidden. Exposed so that [PopupSelectBar] can pass it to
-  /// [SelectorPanel] via its `controller` parameter.
-  SelectorController? get selectorController => _selectorController;
-  SelectorController? _selectorController;
+  /// [SelectPanel] via its `controller` parameter.
+  SelectController? get selectController => _selectController;
+  SelectController? _selectController;
+
+  /// Deprecated alias for [selectController].
+  ///
+  /// Use [selectController] instead. This getter is kept only for backward
+  /// compatibility and will be removed in a future minor version.
+  @Deprecated(
+    'Use selectController instead. This getter will be removed in a future '
+    'minor version.',
+  )
+  SelectController? get selectorController => _selectController;
 
   /// Localized "Multiple" text used when building apply result labels.
   ///
@@ -204,10 +214,10 @@ class PopupSelectController extends ChangeNotifier {
   /// changes to the delegate (selection mode, tile variant, layout, spacing,
   /// etc.) are reflected immediately in the open panel. The open animation is
   /// not replayed — only the panel content is rebuilt against a fresh
-  /// [SelectorController] bound to the new delegate. The surrounding rebuild
+  /// [SelectController] bound to the new delegate. The surrounding rebuild
   /// (driven by the bar/button widget's own `didUpdateWidget`) already re-runs
   /// the overlay entry builder, which reads [previousSelectDelegate] and
-  /// [selectorController], so no extra notify is required here.
+  /// [selectController], so no extra notify is required here.
   ///
   /// Stable apps that reuse the same delegate instances are unaffected: when
   /// the new delegate is identical (`==`) to the one already shown, nothing
@@ -220,7 +230,7 @@ class PopupSelectController extends ChangeNotifier {
       final newDelegate = _selectDelegateAt(currentIndex!);
       if (newDelegate != null && newDelegate != previousSelectDelegate) {
         previousSelectDelegate = newDelegate;
-        _createSelectorController();
+        _createSelectController();
       }
     }
   }
@@ -340,13 +350,13 @@ class PopupSelectController extends ChangeNotifier {
       if (immediate) {
         _overlayAnimCtrl?.value = 0.0;
         _safePortalHide();
-        _disposeSelectorController();
+        _disposeSelectController();
       }
       return;
     }
 
     if (!_isExpanded && !portalCtrl.isShowing) {
-      _disposeSelectorController();
+      _disposeSelectController();
       return;
     }
 
@@ -356,7 +366,7 @@ class PopupSelectController extends ChangeNotifier {
     if (immediate) {
       _overlayAnimCtrl?.value = 0.0;
       _safePortalHide();
-      _disposeSelectorController();
+      _disposeSelectController();
       notifyListeners();
       return;
     }
@@ -364,14 +374,14 @@ class PopupSelectController extends ChangeNotifier {
     final animCtrl = _overlayAnimCtrl;
     if (animCtrl == null) {
       _safePortalHide();
-      _disposeSelectorController();
+      _disposeSelectController();
       notifyListeners();
       return;
     }
 
     if (!portalCtrl.isShowing) {
       animCtrl.value = 0.0;
-      _disposeSelectorController();
+      _disposeSelectController();
       return;
     }
 
@@ -380,7 +390,7 @@ class PopupSelectController extends ChangeNotifier {
       if (portalCtrl.isShowing) {
         _safePortalHide();
       }
-      _disposeSelectorController();
+      _disposeSelectController();
       notifyListeners();
     });
   }
@@ -402,8 +412,8 @@ class PopupSelectController extends ChangeNotifier {
     // tab's content under the new index.
     previousSelectDelegate = newDelegate;
 
-    // Create (or refresh) the SelectorController for this selector session.
-    _createSelectorController();
+    // Create (or refresh) the SelectController for this selector session.
+    _createSelectController();
 
     _ensureOverlayAnimationController();
     final animCtrl = _overlayAnimCtrl;
@@ -421,15 +431,15 @@ class PopupSelectController extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Creates a [SelectorController] bound to [previousSelectDelegate] and wires the
+  /// Creates a [SelectController] bound to [previousSelectDelegate] and wires the
   /// change/apply/reset listeners to this controller's handlers.
   ///
   /// Any previously created controller is disposed first.
-  void _createSelectorController() {
-    _disposeSelectorController();
+  void _createSelectController() {
+    _disposeSelectController();
     final selector = previousSelectDelegate;
     if (selector == null) return;
-    final ctrl = SelectorController(
+    final ctrl = SelectController(
       selectionMode: selector.selectionMode,
       previousSelected: selector.selectedData,
       resetSelected: selector.resetData,
@@ -438,13 +448,13 @@ class PopupSelectController extends ChangeNotifier {
     ctrl.addApplyListener(
         (selected) => handleApply(selected, applyMultipleText ?? 'Multiple'));
     ctrl.addResetListener(handleReset);
-    _selectorController = ctrl;
+    _selectController = ctrl;
   }
 
-  /// Disposes the current [SelectorController], if any.
-  void _disposeSelectorController() {
-    final ctrl = _selectorController;
-    _selectorController = null;
+  /// Disposes the current [SelectController], if any.
+  void _disposeSelectController() {
+    final ctrl = _selectController;
+    _selectController = null;
     ctrl?.dispose();
   }
 
@@ -466,7 +476,7 @@ class PopupSelectController extends ChangeNotifier {
     hideSelector();
     // Persist the applied selection back onto the delegate so that reopening
     // the selector (PopupSelectBar / PopupSelectButton / showSelect
-    // / showModalBottomSelect) reconstructs its SelectorController with
+    // / showModalBottomSelect) reconstructs its SelectController with
     // `previousSelected = selected`. Without this write-back, `selectedData`
     // keeps the initial `selectedEntriesLoader` value and the previous selection
     // is lost on reopen — even though `selectedEntriesLoader` was supplied.
@@ -763,7 +773,7 @@ class PopupSelectControllerProvider extends StatelessWidget {
   'Use PopupSelectController instead. '
   'This alias will be removed in a future minor version.',
 )
-typedef DropdownSelectorController = PopupSelectController;
+typedef DropdownSelectController = PopupSelectController;
 
 /// Deprecated alias for [PopupTabData].
 ///
@@ -783,4 +793,4 @@ typedef DropdownTabData = PopupTabData;
   'Use PopupSelectControllerProvider instead. '
   'This alias will be removed in a future minor version.',
 )
-typedef DropdownSelectorControllerProvider = PopupSelectControllerProvider;
+typedef DropdownSelectControllerProvider = PopupSelectControllerProvider;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../selector_theme.dart';
-import '../selector_theme_data.dart';
+import '../select_theme.dart';
+import '../select_theme_data.dart';
 import 'expansion_tile_theme.dart';
 
 const kSelectorExpansionTileAnimationDuration = Duration(milliseconds: 200);
@@ -37,7 +37,7 @@ class SelectorExpansionTile extends StatefulWidget {
   /// The color used to highlight the tile when expanded.
   ///
   /// If null, [SelectorExpansionTileTheme.selectedColor] is used. If that is
-  /// also null, the value is [SelectorThemeData.selectedColor].
+  /// also null, the value is [SelectThemeData.selectedColor].
   final Color? selectedColor;
 
   /// The content displayed below the header when the tile is expanded.
@@ -308,7 +308,7 @@ class _SelectorExpansionTileDefaults extends SelectorExpansionTileTheme {
   _SelectorExpansionTileDefaults(this.context) : super();
 
   final BuildContext context;
-  late final SelectorThemeData _theme = SelectorTheme.of(context);
+  late final SelectThemeData _theme = SelectTheme.of(context);
   late final TextTheme _textTheme = Theme.of(context).textTheme;
 
   @override

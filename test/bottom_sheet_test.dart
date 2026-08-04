@@ -1,5 +1,4 @@
 import 'package:criteria_selector/criteria_selector.dart';
-import 'package:criteria_selector/src/selector/selector_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -41,7 +40,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // The selector panel is rendered inside a modal bottom sheet.
-      expect(find.byType(SelectorPanel), findsOneWidget);
+      expect(find.byType(SelectPanel), findsOneWidget);
 
       // Simulate a barrier/drag dismiss (returns null).
       Navigator.of(navigatorKey.currentContext!, rootNavigator: true).pop(null);

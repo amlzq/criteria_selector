@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 
 import 'action_bar_visibility.dart';
 import 'constants.dart';
-import 'selector_controller.dart';
+import 'select_controller.dart';
 import 'select_delegate.dart';
 import 'select_entry.dart';
-import 'selector_theme.dart';
+import 'select_theme.dart';
 import 'widgets/widgets.dart';
 
 /// Horizontal layout: category list on the left and cascading item lists on the right.
@@ -55,7 +55,7 @@ class CascadingSelectorState extends State<CascadingSelector> {
 
   final ScrollController _cascadeHorizontalController = ScrollController();
 
-  SelectorController? controller;
+  SelectController? controller;
   int _alignmentSession = 0;
 
   /// Gradient colors for each level
@@ -71,14 +71,14 @@ class CascadingSelectorState extends State<CascadingSelector> {
   void dispose() {
     _disposeScrollControllers();
     _cascadeHorizontalController.dispose();
-    controller?.removeListener(_handleSelectorControllerTick);
+    controller?.removeListener(_handleSelectControllerTick);
     super.dispose();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _updateSelectorController(context);
+    _updateSelectController(context);
   }
 
   @override
@@ -88,7 +88,7 @@ class CascadingSelectorState extends State<CascadingSelector> {
     // In playground's SelectView mode, the ancestor EntryPointScreen calls
     // setState on every onChanged, which causes didUpdateWidget to fire on
     // every tap — even though entries and previousSelected are unchanged.
-    // Unconditionally calling _updateSelectorController (which calls
+    // Unconditionally calling _updateSelectController (which calls
     // _rebuildSelectionState) discards the in-memory focused-path state
     // (_tempSelectedEntryPerLevel) and rebuilds it from the state tree.
     // While that rebuild is usually correct, it is unnecessary work and can
@@ -100,18 +100,18 @@ class CascadingSelectorState extends State<CascadingSelector> {
         widget.previousSelected ?? const {},
         oldWidget.previousSelected ?? const {});
     if (!sameEntries || !samePrevious) {
-      _updateSelectorController(context);
+      _updateSelectController(context);
     }
   }
 
-  void _updateSelectorController(BuildContext context) {
+  void _updateSelectController(BuildContext context) {
     if (controller == null) {
-      controller = SelectorController.of(context)!;
-      controller?.addListener(_handleSelectorControllerTick);
+      controller = SelectController.of(context)!;
+      controller?.addListener(_handleSelectControllerTick);
     }
     // Gradient colors depend on the ambient theme, so they must be recomputed
     // whenever the theme changes (e.g. light/dark switch), not only on first init.
-    final theme = SelectorTheme.of(context);
+    final theme = SelectTheme.of(context);
     final categoryBackgroundColor =
         delegate.categoryBackgroundColor ?? theme.backgroundColor;
     final terminalBackgroundColor =
@@ -128,7 +128,7 @@ class CascadingSelectorState extends State<CascadingSelector> {
     _rebuildSelectionState();
   }
 
-  void _handleSelectorControllerTick() {
+  void _handleSelectControllerTick() {
     if (!mounted) return;
     setState(() {});
   }
@@ -623,7 +623,7 @@ class CascadingSelectorState extends State<CascadingSelector> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = SelectorTheme.of(context);
+    final theme = SelectTheme.of(context);
     final isScrollable = delegate.isScrollable == true;
 
     /// Maximum level for the current category
@@ -772,7 +772,7 @@ class CascadingSelectorState extends State<CascadingSelector> {
   }
 }
 
-// class _CascadingSelectorDefaults extends SelectorThemeData {
+// class _CascadingSelectorDefaults extends SelectThemeData {
 //   _CascadingSelectorDefaults(this.context) : super();
 
 //   final BuildContext context;
@@ -800,7 +800,7 @@ class CascadingSelectorSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final effectiveBackgroundColor =
-        backgroundColor ?? SelectorTheme.of(context).backgroundColor;
+        backgroundColor ?? SelectTheme.of(context).backgroundColor;
     final random = Random();
     return Column(
       mainAxisSize: MainAxisSize.min,

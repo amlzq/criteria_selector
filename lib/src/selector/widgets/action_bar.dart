@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../i18n/localizations.dart';
-import '../selector_theme.dart';
-import '../selector_theme_data.dart';
+import '../select_theme.dart';
+import '../select_theme_data.dart';
 import 'action_bar_theme.dart';
 import 'skeleton_box.dart';
 
@@ -172,7 +172,7 @@ class _SelectorActionBarDefaults extends SelectorActionBarTheme {
   _SelectorActionBarDefaults(this.context) : super();
 
   final BuildContext context;
-  late final SelectorThemeData _theme = SelectorTheme.of(context);
+  late final SelectThemeData _theme = SelectTheme.of(context);
 
   @override
   Color? get backgroundColor => _theme.backgroundColor;

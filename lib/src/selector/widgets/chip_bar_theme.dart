@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../selector_theme.dart';
+import '../select_theme.dart';
 
 /// Visual variant for chips rendered by [SelectorChipBar].
 enum SelectorChipVariant {
@@ -66,7 +66,7 @@ class SelectorChipBarTheme with Diagnosticable {
   }
 
   static SelectorChipBarTheme of(BuildContext context) {
-    return SelectorTheme.of(context).chipBarThemeData;
+    return SelectTheme.of(context).chipBarThemeData;
   }
 
   /// Linearly interpolates between two chip bar themes.

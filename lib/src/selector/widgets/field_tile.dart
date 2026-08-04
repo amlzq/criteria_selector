@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../select_entry.dart';
-import '../selector_theme.dart';
-import '../selector_theme_data.dart';
+import '../select_theme.dart';
+import '../select_theme_data.dart';
 import 'field_tile_theme.dart';
 
 /// A range input tile for a [SelectRangeEntry].
@@ -64,7 +64,7 @@ class SelectorFieldTile extends StatelessWidget {
   /// The color used to highlight the tile when a field is focused or has input.
   ///
   /// If null, [SelectorFieldTileTheme.selectedColor] is used. If that is also
-  /// null, the value is [SelectorThemeData.selectedColor].
+  /// null, the value is [SelectThemeData.selectedColor].
   final Color? selectedColor;
 
   /// Defines the background color of `SelectorFieldTile` when not focused.
@@ -303,7 +303,7 @@ class _SelectorFieldTileDefaults extends SelectorFieldTileTheme {
 
   final BuildContext context;
 
-  late final SelectorThemeData _theme = SelectorTheme.of(context);
+  late final SelectThemeData _theme = SelectTheme.of(context);
   late final TextTheme _textTheme = Theme.of(context).textTheme;
 
   @override
@@ -321,7 +321,7 @@ class _SelectorFieldTileDefaults extends SelectorFieldTileTheme {
   /// Default [tileColor] based on [variant].
   ///
   /// Mirrors [_SelectorGridTileDefaults.tileColor]: a light tint derived from
-  /// [SelectorThemeData.onBackgroundColorHighest] toward white in light theme;
+  /// [SelectThemeData.onBackgroundColorHighest] toward white in light theme;
   /// blends surface colors for harmony in dark theme.
   @override
   Color? get tileColor {

@@ -8,9 +8,9 @@ import 'dropdown_overlay_style.dart';
 import 'i18n/localizations.dart';
 import 'popup_select_bar_theme.dart';
 import 'popup_select_controller.dart';
-import 'selector/select_entry.dart';
 import 'selector/select_delegate.dart';
-import 'selector/selector_theme_data.dart';
+import 'selector/select_entry.dart';
+import 'selector/select_theme_data.dart';
 import 'selector_label_state.dart';
 import 'selector_overlay_host.dart';
 
@@ -108,14 +108,25 @@ class PopupSelectBar extends StatefulWidget implements PreferredSizeWidget {
     this.onReset,
     this.controller,
     this.initialIndex,
-    this.selectorTheme,
+    SelectThemeData? selectTheme,
+    @Deprecated(
+      'Use selectTheme instead. This parameter will be removed in a future '
+      'minor version.',
+    )
+    SelectThemeData? selectorTheme,
     this.direction = PopupSelectDirection.below,
   })  : assert(
           selectDelegates == null || selectorDelegates == null,
           'Provide either selectDelegates or the deprecated '
           'selectorDelegates, but not both.',
         ),
-        selectDelegates = selectorDelegates ?? selectDelegates ?? const [];
+        assert(
+          selectTheme == null || selectorTheme == null,
+          'Provide either selectTheme or the deprecated selectorTheme, '
+          'but not both.',
+        ),
+        selectDelegates = selectorDelegates ?? selectDelegates ?? const [],
+        selectTheme = selectorTheme ?? selectTheme;
 
   /// The set of tabs to display in the bar.
   ///
@@ -202,7 +213,17 @@ class PopupSelectBar extends StatefulWidget implements PreferredSizeWidget {
   final DropdownOverlayStyle? overlayStyle;
 
   /// Theme overrides applied to selector widgets inside the overlay.
-  final SelectorThemeData? selectorTheme;
+  final SelectThemeData? selectTheme;
+
+  /// Deprecated alias for [selectTheme].
+  ///
+  /// Use [selectTheme] instead. This getter is kept only for backward
+  /// compatibility and will be removed in a future minor version.
+  @Deprecated(
+    'Use selectTheme instead. This getter will be removed in a future '
+    'minor version.',
+  )
+  SelectThemeData? get selectorTheme => selectTheme;
 
   /// Vertical placement of the selector panel relative to the bar.
   ///
@@ -238,7 +259,7 @@ class _PopupSelectBarState extends State<PopupSelectBar>
   VoidCallback? _removeApplyListener;
   VoidCallback? _removeResetListener;
 
-  // late List<SelectorController> _selectorControllers;
+  // late List<SelectController> _selectControllers;
 
   bool _debugHasScheduledValidSelectorCountCheck = false;
 
@@ -385,7 +406,7 @@ class _PopupSelectBarState extends State<PopupSelectBar>
 
     final overlayStyle = widget.overlayStyle ?? theme?.overlayStyle;
 
-    final effectiveSelectorTheme = widget.selectorTheme ?? theme?.selectorTheme;
+    final effectiveSelectTheme = widget.selectTheme ?? theme?.selectTheme;
 
     final localizations = SelectorLocalizations.of(context);
 
@@ -397,7 +418,7 @@ class _PopupSelectBarState extends State<PopupSelectBar>
       controller: _controller!,
       direction: widget.direction,
       style: overlayStyle,
-      selectorTheme: effectiveSelectorTheme,
+      selectTheme: effectiveSelectTheme,
       triggerChild: Material(
         color: widget.backgroundColor ??
             theme?.backgroundColor ??

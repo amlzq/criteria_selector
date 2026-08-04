@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'dropdown_overlay_style.dart';
-import 'selector/selector_theme_data.dart';
+import 'selector/select_theme_data.dart';
 
 /// Theme extension for [PopupSelectBar].
 ///
@@ -19,8 +19,18 @@ class PopupSelectBarTheme extends ThemeExtension<PopupSelectBarTheme> {
     this.indicator,
     this.unselectedIndicator,
     this.overlayStyle,
-    this.selectorTheme,
-  });
+    SelectThemeData? selectTheme,
+    @Deprecated(
+      'Use selectTheme instead. This parameter will be removed in a future '
+      'minor version.',
+    )
+    SelectThemeData? selectorTheme,
+  })  : assert(
+          selectTheme == null || selectorTheme == null,
+          'Provide either selectTheme or the deprecated selectorTheme, '
+          'but not both.',
+        ),
+        selectTheme = selectorTheme ?? selectTheme;
 
   /// Overrides the default value of [PopupSelectBar.height].
   final double? height;
@@ -50,7 +60,17 @@ class PopupSelectBarTheme extends ThemeExtension<PopupSelectBarTheme> {
   final DropdownOverlayStyle? overlayStyle;
 
   /// Default theme overrides applied to selector widgets inside the overlay.
-  final SelectorThemeData? selectorTheme;
+  final SelectThemeData? selectTheme;
+
+  /// Deprecated alias for [selectTheme].
+  ///
+  /// Use [selectTheme] instead. This getter is kept only for backward
+  /// compatibility and will be removed in a future minor version.
+  @Deprecated(
+    'Use selectTheme instead. This getter will be removed in a future '
+    'minor version.',
+  )
+  SelectThemeData? get selectorTheme => selectTheme;
 
   @override
   PopupSelectBarTheme copyWith({
@@ -63,7 +83,7 @@ class PopupSelectBarTheme extends ThemeExtension<PopupSelectBarTheme> {
     Widget? indicator,
     Widget? unselectedIndicator,
     DropdownOverlayStyle? overlayStyle,
-    SelectorThemeData? selectorTheme,
+    SelectThemeData? selectTheme,
   }) {
     return PopupSelectBarTheme(
       height: height ?? this.height,
@@ -75,7 +95,7 @@ class PopupSelectBarTheme extends ThemeExtension<PopupSelectBarTheme> {
       indicator: indicator ?? this.indicator,
       unselectedIndicator: unselectedIndicator ?? this.unselectedIndicator,
       overlayStyle: overlayStyle ?? this.overlayStyle,
-      selectorTheme: selectorTheme ?? this.selectorTheme,
+      selectTheme: selectTheme ?? this.selectTheme,
     );
   }
 
@@ -94,7 +114,7 @@ class PopupSelectBarTheme extends ThemeExtension<PopupSelectBarTheme> {
         indicator,
         unselectedIndicator,
         overlayStyle,
-        selectorTheme,
+        selectTheme,
       );
 
   @override
@@ -115,7 +135,7 @@ class PopupSelectBarTheme extends ThemeExtension<PopupSelectBarTheme> {
         other.indicator == indicator &&
         other.unselectedIndicator == unselectedIndicator &&
         other.overlayStyle == overlayStyle &&
-        other.selectorTheme == selectorTheme;
+        other.selectTheme == selectTheme;
   }
 
   @override
@@ -140,8 +160,8 @@ class PopupSelectBarTheme extends ThemeExtension<PopupSelectBarTheme> {
       indicator: indicator,
       unselectedIndicator: unselectedIndicator,
       overlayStyle: overlayStyle,
-      selectorTheme:
-          SelectorThemeData.lerp(selectorTheme, other.selectorTheme, t),
+      selectTheme:
+          SelectThemeData.lerp(selectTheme, other.selectTheme, t),
     );
   }
 }

@@ -204,7 +204,7 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                 crossAxisSpacing: 8,
                 mainAxisSpacing: 8,
                 sideBarTheme: const SelectorSideBarTheme(width: 98),
-                panelTheme: const SelectorPanelTheme(
+                panelTheme: const SelectPanelTheme(
                   elevation: 8,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(16)),

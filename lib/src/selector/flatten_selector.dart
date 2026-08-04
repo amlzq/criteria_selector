@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 
 import 'action_bar_visibility.dart';
 import 'constants.dart';
-import 'selector_controller.dart';
+import 'select_controller.dart';
 import 'select_delegate.dart';
 import 'select_entry.dart';
-import 'selector_theme.dart';
+import 'select_theme.dart';
 import 'widgets/widgets.dart';
 
 /// Horizontal layout: category navigation on the left and a flattened item list on the right.
@@ -61,30 +61,30 @@ class FlattenSelectorState extends State<FlattenSelector> {
 
   final GlobalKey _scrollViewKey = GlobalKey();
 
-  SelectorController? controller;
+  SelectController? controller;
 
   @override
   void dispose() {
-    controller?.removeListener(_handleSelectorControllerTick);
+    controller?.removeListener(_handleSelectControllerTick);
     super.dispose();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _updateSelectorController(context);
+    _updateSelectController(context);
   }
 
   @override
   void didUpdateWidget(covariant FlattenSelector oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _updateSelectorController(context);
+    _updateSelectController(context);
   }
 
-  void _updateSelectorController(BuildContext context) {
+  void _updateSelectController(BuildContext context) {
     if (controller == null) {
-      controller = SelectorController.of(context)!;
-      controller?.addListener(_handleSelectorControllerTick);
+      controller = SelectController.of(context)!;
+      controller?.addListener(_handleSelectControllerTick);
     }
     controller?.bindState(
       widget.entries,
@@ -95,7 +95,7 @@ class FlattenSelectorState extends State<FlattenSelector> {
 
   FlattenSelectDelegate get delegate => widget.delegate;
 
-  void _handleSelectorControllerTick() {
+  void _handleSelectControllerTick() {
     if (mounted) setState(() {});
   }
 
@@ -288,7 +288,7 @@ class FlattenSelectorState extends State<FlattenSelector> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = SelectorTheme.of(context);
+    final theme = SelectTheme.of(context);
 
     // A category badge should only appear when it has a "real" selection,
     // i.e. at least one selected child that is not the "Any" placeholder.
@@ -416,7 +416,7 @@ class PlattenSelectorSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = SelectorTheme.of(context);
+    final theme = SelectTheme.of(context);
 
     final categoryBackgroundColor = theme.backgroundColor;
 

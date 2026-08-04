@@ -3,7 +3,7 @@ import 'dart:ui' show lerpDouble;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../selector_theme.dart';
+import '../select_theme.dart';
 import 'side_bar.dart';
 
 /// Defines a theme for [SelectorSideBar] widgets.
@@ -87,7 +87,7 @@ class SelectorSideBarTheme with Diagnosticable {
   }
 
   static SelectorSideBarTheme of(BuildContext context) {
-    return SelectorTheme.of(context).sideBarTheme;
+    return SelectTheme.of(context).sideBarTheme;
   }
 
   /// Linearly interpolates between two category bar themes.

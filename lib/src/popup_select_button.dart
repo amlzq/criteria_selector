@@ -7,8 +7,8 @@ import 'dropdown_overlay_style.dart';
 import 'i18n/localizations.dart';
 import 'popup_select_button_theme.dart';
 import 'popup_select_controller.dart';
-import 'selector/select_entry.dart';
 import 'selector/select_delegate.dart';
+import 'selector/select_entry.dart';
 import 'selector_label_state.dart';
 import 'selector_overlay_host.dart';
 
@@ -362,11 +362,11 @@ class _PopupSelectButtonState extends State<PopupSelectButton>
       padding: theme?.padding,
       elevation: theme?.elevation,
       overlayStyle: theme?.overlayStyle,
-      selectorTheme: theme?.selectorTheme,
+      selectTheme: theme?.selectTheme,
     );
 
     final overlayStyle = widget.overlayStyle ?? resolved.overlayStyle;
-    final effectiveSelectorTheme = resolved.selectorTheme;
+    final effectiveSelectTheme = resolved.selectTheme;
 
     final localizations = SelectorLocalizations.of(context);
     _controller.applyMultipleText = localizations?.multiple ?? 'Multiple';
@@ -375,7 +375,7 @@ class _PopupSelectButtonState extends State<PopupSelectButton>
       controller: _controller,
       direction: widget.direction,
       style: overlayStyle,
-      selectorTheme: effectiveSelectorTheme,
+      selectTheme: effectiveSelectTheme,
       minWidthFromTrigger: true,
       triggerChild: _buildButton(context, resolved),
     );

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'action_bar_visibility.dart';
 import 'constants.dart';
-import 'selector_controller.dart';
+import 'select_controller.dart';
 import 'select_delegate.dart';
 import 'select_entry.dart';
 import 'select_layout.dart';
@@ -32,30 +32,30 @@ class ListSelectorState extends State<ListSelector> {
   /// Focused category entry
   int _tempSelectedCategoryIndex = 0;
 
-  SelectorController? controller;
+  SelectController? controller;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _updateSelectorController(context);
+    _updateSelectController(context);
   }
 
   @override
   void didUpdateWidget(covariant ListSelector oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _updateSelectorController(context);
+    _updateSelectController(context);
   }
 
   @override
   void dispose() {
-    controller?.removeListener(_handleSelectorControllerTick);
+    controller?.removeListener(_handleSelectControllerTick);
     super.dispose();
   }
 
-  void _updateSelectorController(BuildContext context) {
+  void _updateSelectController(BuildContext context) {
     if (controller == null) {
-      controller = SelectorController.of(context)!;
-      controller?.addListener(_handleSelectorControllerTick);
+      controller = SelectController.of(context)!;
+      controller?.addListener(_handleSelectControllerTick);
     }
     controller?.bindState(
       widget.entries,
@@ -66,7 +66,7 @@ class ListSelectorState extends State<ListSelector> {
 
   ListSelectDelegate get delegate => widget.delegate;
 
-  void _handleSelectorControllerTick() {
+  void _handleSelectControllerTick() {
     if (mounted) setState(() {});
   }
 

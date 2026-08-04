@@ -54,7 +54,7 @@ void main() {
 
     testWidgets('forwards onChanged through an internal controller',
         (tester) async {
-      SelectorController? captured;
+      SelectController? captured;
       var changed = false;
 
       await tester.pumpWidget(
@@ -64,7 +64,7 @@ void main() {
               delegate: _TestDelegate(
                 entriesLoader: () async => <SelectEntry<dynamic>>{},
                 bodyBuilder: (context, _, __) {
-                  captured = SelectorController.of(context);
+                  captured = SelectController.of(context);
                   return const SizedBox();
                 },
               ),
@@ -83,7 +83,7 @@ void main() {
 
     testWidgets('disposes its own internal controller on unmount',
         (tester) async {
-      SelectorController? captured;
+      SelectController? captured;
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -91,7 +91,7 @@ void main() {
               delegate: _TestDelegate(
                 entriesLoader: () async => <SelectEntry<dynamic>>{},
                 bodyBuilder: (context, _, __) {
-                  captured = SelectorController.of(context);
+                  captured = SelectController.of(context);
                   return const SizedBox();
                 },
               ),
@@ -108,8 +108,7 @@ void main() {
 
     testWidgets('does not dispose an externally-provided controller',
         (tester) async {
-      final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+      final controller = SelectController(selectionMode: SelectionMode.single);
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(

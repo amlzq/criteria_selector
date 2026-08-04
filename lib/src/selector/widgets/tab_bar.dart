@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../select_entry.dart';
-import '../selector_theme.dart';
-import '../selector_theme_data.dart';
+import '../select_theme.dart';
+import '../select_theme_data.dart';
 import 'constants.dart';
 import 'skeleton_box.dart';
 import 'tab_bar_theme.dart';
@@ -67,13 +67,13 @@ class SelectorTabBar extends StatelessWidget {
   /// The color of the tab bar itself.
   ///
   /// If null, [SelectorTabBarTheme.backgroundColor] is used. If that is also
-  /// null, the value is [SelectorThemeData.backgroundColor].
+  /// null, the value is [SelectThemeData.backgroundColor].
   final Color? backgroundColor;
 
   /// The color of the tab labels and indicator when a tab is selected.
   ///
   /// If null, [SelectorTabBarTheme.selectedColor] is used. If that is also
-  /// null, the value is [SelectorThemeData.selectedColor].
+  /// null, the value is [SelectThemeData.selectedColor].
   final Color? selectedColor;
 
   /// The text style of the tab labels when not selected.
@@ -367,7 +367,7 @@ class SelectorTabBarSkeleton extends StatelessWidget {
   /// The background color of the skeleton.
   ///
   /// If null, [SelectorTabBarTheme.backgroundColor] is used. If that is also
-  /// null, the value is [SelectorThemeData.backgroundColor].
+  /// null, the value is [SelectThemeData.backgroundColor].
   final Color? backgroundColor;
 
   @override
@@ -412,7 +412,7 @@ class _SelectorTabBarDefaults extends SelectorTabBarTheme {
   _SelectorTabBarDefaults(this.context) : super();
 
   final BuildContext context;
-  late final SelectorThemeData _theme = SelectorTheme.of(context);
+  late final SelectThemeData _theme = SelectTheme.of(context);
   late final TextTheme _textTheme = Theme.of(context).textTheme;
 
   @override

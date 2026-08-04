@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:criteria_selector/criteria_selector.dart';
-import 'package:criteria_selector/src/selector/selector_panel.dart';
+import 'package:criteria_selector/src/selector/select_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// A minimal [SelectDelegate] used to drive [SelectorPanel] rendering and to
+/// A minimal [SelectDelegate] used to drive [SelectPanel] rendering and to
 /// capture the active controller for assertions.
 class _TestDelegate extends SelectDelegate {
   _TestDelegate({
@@ -35,13 +35,13 @@ class _TestDelegate extends SelectDelegate {
 }
 
 void main() {
-  group('SelectorPanel', () {
+  group('SelectPanel', () {
     testWidgets('shows the skeleton while data is loading', (tester) async {
       final completer = Completer<SelectEntries>();
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: SelectorPanel(
+            body: SelectPanel(
               delegate: _TestDelegate(
                 entriesLoader: () => completer.future,
                 bodyBuilder: (_, __, ___) => const Text('body'),
@@ -64,7 +64,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: SelectorPanel(
+            body: SelectPanel(
               delegate: _TestDelegate(
                 entriesLoader: () async => <SelectEntry<dynamic>>{
                   SelectTextEntry<dynamic>.name(id: 'a', name: 'A'),
@@ -85,7 +85,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: SelectorPanel(
+            body: SelectPanel(
               delegate: _TestDelegate(
                 entriesLoader: () async => throw Exception('boom'),
                 bodyBuilder: (_, __, ___) => const Text('body'),
@@ -104,7 +104,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: SelectorPanel(
+            body: SelectPanel(
               delegate: _TestDelegate(
                 entriesLoader: () async => throw Exception('boom'),
                 bodyBuilder: (_, __, ___) => const Text('body'),
@@ -123,7 +123,7 @@ void main() {
     testWidgets('forwards callbacks with an external controller',
         (tester) async {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       var changed = false;
       var applied = false;
       var reset = false;
@@ -131,7 +131,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: SelectorPanel(
+            body: SelectPanel(
               delegate: _TestDelegate(
                 entriesLoader: () async => <SelectEntry<dynamic>>{},
                 bodyBuilder: (_, __, ___) => const SizedBox(),
@@ -157,17 +157,17 @@ void main() {
 
     testWidgets('forwards callbacks with an internal controller',
         (tester) async {
-      SelectorController? captured;
+      SelectController? captured;
       var changed = false;
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: SelectorPanel(
+            body: SelectPanel(
               delegate: _TestDelegate(
                 entriesLoader: () async => <SelectEntry<dynamic>>{},
                 bodyBuilder: (context, _, __) {
-                  captured = SelectorController.of(context);
+                  captured = SelectController.of(context);
                   return const SizedBox();
                 },
               ),
@@ -186,11 +186,11 @@ void main() {
     testWidgets('does not dispose an externally-provided controller',
         (tester) async {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: SelectorPanel(
+            body: SelectPanel(
               delegate: _TestDelegate(
                 entriesLoader: () async => <SelectEntry<dynamic>>{},
                 bodyBuilder: (_, __, ___) => const SizedBox(),
@@ -206,15 +206,15 @@ void main() {
     });
 
     testWidgets('disposes its own internal controller', (tester) async {
-      SelectorController? captured;
+      SelectController? captured;
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: SelectorPanel(
+            body: SelectPanel(
               delegate: _TestDelegate(
                 entriesLoader: () async => <SelectEntry<dynamic>>{},
                 bodyBuilder: (context, _, __) {
-                  captured = SelectorController.of(context);
+                  captured = SelectController.of(context);
                   return const SizedBox();
                 },
               ),
@@ -231,15 +231,15 @@ void main() {
 
     testWidgets('re-registers forwarding listeners when controller changes',
         (tester) async {
-      final first = SelectorController(selectionMode: SelectionMode.single);
-      final second = SelectorController(selectionMode: SelectionMode.single);
+      final first = SelectController(selectionMode: SelectionMode.single);
+      final second = SelectController(selectionMode: SelectionMode.single);
       var appliedOnFirst = false;
       var appliedOnSecond = false;
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: SelectorPanel(
+            body: SelectPanel(
               delegate: _TestDelegate(
                 entriesLoader: () async => <SelectEntry<dynamic>>{},
                 bodyBuilder: (_, __, ___) => const SizedBox(),
@@ -256,7 +256,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: SelectorPanel(
+            body: SelectPanel(
               delegate: _TestDelegate(
                 entriesLoader: () async => <SelectEntry<dynamic>>{},
                 bodyBuilder: (_, __, ___) => const SizedBox(),
@@ -279,19 +279,19 @@ void main() {
 
     testWidgets('initializes the internal controller from delegate state',
         (tester) async {
-      SelectorController? captured;
+      SelectController? captured;
       final previous = <SelectEntry<dynamic>>{
         SelectTextEntry<dynamic>.name(id: 'a', name: 'A'),
       };
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: SelectorPanel(
+            body: SelectPanel(
               delegate: _TestDelegate(
                 entriesLoader: () async => <SelectEntry<dynamic>>{},
                 selectedEntriesLoader: () => previous,
                 bodyBuilder: (context, _, __) {
-                  captured = SelectorController.of(context);
+                  captured = SelectController.of(context);
                   return const SizedBox();
                 },
               ),

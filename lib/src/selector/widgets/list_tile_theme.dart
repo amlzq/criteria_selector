@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../selector_theme.dart';
+import '../select_theme.dart';
 import 'constants.dart';
 
 /// Theme configuration for [SelectorListTile], including toggle builders.
@@ -66,7 +66,7 @@ class SelectorListTileTheme with Diagnosticable {
   }
 
   static SelectorListTileTheme of(BuildContext context) {
-    return SelectorTheme.of(context).listTileTheme;
+    return SelectTheme.of(context).listTileTheme;
   }
 
   /// Linearly interpolates between two list tile themes.

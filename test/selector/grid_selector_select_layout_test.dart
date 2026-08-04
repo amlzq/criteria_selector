@@ -40,15 +40,15 @@ Widget _buildGridSelector(
         crossAxisCount: 3,
         selectionMode: SelectionMode.single,
       );
-  final controller = SelectorController(
+  final controller = SelectController(
     selectionMode: effectiveDelegate.selectionMode,
   );
 
   return MaterialApp(
     home: Scaffold(
-      body: SelectorTheme(
-        data: SelectorThemeData.fallback(ThemeData()),
-        child: SelectorControllerProvider(
+      body: SelectTheme(
+        data: SelectThemeData.fallback(ThemeData()),
+        child: SelectControllerProvider(
           controller: controller,
           child: Builder(
             builder: (context) => effectiveDelegate.buildBody(

@@ -3,23 +3,23 @@ import 'dart:ui' show lerpDouble;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'selector_theme.dart';
+import 'select_theme.dart';
 
 /// Defines the elevation, shadow and shape decoration applied to the
-/// [SelectorPanel] background.
+/// [SelectPanel] background.
 ///
 /// Unlike the host-level decoration (e.g. [Dialog.elevation] /
 /// [showModalBottomSheet]'s `shape`), this theme is applied to the panel
 /// background itself and therefore works for every host, including inline
-/// [SelectorPanel] and the dropdown overlay. The two layers are independent and
+/// [SelectPanel] and the dropdown overlay. The two layers are independent and
 /// can be used together or separately.
 ///
 /// All fields are nullable. When [elevation] and [shape] are both `null`, the
 /// panel falls back to a plain [ColoredBox] (the previous flat behavior), so
 /// existing usage is unaffected.
 @immutable
-class SelectorPanelTheme with Diagnosticable {
-  const SelectorPanelTheme({
+class SelectPanelTheme with Diagnosticable {
+  const SelectPanelTheme({
     this.elevation,
     this.shadowColor,
     this.surfaceTintColor,
@@ -55,21 +55,21 @@ class SelectorPanelTheme with Diagnosticable {
   /// Passed to [Material.clipBehavior].
   final Clip? clipBehavior;
 
-  /// Returns the nearest [SelectorPanelTheme] from the ambient
-  /// [SelectorThemeData].
-  static SelectorPanelTheme of(BuildContext context) {
-    return SelectorTheme.of(context).panelTheme;
+  /// Returns the nearest [SelectPanelTheme] from the ambient
+  /// [SelectThemeData].
+  static SelectPanelTheme of(BuildContext context) {
+    return SelectTheme.of(context).panelTheme;
   }
 
   /// Returns a copy of this theme with the given fields replaced.
-  SelectorPanelTheme copyWith({
+  SelectPanelTheme copyWith({
     double? elevation,
     Color? shadowColor,
     Color? surfaceTintColor,
     ShapeBorder? shape,
     Clip? clipBehavior,
   }) {
-    return SelectorPanelTheme(
+    return SelectPanelTheme(
       elevation: elevation ?? this.elevation,
       shadowColor: shadowColor ?? this.shadowColor,
       surfaceTintColor: surfaceTintColor ?? this.surfaceTintColor,
@@ -79,12 +79,12 @@ class SelectorPanelTheme with Diagnosticable {
   }
 
   /// Linearly interpolates between two panel themes.
-  static SelectorPanelTheme lerp(
-      SelectorPanelTheme? a, SelectorPanelTheme? b, double t) {
+  static SelectPanelTheme lerp(
+      SelectPanelTheme? a, SelectPanelTheme? b, double t) {
     if (identical(a, b) && a != null) {
       return a;
     }
-    return SelectorPanelTheme(
+    return SelectPanelTheme(
       elevation: lerpDouble(a?.elevation, b?.elevation, t),
       shadowColor: Color.lerp(a?.shadowColor, b?.shadowColor, t),
       surfaceTintColor: Color.lerp(a?.surfaceTintColor, b?.surfaceTintColor, t),
@@ -110,7 +110,7 @@ class SelectorPanelTheme with Diagnosticable {
     if (other.runtimeType != runtimeType) {
       return false;
     }
-    return other is SelectorPanelTheme &&
+    return other is SelectPanelTheme &&
         other.elevation == elevation &&
         other.shadowColor == shadowColor &&
         other.surfaceTintColor == surfaceTintColor &&
@@ -118,3 +118,14 @@ class SelectorPanelTheme with Diagnosticable {
         other.clipBehavior == clipBehavior;
   }
 }
+
+/// Deprecated alias for [SelectPanelTheme].
+///
+/// The `Selector`-prefixed name was renamed to drop the redundant `Selector`
+/// prefix. This alias is kept for backward compatibility and will be removed in
+/// a future minor version.
+@Deprecated(
+  'Use SelectPanelTheme instead. This alias will be removed in a future minor '
+  'version.',
+)
+typedef SelectorPanelTheme = SelectPanelTheme;

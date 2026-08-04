@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'selector_panel_theme.dart';
+import 'select_panel_theme.dart';
 import 'widgets/action_bar_theme.dart';
 import 'widgets/chip_bar_theme.dart';
 import 'widgets/expansion_tile_theme.dart';
@@ -17,10 +17,10 @@ import 'widgets/tab_bar_theme.dart';
 /// This object is usually derived from a Material [ThemeData] plus optional
 /// overrides, and is consumed by selector widgets to keep styling consistent.
 @immutable
-class SelectorThemeData with Diagnosticable {
-  /// Creates a [SelectorThemeData] by reading defaults from [theme] and applying
+class SelectThemeData with Diagnosticable {
+  /// Creates a [SelectThemeData] by reading defaults from [theme] and applying
   /// optional overrides.
-  factory SelectorThemeData(
+  factory SelectThemeData(
     ThemeData theme, {
     Color? selectedColor,
     Color? onSelectedColor,
@@ -40,9 +40,9 @@ class SelectorThemeData with Diagnosticable {
     RadioThemeData? radioTheme,
     CheckboxThemeData? checkboxTheme,
     SelectorChipBarTheme? chipBarThemeData,
-    SelectorPanelTheme? panelTheme,
+    SelectPanelTheme? panelTheme,
   }) {
-    return SelectorThemeData.raw(
+    return SelectThemeData.raw(
       selectedColor: selectedColor ?? theme.colorScheme.primary,
       onSelectedColor: onSelectedColor ?? theme.colorScheme.onPrimary,
       backgroundColor: backgroundColor ?? theme.colorScheme.surface,
@@ -65,12 +65,12 @@ class SelectorThemeData with Diagnosticable {
       radioTheme: radioTheme ?? const RadioThemeData(),
       checkboxTheme: checkboxTheme ?? const CheckboxThemeData(),
       chipBarThemeData: chipBarThemeData ?? const SelectorChipBarTheme(),
-      panelTheme: panelTheme ?? const SelectorPanelTheme(),
+      panelTheme: panelTheme ?? const SelectPanelTheme(),
     );
   }
 
-  /// Creates a [SelectorThemeData] with explicit values.
-  const SelectorThemeData.raw({
+  /// Creates a [SelectThemeData] with explicit values.
+  const SelectThemeData.raw({
     required this.selectedColor,
     required this.onSelectedColor,
     required this.backgroundColor,
@@ -93,8 +93,7 @@ class SelectorThemeData with Diagnosticable {
   });
 
   /// Convenience factory that uses [theme] defaults without any overrides.
-  factory SelectorThemeData.fallback(ThemeData theme) =>
-      SelectorThemeData(theme);
+  factory SelectThemeData.fallback(ThemeData theme) => SelectThemeData(theme);
 
   /// The background color used for selected entries.
   final Color selectedColor;
@@ -150,10 +149,10 @@ class SelectorThemeData with Diagnosticable {
   final SelectorChipBarTheme chipBarThemeData;
 
   /// Theme overrides for the panel's elevation, shadow and shape decoration.
-  final SelectorPanelTheme panelTheme;
+  final SelectPanelTheme panelTheme;
 
   /// Creates a copy of this theme data with the given fields replaced.
-  SelectorThemeData copyWith({
+  SelectThemeData copyWith({
     Color? selectedColor,
     Color? onSelectedColor,
     Color? backgroundColor,
@@ -172,9 +171,9 @@ class SelectorThemeData with Diagnosticable {
     RadioThemeData? radioTheme,
     CheckboxThemeData? checkboxTheme,
     SelectorChipBarTheme? chipBarThemeData,
-    SelectorPanelTheme? panelTheme,
+    SelectPanelTheme? panelTheme,
   }) {
-    return SelectorThemeData.raw(
+    return SelectThemeData.raw(
       selectedColor: selectedColor ?? this.selectedColor,
       onSelectedColor: onSelectedColor ?? this.onSelectedColor,
       backgroundColor: backgroundColor ?? this.backgroundColor,
@@ -200,12 +199,12 @@ class SelectorThemeData with Diagnosticable {
   }
 
   /// Linearly interpolates between two theme data objects.
-  static SelectorThemeData? lerp(
-      SelectorThemeData? a, SelectorThemeData? b, double t) {
+  static SelectThemeData? lerp(
+      SelectThemeData? a, SelectThemeData? b, double t) {
     if (identical(a, b)) {
       return a;
     }
-    return SelectorThemeData.raw(
+    return SelectThemeData.raw(
       selectedColor: Color.lerp(a?.selectedColor, b?.selectedColor, t)!,
       onSelectedColor: Color.lerp(a?.onSelectedColor, b?.onSelectedColor, t)!,
       backgroundColor: Color.lerp(a?.backgroundColor, b?.backgroundColor, t)!,
@@ -237,7 +236,7 @@ class SelectorThemeData with Diagnosticable {
           CheckboxThemeData.lerp(a?.checkboxTheme, b?.checkboxTheme, t),
       chipBarThemeData: SelectorChipBarTheme.lerp(
           a?.chipBarThemeData, b?.chipBarThemeData, t),
-      panelTheme: SelectorPanelTheme.lerp(a?.panelTheme, b?.panelTheme, t),
+      panelTheme: SelectPanelTheme.lerp(a?.panelTheme, b?.panelTheme, t),
     );
   }
 
@@ -272,7 +271,7 @@ class SelectorThemeData with Diagnosticable {
     if (other.runtimeType != runtimeType) {
       return false;
     }
-    return other is SelectorThemeData &&
+    return other is SelectThemeData &&
         other.selectedColor == selectedColor &&
         other.onSelectedColor == onSelectedColor &&
         other.backgroundColor == backgroundColor &&
@@ -294,3 +293,14 @@ class SelectorThemeData with Diagnosticable {
         other.panelTheme == panelTheme;
   }
 }
+
+/// Deprecated alias for [SelectThemeData].
+///
+/// The `Selector`-prefixed name was renamed to drop the redundant `Selector`
+/// prefix. This alias is kept for backward compatibility and will be removed in
+/// a future minor version.
+@Deprecated(
+  'Use SelectThemeData instead. This alias will be removed in a future minor '
+  'version.',
+)
+typedef SelectorThemeData = SelectThemeData;

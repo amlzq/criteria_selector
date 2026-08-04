@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../constants.dart';
 import '../select_entry.dart';
-import '../selector_theme.dart';
-import '../selector_theme_data.dart';
+import '../select_theme.dart';
+import '../select_theme_data.dart';
 import 'chip_bar_theme.dart';
 import 'constants.dart';
 import 'extensions.dart';
@@ -263,7 +263,7 @@ class _SelectorChipBarDefaults extends SelectorChipBarTheme {
 
   final BuildContext context;
 
-  late final SelectorThemeData _theme = SelectorTheme.of(context);
+  late final SelectThemeData _theme = SelectTheme.of(context);
   late final TextTheme _textTheme = Theme.of(context).textTheme;
 
   @override
@@ -275,7 +275,7 @@ class _SelectorChipBarDefaults extends SelectorChipBarTheme {
   /// Default [chipColor] based on [variant].
   ///
   /// Mirrors [_SelectorGridTileDefaults.tileColor]: a light tint derived from
-  /// [SelectorThemeData.onBackgroundColorHighest] toward white in light theme;
+  /// [SelectThemeData.onBackgroundColorHighest] toward white in light theme;
   /// blends surface colors for harmony in dark theme.
   @override
   Color? get chipColor {

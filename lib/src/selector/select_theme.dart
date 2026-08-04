@@ -1,33 +1,32 @@
 import 'package:flutter/material.dart';
 
-import 'selector_theme_data.dart';
+import 'select_theme_data.dart';
 
-/// Provides [SelectorThemeData] to selector widgets.
+/// Provides [SelectThemeData] to selector widgets.
 ///
 /// This works similarly to Material's theme widgets and supports merging via
-/// [SelectorTheme.merge].
-class SelectorTheme extends InheritedTheme {
-  const SelectorTheme({
+/// [SelectTheme.merge].
+class SelectTheme extends InheritedTheme {
+  const SelectTheme({
     super.key,
     required this.data,
     required super.child,
   });
 
-  final SelectorThemeData data;
+  final SelectThemeData data;
 
-  /// Returns the nearest [SelectorThemeData] or a fallback derived from the
+  /// Returns the nearest [SelectThemeData] or a fallback derived from the
   /// current Material [ThemeData].
-  static SelectorThemeData of(BuildContext context) {
-    final SelectorTheme? inheritedTheme =
-        context.dependOnInheritedWidgetOfExactType<SelectorTheme>();
-    return inheritedTheme?.data ??
-        SelectorThemeData.fallback(Theme.of(context));
+  static SelectThemeData of(BuildContext context) {
+    final SelectTheme? inheritedTheme =
+        context.dependOnInheritedWidgetOfExactType<SelectTheme>();
+    return inheritedTheme?.data ?? SelectThemeData.fallback(Theme.of(context));
   }
 
-  /// Merges the given [data] into the ambient [SelectorThemeData].
+  /// Merges the given [data] into the ambient [SelectThemeData].
   static Widget merge({
     Key? key,
-    SelectorThemeData? data,
+    SelectThemeData? data,
     required Widget child,
   }) {
     if (data == null) {
@@ -35,7 +34,7 @@ class SelectorTheme extends InheritedTheme {
     }
     return Builder(
       builder: (context) {
-        final merged = SelectorTheme.of(context).copyWith(
+        final merged = SelectTheme.of(context).copyWith(
           selectedColor: data.selectedColor,
           onSelectedColor: data.onSelectedColor,
           backgroundColor: data.backgroundColor,
@@ -55,7 +54,7 @@ class SelectorTheme extends InheritedTheme {
           checkboxTheme: data.checkboxTheme,
           chipBarThemeData: data.chipBarThemeData,
         );
-        return SelectorTheme(
+        return SelectTheme(
           key: key,
           data: merged.copyWith(panelTheme: data.panelTheme),
           child: child,
@@ -65,10 +64,21 @@ class SelectorTheme extends InheritedTheme {
   }
 
   @override
-  bool updateShouldNotify(SelectorTheme oldWidget) => data != oldWidget.data;
+  bool updateShouldNotify(SelectTheme oldWidget) => data != oldWidget.data;
 
   @override
   Widget wrap(BuildContext context, Widget child) {
-    return SelectorTheme(data: data, child: child);
+    return SelectTheme(data: data, child: child);
   }
 }
+
+/// Deprecated alias for [SelectTheme].
+///
+/// The `Selector`-prefixed name was renamed to drop the redundant `Selector`
+/// prefix. This alias is kept for backward compatibility and will be removed in
+/// a future minor version.
+@Deprecated(
+  'Use SelectTheme instead. This alias will be removed in a future minor '
+  'version.',
+)
+typedef SelectorTheme = SelectTheme;

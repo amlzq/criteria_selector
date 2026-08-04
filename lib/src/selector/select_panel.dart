@@ -1,45 +1,45 @@
 import 'package:flutter/material.dart';
 
 import 'constants.dart';
-import 'selector_controller.dart';
+import 'select_controller.dart';
 import 'select_delegate.dart';
 import 'select_entry.dart';
-import 'selector_theme.dart';
-import 'selector_theme_data.dart';
+import 'select_theme.dart';
+import 'select_theme_data.dart';
 
 /// A widget that renders a [SelectDelegate] and manages its selection state.
 ///
 /// The panel loads [SelectDelegate.data] and displays the selector body once the data
 /// is available, or a skeleton while it is loading. Selector widgets rendered by
-/// the panel are styled according to [selectorTheme].
+/// the panel are styled according to [selectTheme].
 ///
-/// The selection state is driven by a [SelectorController]. If [controller] is
+/// The selection state is driven by a [SelectController]. If [controller] is
 /// omitted, the panel creates and owns an internal controller. In both cases
 /// (an internal controller or a caller-provided one), the panel forwards
 /// selection events through the [onChangeTap], [onApplyTap] and [onResetTap]
 /// callbacks. When [controller] is provided, the caller still owns it and can
 /// drive the selection programmatically (for example, with
-/// [SelectorController.select]); the panel-level callbacks are fired in addition
+/// [SelectController.select]); the panel-level callbacks are fired in addition
 /// to any listeners registered directly on the controller.
 ///
 /// The active controller is exposed to descendants via
-/// [SelectorControllerProvider].
-class SelectorPanel extends StatefulWidget {
-  const SelectorPanel({
+/// [SelectControllerProvider].
+class SelectPanel extends StatefulWidget {
+  const SelectPanel({
     super.key,
     required this.delegate,
     this.controller,
     this.onChangeTap,
     this.onApplyTap,
     this.onResetTap,
-    this.selectorTheme,
+    this.selectTheme,
   });
 
   final SelectDelegate delegate;
 
   /// Optional controller that drives the selection state.
   ///
-  /// When provided, callers can call [SelectorController.select] and other
+  /// When provided, callers can call [SelectController.select] and other
   /// methods from outside the panel. The panel will not dispose a controller
   /// that it did not create.
   ///
@@ -47,35 +47,34 @@ class SelectorPanel extends StatefulWidget {
   /// [onApplyTap] and [onResetTap] callbacks are forwarded in addition to any
   /// listeners registered directly on the controller. The panel will not
   /// dispose a controller that it did not create.
-  final SelectorController? controller;
+  final SelectController? controller;
 
   /// Fired when the selection changes.
   ///
   /// Forwarded in both cases, whether [controller] is provided or not.
-  final SelectorCallback? onChangeTap;
+  final SelectCallback? onChangeTap;
 
   /// Fired when the selection is applied.
   ///
   /// Forwarded in both cases, whether [controller] is provided or not.
-  final SelectorCallback? onApplyTap;
+  final SelectCallback? onApplyTap;
 
   /// Fired when reset is triggered.
   ///
   /// Forwarded in both cases, whether [controller] is provided or not.
   final VoidCallback? onResetTap;
 
-  final SelectorThemeData? selectorTheme;
+  final SelectThemeData? selectTheme;
 
   @override
-  State<SelectorPanel> createState() => _SelectorPanelState();
+  State<SelectPanel> createState() => _SelectPanelState();
 }
 
-class _SelectorPanelState extends State<SelectorPanel> {
-  SelectorController? _internalController;
+class _SelectPanelState extends State<SelectPanel> {
+  SelectController? _internalController;
   final List<VoidCallback> _unregister = [];
 
-  SelectorController get _controller =>
-      widget.controller ?? _internalController!;
+  SelectController get _controller => widget.controller ?? _internalController!;
 
   @override
   void initState() {
@@ -87,7 +86,7 @@ class _SelectorPanelState extends State<SelectorPanel> {
   }
 
   void _createInternalController() {
-    _internalController = SelectorController(
+    _internalController = SelectController(
       selectionMode: widget.delegate.selectionMode,
       previousSelected: widget.delegate.selectedData,
       resetSelected: widget.delegate.resetData,
@@ -122,7 +121,7 @@ class _SelectorPanelState extends State<SelectorPanel> {
   }
 
   @override
-  void didUpdateWidget(covariant SelectorPanel oldWidget) {
+  void didUpdateWidget(covariant SelectPanel oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.controller != oldWidget.controller) {
       _unregisterForwardingListeners();
@@ -145,18 +144,18 @@ class _SelectorPanelState extends State<SelectorPanel> {
 
   @override
   Widget build(BuildContext context) {
-    // Merge the delegate-level [SelectorPanelTheme] override (if any) into the
+    // Merge the delegate-level [SelectPanelTheme] override (if any) into the
     // ambient theme so that [_PanelDecoratedBox] picks it up. `copyWith` keeps
     // the existing `panelTheme` when the delegate does not supply one.
     final baseTheme =
-        widget.selectorTheme ?? SelectorThemeData.fallback(Theme.of(context));
+        widget.selectTheme ?? SelectThemeData.fallback(Theme.of(context));
     final effectiveTheme = widget.delegate.panelTheme == null
         ? baseTheme
         : baseTheme.copyWith(panelTheme: widget.delegate.panelTheme);
-    return SelectorTheme(
+    return SelectTheme(
       data: effectiveTheme,
       child: _PanelDecoratedBox(
-        child: SelectorControllerProvider(
+        child: SelectControllerProvider(
           controller: _controller,
           child: FutureBuilder<SelectEntries>(
             future: widget.delegate.data,
@@ -191,10 +190,10 @@ class _SelectorPanelState extends State<SelectorPanel> {
   }
 }
 
-/// Wraps the panel content, applying the [SelectorPanelTheme] elevation and
+/// Wraps the panel content, applying the [SelectPanelTheme] elevation and
 /// shape when configured.
 ///
-/// When either [SelectorPanelTheme.elevation] or [SelectorPanelTheme.shape] is
+/// When either [SelectPanelTheme.elevation] or [SelectPanelTheme.shape] is
 /// set, the background is rendered as a [Material] so that it casts a shadow and
 /// consumes the [ShapeBorder]. Otherwise, a plain [ColoredBox] is used, which
 /// preserves the previous flat appearance and keeps hosts that supply their own
@@ -207,7 +206,7 @@ class _PanelDecoratedBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = SelectorTheme.of(context);
+    final theme = SelectTheme.of(context);
     final panel = theme.panelTheme;
     final hasDecoration = panel.elevation != null || panel.shape != null;
     if (!hasDecoration) {

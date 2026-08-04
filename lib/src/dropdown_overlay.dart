@@ -35,7 +35,7 @@ enum PopupSelectDirection {
 typedef DropdownSelectorDirection = PopupSelectDirection;
 
 /// Overlay container that hosts an arbitrary [child] widget (typically a
-/// [SelectorPanel]).
+/// [SelectPanel]).
 ///
 /// This widget is responsible for the overlay backdrop, expand/collapse
 /// animation, max-height constraint, and on-screen positioning. Given the

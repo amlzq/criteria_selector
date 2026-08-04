@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import '../selector_theme.dart';
+import '../select_theme.dart';
 
 /// A shimmering wrapper used for loading skeleton UIs.
 ///
@@ -132,7 +132,7 @@ class SkeletonTile extends StatelessWidget {
 
   /// The fill color of the placeholder tile.
   ///
-  /// If null, [SelectorThemeData.backgroundColorHigh] is used.
+  /// If null, [SelectThemeData.backgroundColorHigh] is used.
   final Color? color;
 
   /// A border to draw around the placeholder tile.
@@ -179,7 +179,7 @@ class SkeletonTile extends StatelessWidget {
         decoration: BoxDecoration(
           border: border,
           borderRadius: borderRadius,
-          color: color ?? SelectorTheme.of(context).backgroundColorHigh,
+          color: color ?? SelectTheme.of(context).backgroundColorHigh,
         ),
       ),
     );

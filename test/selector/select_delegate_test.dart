@@ -65,16 +65,16 @@ void main() {
 
       final selector =
           CascadingSelectDelegate(selectionMode: SelectionMode.multiple);
-      final controller = SelectorController(
+      final controller = SelectController(
         selectionMode: SelectionMode.multiple,
       );
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: SelectorTheme(
-              data: SelectorThemeData.fallback(ThemeData()),
-              child: SelectorControllerProvider(
+            body: SelectTheme(
+              data: SelectThemeData.fallback(ThemeData()),
+              child: SelectControllerProvider(
                 controller: controller,
                 child: Builder(
                   builder: (context) => selector.buildBody(
@@ -135,16 +135,16 @@ void main() {
 
       final selector =
           CascadingSelectDelegate(selectionMode: SelectionMode.multiple);
-      final controller = SelectorController(
+      final controller = SelectController(
         selectionMode: SelectionMode.multiple,
       );
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: SelectorTheme(
-              data: SelectorThemeData.fallback(ThemeData()),
-              child: SelectorControllerProvider(
+            body: SelectTheme(
+              data: SelectThemeData.fallback(ThemeData()),
+              child: SelectControllerProvider(
                 controller: controller,
                 child: Builder(
                   builder: (context) => selector.buildBody(

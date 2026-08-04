@@ -208,7 +208,7 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                 fieldTileTheme: const SelectorFieldTileTheme(
                   variant: SelectorFieldTileVariant.outlined,
                 ),
-                panelTheme: const SelectorPanelTheme(
+                panelTheme: const SelectPanelTheme(
                   elevation: 8,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(16)),

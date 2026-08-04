@@ -6,7 +6,7 @@ import 'flatten_selector.dart';
 import 'grid_selector.dart';
 import 'list_selector.dart';
 import 'select_entry.dart';
-import 'selector_panel_theme.dart';
+import 'select_panel_theme.dart';
 import 'widgets/widgets.dart';
 
 /// Builds the action bar shown at the bottom of the selector panel.
@@ -26,7 +26,7 @@ typedef SelectorActionBarBuilder = Widget Function(
 /// - Defining UI/theme overrides (colors and per-widget themes).
 /// - Building the selector body widget, a loading skeleton and an error widget.
 ///
-/// The actual selection state is managed by [SelectorController] and widgets
+/// The actual selection state is managed by [SelectController] and widgets
 /// under `src/selector/`.
 abstract class SelectDelegate {
   SelectDelegate({
@@ -150,11 +150,11 @@ abstract class SelectDelegate {
 
   /// Theme overrides for the panel's elevation, shadow and shape decoration.
   ///
-  /// When provided, this is merged into the ambient [SelectorThemeData] used by
-  /// [SelectorPanel], so it applies to every host (inline [SelectView],
+  /// When provided, this is merged into the ambient [SelectThemeData] used by
+  /// [SelectPanel], so it applies to every host (inline [SelectView],
   /// [showSelect], [showModalBottomSelect] and the dropdown overlay). It is
   /// independent from the host-level decoration (e.g. [Dialog.elevation]).
-  final SelectorPanelTheme? panelTheme;
+  final SelectPanelTheme? panelTheme;
 
   /// Optional builder for the loading skeleton.
   final WidgetBuilder? skeletonBuilder;

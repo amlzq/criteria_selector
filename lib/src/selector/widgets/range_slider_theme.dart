@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../selector_theme.dart';
+import '../select_theme.dart';
 
 /// Theme configuration for [SelectorRangeSlider].
 @immutable
@@ -65,7 +65,7 @@ class SelectorRangeSliderTheme with Diagnosticable {
   }
 
   static SelectorRangeSliderTheme of(BuildContext context) {
-    return SelectorTheme.of(context).rangeSliderTheme;
+    return SelectTheme.of(context).rangeSliderTheme;
   }
 
   static SelectorRangeSliderTheme lerp(

@@ -327,14 +327,14 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
             children: <Widget>[
               Expanded(
                 child: SelectView(
-                  // The view owns a [SelectorController] that is created once from
+                  // The view owns a [SelectController] that is created once from
                   // the delegate and NOT re-created on delegate changes. Key it by
                   // the params that must reset that controller (language / delegate
                   // / selection mode / tile variant). Columns / aspect ratio /
                   // spacing are deliberately excluded: those now live in the
                   // delegate cache key, so changing them yields a *new* delegate
                   // object while the view stays mounted — `widget.delegate` updates
-                  // live and [SelectorPanel] rebuilds with the new grid, and the
+                  // live and [SelectPanel] rebuilds with the new grid, and the
                   // view keeps its in-progress selection instead of losing it.
                   key: ValueKey(
                     '${l10n.language}|${p.delegate}|${p.selectionMode}|'

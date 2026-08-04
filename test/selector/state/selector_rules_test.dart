@@ -38,14 +38,14 @@ SelectCategoryEntry<dynamic> _category(
 }
 
 void main() {
-  group('SelectorController external control API', () {
+  group('SelectController external control API', () {
     test('select/unselect leaf without any does not throw and clears selection',
         () {
       final a = _text('c', 'a', 'A');
       final b = _text('c', 'b', 'B');
       final c = _category('c', 'C', children: {a, b});
 
-      final controller = SelectorController(
+      final controller = SelectController(
         selectionMode: SelectionMode.single,
       );
       controller.bindState([c], initializeAnyIfEmpty: true);
@@ -69,7 +69,7 @@ void main() {
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {any, custom, a});
 
-      final controller = SelectorController(
+      final controller = SelectController(
         selectionMode: SelectionMode.single,
       );
       controller.bindState([c], initializeAnyIfEmpty: true);
@@ -103,7 +103,7 @@ void main() {
       final parent = _text('c', 'p', 'P', children: {leaf});
       final c = _category('c', 'C', children: {parent});
 
-      final controller = SelectorController(
+      final controller = SelectController(
         selectionMode: SelectionMode.single,
       );
       controller.bindState([c], initializeAnyIfEmpty: false);
@@ -126,7 +126,7 @@ void main() {
         headerSelectionMode: SelectionMode.single,
       );
 
-      final controller = SelectorController(
+      final controller = SelectController(
         selectionMode: SelectionMode.single,
       );
       controller.bindState([c], initializeAnyIfEmpty: false);
@@ -151,7 +151,7 @@ void main() {
         headerSelectionMode: SelectionMode.single,
       );
 
-      final controller = SelectorController(
+      final controller = SelectController(
         selectionMode: SelectionMode.single,
       );
       controller.bindState([c], initializeAnyIfEmpty: false);
@@ -176,7 +176,7 @@ void main() {
         headerSelectionMode: SelectionMode.multiple,
       );
 
-      final controller = SelectorController(
+      final controller = SelectController(
         selectionMode: SelectionMode.single,
       );
       controller.bindState([c], initializeAnyIfEmpty: false);
@@ -198,7 +198,7 @@ void main() {
         footerSelectionMode: SelectionMode.single,
       );
 
-      final controller = SelectorController(
+      final controller = SelectController(
         selectionMode: SelectionMode.single,
       );
       controller.bindState([c], initializeAnyIfEmpty: false);

@@ -38,10 +38,10 @@ SelectCategoryEntry<dynamic> _category(
 }
 
 void main() {
-  group('SelectorController - bindState', () {
+  group('SelectController - bindState', () {
     test('bindState notifies listeners on first bind', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       var notified = false;
       controller.addListener(() => notified = true);
 
@@ -52,7 +52,7 @@ void main() {
 
     test('bindState does not notify when entries are identical', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       var notified = false;
       controller.addListener(() => notified = true);
 
@@ -65,7 +65,7 @@ void main() {
 
     test('bindState with initializeAnyIfEmpty initializes Any entries', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       final any = SelectTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {any, a});
@@ -76,10 +76,10 @@ void main() {
     });
   });
 
-  group('SelectorController - select', () {
+  group('SelectController - select', () {
     test('select a leaf entry in a category tree (path length 2)', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
       controller.bindState([c], initializeAnyIfEmpty: false);
@@ -94,7 +94,7 @@ void main() {
 
     test('select a cascading leaf entry (path length > 2)', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       final leaf = _text('p', 'l', 'L');
       final parent = _text('c', 'p', 'P', children: {leaf});
       final c = _category('c', 'C', children: {parent});
@@ -108,7 +108,7 @@ void main() {
 
     test('select a category entry triggers focusCategoryEntry', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
       controller.bindState([c], initializeAnyIfEmpty: false);
@@ -119,7 +119,7 @@ void main() {
 
     test('select returns false for non-existent entry', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       final c = _category('c', 'C', children: {_text('c', 'a', 'A')});
       controller.bindState([c], initializeAnyIfEmpty: false);
 
@@ -129,7 +129,7 @@ void main() {
     test('select in single mode replaces previous selection in same category',
         () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       final a = _text('c', 'a', 'A');
       final b = _text('c', 'b', 'B');
       final c = _category('c', 'C', children: {a, b});
@@ -146,7 +146,7 @@ void main() {
 
     test('select custom range entry works', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       final custom = SelectRangeEntry<int, dynamic>.custom(
         parentId: 'c',
         name: 'Custom',
@@ -169,7 +169,7 @@ void main() {
     test('select with applyIfImmediate calls apply listeners in single mode',
         () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       var applyCalled = false;
       controller.addApplyListener((_) => applyCalled = true);
 
@@ -184,7 +184,7 @@ void main() {
 
     test('select with applyIfImmediate on immediate entry calls apply', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.multiple);
+          SelectController(selectionMode: SelectionMode.multiple);
       var applyCalled = false;
       controller.addApplyListener((_) => applyCalled = true);
 
@@ -204,7 +204,7 @@ void main() {
 
     test('select without emitChange does not call change listeners', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       var changeCalled = false;
       controller.addChangeListener((_) => changeCalled = true);
 
@@ -217,10 +217,10 @@ void main() {
     });
   });
 
-  group('SelectorController - unselect', () {
+  group('SelectController - unselect', () {
     test('unselect a leaf entry removes it from selection', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
       controller.bindState([c], initializeAnyIfEmpty: false);
@@ -232,7 +232,7 @@ void main() {
 
     test('unselect in single mode with Any restores Any', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       final any = SelectTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {any, a});
@@ -248,7 +248,7 @@ void main() {
 
     test('unselect in single mode without Any clears category', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       final a = _text('c', 'a', 'A');
       final b = _text('c', 'b', 'B');
       final c = _category('c', 'C', children: {a, b});
@@ -261,7 +261,7 @@ void main() {
 
     test('unselect in multiple mode for flat tree (no category)', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.multiple);
+          SelectController(selectionMode: SelectionMode.multiple);
       final a = _text('', 'a', 'A');
       final b = _text('', 'b', 'B');
       controller.bindState([a, b], initializeAnyIfEmpty: false);
@@ -273,7 +273,7 @@ void main() {
 
     test('unselect returns false for non-existent entry', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       final c = _category('c', 'C', children: {_text('c', 'a', 'A')});
       controller.bindState([c], initializeAnyIfEmpty: false);
 
@@ -282,7 +282,7 @@ void main() {
 
     test('unselect cascading entry in single mode with Any restores Any', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       final any = SelectTextEntry<dynamic>.any(parentId: 'p', name: 'Any');
       final leaf = _text('p', 'l', 'L');
       final parent = _text('c', 'p', 'P', children: {any, leaf});
@@ -295,10 +295,10 @@ void main() {
     });
   });
 
-  group('SelectorController - focusCategory', () {
+  group('SelectController - focusCategory', () {
     test('focusCategory selects category in single mode', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
       controller.bindState([c], initializeAnyIfEmpty: false);
@@ -309,7 +309,7 @@ void main() {
 
     test('focusCategory returns false for non-existent category', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       final c = _category('c', 'C', children: {_text('c', 'a', 'A')});
       controller.bindState([c], initializeAnyIfEmpty: false);
 
@@ -317,10 +317,10 @@ void main() {
     });
   });
 
-  group('SelectorController - selectHeaderChild / unselectHeaderChild', () {
+  group('SelectController - selectHeaderChild / unselectHeaderChild', () {
     test('selectHeaderChild in single mode', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       final h1 = _text('header', 'h1', 'H1');
       final h2 = _text('header', 'h2', 'H2');
       final header = _text('c', 'header', 'Header', children: {h1, h2});
@@ -349,7 +349,7 @@ void main() {
 
     test('selectHeaderChild in multiple mode', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       final h1 = _text('header', 'h1', 'H1');
       final h2 = _text('header', 'h2', 'H2');
       final header = _text('c', 'header', 'Header', children: {h1, h2});
@@ -372,7 +372,7 @@ void main() {
 
     test('selectHeaderChild is a no-op if already selected', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       final h1 = _text('header', 'h1', 'H1');
       final header = _text('c', 'header', 'Header', children: {h1});
       final c = _category(
@@ -391,7 +391,7 @@ void main() {
 
     test('selectHeaderChild returns false for non-existent child', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       final c = _category('c', 'C', children: {_text('c', 'a', 'A')});
       controller.bindState([c], initializeAnyIfEmpty: false);
 
@@ -400,7 +400,7 @@ void main() {
 
     test('unselectHeaderChild removes header child', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       final h1 = _text('header', 'h1', 'H1');
       final header = _text('c', 'header', 'Header', children: {h1});
       final c = _category(
@@ -417,10 +417,10 @@ void main() {
     });
   });
 
-  group('SelectorController - selectFooterChild / unselectFooterChild', () {
+  group('SelectController - selectFooterChild / unselectFooterChild', () {
     test('selectFooterChild in single mode', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       final f1 = _text('footer', 'f1', 'F1');
       final footer = _text('c', 'footer', 'Footer', children: {f1});
       final c = _category(
@@ -441,7 +441,7 @@ void main() {
 
     test('unselectFooterChild removes footer child', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       final f1 = _text('footer', 'f1', 'F1');
       final footer = _text('c', 'footer', 'Footer', children: {f1});
       final c = _category(
@@ -458,10 +458,10 @@ void main() {
     });
   });
 
-  group('SelectorController - listeners', () {
+  group('SelectController - listeners', () {
     test('addChangeListener returns an unregister function', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       var callCount = 0;
       final unregister = controller.addChangeListener((_) => callCount++);
 
@@ -478,7 +478,7 @@ void main() {
 
     test('addApplyListener receives applied entries', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       SelectEntries? received;
       controller.addApplyListener((selected) => received = selected);
 
@@ -493,7 +493,7 @@ void main() {
 
     test('addResetListener is called on reset', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       var resetCalled = false;
       controller.addResetListener(() => resetCalled = true);
 
@@ -503,7 +503,7 @@ void main() {
 
     test('removeChangeListener stops notifications', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       var callCount = 0;
       void listener(SelectEntries _) => callCount++;
       controller.addChangeListener(listener);
@@ -521,7 +521,7 @@ void main() {
 
     test('removeApplyListener stops notifications', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       var callCount = 0;
       void listener(SelectEntries _) => callCount++;
       controller.addApplyListener(listener);
@@ -536,7 +536,7 @@ void main() {
 
     test('removeResetListener stops notifications', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       var callCount = 0;
       void listener() => callCount++;
       controller.addResetListener(listener);
@@ -550,10 +550,10 @@ void main() {
     });
   });
 
-  group('SelectorController - dispose', () {
+  group('SelectController - dispose', () {
     test('dispose clears all listeners', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       var callCount = 0;
       controller.addChangeListener((_) => callCount++);
       controller.addApplyListener((_) => callCount++);
@@ -574,15 +574,15 @@ void main() {
 
     test('isDisposed returns false before dispose', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       expect(controller.isDisposed, isFalse);
     });
   });
 
-  group('SelectorController - findEntry / findPath', () {
+  group('SelectController - findEntry / findPath', () {
     test('findEntry delegates to stateTree', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
       controller.bindState([c], initializeAnyIfEmpty: false);
@@ -593,7 +593,7 @@ void main() {
 
     test('findPath delegates to stateTree', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
       controller.bindState([c], initializeAnyIfEmpty: false);
@@ -604,10 +604,10 @@ void main() {
     });
   });
 
-  group('SelectorController - snapshot', () {
+  group('SelectController - snapshot', () {
     test('snapshot returns current selection state', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
       controller.bindState([c], initializeAnyIfEmpty: false);
@@ -619,9 +619,9 @@ void main() {
     });
   });
 
-  group('SelectorController - resetState', () {
+  group('SelectController - resetState', () {
     test('resetState restores resetSelected and notifies', () {
-      final controller = SelectorController(
+      final controller = SelectController(
         selectionMode: SelectionMode.single,
         resetSelected: {_text('c', 'b', 'B')},
       );
@@ -639,10 +639,10 @@ void main() {
     });
   });
 
-  group('SelectorController - trimSelectionLevels', () {
+  group('SelectController - trimSelectionLevels', () {
     test('trimSelectionLevels trims and notifies', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       final leaf = _text('p', 'l', 'L');
       final parent = _text('c', 'p', 'P', children: {leaf});
       final c = _category('c', 'C', children: {parent});
@@ -657,16 +657,14 @@ void main() {
     });
   });
 
-  group('SelectorController - _effectiveSelectorSelectionMode', () {
+  group('SelectController - _effectiveSelectorSelectionMode', () {
     test('returns multiple when controller selectionMode is multiple', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.multiple);
+          SelectController(selectionMode: SelectionMode.multiple);
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
       controller.bindState([c], initializeAnyIfEmpty: false);
 
-      // select in multiple mode should allow multiple selections
-      final b = _text('c', 'b', 'B');
       // We just verify the mode is correctly evaluated by checking behavior
       controller.select('a', parentId: 'c', emitChange: false);
       // In multiple mode, select should not clear previous selections
@@ -674,7 +672,7 @@ void main() {
 
     test('returns multiple when a category has multiple selectionMode', () {
       final controller =
-          SelectorController(selectionMode: SelectionMode.single);
+          SelectController(selectionMode: SelectionMode.single);
       final a = _text('c', 'a', 'A');
       final b = _text('c', 'b', 'B');
       final c = _category('c', 'C',

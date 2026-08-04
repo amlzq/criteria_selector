@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../selector/selector_controller.dart';
+import '../selector/select_controller.dart';
 import 'select_entry.dart';
 
 /// Callback invoked with the currently selected entries.
-typedef SelectorCallback = void Function(SelectEntries selected);
+typedef SelectCallback = void Function(SelectEntries selected);
 
 /// Badge rendering style.
 enum BadgeStyle {
@@ -28,7 +28,7 @@ const kSelectorCategoryTileWidth = 80.0;
 typedef SelectorBuilder = Widget Function(
   BuildContext context,
   Future<SelectEntries>? asyncData,
-  SelectorController selectorController,
+  SelectController selectController,
 );
 
 /// Builds a skeleton widget while selector data is loading.
@@ -81,3 +81,14 @@ extension IterableExtension<SelectEntry> on Iterable<SelectEntry> {
     return null;
   }
 }
+
+/// Deprecated alias for [SelectCallback].
+///
+/// The `Selector`-prefixed name was renamed to drop the redundant `Selector`
+/// prefix. This alias is kept for backward compatibility and will be removed in
+/// a future minor version.
+@Deprecated(
+  'Use SelectCallback instead. This alias will be removed in a future minor '
+  'version.',
+)
+typedef SelectorCallback = SelectCallback;

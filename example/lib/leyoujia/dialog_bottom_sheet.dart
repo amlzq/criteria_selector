@@ -118,7 +118,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                     crossAxisSpacing: 8,
                     mainAxisSpacing: 8,
                     sideBarTheme: const SelectorSideBarTheme(width: 90),
-                    panelTheme: const SelectorPanelTheme(
+                    panelTheme: const SelectPanelTheme(
                       elevation: 8,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(16)),
@@ -178,7 +178,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                     radioBuilder: (context, selected) {
                       return MyRadio(value: selected);
                     },
-                    panelTheme: const SelectorPanelTheme(
+                    panelTheme: const SelectPanelTheme(
                       elevation: 8,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(16)),
@@ -312,7 +312,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                     crossAxisSpacing: 8,
                     mainAxisSpacing: 8,
                     sideBarTheme: const SelectorSideBarTheme(width: 98),
-                    panelTheme: const SelectorPanelTheme(
+                    panelTheme: const SelectPanelTheme(
                       elevation: 6,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(16)),

@@ -92,7 +92,7 @@ class _MyAppState extends State<MyApp> {
                   PopupSelectBarTheme(
                     overlayStyle: const DropdownOverlayStyle(
                         barrierColor: Colors.black54),
-                    selectorTheme: SelectorThemeData(baseTheme),
+                    selectTheme: SelectThemeData(baseTheme),
                   ),
                 ],
               );

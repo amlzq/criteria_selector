@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'dropdown_overlay.dart';
 import 'dropdown_overlay_style.dart';
 import 'popup_select_controller.dart';
-import 'selector/selector_panel.dart';
-import 'selector/selector_theme_data.dart';
+import 'selector/select_panel.dart';
+import 'selector/select_theme_data.dart';
 
 /// Shared host that wires a trigger widget (a [PopupSelectBar] or a
 /// [PopupSelectButton]) to its selector overlay.
@@ -12,15 +12,15 @@ import 'selector/selector_theme_data.dart';
 /// This widget owns the boilerplate that used to be duplicated verbatim in both
 /// triggers:
 /// - [PopupSelectControllerProvider] to expose the [controller] to
-///   descendants (e.g. [SelectorPanel]).
+///   descendants (e.g. [SelectPanel]).
 /// - [CompositedTransformTarget] + [OverlayPortal] + [CompositedTransformFollower]
 ///   to anchor the overlay to the trigger's actual painted position, which is
 ///   robust to scrolling and ancestor transforms ([DropdownOverlay] relies on
 ///   this follower to make the Stack origin equal the screen's top-left).
-/// - [DropdownOverlay] to position, animate, and clip the [SelectorPanel].
+/// - [DropdownOverlay] to position, animate, and clip the [SelectPanel].
 ///
 /// The trigger only supplies its own UI ([triggerChild]) plus the already
-/// resolved [style], [selectorTheme], and [direction], and optionally whether
+/// resolved [style], [selectTheme], and [direction], and optionally whether
 /// the panel should keep at least the trigger's width ([minWidthFromTrigger]).
 ///
 /// This widget is package-internal (kept in `lib/src/` and not re-exported from
@@ -31,7 +31,7 @@ class SelectorOverlayHost extends StatelessWidget {
     required this.controller,
     required this.direction,
     required this.style,
-    required this.selectorTheme,
+    required this.selectTheme,
     required this.triggerChild,
     this.minWidthFromTrigger = false,
   });
@@ -39,7 +39,7 @@ class SelectorOverlayHost extends StatelessWidget {
   final PopupSelectController controller;
   final PopupSelectDirection direction;
   final DropdownOverlayStyle? style;
-  final SelectorThemeData? selectorTheme;
+  final SelectThemeData? selectTheme;
 
   /// When true, the overlay panel's [DropdownOverlayStyle.minWidth] defaults to
   /// the trigger's width ([PopupSelectButton]). When false, any explicit
@@ -118,10 +118,10 @@ class SelectorOverlayHost extends StatelessWidget {
                 style: resolvedStyle,
                 animation: controller.overlayAnimation,
                 onOverlayTap: () => controller.hideSelector(),
-                child: SelectorPanel(
-                  controller: controller.selectorController,
+                child: SelectPanel(
+                  controller: controller.selectController,
                   delegate: controller.previousSelectDelegate!,
-                  selectorTheme: selectorTheme,
+                  selectTheme: selectTheme,
                 ),
               ),
             );

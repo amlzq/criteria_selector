@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 import 'selector/action_bar_visibility.dart';
 import 'selector/constants.dart';
-import 'selector/selector_controller.dart';
+import 'selector/select_controller.dart';
 import 'selector/select_delegate.dart';
-import 'selector/selector_panel.dart';
+import 'selector/select_panel.dart';
 
 /// A high-level, ready-to-use selector.
 ///
 /// [SelectView] is the public entry point for embedding a selector
-/// directly in a page or dialog body. It wraps [SelectorPanel] — now an
+/// directly in a page or dialog body. It wraps [SelectPanel] — now an
 /// internal implementation detail that is no longer exported — and takes care
 /// of the controller lifecycle so callers get a complete, styled component
 /// without extra wiring.
@@ -24,17 +24,17 @@ import 'selector/selector_panel.dart';
 ///
 /// Styling is carried entirely by the [delegate] (colors, per-widget themes
 /// and the panel decoration via [SelectDelegate.panelTheme]). When a selector
-/// is the only one in its host, a separate `selectorTheme` parameter is
+/// is the only one in its host, a separate `selectTheme` parameter is
 /// unnecessary.
 ///
 /// If [controller] is omitted, [SelectView] creates and owns an internal
-/// [SelectorController]; otherwise the caller-provided controller is used and
+/// [SelectController]; otherwise the caller-provided controller is used and
 /// remains owned by the caller.
 ///
 /// In addition to selector-specific options, [SelectView] accepts the same
 /// sizing and decorating parameters as [Container] — [width], [height],
 /// [constraints], [padding], [margin] and [decoration]. These surround the
-/// [SelectorPanel] exactly as [Container] surrounds its child: the panel is
+/// [SelectPanel] exactly as [Container] surrounds its child: the panel is
 /// inset by [padding] (inflated by any border in the [decoration]), the
 /// [decoration] is painted to fill the padded extent, then [constraints]
 /// (combining [width]/[height]) are applied, and finally the [margin]
@@ -57,10 +57,10 @@ class SelectView extends StatefulWidget {
     double? height,
     BoxConstraints? constraints,
     this.margin,
-    SelectorCallback? onChanged,
+    SelectCallback? onChanged,
     @Deprecated(
         'Use onChanged instead. This parameter will be removed in a future minor version.')
-    SelectorCallback? onChangeTap,
+    SelectCallback? onChangeTap,
   })  : assert(maxHeightFactor > 0 && maxHeightFactor <= 1),
         assert(onChanged == null || onChangeTap == null,
             'Use onChanged only; onChangeTap is deprecated.'),
@@ -83,13 +83,13 @@ class SelectView extends StatefulWidget {
   /// Optional controller that drives the selection state.
   ///
   /// When provided, callers can drive the selection programmatically (for
-  /// example with [SelectorController.select]); the caller still owns it and is
+  /// example with [SelectController.select]); the caller still owns it and is
   /// responsible for disposing it. When omitted, an internal controller is
   /// created and disposed by [SelectView].
-  final SelectorController? controller;
+  final SelectController? controller;
 
   /// Fired when the selection changes.
-  final SelectorCallback? onChanged;
+  final SelectCallback? onChanged;
 
   /// Fired when the selection changes.
   ///
@@ -97,7 +97,7 @@ class SelectView extends StatefulWidget {
   /// backward compatibility and will be removed in a future minor version.
   @Deprecated(
       'Use onChanged instead. This getter will be removed in a future minor version.')
-  SelectorCallback? get onChangeTap => onChanged;
+  SelectCallback? get onChangeTap => onChanged;
 
   /// Caps the selector's height to this fraction of the screen height when it
   /// is embedded in an unbounded context (e.g. a [Column] with
@@ -113,10 +113,10 @@ class SelectView extends StatefulWidget {
   /// with this cap (a tighter bound still wins); see [constraints].
   ///
   /// It has no effect on the modal [showSelect] / [showModalBottomSelect],
-  /// which use [SelectorPanel] directly with their own height constraints.
+  /// which use [SelectPanel] directly with their own height constraints.
   final double maxHeightFactor;
 
-  /// Empty space to inscribe inside the [decoration]. The [SelectorPanel] is
+  /// Empty space to inscribe inside the [decoration]. The [SelectPanel] is
   /// placed inside this padding.
   ///
   /// This padding is in addition to any padding inherent in the [decoration]
@@ -128,7 +128,7 @@ class SelectView extends StatefulWidget {
 
   /// The decoration to paint behind the selector content.
   ///
-  /// Commonly a [BoxDecoration]. The [SelectorPanel] is not clipped to the
+  /// Commonly a [BoxDecoration]. The [SelectPanel] is not clipped to the
   /// decoration; to clip it to a particular shape, consider wrapping the box
   /// in a [ClipPath].
   final Decoration? decoration;
@@ -159,10 +159,9 @@ class SelectView extends StatefulWidget {
 }
 
 class _SelectViewState extends State<SelectView> {
-  SelectorController? _internalController;
+  SelectController? _internalController;
 
-  SelectorController get _controller =>
-      widget.controller ?? _internalController!;
+  SelectController get _controller => widget.controller ?? _internalController!;
 
   @override
   void initState() {
@@ -173,7 +172,7 @@ class _SelectViewState extends State<SelectView> {
   }
 
   void _createInternalController() {
-    _internalController = SelectorController(
+    _internalController = SelectController(
       selectionMode: widget.delegate.selectionMode,
       previousSelected: widget.delegate.selectedData,
       resetSelected: widget.delegate.resetData,
@@ -222,10 +221,10 @@ class _SelectViewState extends State<SelectView> {
   @override
   Widget build(BuildContext context) {
     // The controller is owned here, but the selection body (and the
-    // delegate-owned action bar) is rendered by the internal SelectorPanel,
+    // delegate-owned action bar) is rendered by the internal SelectPanel,
     // which is kept as the building block used by dialogs and bottom sheets.
     //
-    // Layout mirrors [Container]: the [SelectorPanel] is surrounded by
+    // Layout mirrors [Container]: the [SelectPanel] is surrounded by
     // [padding] (inflated by any border in the [decoration]), then the
     // [decoration] is painted, then constraints are applied (combining
     // [width]/[height]/[constraints] with the [maxHeightFactor] cap), and
@@ -234,7 +233,7 @@ class _SelectViewState extends State<SelectView> {
     // bounded height; the constraints guarantee that.
     Widget current = SelectorActionBarVisibility(
       hidden: true,
-      child: SelectorPanel(
+      child: SelectPanel(
         delegate: widget.delegate,
         controller: _controller,
         onChangeTap: widget.onChanged,

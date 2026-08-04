@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../selector_theme.dart';
+import '../select_theme.dart';
 
 /// Visual variant for [SelectorGridTile].
 enum SelectorGridTileVariant {
@@ -66,7 +66,7 @@ class SelectorGridTileTheme with Diagnosticable {
   }
 
   static SelectorGridTileTheme of(BuildContext context) {
-    return SelectorTheme.of(context).gridTileTheme;
+    return SelectTheme.of(context).gridTileTheme;
   }
 
   /// Linearly interpolates between two grid tile themes.

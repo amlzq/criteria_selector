@@ -12,7 +12,7 @@ Two layers work together: **entry points** decide *where* the selector appears, 
 - Async data loading through `entriesLoader`.
 - Flexible entries: the "Any" entry clears a category, `SelectRangeEntry.custom` takes user min/max input, and an `immediate` entry applies on tap without the action bar.
 - `skeletonBuilder` & `errorBuilder` for loading and error states.
-- Theming via `SelectorThemeData` and the `PopupSelectBarTheme` / `PopupSelectButtonTheme` extensions.
+- Theming via `SelectThemeData` and the `PopupSelectBarTheme` / `PopupSelectButtonTheme` extensions.
 - Built-in i18n in 10 languages via `SelectorLocalizationsDelegate`.
 
 ### Getting started
@@ -193,12 +193,12 @@ if (selected != null) {
 
 #### Theming
 
-**Per instance** — pass `selectorTheme` to any selector entry point (`SelectView`, `showSelect`, `showModalBottomSelect`, `PopupSelectBar`, `PopupSelectButton`):
+**Per instance** — pass `selectTheme` to any selector entry point (`SelectView`, `showSelect`, `showModalBottomSelect`, `PopupSelectBar`, `PopupSelectButton`):
 
 ```dart
 SelectView(
   delegate: ListSelectDelegate(entriesLoader: _fetchSort),
-  selectorTheme: SelectorThemeData(
+  selectTheme: SelectThemeData(
     Theme.of(context),
     selectedColor: Theme.of(context).colorScheme.primary,
     onSelectedColor: Theme.of(context).colorScheme.onPrimary,
@@ -215,7 +215,7 @@ MaterialApp(
       PopupSelectBarTheme(
         height: 48,
         labelColor: Colors.blue,
-        selectorTheme: SelectorThemeData(ThemeData.light()),
+        selectTheme: SelectThemeData(ThemeData.light()),
       ),
       PopupSelectButtonTheme(
         backgroundColor: Colors.green,

@@ -7,7 +7,7 @@ import 'state/selector_selection_rules.dart';
 import 'state/selector_state_snapshot.dart';
 import 'state/selector_state_tree.dart';
 
-/// Controller for a single [Selector] instance.
+/// Controller for a single [SelectDelegate] instance.
 ///
 /// This controller manages selector state and forwards user actions
 /// (change/apply/reset) to listeners registered via [addChangeListener],
@@ -15,9 +15,9 @@ import 'state/selector_state_tree.dart';
 ///
 /// The selection behavior ([selectionMode]) and the initial/reset selection
 /// state ([previousSelected]/[resetSelected]) are injected as plain data at
-/// construction time. The controller does not depend on the [Selector]
+/// construction time. The controller does not depend on the [SelectDelegate]
 /// configuration class.
-class SelectorController extends ChangeNotifier {
+class SelectController extends ChangeNotifier {
   /// The selection behavior applied at the top level of the selector.
   ///
   /// Determines how many entries can be selected at once. Per-category
@@ -41,11 +41,11 @@ class SelectorController extends ChangeNotifier {
   final SelectorSelectionRules _selectionRules = const SelectorSelectionRules();
   bool _isDisposed = false;
 
-  final List<SelectorCallback> _changeListeners = [];
-  final List<SelectorCallback> _applyListeners = [];
+  final List<SelectCallback> _changeListeners = [];
+  final List<SelectCallback> _applyListeners = [];
   final List<VoidCallback> _resetListeners = [];
 
-  SelectorController({
+  SelectController({
     required this.selectionMode,
     this.previousSelected,
     this.resetSelected,
@@ -54,26 +54,26 @@ class SelectorController extends ChangeNotifier {
   /// Registers a listener to be called when the selection changes.
   ///
   /// Returns a [VoidCallback] that unregisters the listener when called.
-  VoidCallback addChangeListener(SelectorCallback listener) {
+  VoidCallback addChangeListener(SelectCallback listener) {
     _changeListeners.add(listener);
     return () => removeChangeListener(listener);
   }
 
   /// Unregisters a previously registered change listener.
-  void removeChangeListener(SelectorCallback listener) {
+  void removeChangeListener(SelectCallback listener) {
     _changeListeners.remove(listener);
   }
 
   /// Registers a listener to be called when the selection is applied.
   ///
   /// Returns a [VoidCallback] that unregisters the listener when called.
-  VoidCallback addApplyListener(SelectorCallback listener) {
+  VoidCallback addApplyListener(SelectCallback listener) {
     _applyListeners.add(listener);
     return () => removeApplyListener(listener);
   }
 
   /// Unregisters a previously registered apply listener.
-  void removeApplyListener(SelectorCallback listener) {
+  void removeApplyListener(SelectCallback listener) {
     _applyListeners.remove(listener);
   }
 
@@ -363,8 +363,8 @@ class SelectorController extends ChangeNotifier {
 
       if (root.selectionMode == SelectionMode.single) {
         final any = root.children?.singleWhereOrNull(testAnyElement);
-        selectedChildren.removeWhere(
-            (e) => e is SelectChildEntry && e.parentId == root.id);
+        selectedChildren
+            .removeWhere((e) => e is SelectChildEntry && e.parentId == root.id);
         if (any != null) {
           selectedChildren.add(any);
           stateTree.mutableSelectedEntriesAtLevel(0).add(root);
@@ -518,9 +518,9 @@ class SelectorController extends ChangeNotifier {
     }
   }
 
-  static SelectorController? of(BuildContext context) {
+  static SelectController? of(BuildContext context) {
     return context
-        .dependOnInheritedWidgetOfExactType<_InheritedSelectorControllerScope>()
+        .dependOnInheritedWidgetOfExactType<_InheritedSelectControllerScope>()
         ?.controller;
   }
 
@@ -534,25 +534,24 @@ class SelectorController extends ChangeNotifier {
   }
 }
 
-class _InheritedSelectorControllerScope extends InheritedWidget {
-  final SelectorController controller;
+class _InheritedSelectControllerScope extends InheritedWidget {
+  final SelectController controller;
 
-  const _InheritedSelectorControllerScope(
+  const _InheritedSelectControllerScope(
       {required super.child, required this.controller});
 
   @override
-  bool updateShouldNotify(
-      covariant _InheritedSelectorControllerScope oldWidget) {
+  bool updateShouldNotify(covariant _InheritedSelectControllerScope oldWidget) {
     return oldWidget.controller != controller;
   }
 }
 
-class SelectorControllerProvider extends StatelessWidget {
-  final SelectorController controller;
+class SelectControllerProvider extends StatelessWidget {
+  final SelectController controller;
   final Widget child;
 
-  /// Provides a [SelectorController] to descendants.
-  const SelectorControllerProvider({
+  /// Provides a [SelectController] to descendants.
+  const SelectControllerProvider({
     super.key,
     required this.controller,
     required this.child,
@@ -560,9 +559,31 @@ class SelectorControllerProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _InheritedSelectorControllerScope(
+    return _InheritedSelectControllerScope(
       controller: controller,
       child: child,
     );
   }
 }
+
+/// Deprecated alias for [SelectController].
+///
+/// The `Selector`-prefixed name was renamed to drop the redundant `Selector`
+/// prefix. This alias is kept for backward compatibility and will be removed in
+/// a future minor version.
+@Deprecated(
+  'Use SelectController instead. This alias will be removed in a future minor '
+  'version.',
+)
+typedef SelectorController = SelectController;
+
+/// Deprecated alias for [SelectControllerProvider].
+///
+/// The `Selector`-prefixed name was renamed to drop the redundant `Selector`
+/// prefix. This alias is kept for backward compatibility and will be removed in
+/// a future minor version.
+@Deprecated(
+  'Use SelectControllerProvider instead. This alias will be removed in a '
+  'future minor version.',
+)
+typedef SelectorControllerProvider = SelectControllerProvider;

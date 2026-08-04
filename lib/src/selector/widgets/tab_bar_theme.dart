@@ -3,7 +3,7 @@ import 'dart:ui' show lerpDouble;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../selector_theme.dart';
+import '../select_theme.dart';
 import 'tab_bar.dart';
 
 /// Defines a theme for [SelectorTabBar] widgets.
@@ -83,7 +83,7 @@ class SelectorTabBarTheme with Diagnosticable {
   }
 
   static SelectorTabBarTheme of(BuildContext context) {
-    return SelectorTheme.of(context).tabBarTheme;
+    return SelectTheme.of(context).tabBarTheme;
   }
 
   /// Linearly interpolates between two tab bar themes.

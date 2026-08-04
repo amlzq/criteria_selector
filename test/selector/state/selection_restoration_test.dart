@@ -78,9 +78,9 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(controller.isSelectorShowing, isTrue);
-      expect(controller.selectorController, isNotNull);
+      expect(controller.selectController, isNotNull);
       expect(
-          controller.selectorController!.previousSelected!
+          controller.selectController!.previousSelected!
               .any((e) => e.id == 'a'),
           isTrue);
     });

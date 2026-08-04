@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'dropdown_overlay_style.dart';
-import 'selector/selector_theme_data.dart';
+import 'selector/select_theme_data.dart';
 
 /// Theme extension for [PopupSelectButton].
 ///
@@ -23,8 +23,18 @@ class PopupSelectButtonTheme extends ThemeExtension<PopupSelectButtonTheme> {
     this.padding,
     this.elevation,
     this.overlayStyle,
-    this.selectorTheme,
-  });
+    SelectThemeData? selectTheme,
+    @Deprecated(
+      'Use selectTheme instead. This parameter will be removed in a future '
+      'minor version.',
+    )
+    SelectThemeData? selectorTheme,
+  })  : assert(
+          selectTheme == null || selectorTheme == null,
+          'Provide either selectTheme or the deprecated selectorTheme, '
+          'but not both.',
+        ),
+        selectTheme = selectorTheme ?? selectTheme;
 
   /// Overrides the default value of the button background color.
   final Color? backgroundColor;
@@ -63,7 +73,17 @@ class PopupSelectButtonTheme extends ThemeExtension<PopupSelectButtonTheme> {
   final DropdownOverlayStyle? overlayStyle;
 
   /// Default theme overrides applied to selector widgets inside the overlay.
-  final SelectorThemeData? selectorTheme;
+  final SelectThemeData? selectTheme;
+
+  /// Deprecated alias for [selectTheme].
+  ///
+  /// Use [selectTheme] instead. This getter is kept only for backward
+  /// compatibility and will be removed in a future minor version.
+  @Deprecated(
+    'Use selectTheme instead. This getter will be removed in a future '
+    'minor version.',
+  )
+  SelectThemeData? get selectorTheme => selectTheme;
 
   @override
   PopupSelectButtonTheme copyWith({
@@ -79,7 +99,7 @@ class PopupSelectButtonTheme extends ThemeExtension<PopupSelectButtonTheme> {
     EdgeInsetsGeometry? padding,
     double? elevation,
     DropdownOverlayStyle? overlayStyle,
-    SelectorThemeData? selectorTheme,
+    SelectThemeData? selectTheme,
   }) {
     return PopupSelectButtonTheme(
       backgroundColor: backgroundColor ?? this.backgroundColor,
@@ -94,7 +114,7 @@ class PopupSelectButtonTheme extends ThemeExtension<PopupSelectButtonTheme> {
       padding: padding ?? this.padding,
       elevation: elevation ?? this.elevation,
       overlayStyle: overlayStyle ?? this.overlayStyle,
-      selectorTheme: selectorTheme ?? this.selectorTheme,
+      selectTheme: selectTheme ?? this.selectTheme,
     );
   }
 
@@ -117,7 +137,7 @@ class PopupSelectButtonTheme extends ThemeExtension<PopupSelectButtonTheme> {
         padding,
         elevation,
         overlayStyle,
-        selectorTheme,
+        selectTheme,
       );
 
   @override
@@ -141,7 +161,7 @@ class PopupSelectButtonTheme extends ThemeExtension<PopupSelectButtonTheme> {
         other.padding == padding &&
         other.elevation == elevation &&
         other.overlayStyle == overlayStyle &&
-        other.selectorTheme == selectorTheme;
+        other.selectTheme == selectTheme;
   }
 
   @override
@@ -171,8 +191,7 @@ class PopupSelectButtonTheme extends ThemeExtension<PopupSelectButtonTheme> {
               ? elevation
               : other.elevation,
       overlayStyle: overlayStyle,
-      selectorTheme:
-          SelectorThemeData.lerp(selectorTheme, other.selectorTheme, t),
+      selectTheme: SelectThemeData.lerp(selectTheme, other.selectTheme, t),
     );
   }
 }
