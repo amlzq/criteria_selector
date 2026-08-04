@@ -44,7 +44,7 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
       <String, SelectorDelegate>{};
 
   var _params = const PlaygroundParams(
-    entryPoint: EntryPoint.box,
+    entryPoint: EntryPoint.view,
     delegate: Delegate.cascading,
     selectionMode: SelectionMode.multiple,
     crossAxisCount: 4,
@@ -93,7 +93,7 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
 
     // Add the playground theme *above* the scoped [Navigator] so that routes
     // pushed by [showSelect] / [showModalBottomSelect] /
-    // [DropdownSelectorBar] / [DropdownSelectorButton] (which all use the
+    // [PopupSelectBar] / [PopupSelectButton] (which all use the
     // scoped navigator via `useRootNavigator: false`) also inherit this theme.
     // If the [Theme] is placed *inside* the navigator's base page, only the
     // base screen gets it while the route overlay (which lives outside the
@@ -101,10 +101,10 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
     // selector popup ignore the dark/light toggle.
     final paramThemeWithExtensions = paramTheme.copyWith(
       extensions: <ThemeExtension<dynamic>>[
-        DropdownSelectorBarTheme(
+        PopupSelectBarTheme(
           selectorTheme: SelectorThemeData(paramTheme),
         ),
-        DropdownSelectorButtonTheme(
+        PopupSelectButtonTheme(
           selectorTheme: SelectorThemeData(paramTheme),
         ),
       ],
@@ -141,7 +141,7 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
             MaterialPage<void>(
               // Keep a constant key so switching the playground theme does NOT
               // tear down and rebuild the base route: a changing key would
-              // dispose the SelectView / DropdownSelectorBar subtrees, drop
+              // dispose the SelectView / PopupSelectBar subtrees, drop
               // their controllers and re-fetch selector data (showing a skeleton
               // flash) — a visible hitch. Instead the theme is applied *inside*
               // this page via the [Theme] below, whose dependents rebuild in

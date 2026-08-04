@@ -3,15 +3,14 @@ import 'package:flutter/material.dart';
 import 'dropdown_overlay_style.dart';
 import 'selector/selector_theme_data.dart';
 
-/// Theme extension for [DropdownSelectorButton].
+/// Theme extension for [PopupSelectButton].
 ///
 /// Add this extension to your app theme to override the default visuals of the
 /// three button variants (elevated / filled / outlined) and the overlay/selector
 /// styles used when the panel is opened.
 @immutable
-class DropdownSelectorButtonTheme
-    extends ThemeExtension<DropdownSelectorButtonTheme> {
-  const DropdownSelectorButtonTheme({
+class PopupSelectButtonTheme extends ThemeExtension<PopupSelectButtonTheme> {
+  const PopupSelectButtonTheme({
     this.backgroundColor,
     this.foregroundColor,
     this.overlayColor,
@@ -67,7 +66,7 @@ class DropdownSelectorButtonTheme
   final SelectorThemeData? selectorTheme;
 
   @override
-  DropdownSelectorButtonTheme copyWith({
+  PopupSelectButtonTheme copyWith({
     Color? backgroundColor,
     Color? foregroundColor,
     Color? overlayColor,
@@ -82,7 +81,7 @@ class DropdownSelectorButtonTheme
     DropdownOverlayStyle? overlayStyle,
     SelectorThemeData? selectorTheme,
   }) {
-    return DropdownSelectorButtonTheme(
+    return PopupSelectButtonTheme(
       backgroundColor: backgroundColor ?? this.backgroundColor,
       foregroundColor: foregroundColor ?? this.foregroundColor,
       overlayColor: overlayColor ?? this.overlayColor,
@@ -99,9 +98,9 @@ class DropdownSelectorButtonTheme
     );
   }
 
-  /// Returns the [DropdownSelectorButtonTheme] from the nearest [Theme], or null.
-  static DropdownSelectorButtonTheme? maybeOf(BuildContext context) {
-    return Theme.of(context).extension<DropdownSelectorButtonTheme>();
+  /// Returns the [PopupSelectButtonTheme] from the nearest [Theme], or null.
+  static PopupSelectButtonTheme? maybeOf(BuildContext context) {
+    return Theme.of(context).extension<PopupSelectButtonTheme>();
   }
 
   @override
@@ -129,7 +128,7 @@ class DropdownSelectorButtonTheme
     if (other.runtimeType != runtimeType) {
       return false;
     }
-    return other is DropdownSelectorButtonTheme &&
+    return other is PopupSelectButtonTheme &&
         other.backgroundColor == backgroundColor &&
         other.foregroundColor == foregroundColor &&
         other.overlayColor == overlayColor &&
@@ -146,12 +145,12 @@ class DropdownSelectorButtonTheme
   }
 
   @override
-  ThemeExtension<DropdownSelectorButtonTheme> lerp(
-      covariant ThemeExtension<DropdownSelectorButtonTheme>? other, double t) {
-    if (other is! DropdownSelectorButtonTheme) {
+  ThemeExtension<PopupSelectButtonTheme> lerp(
+      covariant ThemeExtension<PopupSelectButtonTheme>? other, double t) {
+    if (other is! PopupSelectButtonTheme) {
       return this;
     }
-    return DropdownSelectorButtonTheme(
+    return PopupSelectButtonTheme(
       backgroundColor: Color.lerp(backgroundColor, other.backgroundColor, t),
       foregroundColor: Color.lerp(foregroundColor, other.foregroundColor, t),
       overlayColor: Color.lerp(overlayColor, other.overlayColor, t),
@@ -177,3 +176,13 @@ class DropdownSelectorButtonTheme
     );
   }
 }
+
+/// Deprecated alias for [PopupSelectButtonTheme].
+///
+/// Use [PopupSelectButtonTheme] instead. This alias is kept only for backward
+/// compatibility and will be removed in a future minor version.
+@Deprecated(
+  'Use PopupSelectButtonTheme instead. '
+  'This alias will be removed in a future minor version.',
+)
+typedef DropdownSelectorButtonTheme = PopupSelectButtonTheme;

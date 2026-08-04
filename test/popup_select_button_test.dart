@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('DropdownSelectorButton', () {
+  group('PopupSelectButton', () {
     testWidgets('toggles overlay and rotates the icon on tap', (tester) async {
       var showed = false;
       var hidden = false;
@@ -11,7 +11,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: DropdownSelectorButton(
+            body: PopupSelectButton(
               label: 'Filter',
               selectorDelegate: ListSelectorDelegate(
                 entriesLoader: () async => <SelectorEntry<dynamic>>{
@@ -34,7 +34,7 @@ void main() {
       expect(showed, isTrue);
       // The trailing icon rotates 180° (visually) while the overlay is open.
       final rotationFinder = find.descendant(
-        of: find.byType(DropdownSelectorButton),
+        of: find.byType(PopupSelectButton),
         matching: find.byType(RotationTransition),
       );
       final rotation = tester.widget<RotationTransition>(rotationFinder);
@@ -56,7 +56,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: DropdownSelectorButton(
+            body: PopupSelectButton(
               label: 'Sort',
               selectorDelegate: ListSelectorDelegate(
                 entriesLoader: () async => <SelectorEntry<dynamic>>{
@@ -90,7 +90,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: DropdownSelectorButton(
+            body: PopupSelectButton(
               label: 'Sort',
               labelLoader: (selected) => '${selected.length} selected',
               selectorDelegate: ListSelectorDelegate(
@@ -120,13 +120,13 @@ void main() {
           home: Scaffold(
             body: Wrap(
               children: [
-                DropdownSelectorButton.elevated(
+                PopupSelectButton.elevated(
                   label: 'Elevated',
                   selectorDelegate: ListSelectorDelegate(
                     entriesLoader: () async => <SelectorEntry<dynamic>>{},
                   ),
                 ),
-                DropdownSelectorButton.outlined(
+                PopupSelectButton.outlined(
                   label: 'Outlined',
                   selectorDelegate: ListSelectorDelegate(
                     entriesLoader: () async => <SelectorEntry<dynamic>>{},

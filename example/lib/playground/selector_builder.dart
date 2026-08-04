@@ -321,9 +321,9 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
     );
 
     switch (p.entryPoint) {
-      case EntryPoint.box:
+      case EntryPoint.view:
         return Scaffold(
-          appBar: AppBar(title: Text(l10n.phoneBoxTitle)),
+          appBar: AppBar(title: Text(l10n.phoneViewTitle)),
           body: Column(
             children: <Widget>[
               Expanded(
@@ -355,7 +355,7 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
             ],
           ),
         );
-      case EntryPoint.dropdownBar:
+      case EntryPoint.popupBar:
         final tabDelegates = <SelectorDelegate>[
           _tabDelegate(Delegate.cascading),
           _tabDelegate(Delegate.grid),
@@ -364,13 +364,13 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
         ];
         return Scaffold(
           appBar: AppBar(
-            title: Text(l10n.phoneDropdownBarTitle),
-            bottom: DropdownSelectorBar(
-              tabs: <DropdownTab>[
-                DropdownTab(label: l10n.layoutCascading),
-                DropdownTab(label: l10n.layoutGrid),
-                DropdownTab(label: l10n.layoutFlatten),
-                DropdownTab(label: l10n.layoutList),
+            title: Text(l10n.phonePopupBarTitle),
+            bottom: PopupSelectBar(
+              tabs: <PopupTab>[
+                PopupTab(label: l10n.layoutCascading),
+                PopupTab(label: l10n.layoutGrid),
+                PopupTab(label: l10n.layoutFlatten),
+                PopupTab(label: l10n.layoutList),
               ],
               selectorDelegates: tabDelegates,
               onChanged: (tabData, selected) =>
@@ -386,14 +386,14 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
             ],
           ),
         );
-      case EntryPoint.dropdownButton:
+      case EntryPoint.popupButton:
         return Scaffold(
-          appBar: AppBar(title: Text(l10n.phoneDropdownButtonTitle)),
+          appBar: AppBar(title: Text(l10n.phonePopupButtonTitle)),
           body: Column(
             children: <Widget>[
               Expanded(
                 child: Center(
-                  child: DropdownSelectorButton(
+                  child: PopupSelectButton(
                     selectorDelegate: widget.delegate,
                     label: l10n.filterLabel,
                     onChanged: (selected) => _onChanged(selected),
@@ -422,7 +422,7 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
                         );
                         _onApplied(result);
                       },
-                      child: Text(l10n.openSelector),
+                      child: Text(l10n.openSelect),
                     ),
                   ),
                 ),
@@ -447,7 +447,7 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
                         );
                         _onApplied(result);
                       },
-                      child: Text(l10n.openSelector),
+                      child: Text(l10n.openSelect),
                     ),
                   ),
                 ),

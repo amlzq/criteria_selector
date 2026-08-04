@@ -17,7 +17,7 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
-  final DropdownSelectorController _controller = DropdownSelectorController();
+  final PopupSelectController _controller = PopupSelectController();
   late final HouseRepository _repo;
   late final HouseFiltersRepository _filtersRepo;
   HouseFilter? _filter;
@@ -59,7 +59,7 @@ class _MapPageState extends State<MapPage> {
   }
 
   HouseFilter? _dropdownSelectorResultParser(
-      DropdownTabData tabData, SelectorEntries selected) {
+      PopupTabData tabData, SelectorEntries selected) {
     final filter = HouseFilter(cityId: userCityId);
     if (tabData.index == 0) {
       // 区域
@@ -136,7 +136,7 @@ class _MapPageState extends State<MapPage> {
   }
 
   void _handleSelectorChange(
-      DropdownTabData tabData, SelectorEntries selected) async {
+      PopupTabData tabData, SelectorEntries selected) async {
     final l10n = AppLocalizations.of(context);
     _filter = _dropdownSelectorResultParser(tabData, selected);
     if (_filter == null) {
@@ -171,7 +171,7 @@ class _MapPageState extends State<MapPage> {
     }
   }
 
-  void _handleSelectorApply(DropdownTabData tabData, SelectorEntries selected) {
+  void _handleSelectorApply(PopupTabData tabData, SelectorEntries selected) {
     showSelectResult(context, selected);
 
     // Persist the applied selection to the repo so it can be restored on reopen.
@@ -200,8 +200,8 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final DropdownSelectorBarTheme dropdownTabBarTheme =
-        DropdownSelectorBarTheme.maybeOf(context)!;
+    final PopupSelectBarTheme dropdownTabBarTheme =
+        PopupSelectBarTheme.maybeOf(context)!;
     return Theme(
       data: Theme.of(context).copyWith(
         extensions: <ThemeExtension<dynamic>>[
@@ -216,10 +216,10 @@ class _MapPageState extends State<MapPage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(l10n?.onMap ?? ''),
-          bottom: DropdownSelectorBar(
+          bottom: PopupSelectBar(
             controller: _controller,
             tabs: [
-              DropdownTab(
+              PopupTab(
                 // tag: 'region',
                 label: l10n?.region ?? '',
                 // labelLoader: (tabData, selected) {
@@ -227,9 +227,9 @@ class _MapPageState extends State<MapPage> {
                 //   return '自定义标签';
                 // },
               ),
-              DropdownTab(label: l10n?.price ?? ''),
-              DropdownTab(label: l10n?.floorPlan ?? ''),
-              DropdownTab(
+              PopupTab(label: l10n?.price ?? ''),
+              PopupTab(label: l10n?.floorPlan ?? ''),
+              PopupTab(
                 child: Image.asset('assets/sorting.png', width: 16, height: 16),
               ),
             ],

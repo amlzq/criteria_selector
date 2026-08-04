@@ -64,6 +64,63 @@ final result = await showModalBottomSelector(context: context, delegate: delegat
 final result = await showModalBottomSelect(context: context, delegate: delegate);
 ```
 
+### `DropdownSelector*` renamed to `PopupSelect*`
+
+The `DropdownSelector*` widgets and their related types have been renamed to the
+shorter `PopupSelect*` names. The old names are kept as deprecated type aliases
+(`typedef DropdownSelectorBar = PopupSelectBar;`) for backward compatibility and
+**will be removed in a future minor version**. Since the aliases are exact
+`typedef`s, this is a pure rename — no behavior changes.
+
+| Old name | New name |
+| --- | --- |
+| `DropdownSelectorBar` | `PopupSelectBar` |
+| `DropdownSelectorButton` | `PopupSelectButton` |
+| `DropdownSelectorBarTheme` | `PopupSelectBarTheme` |
+| `DropdownSelectorButtonTheme` | `PopupSelectButtonTheme` |
+| `DropdownSelectorController` | `PopupSelectController` |
+| `DropdownTabData` | `PopupTabData` |
+| `DropdownSelectorDirection` | `PopupSelectDirection` |
+| `DropdownTab` | `PopupTab` |
+| `DropdownSelectorBarCallback` | `PopupSelectBarCallback` |
+| `DropdownSelectorBarToggleCallback` | `PopupSelectBarToggleCallback` |
+| `DropdownSelectorBarWillToggleCallback` | `PopupSelectBarWillToggleCallback` |
+| `DropdownSelectorButtonVariant` | `PopupSelectButtonVariant` |
+| `DropdownSelectorButtonResultCallback` | `PopupSelectButtonResultCallback` |
+| `DropdownSelectorButtonWillToggleCallback` | `PopupSelectButtonWillToggleCallback` |
+| `DropdownSelectorControllerProvider` | `PopupSelectControllerProvider` |
+| `kDropdownSelectorBarHeight` | `kPopupSelectBarHeight` |
+| `kDropdownSelectorButtonHeight` | `kPopupSelectButtonHeight` |
+
+The source files were renamed along the way (`lib/src/dropdown_selector_bar.dart`
+→ `lib/src/popup_select_bar.dart`, `lib/src/dropdown_selector_button.dart` →
+`lib/src/popup_select_button.dart`, `lib/src/dropdown_selector_bar_theme.dart` →
+`lib/src/popup_select_bar_theme.dart`, `lib/src/dropdown_selector_button_theme.dart`
+→ `lib/src/popup_select_button_theme.dart`, and
+`lib/src/dropdown_selector_controller.dart` → `lib/src/popup_select_controller.dart`).
+The public export is updated, so no import change is required when using the
+package barrel.
+
+Migration: replace each old name with its new counterpart at every call site.
+
+```dart
+// Before
+DropdownSelectorBar(
+  tabs: const [DropdownTab(label: 'Filter')],
+  selectorDelegates: [delegate],
+  controller: DropdownSelectorController(),
+  direction: DropdownSelectorDirection.below,
+);
+
+// After
+PopupSelectBar(
+  tabs: const [PopupTab(label: 'Filter')],
+  selectorDelegates: [delegate],
+  controller: PopupSelectController(),
+  direction: PopupSelectDirection.below,
+);
+```
+
 ## MIGRATE TO 0.4.0
 
 ### Single `layout` replaces `listConfig` / `gridConfig` / `chipConfig`

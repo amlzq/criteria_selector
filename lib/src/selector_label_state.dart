@@ -3,17 +3,17 @@ import 'selector/selector_entry.dart';
 /// Builds a custom label for a selector / tab from the applied selection.
 ///
 /// Receives only the [selected] entries. This is the canonical label-loader type
-/// and is used by [DropdownTabData.labelLoader] / [DropdownTab.labelLoader] /
-/// [DropdownSelectorButton.labelLoader].
+/// and is used by [PopupTabData.labelLoader] / [PopupTab.labelLoader] /
+/// [PopupSelectButton.labelLoader].
 typedef SelectorLabelLoader = String Function(SelectorEntries selected);
 
-/// Tab-agnostic label / selection state shared by [DropdownSelectorBar]
-/// (via [DropdownTabData]) and [DropdownSelectorButton].
+/// Tab-agnostic label / selection state shared by [PopupSelectBar]
+/// (via [PopupTabData]) and [PopupSelectButton].
 ///
 /// It carries only what both a single-trigger button and a multi-tab bar need:
 /// an original (default) label, the currently displayed label, and whether a
-/// result has been applied. Tab identity ([DropdownTabData.index] /
-/// [DropdownTabData.tag]) lives exclusively in [DropdownTabData].
+/// result has been applied. Tab identity ([PopupTabData.index] /
+/// [PopupTabData.tag]) lives exclusively in [PopupTabData].
 class SelectorLabelState {
   SelectorLabelState({this.originalLabel, this.labelLoader});
 

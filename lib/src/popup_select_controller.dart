@@ -6,20 +6,20 @@ import 'selector/selector_entry.dart';
 import 'selector/selector_utils.dart';
 import 'selector_label_state.dart';
 
-/// Tab label data for [DropdownSelectorBar].
+/// Tab label data for [PopupSelectBar].
 ///
 /// Extends [SelectorLabelState] (which carries the label / result state shared
-/// with [DropdownSelectorButton]) by adding the tab identity ([index] / [tag]).
-/// A standalone [DropdownSelectorButton] never creates a [DropdownTabData]; it
-/// uses [SelectorLabelState] directly.
-class DropdownTabData extends SelectorLabelState {
-  /// Tab index in the [DropdownSelectorBar].
+/// with [PopupSelectButton]) by adding the tab identity ([index] / [tag]).
+/// A standalone [PopupSelectButton] never creates a [PopupTabData]; it uses
+/// [SelectorLabelState] directly.
+class PopupTabData extends SelectorLabelState {
+  /// Tab index in the [PopupSelectBar].
   final int index;
 
   /// Optional tag for identifying the tab.
   final String? tag;
 
-  DropdownTabData({
+  PopupTabData({
     required this.index,
     super.originalLabel,
     this.tag,
@@ -28,23 +28,23 @@ class DropdownTabData extends SelectorLabelState {
 
   @override
   String toString() =>
-      'DropdownTabData(index: $index, originalLabel: $originalLabel)';
+      'PopupTabData(index: $index, originalLabel: $originalLabel)';
 }
 
-/// Tab-agnostic change callback used internally by [DropdownSelectorController].
+/// Tab-agnostic change callback used internally by [PopupSelectController].
 ///
-/// Suitable for [DropdownSelectorButton], which has no tab concept, as well as
-/// multi-tab [DropdownSelectorBar].
+/// Suitable for [PopupSelectButton], which has no tab concept, as well as
+/// multi-tab [PopupSelectBar].
 typedef SelectorLabelChangeCallback = void Function(
     SelectorLabelState labelState, SelectorEntries selected);
 
-/// Controller for [DropdownSelectorBar] and its selector overlay.
+/// Controller for [PopupSelectBar] and its selector overlay.
 ///
-/// This controller stores per-tab label data ([DropdownTabData]) and manages
+/// This controller stores per-tab label data ([PopupTabData]) and manages
 /// the overlay visibility. It forwards selection events to listeners
 /// registered via [addChangeListener], [addApplyListener], and
 /// [addResetListener].
-class DropdownSelectorController extends ChangeNotifier {
+class PopupSelectController extends ChangeNotifier {
   static const Duration _kOverlayAnimationDuration =
       Duration(milliseconds: 240);
 
@@ -94,28 +94,28 @@ class DropdownSelectorController extends ChangeNotifier {
 
   /// Per-tab label and result data keyed by tab index.
   ///
-  /// For [DropdownSelectorBar] these are [DropdownTabData] (tab identity + label
-  /// state); for a standalone [DropdownSelectorButton] the lone trigger is a
+  /// For [PopupSelectBar] these are [PopupTabData] (tab identity + label
+  /// state); for a standalone [PopupSelectButton] the lone trigger is a
   /// plain [SelectorLabelState] stored at index `0`.
   final Map<int, SelectorLabelState> labelStateMap = {};
   bool _isDisposed = false;
 
-  /// Returns the nearest controller provided by [DropdownSelectorControllerProvider]
+  /// Returns the nearest controller provided by [PopupSelectControllerProvider]
   /// or null if none is found.
-  static DropdownSelectorController? maybeOf(BuildContext context) {
+  static PopupSelectController? maybeOf(BuildContext context) {
     return context
-        .dependOnInheritedWidgetOfExactType<_DropdownSelectorControllerScope>()
+        .dependOnInheritedWidgetOfExactType<_PopupSelectControllerScope>()
         ?.controller;
   }
 
-  /// Returns the nearest controller provided by [DropdownSelectorControllerProvider].
-  static DropdownSelectorController of(BuildContext context) {
-    final DropdownSelectorController? controller = maybeOf(context);
+  /// Returns the nearest controller provided by [PopupSelectControllerProvider].
+  static PopupSelectController of(BuildContext context) {
+    final PopupSelectController? controller = maybeOf(context);
     assert(() {
       if (controller == null) {
         throw FlutterError(
-          'DropdownSelectorController.of() was called with a context that does not '
-          'contain a DropdownSelectorControllerProvider widget.\n'
+          'PopupSelectController.of() was called with a context that does not '
+          'contain a PopupSelectControllerProvider widget.\n'
           'The context used was:\n'
           '  $context',
         );
@@ -150,8 +150,8 @@ class DropdownSelectorController extends ChangeNotifier {
   int? currentIndex;
 
   /// Returns the current tab data for [currentIndex].
-  DropdownTabData get currentTabData =>
-      labelStateMap[currentIndex]! as DropdownTabData;
+  PopupTabData get currentTabData =>
+      labelStateMap[currentIndex]! as PopupTabData;
 
   /// The selector previously used for the overlay.
   SelectorDelegate? previousSelectorDelegate;
@@ -159,14 +159,14 @@ class DropdownSelectorController extends ChangeNotifier {
   /// The [SelectorController] for the currently active selector panel, if any.
   ///
   /// Created when a selector is shown (see [_showSelector]) and disposed when
-  /// the overlay is hidden. Exposed so that [DropdownSelectorBar] can pass it to
+  /// the overlay is hidden. Exposed so that [PopupSelectBar] can pass it to
   /// [SelectorPanel] via its `controller` parameter.
   SelectorController? get selectorController => _selectorController;
   SelectorController? _selectorController;
 
   /// Localized "Multiple" text used when building apply result labels.
   ///
-  /// Injected by [DropdownSelectorBar] from the active localizations before the
+  /// Injected by [PopupSelectBar] from the active localizations before the
   /// overlay is shown.
   String? applyMultipleText;
 
@@ -426,7 +426,7 @@ class DropdownSelectorController extends ChangeNotifier {
     if (labelState == null) return;
     hideSelector();
     // Persist the applied selection back onto the delegate so that reopening
-    // the selector (DropdownSelectorBar / DropdownSelectorButton / showSelect
+    // the selector (PopupSelectBar / PopupSelectButton / showSelect
     // / showModalBottomSelect) reconstructs its SelectorController with
     // `previousSelected = selected`. Without this write-back, `selectedData`
     // keeps the initial `selectedEntriesLoader` value and the previous selection
@@ -471,7 +471,7 @@ class DropdownSelectorController extends ChangeNotifier {
   }) async {
     if (_isDisposed) return false;
     final labelState = labelStateMap[tabIndex];
-    if (labelState is! DropdownTabData) return false;
+    if (labelState is! PopupTabData) return false;
     final tabData = labelState;
 
     final selector = _selectorAt(tabIndex);
@@ -487,7 +487,7 @@ class DropdownSelectorController extends ChangeNotifier {
       return false;
     }
 
-    final ctx = _DropdownSelectorApplyContext(selectedEntryIds);
+    final ctx = _PopupSelectApplyContext(selectedEntryIds);
     final selected = _buildAppliedSelection(entries.toList(), ctx);
     if (ctx.invalidCategoryHit) return false;
     if (ctx.invalidCustomHit) return false;
@@ -504,7 +504,7 @@ class DropdownSelectorController extends ChangeNotifier {
 
   Future<bool> select(int tabIndex, Set<String> selectedEntryIds) async {
     if (_isDisposed) return false;
-    if (labelStateMap[tabIndex] is! DropdownTabData) return false;
+    if (labelStateMap[tabIndex] is! PopupTabData) return false;
 
     final selector = _selectorAt(tabIndex);
     if (selector == null) return false;
@@ -523,7 +523,7 @@ class DropdownSelectorController extends ChangeNotifier {
       return false;
     }
 
-    final ctx = _DropdownSelectorApplyContext(selectedEntryIds);
+    final ctx = _PopupSelectApplyContext(selectedEntryIds);
     final selected = _buildAppliedSelection(entries.toList(), ctx);
     if (ctx.invalidCategoryHit) return false;
     if (ctx.invalidCustomHit) return false;
@@ -536,7 +536,7 @@ class DropdownSelectorController extends ChangeNotifier {
 
   static SelectorEntries _buildAppliedSelection(
     List<SelectorEntry> roots,
-    _DropdownSelectorApplyContext ctx,
+    _PopupSelectApplyContext ctx,
   ) {
     final SelectorEntries result = {};
     for (final root in roots) {
@@ -549,7 +549,7 @@ class DropdownSelectorController extends ChangeNotifier {
 
   static SelectorEntry? _cropEntry(
     SelectorEntry entry,
-    _DropdownSelectorApplyContext ctx,
+    _PopupSelectApplyContext ctx,
   ) {
     if (entry is SelectorCategoryEntry) {
       if (ctx.selectedEntryIds.contains(entry.id)) {
@@ -676,36 +676,35 @@ class DropdownSelectorController extends ChangeNotifier {
   }
 }
 
-class _DropdownSelectorApplyContext {
+class _PopupSelectApplyContext {
   final Set<String> selectedEntryIds;
   bool invalidCategoryHit = false;
   bool invalidCustomHit = false;
   int matchedCount = 0;
 
-  _DropdownSelectorApplyContext(this.selectedEntryIds);
+  _PopupSelectApplyContext(this.selectedEntryIds);
 }
 
-class _DropdownSelectorControllerScope extends InheritedWidget {
-  final DropdownSelectorController? controller;
+class _PopupSelectControllerScope extends InheritedWidget {
+  final PopupSelectController? controller;
 
-  const _DropdownSelectorControllerScope({
+  const _PopupSelectControllerScope({
     this.controller,
     required super.child,
   });
 
   @override
-  bool updateShouldNotify(
-      covariant _DropdownSelectorControllerScope oldWidget) {
+  bool updateShouldNotify(covariant _PopupSelectControllerScope oldWidget) {
     return controller != oldWidget.controller;
   }
 }
 
-/// Provides a [DropdownSelectorController] to descendants.
-class DropdownSelectorControllerProvider extends StatelessWidget {
-  final DropdownSelectorController? controller;
+/// Provides a [PopupSelectController] to descendants.
+class PopupSelectControllerProvider extends StatelessWidget {
+  final PopupSelectController? controller;
   final Widget child;
 
-  const DropdownSelectorControllerProvider({
+  const PopupSelectControllerProvider({
     super.key,
     this.controller,
     required this.child,
@@ -713,7 +712,36 @@ class DropdownSelectorControllerProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _DropdownSelectorControllerScope(
-        controller: controller, child: child);
+    return _PopupSelectControllerScope(controller: controller, child: child);
   }
 }
+
+/// Deprecated alias for [PopupSelectController].
+///
+/// Use [PopupSelectController] instead. This alias is kept only for backward
+/// compatibility and will be removed in a future minor version.
+@Deprecated(
+  'Use PopupSelectController instead. '
+  'This alias will be removed in a future minor version.',
+)
+typedef DropdownSelectorController = PopupSelectController;
+
+/// Deprecated alias for [PopupTabData].
+///
+/// Use [PopupTabData] instead. This alias is kept only for backward
+/// compatibility and will be removed in a future minor version.
+@Deprecated(
+  'Use PopupTabData instead. '
+  'This alias will be removed in a future minor version.',
+)
+typedef DropdownTabData = PopupTabData;
+
+/// Deprecated alias for [PopupSelectControllerProvider].
+///
+/// Use [PopupSelectControllerProvider] instead. This alias is kept only for
+/// backward compatibility and will be removed in a future minor version.
+@Deprecated(
+  'Use PopupSelectControllerProvider instead. '
+  'This alias will be removed in a future minor version.',
+)
+typedef DropdownSelectorControllerProvider = PopupSelectControllerProvider;

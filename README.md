@@ -1,4 +1,4 @@
-A highly customizable Flutter selector library. Supports SelectView, DropdownSelectorBar, DropdownSelectorButton, dialog, and bottom-sheet selectors.
+A highly customizable Flutter selector library. Supports SelectView, PopupSelectBar, PopupSelectButton, dialog, and bottom-sheet selectors.
 
 [Playground](https://criteria-selector.zeaon.dev/)
 
@@ -6,13 +6,13 @@ A highly customizable Flutter selector library. Supports SelectView, DropdownSel
 
 Two layers work together: **entry points** decide *where* the selector appears, and **delegates** decide *how* entries are laid out — any delegate plugs into any entry point.
 
-- **Entry points** — five ways to show a selector: `SelectView` (inline), `DropdownSelectorBar` (tab bar), `DropdownSelectorButton` (single trigger), `showSelect` (dialog), `showModalBottomSelect` (bottom sheet).
+- **Entry points** — five ways to show a selector: `SelectView` (inline), `PopupSelectBar` (tab bar), `PopupSelectButton` (single trigger), `showSelect` (dialog), `showModalBottomSelect` (bottom sheet).
 - **Delegates** — four layouts: `CascadingSelectorDelegate` (tree), `GridSelectorDelegate` (grid), `ListSelectorDelegate` (single column), `FlattenSelectorDelegate` (grid that keeps category grouping).
 - Single & multiple selection via `SelectionMode` (per category or as a delegate fallback).
 - Async data loading through `entriesLoader`.
 - Flexible entries: the "Any" entry clears a category, `SelectorRangeEntry.custom` takes user min/max input, and an `immediate` entry applies on tap without the action bar.
 - `skeletonBuilder` & `errorBuilder` for loading and error states.
-- Theming via `SelectorThemeData` and the `DropdownSelectorBarTheme` / `DropdownSelectorButtonTheme` extensions.
+- Theming via `SelectorThemeData` and the `PopupSelectBarTheme` / `PopupSelectButtonTheme` extensions.
 - Built-in i18n in 10 languages via `SelectorLocalizationsDelegate`.
 
 ### Getting started
@@ -98,18 +98,18 @@ SelectView(
 );
 ```
 
-#### DropdownSelectorBar
+#### PopupSelectBar
 
 A tab bar (`PreferredSizeWidget`) that opens an overlay selector when a tab is tapped. Provide `tabs` for the bar and a matching `selectorDelegates` list (one per tab). Results arrive via `onChanged` / `onApplied` / `onReset`.
 
 ```dart
-DropdownSelectorBar(
+PopupSelectBar(
   tabs: const [
-    DropdownTab(label: 'Neighborhood'),
-    DropdownTab(label: 'Price'),
-    DropdownTab(label: 'Rooms'),
-    DropdownTab(label: 'More'),
-    DropdownTab(label: 'Sort'),
+    PopupTab(label: 'Neighborhood'),
+    PopupTab(label: 'Price'),
+    PopupTab(label: 'Rooms'),
+    PopupTab(label: 'More'),
+    PopupTab(label: 'Sort'),
   ],
   selectorDelegates: [
     CascadingSelectorDelegate(entriesLoader: _fetchNeighborhood),
@@ -119,43 +119,41 @@ DropdownSelectorBar(
     ListSelectorDelegate(entriesLoader: _fetchSort),
   ],
   onApplied: (tabData, selected) {
-    // tabData is the DropdownTabData; selected is the SelectorEntries
+    // tabData is the PopupTabData; selected is the SelectorEntries
   },
 );
 ```
 
-![DropdownSelectorBar](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/bar.gif)
+![PopupSelectBar](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/bar.gif)
 
-#### DropdownSelectorButton
+#### PopupSelectButton
 
-A single-trigger alternative to `DropdownSelectorBar` — opens a selector overlay on tap, like `PopupMenuButton`. It takes one `selectorDelegate` and a `label`/`child`. Three variants: filled (default), `.elevated(...)`, and `.outlined(...)`.
+A single-trigger alternative to `PopupSelectBar` — opens a selector overlay on tap, like `PopupMenuButton`. It takes one `selectorDelegate` and a `label`/`child`. Three variants: filled (default), `.elevated(...)`, and `.outlined(...)`.
 
 ```dart
-DropdownSelectorButton(
+PopupSelectButton(
   label: 'Neighborhood',
   selectorDelegate: GridSelectorDelegate(crossAxisCount: 3, entriesLoader: _fetchNeighborhood),
   onApplied: (tabData, selected) { /* ... */ },
 );
 
-DropdownSelectorButton.elevated(
+PopupSelectButton.elevated(
   label: 'Price',
   selectorDelegate: GridSelectorDelegate(crossAxisCount: 3, entriesLoader: _fetchPrice),
 );
 
-DropdownSelectorButton.outlined(
+PopupSelectButton.outlined(
   label: 'Rooms',
   icon: const Icon(Icons.filter_alt_outlined),
   selectorDelegate: GridSelectorDelegate(crossAxisCount: 3, entriesLoader: _fetchRooms),
 );
 ```
 
-![DropdownSelectorButton](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/button.gif)
+![PopupSelectButton](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/button.gif)
 
 #### showSelect
 
 Shows a selector in a modal dialog. Returns the selected `SelectorEntries` when applied, or `null` when dismissed. In single-selection mode, tapping an item applies immediately; in multi-selection mode, "Apply" in the action bar confirms.
-
-> `showSelector` is retained as a deprecated alias of `showSelect` for backward compatibility and will be removed in a future minor version.
 
 ```dart
 final SelectorEntries? selected = await showSelect(
@@ -195,7 +193,7 @@ if (selected != null) {
 
 #### Theming
 
-**Per instance** — pass `selectorTheme` to any selector entry point (`SelectView`, `showSelect`, `showModalBottomSelect`, `DropdownSelectorBar`, `DropdownSelectorButton`):
+**Per instance** — pass `selectorTheme` to any selector entry point (`SelectView`, `showSelect`, `showModalBottomSelect`, `PopupSelectBar`, `PopupSelectButton`):
 
 ```dart
 SelectView(
@@ -208,18 +206,18 @@ SelectView(
 );
 ```
 
-**Globally** — register `DropdownSelectorBarTheme` and `DropdownSelectorButtonTheme` as `ThemeData` extensions so every bar/button picks them up automatically:
+**Globally** — register `PopupSelectBarTheme` and `PopupSelectButtonTheme` as `ThemeData` extensions so every bar/button picks them up automatically:
 
 ```dart
 MaterialApp(
   theme: ThemeData(
     extensions: [
-      DropdownSelectorBarTheme(
+      PopupSelectBarTheme(
         height: 48,
         labelColor: Colors.blue,
         selectorTheme: SelectorThemeData(ThemeData.light()),
       ),
-      DropdownSelectorButtonTheme(
+      PopupSelectButtonTheme(
         backgroundColor: Colors.green,
         foregroundColor: Colors.white,
       ),

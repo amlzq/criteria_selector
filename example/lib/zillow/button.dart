@@ -122,12 +122,12 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('DropdownSelectorButton')),
+      appBar: AppBar(title: const Text('PopupSelectButton')),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 16),
-          DropdownSelectorButton(
+          PopupSelectButton(
             label: 'Neighborhood',
             selectorDelegate: CascadingSelectorDelegate(
               entriesLoader: _filtersRepo.fetchNeighborhoodData,
@@ -158,7 +158,7 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
             },
           ),
           Center(
-            child: DropdownSelectorButton.elevated(
+            child: PopupSelectButton.elevated(
               label: 'Price',
               selectorDelegate: GridSelectorDelegate(
                 entriesLoader: _filtersRepo.fetchPriceData,
@@ -193,7 +193,7 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
           ),
           Align(
             alignment: Alignment.bottomRight,
-            child: DropdownSelectorButton.outlined(
+            child: PopupSelectButton.outlined(
               label: 'Rooms',
               selectorDelegate: FlattenSelectorDelegate(
                 entriesLoader: _filtersRepo.fetchRoomsData,
@@ -229,7 +229,7 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 50),
-            child: DropdownSelectorButton(
+            child: PopupSelectButton(
               label: 'More',
               icon: const Icon(Icons.filter_alt_outlined),
               selectorDelegate: ListSelectorDelegate(

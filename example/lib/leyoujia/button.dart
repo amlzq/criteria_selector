@@ -154,12 +154,12 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('DropdownSelectorButton')),
+      appBar: AppBar(title: const Text('PopupSelectButton')),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 16),
-          DropdownSelectorButton(
+          PopupSelectButton(
             label: '区域',
             selectorDelegate: CascadingSelectorDelegate(
               entriesLoader: _filtersRepo.fetchRegionData,
@@ -188,7 +188,7 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
             },
           ),
           Center(
-            child: DropdownSelectorButton.elevated(
+            child: PopupSelectButton.elevated(
               label: '价格',
               labelLoader: (selected) {
                 return '价格${selected.length}';
@@ -234,7 +234,7 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
           ),
           Align(
             alignment: Alignment.bottomRight,
-            child: DropdownSelectorButton.outlined(
+            child: PopupSelectButton.outlined(
               label: '户型',
               selectorDelegate: FlattenSelectorDelegate(
                 entriesLoader: _filtersRepo.fetchFloorPlanBuyData,
@@ -265,7 +265,7 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 50),
-            child: DropdownSelectorButton(
+            child: PopupSelectButton(
               label: '更多',
               icon: const Icon(Icons.filter_alt_outlined),
               selectorDelegate: ListSelectorDelegate(

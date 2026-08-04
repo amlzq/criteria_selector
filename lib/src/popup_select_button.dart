@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 
 import 'dropdown_overlay.dart';
 import 'dropdown_overlay_style.dart';
-import 'dropdown_selector_button_theme.dart';
-import 'dropdown_selector_controller.dart';
 import 'i18n/localizations.dart';
+import 'popup_select_button_theme.dart';
+import 'popup_select_controller.dart';
 import 'selector/selector_delegate.dart';
 import 'selector/selector_entry.dart';
 import 'selector_label_state.dart';
 import 'selector_overlay_host.dart';
 
-/// Visual variants for [DropdownSelectorButton].
-enum DropdownSelectorButtonVariant {
+/// Visual variants for [PopupSelectButton].
+enum PopupSelectButtonVariant {
   /// A button with elevation and a subtle surface tint (like [ElevatedButton]).
   elevated,
 
@@ -26,32 +26,73 @@ enum DropdownSelectorButtonVariant {
 }
 
 /// Callback invoked with the selected entries only — used by
-typedef DropdownSelectorButtonResultCallback = void Function(
+typedef PopupSelectButtonResultCallback = void Function(
     SelectorEntries selected);
 
-typedef DropdownSelectorButtonWillToggleCallback = FutureOr<bool> Function();
+typedef PopupSelectButtonWillToggleCallback = FutureOr<bool> Function();
 
 /// Default height used when the button size cannot be measured yet.
-const kDropdownSelectorButtonHeight = 40.0;
+const kPopupSelectButtonHeight = 40.0;
 
-/// A single-button alternative to [DropdownSelectorBar].
+/// Deprecated alias for [PopupSelectButtonVariant].
 ///
-/// Where [DropdownSelectorBar] renders a horizontal row of tabs, this widget
+/// Use [PopupSelectButtonVariant] instead. This alias is kept only for
+/// backward compatibility and will be removed in a future minor version.
+@Deprecated(
+  'Use PopupSelectButtonVariant instead. '
+  'This alias will be removed in a future minor version.',
+)
+typedef DropdownSelectorButtonVariant = PopupSelectButtonVariant;
+
+/// Deprecated alias for [PopupSelectButtonResultCallback].
+///
+/// Use [PopupSelectButtonResultCallback] instead. This alias is kept only for
+/// backward compatibility and will be removed in a future minor version.
+@Deprecated(
+  'Use PopupSelectButtonResultCallback instead. '
+  'This alias will be removed in a future minor version.',
+)
+typedef DropdownSelectorButtonResultCallback = PopupSelectButtonResultCallback;
+
+/// Deprecated alias for [PopupSelectButtonWillToggleCallback].
+///
+/// Use [PopupSelectButtonWillToggleCallback] instead. This alias is kept only
+/// for backward compatibility and will be removed in a future minor version.
+@Deprecated(
+  'Use PopupSelectButtonWillToggleCallback instead. '
+  'This alias will be removed in a future minor version.',
+)
+typedef DropdownSelectorButtonWillToggleCallback
+    = PopupSelectButtonWillToggleCallback;
+
+/// Deprecated alias for [kPopupSelectButtonHeight].
+///
+/// Use [kPopupSelectButtonHeight] instead. This alias is kept only for backward
+/// compatibility and will be removed in a future minor version.
+@Deprecated(
+  'Use kPopupSelectButtonHeight instead. '
+  'This alias will be removed in a future minor version.',
+)
+const kDropdownSelectorButtonHeight = kPopupSelectButtonHeight;
+
+/// A single-button alternative to [PopupSelectBar].
+///
+/// Where [PopupSelectBar] renders a horizontal row of tabs, this widget
 /// exposes a single trigger styled like a Material button (one of
-/// [DropdownSelectorButtonVariant]) that opens the selector overlay on tap,
+/// [PopupSelectButtonVariant]) that opens the selector overlay on tap,
 /// similar to [PopupMenuButton]. The interaction (overlay positioning,
 /// animation, dismissal on outside tap, auto-close on apply) is driven by the
-/// same [DropdownSelectorController] machinery as [DropdownSelectorBar].
+/// same [PopupSelectController] machinery as [PopupSelectBar].
 ///
 /// Provide a [selectorDelegate] to define the selector content, and a [label]
 /// or [child] for the trigger. The trailing [icon] rotates while the overlay is
 /// open. After an apply, the button label is updated with the resulting label.
-class DropdownSelectorButton extends StatefulWidget {
+class PopupSelectButton extends StatefulWidget {
   /// Creates a filled button (the default variant).
-  const DropdownSelectorButton({
+  const PopupSelectButton({
     super.key,
     required this.selectorDelegate,
-    this.variant = DropdownSelectorButtonVariant.filled,
+    this.variant = PopupSelectButtonVariant.filled,
     this.label,
     this.child,
     this.icon,
@@ -64,13 +105,13 @@ class DropdownSelectorButton extends StatefulWidget {
     this.onApplied,
     this.onReset,
     this.labelLoader,
-    this.direction = DropdownSelectorDirection.below,
+    this.direction = PopupSelectDirection.below,
   }) : assert(label == null || child == null,
             'Provide either label or child, not both.');
 
   /// Creates an elevated button. The [variant] is fixed to
-  /// [DropdownSelectorButtonVariant.elevated].
-  const DropdownSelectorButton.elevated({
+  /// [PopupSelectButtonVariant.elevated].
+  const PopupSelectButton.elevated({
     super.key,
     required this.selectorDelegate,
     this.label,
@@ -85,14 +126,14 @@ class DropdownSelectorButton extends StatefulWidget {
     this.onApplied,
     this.onReset,
     this.labelLoader,
-    this.direction = DropdownSelectorDirection.below,
-  })  : variant = DropdownSelectorButtonVariant.elevated,
+    this.direction = PopupSelectDirection.below,
+  })  : variant = PopupSelectButtonVariant.elevated,
         assert(label == null || child == null,
             'Provide either label or child, not both.');
 
   /// Creates an outlined button. The [variant] is fixed to
-  /// [DropdownSelectorButtonVariant.outlined].
-  const DropdownSelectorButton.outlined({
+  /// [PopupSelectButtonVariant.outlined].
+  const PopupSelectButton.outlined({
     super.key,
     required this.selectorDelegate,
     this.label,
@@ -107,8 +148,8 @@ class DropdownSelectorButton extends StatefulWidget {
     this.onApplied,
     this.onReset,
     this.labelLoader,
-    this.direction = DropdownSelectorDirection.below,
-  })  : variant = DropdownSelectorButtonVariant.outlined,
+    this.direction = PopupSelectDirection.below,
+  })  : variant = PopupSelectButtonVariant.outlined,
         assert(label == null || child == null,
             'Provide either label or child, not both.');
 
@@ -116,7 +157,7 @@ class DropdownSelectorButton extends StatefulWidget {
   final SelectorDelegate selectorDelegate;
 
   /// Visual style of the trigger button.
-  final DropdownSelectorButtonVariant variant;
+  final PopupSelectButtonVariant variant;
 
   /// Default label shown on the trigger. Replaced by the applied result label
   /// after a selection is applied. Mutually exclusive with [child].
@@ -141,17 +182,17 @@ class DropdownSelectorButton extends StatefulWidget {
   /// Invoked just before the overlay is shown. The returned [Future] (if any)
   /// is awaited before the overlay appears, e.g. to scroll a header into place.
   /// Returning `false` cancels the show, leaving the overlay hidden.
-  final DropdownSelectorButtonWillToggleCallback? onSelectorWillShow;
+  final PopupSelectButtonWillToggleCallback? onSelectorWillShow;
 
   /// Invoked just before the overlay is hidden. Returning `false` cancels the
   /// hide, leaving the overlay visible.
-  final DropdownSelectorButtonWillToggleCallback? onSelectorWillHide;
+  final PopupSelectButtonWillToggleCallback? onSelectorWillHide;
 
   /// Fired whenever a selector reports a selection change.
-  final DropdownSelectorButtonResultCallback? onChanged;
+  final PopupSelectButtonResultCallback? onChanged;
 
   /// Fired when a selector is applied.
-  final DropdownSelectorButtonResultCallback? onApplied;
+  final PopupSelectButtonResultCallback? onApplied;
 
   /// Fired when reset is triggered.
   final VoidCallback? onReset;
@@ -167,20 +208,20 @@ class DropdownSelectorButton extends StatefulWidget {
 
   /// Vertical placement of the selector panel relative to the trigger.
   ///
-  /// Defaults to [DropdownSelectorDirection.below], which always shows the
-  /// panel under the trigger. Use [DropdownSelectorDirection.adaptive] to let
+  /// Defaults to [PopupSelectDirection.below], which always shows the
+  /// panel under the trigger. Use [PopupSelectDirection.adaptive] to let
   /// it flip above when there is more room there, or
-  /// [DropdownSelectorDirection.above] to force the panel above. Regardless of
+  /// [PopupSelectDirection.above] to force the panel above. Regardless of
   /// the value, the panel is always kept fully on screen horizontally.
-  final DropdownSelectorDirection direction;
+  final PopupSelectDirection direction;
 
   @override
-  State<DropdownSelectorButton> createState() => _DropdownSelectorButtonState();
+  State<PopupSelectButton> createState() => _PopupSelectButtonState();
 }
 
-class _DropdownSelectorButtonState extends State<DropdownSelectorButton>
+class _PopupSelectButtonState extends State<PopupSelectButton>
     with SingleTickerProviderStateMixin {
-  late final DropdownSelectorController _controller;
+  late final PopupSelectController _controller;
   final SelectorLabelState _labelState = SelectorLabelState();
 
   VoidCallback? _removeChangeListener;
@@ -190,7 +231,7 @@ class _DropdownSelectorButtonState extends State<DropdownSelectorButton>
   @override
   void initState() {
     super.initState();
-    _controller = DropdownSelectorController();
+    _controller = PopupSelectController();
     _controller.addListener(_handleControllerTick);
     _removeChangeListener = _controller.addChangeListener(_handleWidgetChange);
     _removeApplyListener = _controller.addApplyListener(_handleWidgetApply);
@@ -203,7 +244,7 @@ class _DropdownSelectorButtonState extends State<DropdownSelectorButton>
   }
 
   @override
-  void didUpdateWidget(covariant DropdownSelectorButton oldWidget) {
+  void didUpdateWidget(covariant PopupSelectButton oldWidget) {
     super.didUpdateWidget(oldWidget);
     _controller.attachSelectorDelegates([widget.selectorDelegate]);
     _controller.attachTickerProvider(this);
@@ -258,10 +299,10 @@ class _DropdownSelectorButtonState extends State<DropdownSelectorButton>
 
   @override
   Widget build(BuildContext context) {
-    final DropdownSelectorButtonTheme defaults =
-        _DropdownSelectorButtonDefaults(context, widget.variant);
-    final DropdownSelectorButtonTheme? theme =
-        DropdownSelectorButtonTheme.maybeOf(context);
+    final PopupSelectButtonTheme defaults =
+        _PopupSelectButtonDefaults(context, widget.variant);
+    final PopupSelectButtonTheme? theme =
+        PopupSelectButtonTheme.maybeOf(context);
 
     final resolved = defaults.copyWith(
       backgroundColor: theme?.backgroundColor,
@@ -295,8 +336,7 @@ class _DropdownSelectorButtonState extends State<DropdownSelectorButton>
     );
   }
 
-  Widget _buildButton(
-      BuildContext context, DropdownSelectorButtonTheme resolved) {
+  Widget _buildButton(BuildContext context, PopupSelectButtonTheme resolved) {
     final textTheme = Theme.of(context).textTheme;
 
     final backgroundColor = resolved.backgroundColor!;
@@ -354,7 +394,7 @@ class _DropdownSelectorButtonState extends State<DropdownSelectorButton>
       shadowColor: resolved.shadowColor,
       surfaceTintColor: resolved.surfaceTintColor,
       shape: shape,
-      type: widget.variant == DropdownSelectorButtonVariant.outlined
+      type: widget.variant == PopupSelectButtonVariant.outlined
           ? MaterialType.transparency
           : MaterialType.button,
       child: InkWell(
@@ -377,15 +417,14 @@ class _DropdownSelectorButtonState extends State<DropdownSelectorButton>
   }
 }
 
-class _DropdownSelectorButtonDefaults extends DropdownSelectorButtonTheme {
-  _DropdownSelectorButtonDefaults(this.context, this.variant)
+class _PopupSelectButtonDefaults extends PopupSelectButtonTheme {
+  _PopupSelectButtonDefaults(this.context, this.variant)
       : super(
-          elevation:
-              variant == DropdownSelectorButtonVariant.elevated ? 1.0 : 0.0,
+          elevation: variant == PopupSelectButtonVariant.elevated ? 1.0 : 0.0,
         );
 
   final BuildContext context;
-  final DropdownSelectorButtonVariant variant;
+  final PopupSelectButtonVariant variant;
 
   late final ColorScheme _colors = Theme.of(context).colorScheme;
   late final TextTheme _textTheme = Theme.of(context).textTheme;
@@ -393,11 +432,11 @@ class _DropdownSelectorButtonDefaults extends DropdownSelectorButtonTheme {
   @override
   Color? get backgroundColor {
     switch (variant) {
-      case DropdownSelectorButtonVariant.elevated:
+      case PopupSelectButtonVariant.elevated:
         return _colors.surfaceContainerLow;
-      case DropdownSelectorButtonVariant.filled:
+      case PopupSelectButtonVariant.filled:
         return _colors.primary;
-      case DropdownSelectorButtonVariant.outlined:
+      case PopupSelectButtonVariant.outlined:
         return Colors.transparent;
     }
   }
@@ -405,11 +444,11 @@ class _DropdownSelectorButtonDefaults extends DropdownSelectorButtonTheme {
   @override
   Color? get foregroundColor {
     switch (variant) {
-      case DropdownSelectorButtonVariant.elevated:
+      case PopupSelectButtonVariant.elevated:
         return _colors.onSurface;
-      case DropdownSelectorButtonVariant.filled:
+      case PopupSelectButtonVariant.filled:
         return _colors.onPrimary;
-      case DropdownSelectorButtonVariant.outlined:
+      case PopupSelectButtonVariant.outlined:
         return _colors.primary;
     }
   }
@@ -419,13 +458,11 @@ class _DropdownSelectorButtonDefaults extends DropdownSelectorButtonTheme {
 
   @override
   Color? get surfaceTintColor =>
-      variant == DropdownSelectorButtonVariant.elevated
-          ? _colors.surfaceTint
-          : null;
+      variant == PopupSelectButtonVariant.elevated ? _colors.surfaceTint : null;
 
   @override
   BorderSide? get side {
-    if (variant == DropdownSelectorButtonVariant.outlined) {
+    if (variant == PopupSelectButtonVariant.outlined) {
       return BorderSide(color: _colors.outline);
     }
     return BorderSide.none;
@@ -449,3 +486,13 @@ class _DropdownSelectorButtonDefaults extends DropdownSelectorButtonTheme {
   @override
   Color? get overlayColor => foregroundColor?.withOpacity(0.12);
 }
+
+/// Deprecated alias for [PopupSelectButton].
+///
+/// Use [PopupSelectButton] instead. This alias is kept only for backward
+/// compatibility and will be removed in a future minor version.
+@Deprecated(
+  'Use PopupSelectButton instead. '
+  'This alias will be removed in a future minor version.',
+)
+typedef DropdownSelectorButton = PopupSelectButton;

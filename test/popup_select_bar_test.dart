@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('DropdownSelectorBar', () {
+  group('PopupSelectBar', () {
     testWidgets('toggles overlay and indicator on tap', (tester) async {
       var showed = false;
       var hidden = false;
-      final controller = DropdownSelectorController();
+      final controller = PopupSelectController();
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            appBar: DropdownSelectorBar(
+            appBar: PopupSelectBar(
               tabs: const [
-                DropdownTab(label: 'Filter'),
+                PopupTab(label: 'Filter'),
               ],
               selectorDelegates: [
                 ListSelectorDelegate(
@@ -48,7 +48,7 @@ void main() {
       expect(find.byIcon(Icons.arrow_drop_up), findsNothing);
       final expandedRotation = tester.widget<RotationTransition>(
         find.descendant(
-          of: find.byType(DropdownTab),
+          of: find.byType(PopupTab),
           matching: find.byType(RotationTransition),
         ),
       );
@@ -63,7 +63,7 @@ void main() {
       expect(find.byIcon(Icons.arrow_drop_down), findsOneWidget);
       final collapsedRotation = tester.widget<RotationTransition>(
         find.descendant(
-          of: find.byType(DropdownTab),
+          of: find.byType(PopupTab),
           matching: find.byType(RotationTransition),
         ),
       );
@@ -71,15 +71,15 @@ void main() {
     });
 
     testWidgets('applies selection and updates tab label', (tester) async {
-      ({DropdownTabData tabData, SelectorEntries selected})? applied;
-      final controller = DropdownSelectorController();
+      ({PopupTabData tabData, SelectorEntries selected})? applied;
+      final controller = PopupSelectController();
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            appBar: DropdownSelectorBar(
+            appBar: PopupSelectBar(
               tabs: const [
-                DropdownTab(label: 'Sort'),
+                PopupTab(label: 'Sort'),
               ],
               selectorDelegates: [
                 ListSelectorDelegate(
@@ -116,15 +116,15 @@ void main() {
     });
 
     testWidgets('uses labelGetter when provided', (tester) async {
-      ({DropdownTabData tabData, SelectorEntries selected})? applied;
-      final controller = DropdownSelectorController();
+      ({PopupTabData tabData, SelectorEntries selected})? applied;
+      final controller = PopupSelectController();
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            appBar: DropdownSelectorBar(
+            appBar: PopupSelectBar(
               tabs: [
-                DropdownTab(
+                PopupTab(
                   label: 'Price',
                   labelLoader: (selected) => 'Custom',
                 ),
@@ -161,16 +161,16 @@ void main() {
 
     testWidgets('fires onChanged and onReset in multiple selection',
         (tester) async {
-      ({DropdownTabData tabData, SelectorEntries selected})? changed;
+      ({PopupTabData tabData, SelectorEntries selected})? changed;
       var resetCalled = false;
-      final controller = DropdownSelectorController();
+      final controller = PopupSelectController();
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            appBar: DropdownSelectorBar(
+            appBar: PopupSelectBar(
               tabs: const [
-                DropdownTab(label: 'Multi'),
+                PopupTab(label: 'Multi'),
               ],
               selectorDelegates: [
                 ListSelectorDelegate(

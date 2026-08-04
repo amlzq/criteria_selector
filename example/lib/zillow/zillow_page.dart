@@ -28,7 +28,7 @@ class ZillowPage extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => const HousePage()),
                 );
               },
-              child: Text(l10n?.sell ?? 'DropdownSelectorBar'),
+              child: Text(l10n?.sell ?? 'PopupSelectBar'),
             ),
             TextButton(
               onPressed: () {
@@ -39,7 +39,7 @@ class ZillowPage extends StatelessWidget {
                   ),
                 );
               },
-              child: const Text('DropdownSelectorButton'),
+              child: const Text('PopupSelectButton'),
             ),
             TextButton(
               onPressed: () {

@@ -2,23 +2,23 @@ import 'package:criteria_selector/criteria_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// Unit tests for [DropdownSelectorController] behavior driven directly through
-/// its public API (rather than via simulated taps). The real [DropdownSelectorBar]
+/// Unit tests for [PopupSelectController] behavior driven directly through
+/// its public API (rather than via simulated taps). The real [PopupSelectBar]
 /// widget is mounted only to wire up the ticker provider, tab data and selector
 /// delegates the controller depends on; assertions then call
 /// `controller.toggleSelector` / `controller.hideSelector` directly.
 void main() {
-  group('DropdownSelectorController', () {
+  group('PopupSelectController', () {
     Future<void> pumpBar(
       WidgetTester tester,
-      DropdownSelectorController controller,
-      List<DropdownTab> tabs,
+      PopupSelectController controller,
+      List<PopupTab> tabs,
       List<SelectorDelegate> delegates,
     ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            appBar: DropdownSelectorBar(
+            appBar: PopupSelectBar(
               tabs: tabs,
               selectorDelegates: delegates,
               controller: controller,
@@ -30,11 +30,11 @@ void main() {
     }
 
     testWidgets('toggleSelector opens the requested panel', (tester) async {
-      final controller = DropdownSelectorController();
+      final controller = PopupSelectController();
       await pumpBar(
         tester,
         controller,
-        const [DropdownTab(label: 'T0'), DropdownTab(label: 'T1')],
+        const [PopupTab(label: 'T0'), PopupTab(label: 'T1')],
         [
           ListSelectorDelegate(
             entriesLoader: () async => {
@@ -62,11 +62,11 @@ void main() {
     testWidgets(
         'toggleSelector switches to another open panel without closing the '
         'overlay and renders the new panel content', (tester) async {
-      final controller = DropdownSelectorController();
+      final controller = PopupSelectController();
       await pumpBar(
         tester,
         controller,
-        const [DropdownTab(label: 'T0'), DropdownTab(label: 'T1')],
+        const [PopupTab(label: 'T0'), PopupTab(label: 'T1')],
         [
           ListSelectorDelegate(
             entriesLoader: () async => {
@@ -101,11 +101,11 @@ void main() {
 
     testWidgets('toggleSelector on the already-open panel closes it',
         (tester) async {
-      final controller = DropdownSelectorController();
+      final controller = PopupSelectController();
       await pumpBar(
         tester,
         controller,
-        const [DropdownTab(label: 'T0'), DropdownTab(label: 'T1')],
+        const [PopupTab(label: 'T0'), PopupTab(label: 'T1')],
         [
           ListSelectorDelegate(
             entriesLoader: () async => {
@@ -133,11 +133,11 @@ void main() {
     });
 
     testWidgets('hideSelector closes an open overlay', (tester) async {
-      final controller = DropdownSelectorController();
+      final controller = PopupSelectController();
       await pumpBar(
         tester,
         controller,
-        const [DropdownTab(label: 'T0')],
+        const [PopupTab(label: 'T0')],
         [
           ListSelectorDelegate(
             entriesLoader: () async => {
@@ -159,11 +159,11 @@ void main() {
 
     testWidgets('toggleSelector is a no-op for an out-of-range index',
         (tester) async {
-      final controller = DropdownSelectorController();
+      final controller = PopupSelectController();
       await pumpBar(
         tester,
         controller,
-        const [DropdownTab(label: 'T0')],
+        const [PopupTab(label: 'T0')],
         [
           ListSelectorDelegate(
             entriesLoader: () async => {

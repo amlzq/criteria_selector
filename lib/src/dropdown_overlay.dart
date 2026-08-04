@@ -10,8 +10,8 @@ const kDropdownOverlayMaxHeightFactor = 0.7;
 const kDropdownOverlayScreenMargin = 0.0;
 
 /// Vertical placement strategy for the selector overlay relative to its trigger
-/// (a [DropdownSelectorButton] or [DropdownSelectorBar]).
-enum DropdownSelectorDirection {
+/// (a [PopupSelectButton] or [PopupSelectBar]).
+enum PopupSelectDirection {
   /// Always present the panel below the trigger.
   below,
 
@@ -24,6 +24,16 @@ enum DropdownSelectorDirection {
   adaptive,
 }
 
+/// Deprecated alias for [PopupSelectDirection].
+///
+/// Use [PopupSelectDirection] instead. This alias is kept only for backward
+/// compatibility and will be removed in a future minor version.
+@Deprecated(
+  'Use PopupSelectDirection instead. '
+  'This alias will be removed in a future minor version.',
+)
+typedef DropdownSelectorDirection = PopupSelectDirection;
+
 /// Overlay container that hosts an arbitrary [child] widget (typically a
 /// [SelectorPanel]).
 ///
@@ -31,7 +41,7 @@ enum DropdownSelectorDirection {
 /// animation, max-height constraint, and on-screen positioning. Given the
 /// global [targetRect] of the trigger and a [direction], it keeps the panel
 /// fully visible by translating it (never scaling it) within the screen, and
-/// flips above the trigger when [DropdownSelectorDirection.adaptive] is used
+/// flips above the trigger when [PopupSelectDirection.adaptive] is used
 /// and space below is tight. Compared to the previous "shrink to fit the
 /// available side" approach, the panel now keeps its intrinsic size, exactly
 /// like [PopupMenuButton].
@@ -43,7 +53,7 @@ class DropdownOverlay extends StatelessWidget {
     this.animation,
     this.onOverlayTap,
     this.targetRect,
-    this.direction = DropdownSelectorDirection.adaptive,
+    this.direction = PopupSelectDirection.adaptive,
     this.screenMargin = kDropdownOverlayScreenMargin,
   });
 
@@ -61,8 +71,8 @@ class DropdownOverlay extends StatelessWidget {
   /// panel is centered horizontally near the top of the screen.
   final Rect? targetRect;
 
-  /// Vertical placement strategy. Defaults to [DropdownSelectorDirection.adaptive].
-  final DropdownSelectorDirection direction;
+  /// Vertical placement strategy. Defaults to [PopupSelectDirection.adaptive].
+  final PopupSelectDirection direction;
 
   /// Minimum inset between the panel and the screen edges.
   final double screenMargin;
@@ -70,18 +80,18 @@ class DropdownOverlay extends StatelessWidget {
   static bool _resolveGrowUp(
     Rect? targetRect,
     Size screenSize,
-    DropdownSelectorDirection direction,
+    PopupSelectDirection direction,
   ) {
     final rect = targetRect;
     if (rect == null) return false;
     final belowSpace = screenSize.height - rect.bottom;
     final aboveSpace = rect.top;
     switch (direction) {
-      case DropdownSelectorDirection.below:
+      case PopupSelectDirection.below:
         return false;
-      case DropdownSelectorDirection.above:
+      case PopupSelectDirection.above:
         return true;
-      case DropdownSelectorDirection.adaptive:
+      case PopupSelectDirection.adaptive:
         return belowSpace < aboveSpace;
     }
   }

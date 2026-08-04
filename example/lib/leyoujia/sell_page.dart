@@ -15,7 +15,7 @@ class SellPage extends StatefulWidget {
 }
 
 class _SellPageState extends State<SellPage> {
-  final DropdownSelectorController _controller = DropdownSelectorController();
+  final PopupSelectController _controller = PopupSelectController();
   late final HouseRepository _repo;
   late final HouseFiltersRepository _filtersRepo;
   HouseFilter? _filter;
@@ -77,7 +77,7 @@ class _SellPageState extends State<SellPage> {
     super.dispose();
   }
 
-  void _handleSelectorApply(DropdownTabData tabData, SelectorEntries selected) {
+  void _handleSelectorApply(PopupTabData tabData, SelectorEntries selected) {
     _filter ??= HouseFilter(cityId: userCityId);
     if (tabData.index == 0) {
       // 区域筛选
@@ -160,8 +160,8 @@ class _SellPageState extends State<SellPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final DropdownSelectorBarTheme dropdownTabBarTheme =
-        DropdownSelectorBarTheme.maybeOf(context)!;
+    final PopupSelectBarTheme dropdownTabBarTheme =
+        PopupSelectBarTheme.maybeOf(context)!;
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)?.sell ?? ''),
@@ -186,7 +186,7 @@ class _SellPageState extends State<SellPage> {
                 ),
               ],
             ),
-            child: DropdownSelectorBar(
+            child: PopupSelectBar(
               controller: _controller,
               isScrollable: true,
               // labelColor: Colors.orange,
@@ -196,7 +196,7 @@ class _SellPageState extends State<SellPage> {
               //   backgroundColor: Colors.orange[100],
               // ),
               tabs: [
-                DropdownTab(
+                PopupTab(
                   // tag: 'region',
                   label: l10n?.region ?? '',
                   // labelLoader: (tabData, selected) {
@@ -204,9 +204,9 @@ class _SellPageState extends State<SellPage> {
                   //   return '自定义标签';
                   // },
                 ),
-                DropdownTab(label: l10n?.price ?? ''),
-                DropdownTab(label: l10n?.floorPlan ?? ''),
-                DropdownTab(
+                PopupTab(label: l10n?.price ?? ''),
+                PopupTab(label: l10n?.floorPlan ?? ''),
+                PopupTab(
                   child:
                       Image.asset('assets/sorting.png', width: 16, height: 16),
                 ),
@@ -261,10 +261,10 @@ class _SellPageState extends State<SellPage> {
                   },
                 ),
               ],
-              onSelectorShowed: (DropdownTabData tabData) {
+              onSelectorShowed: (PopupTabData tabData) {
                 largePrint('onShowed: ${tabData.label}');
               },
-              onSelectorHidden: (DropdownTabData tabData) {
+              onSelectorHidden: (PopupTabData tabData) {
                 largePrint('onHidden: ${tabData.label}');
               },
               onChanged: (tabData, selected) {

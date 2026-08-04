@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 import 'dropdown_overlay_style.dart';
 import 'selector/selector_theme_data.dart';
 
-/// Theme extension for [DropdownSelectorBar].
+/// Theme extension for [PopupSelectBar].
 ///
 /// Add this extension to your app theme to override default tab bar visuals
 /// and overlay styles.
 @immutable
-class DropdownSelectorBarTheme
-    extends ThemeExtension<DropdownSelectorBarTheme> {
-  const DropdownSelectorBarTheme({
+class PopupSelectBarTheme extends ThemeExtension<PopupSelectBarTheme> {
+  const PopupSelectBarTheme({
     this.height,
     this.backgroundColor,
     this.labelColor,
@@ -23,10 +22,10 @@ class DropdownSelectorBarTheme
     this.selectorTheme,
   });
 
-  /// Overrides the default value of [DropdownSelectorBar.height].
+  /// Overrides the default value of [PopupSelectBar.height].
   final double? height;
 
-  /// Overrides the default value of [DropdownSelectorBar.backgroundColor].
+  /// Overrides the default value of [PopupSelectBar.backgroundColor].
   final Color? backgroundColor;
 
   /// Overrides the default selected tab label color.
@@ -54,7 +53,7 @@ class DropdownSelectorBarTheme
   final SelectorThemeData? selectorTheme;
 
   @override
-  DropdownSelectorBarTheme copyWith({
+  PopupSelectBarTheme copyWith({
     double? height,
     Color? backgroundColor,
     Color? labelColor,
@@ -66,7 +65,7 @@ class DropdownSelectorBarTheme
     DropdownOverlayStyle? overlayStyle,
     SelectorThemeData? selectorTheme,
   }) {
-    return DropdownSelectorBarTheme(
+    return PopupSelectBarTheme(
       height: height ?? this.height,
       backgroundColor: backgroundColor ?? this.backgroundColor,
       labelColor: labelColor ?? this.labelColor,
@@ -80,8 +79,8 @@ class DropdownSelectorBarTheme
     );
   }
 
-  static DropdownSelectorBarTheme? maybeOf(BuildContext context) {
-    return Theme.of(context).extension<DropdownSelectorBarTheme>();
+  static PopupSelectBarTheme? maybeOf(BuildContext context) {
+    return Theme.of(context).extension<PopupSelectBarTheme>();
   }
 
   @override
@@ -106,7 +105,7 @@ class DropdownSelectorBarTheme
     if (other.runtimeType != runtimeType) {
       return false;
     }
-    return other is DropdownSelectorBarTheme &&
+    return other is PopupSelectBarTheme &&
         other.height == height &&
         other.backgroundColor == backgroundColor &&
         other.labelColor == labelColor &&
@@ -120,12 +119,12 @@ class DropdownSelectorBarTheme
   }
 
   @override
-  ThemeExtension<DropdownSelectorBarTheme> lerp(
-      covariant ThemeExtension<DropdownSelectorBarTheme>? other, double t) {
-    if (other is! DropdownSelectorBarTheme) {
+  ThemeExtension<PopupSelectBarTheme> lerp(
+      covariant ThemeExtension<PopupSelectBarTheme>? other, double t) {
+    if (other is! PopupSelectBarTheme) {
       return this;
     }
-    return DropdownSelectorBarTheme(
+    return PopupSelectBarTheme(
       height: height != null && other.height != null
           ? height! + (other.height! - height!) * t
           : t < 0.5
@@ -146,3 +145,13 @@ class DropdownSelectorBarTheme
     );
   }
 }
+
+/// Deprecated alias for [PopupSelectBarTheme].
+///
+/// Use [PopupSelectBarTheme] instead. This alias is kept only for backward
+/// compatibility and will be removed in a future minor version.
+@Deprecated(
+  'Use PopupSelectBarTheme instead. '
+  'This alias will be removed in a future minor version.',
+)
+typedef DropdownSelectorBarTheme = PopupSelectBarTheme;

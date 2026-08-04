@@ -5,30 +5,70 @@ import 'package:flutter/material.dart';
 
 import 'dropdown_overlay.dart';
 import 'dropdown_overlay_style.dart';
-import 'dropdown_selector_bar_theme.dart';
-import 'dropdown_selector_controller.dart';
 import 'i18n/localizations.dart';
+import 'popup_select_bar_theme.dart';
+import 'popup_select_controller.dart';
 import 'selector/selector_delegate.dart';
 import 'selector/selector_entry.dart';
 import 'selector/selector_theme_data.dart';
 import 'selector_label_state.dart';
 import 'selector_overlay_host.dart';
 
-/// Default height for [DropdownSelectorBar] when no theme override is provided.
-const kDropdownSelectorBarHeight = 44.0;
+/// Default height for [PopupSelectBar] when no theme override is provided.
+const kPopupSelectBarHeight = 44.0;
 
-typedef DropdownSelectorBarWillToggleCallback = FutureOr<bool> Function(
-    DropdownTabData tabData);
+typedef PopupSelectBarWillToggleCallback = FutureOr<bool> Function(
+    PopupTabData tabData);
 
 /// Callback parameter indicates which selector is being shown or hidden.
-typedef DropdownSelectorBarToggleCallback = void Function(
-    DropdownTabData tabData);
+typedef PopupSelectBarToggleCallback = void Function(PopupTabData tabData);
 
-/// Callback for selection change or apply events from a [DropdownSelectorBar].
+/// Callback for selection change or apply events from a [PopupSelectBar].
 ///
 /// Receives the tab metadata and the selected entries directly.
-typedef DropdownSelectorBarCallback = void Function(
-    DropdownTabData tabData, SelectorEntries selected);
+typedef PopupSelectBarResultCallback = void Function(
+    PopupTabData tabData, SelectorEntries selected);
+
+/// Deprecated alias for [kPopupSelectBarHeight].
+///
+/// Use [kPopupSelectBarHeight] instead. This alias is kept only for backward
+/// compatibility and will be removed in a future minor version.
+@Deprecated(
+  'Use kPopupSelectBarHeight instead. '
+  'This alias will be removed in a future minor version.',
+)
+const kDropdownSelectorBarHeight = kPopupSelectBarHeight;
+
+/// Deprecated alias for [PopupSelectBarWillToggleCallback].
+///
+/// Use [PopupSelectBarWillToggleCallback] instead. This alias is kept only for
+/// backward compatibility and will be removed in a future minor version.
+@Deprecated(
+  'Use PopupSelectBarWillToggleCallback instead. '
+  'This alias will be removed in a future minor version.',
+)
+typedef DropdownSelectorBarWillToggleCallback
+    = PopupSelectBarWillToggleCallback;
+
+/// Deprecated alias for [PopupSelectBarToggleCallback].
+///
+/// Use [PopupSelectBarToggleCallback] instead. This alias is kept only for
+/// backward compatibility and will be removed in a future minor version.
+@Deprecated(
+  'Use PopupSelectBarToggleCallback instead. '
+  'This alias will be removed in a future minor version.',
+)
+typedef DropdownSelectorBarToggleCallback = PopupSelectBarToggleCallback;
+
+/// Deprecated alias for [PopupSelectBarResultCallback].
+///
+/// Use [PopupSelectBarResultCallback] instead. This alias is kept only for backward
+/// compatibility and will be removed in a future minor version.
+@Deprecated(
+  'Use PopupSelectBarResultCallback instead. '
+  'This alias will be removed in a future minor version.',
+)
+typedef DropdownSelectorBarCallback = PopupSelectBarResultCallback;
 
 /// A tab bar that shows an overlay selector panel when a tab is tapped.
 ///
@@ -36,11 +76,10 @@ typedef DropdownSelectorBarCallback = void Function(
 /// - [tabs] to render the bar UI.
 /// - [selectorDelegates] to define the selector configuration for each tab.
 ///
-/// The overlay content is driven by [DropdownSelectorController] and the selected
+/// The overlay content is driven by [PopupSelectController] and the selected
 /// results are delivered via [onChanged] and [onApplied].
-class DropdownSelectorBar extends StatefulWidget
-    implements PreferredSizeWidget {
-  const DropdownSelectorBar({
+class PopupSelectBar extends StatefulWidget implements PreferredSizeWidget {
+  const PopupSelectBar({
     super.key,
     required this.tabs,
     this.selectorDelegates = const [],
@@ -65,7 +104,7 @@ class DropdownSelectorBar extends StatefulWidget
     this.controller,
     this.initialIndex,
     this.selectorTheme,
-    this.direction = DropdownSelectorDirection.below,
+    this.direction = PopupSelectDirection.below,
   });
 
   /// The set of tabs to display in the bar.
@@ -73,22 +112,22 @@ class DropdownSelectorBar extends StatefulWidget
   /// Each entry renders a tab's UI and must have a matching entry in
   /// [selectorDelegates]; the number of [tabs] must equal the number of
   /// [selectorDelegates].
-  final List<DropdownTab> tabs;
+  final List<PopupTab> tabs;
 
   /// Selector configuration for each tab.
   final List<SelectorDelegate> selectorDelegates;
 
-  /// The height of the [DropdownSelectorBar] itself.
+  /// The height of the [PopupSelectBar] itself.
   ///
-  /// If null, [DropdownSelectorBarTheme.height] is used. If that
-  /// is also null, the default is [kDropdownSelectorBarHeight].
+  /// If null, [PopupSelectBarTheme.height] is used. If that
+  /// is also null, the default is [kPopupSelectBarHeight].
   final double? height;
 
   final bool isScrollable;
 
-  /// The color of the [DropdownSelectorBar] itself.
+  /// The color of the [PopupSelectBar] itself.
   ///
-  /// If null, [DropdownSelectorBarTheme.backgroundColor] is used. If that
+  /// If null, [PopupSelectBarTheme.backgroundColor] is used. If that
   /// is also null, the value is [ColorScheme.surfaceContainer].
   final Color? backgroundColor;
 
@@ -106,9 +145,9 @@ class DropdownSelectorBar extends StatefulWidget
 
   final Widget? unselectedIndicator;
 
-  final DropdownSelectorBarToggleCallback? onSelectorShowed;
+  final PopupSelectBarToggleCallback? onSelectorShowed;
 
-  final DropdownSelectorBarToggleCallback? onSelectorHidden;
+  final PopupSelectBarToggleCallback? onSelectorHidden;
 
   /// Invoked just before the overlay is shown for a tab.
   ///
@@ -116,30 +155,30 @@ class DropdownSelectorBar extends StatefulWidget
   /// async work such as scrolling a [SliverPersistentHeader] to the top can
   /// finish first and the overlay is positioned against the final layout.
   /// Returning `false` cancels the show, leaving the overlay hidden.
-  final DropdownSelectorBarWillToggleCallback? onSelectorWillShow;
+  final PopupSelectBarWillToggleCallback? onSelectorWillShow;
 
   /// Invoked just before the overlay is hidden for a tab. Returning `false`
   /// cancels the hide, leaving the overlay visible.
-  final DropdownSelectorBarWillToggleCallback? onSelectorWillHide;
+  final PopupSelectBarWillToggleCallback? onSelectorWillHide;
 
   /// Fired whenever a selector reports a selection change.
-  final DropdownSelectorBarCallback? onChanged;
+  final PopupSelectBarResultCallback? onChanged;
 
   /// Fired when a selector is applied.
-  final DropdownSelectorBarCallback? onApplied;
+  final PopupSelectBarResultCallback? onApplied;
 
   /// Fired when reset is triggered.
   final VoidCallback? onReset;
 
   /// Controls selector overlay visibility and tab state.
-  final DropdownSelectorController? controller;
+  final PopupSelectController? controller;
 
   /// If not null, the initial index of the selected tab and show selector.
   final int? initialIndex;
 
   /// Visual configuration for the selector overlay panel.
   ///
-  /// If null, [DropdownSelectorBarTheme.overlayStyle] is used.
+  /// If null, [PopupSelectBarTheme.overlayStyle] is used.
   final DropdownOverlayStyle? overlayStyle;
 
   /// Theme overrides applied to selector widgets inside the overlay.
@@ -147,19 +186,19 @@ class DropdownSelectorBar extends StatefulWidget
 
   /// Vertical placement of the selector panel relative to the bar.
   ///
-  /// Defaults to [DropdownSelectorDirection.below], which always shows the
-  /// panel under the trigger. Use [DropdownSelectorDirection.adaptive] to let
+  /// Defaults to [PopupSelectDirection.below], which always shows the
+  /// panel under the trigger. Use [PopupSelectDirection.adaptive] to let
   /// it flip above when there is more room there, or
-  /// [DropdownSelectorDirection.above] to force the panel above. Regardless of
+  /// [PopupSelectDirection.above] to force the panel above. Regardless of
   /// the value, the panel is always kept fully on screen horizontally.
-  final DropdownSelectorDirection direction;
+  final PopupSelectDirection direction;
 
   @override
-  State<DropdownSelectorBar> createState() => _DropdownSelectorBarState();
+  State<PopupSelectBar> createState() => _PopupSelectBarState();
 
   @override
   Size get preferredSize {
-    double maxHeight = kDropdownSelectorBarHeight;
+    double maxHeight = kPopupSelectBarHeight;
     for (final Widget item in tabs) {
       if (item is PreferredSizeWidget) {
         final double itemHeight = item.preferredSize.height;
@@ -170,9 +209,9 @@ class DropdownSelectorBar extends StatefulWidget
   }
 }
 
-class _DropdownSelectorBarState extends State<DropdownSelectorBar>
+class _PopupSelectBarState extends State<PopupSelectBar>
     with SingleTickerProviderStateMixin {
-  DropdownSelectorController? _controller;
+  PopupSelectController? _controller;
   int? _previousIndex;
 
   VoidCallback? _removeChangeListener;
@@ -196,7 +235,7 @@ class _DropdownSelectorBarState extends State<DropdownSelectorBar>
     // _controller.detachBarContext();
     final controller = _controller;
     if (controller != null) {
-      controller.removeListener(_handleDropdownSelectorControllerTick);
+      controller.removeListener(_handlePopupSelectControllerTick);
       _removeChangeListener?.call();
       _removeApplyListener?.call();
       _removeResetListener?.call();
@@ -212,19 +251,19 @@ class _DropdownSelectorBarState extends State<DropdownSelectorBar>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _updateDropdownSelectorController(context);
+    _updatePopupSelectController(context);
   }
 
   @override
-  void didUpdateWidget(covariant DropdownSelectorBar oldWidget) {
+  void didUpdateWidget(covariant PopupSelectBar oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _updateDropdownSelectorController(context);
+    _updatePopupSelectController(context);
   }
 
-  void _updateDropdownSelectorController(BuildContext context) {
+  void _updatePopupSelectController(BuildContext context) {
     if (_controller == null) {
-      _controller = widget.controller ?? DropdownSelectorController();
-      _controller!.addListener(_handleDropdownSelectorControllerTick);
+      _controller = widget.controller ?? PopupSelectController();
+      _controller!.addListener(_handlePopupSelectControllerTick);
       _removeChangeListener =
           _controller!.addChangeListener(_handleWidgetChange);
       _removeApplyListener = _controller!.addApplyListener(_handleWidgetApply);
@@ -234,7 +273,7 @@ class _DropdownSelectorBarState extends State<DropdownSelectorBar>
     _controller!.attachTickerProvider(this);
   }
 
-  void _handleDropdownSelectorControllerTick() {
+  void _handlePopupSelectControllerTick() {
     if (_previousIndex != _controller?.currentIndex) {
       _previousIndex = _controller?.currentIndex;
     }
@@ -243,15 +282,15 @@ class _DropdownSelectorBarState extends State<DropdownSelectorBar>
 
   void _handleWidgetChange(
           SelectorLabelState labelState, SelectorEntries selected) =>
-      widget.onChanged?.call(labelState as DropdownTabData, selected);
+      widget.onChanged?.call(labelState as PopupTabData, selected);
 
   void _handleWidgetApply(
           SelectorLabelState labelState, SelectorEntries selected) =>
-      widget.onApplied?.call(labelState as DropdownTabData, selected);
+      widget.onApplied?.call(labelState as PopupTabData, selected);
 
   void _handleWidgetReset() => widget.onReset?.call();
 
-  Future<void> _handleTap(DropdownTabData tabData) async {
+  Future<void> _handleTap(PopupTabData tabData) async {
     // final barHeight = _getBarHeight;
 
     // Tapping a collapsed tab (or switching to a different one) will show the
@@ -286,9 +325,9 @@ class _DropdownSelectorBarState extends State<DropdownSelectorBar>
   }
 
   // double get _barHeight {
-  //   final DropdownSelectorBarTheme defaults = _DropdownSelectorBarDefaults(context);
-  //   final DropdownSelectorBarTheme? inheritedTheme =
-  //       DropdownSelectorBarTheme.maybeOf(context);
+  //   final PopupSelectBarTheme defaults = _PopupSelectBarDefaults(context);
+  //   final PopupSelectBarTheme? inheritedTheme =
+  //       PopupSelectBarTheme.maybeOf(context);
   //   return widget.height ?? inheritedTheme?.height ?? defaults.height!;
   // }
 
@@ -304,13 +343,13 @@ class _DropdownSelectorBarState extends State<DropdownSelectorBar>
       assert(() {
         if (widget.tabs.length != widget.selectorDelegates.length) {
           throw FlutterError(
-            "The number of tabs (${widget.tabs.length}) in the DropdownSelectorBar does not match "
+            "The number of tabs (${widget.tabs.length}) in the PopupSelectBar does not match "
             "the number of selectorDelegates(${widget.selectorDelegates.length}).",
           );
         }
         return true;
       }());
-    }, debugLabel: 'DropdownSelectorBar.validSelectorCountCheck');
+    }, debugLabel: 'PopupSelectBar.validSelectorCountCheck');
     _debugHasScheduledValidSelectorCountCheck = true;
     return true;
   }
@@ -319,10 +358,8 @@ class _DropdownSelectorBarState extends State<DropdownSelectorBar>
   Widget build(BuildContext context) {
     assert(_debugScheduleCheckHasValidSelectorCount());
 
-    final DropdownSelectorBarTheme defaults =
-        _DropdownSelectorBarDefaults(context);
-    final DropdownSelectorBarTheme? theme =
-        DropdownSelectorBarTheme.maybeOf(context);
+    final PopupSelectBarTheme defaults = _PopupSelectBarDefaults(context);
+    final PopupSelectBarTheme? theme = PopupSelectBarTheme.maybeOf(context);
 
     final height = widget.height ?? theme?.height ?? defaults.height!;
 
@@ -353,12 +390,12 @@ class _DropdownSelectorBarState extends State<DropdownSelectorBar>
             builder: (context) {
               final tabs = <Widget>[
                 for (int i = 0; i < widget.tabs.length; i++)
-                  _DropdownSelectorTabInfo(
+                  _PopupSelectTabInfo(
                     index: i,
                     onTap: (tabData) => _handleTap(tabData),
                     indicator: widget.indicator,
                     unselectedIndicator: widget.unselectedIndicator,
-                    child: _DropdownSelectorTabStyle(
+                    child: _PopupSelectTabStyle(
                       isSelected: (_controller?.isSelectorShowing == true &&
                               _controller!.currentIndex == i) ||
                           _controller?.labelStateMap[i]?.isResulted == true,
@@ -401,8 +438,8 @@ class _DropdownSelectorBarState extends State<DropdownSelectorBar>
   }
 }
 
-class _DropdownSelectorTabStyle extends StatelessWidget {
-  const _DropdownSelectorTabStyle({
+class _PopupSelectTabStyle extends StatelessWidget {
+  const _PopupSelectTabStyle({
     required this.isSelected,
     required this.labelColor,
     required this.unselectedLabelColor,
@@ -417,12 +454,11 @@ class _DropdownSelectorTabStyle extends StatelessWidget {
   final bool isSelected;
   final Color? labelColor;
   final Color? unselectedLabelColor;
-  final DropdownSelectorBarTheme defaults;
+  final PopupSelectBarTheme defaults;
   final Widget child;
 
   WidgetStateColor _resolveWithLabelColor(BuildContext context) {
-    final DropdownSelectorBarTheme? theme =
-        DropdownSelectorBarTheme.maybeOf(context);
+    final PopupSelectBarTheme? theme = PopupSelectBarTheme.maybeOf(context);
 
     Color selectedColor = labelColor ??
         theme?.labelColor ??
@@ -454,8 +490,7 @@ class _DropdownSelectorTabStyle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DropdownSelectorBarTheme? theme =
-        DropdownSelectorBarTheme.maybeOf(context);
+    final PopupSelectBarTheme? theme = PopupSelectBarTheme.maybeOf(context);
 
     final Set<WidgetState> states = isSelected
         ? const <WidgetState>{WidgetState.selected}
@@ -494,11 +529,11 @@ class _DropdownSelectorTabStyle extends StatelessWidget {
   }
 }
 
-/// A tab widget used inside [DropdownSelectorBar].
+/// A tab widget used inside [PopupSelectBar].
 ///
 /// Provide either [label] or [child]. Use [labelLoader] to compute a custom
 /// label from the applied selection result.
-class DropdownTab extends StatelessWidget {
+class PopupTab extends StatelessWidget {
   /// The text label shown in the tab.
   ///
   /// Mutually exclusive with [child]; providing both triggers an assertion.
@@ -519,7 +554,7 @@ class DropdownTab extends StatelessWidget {
   /// An optional tag used to identify this tab.
   final String? tag;
 
-  const DropdownTab({
+  const PopupTab({
     super.key,
     this.label,
     this.labelLoader,
@@ -530,22 +565,19 @@ class DropdownTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DropdownSelectorBarTheme defaults =
-        _DropdownSelectorBarDefaults(context);
-    final DropdownSelectorBarTheme? theme =
-        DropdownSelectorBarTheme.maybeOf(context);
+    final PopupSelectBarTheme defaults = _PopupSelectBarDefaults(context);
+    final PopupSelectBarTheme? theme = PopupSelectBarTheme.maybeOf(context);
 
-    final DropdownSelectorController controller =
-        DropdownSelectorController.of(context);
-    final _DropdownSelectorTabInfo info = _DropdownSelectorTabInfo.of(context);
+    final PopupSelectController controller = PopupSelectController.of(context);
+    final _PopupSelectTabInfo info = _PopupSelectTabInfo.of(context);
     final unselected = controller.currentIndex != info.index;
     final isSelectorShowing = controller.isSelectorShowing;
 
-    DropdownTabData? tabData = controller.labelStateMap.containsKey(info.index)
-        ? controller.labelStateMap[info.index] as DropdownTabData?
+    PopupTabData? tabData = controller.labelStateMap.containsKey(info.index)
+        ? controller.labelStateMap[info.index] as PopupTabData?
         : null;
     if (tabData == null) {
-      tabData = DropdownTabData(
+      tabData = PopupTabData(
           index: info.index,
           originalLabel: label,
           tag: tag,
@@ -584,10 +616,10 @@ class DropdownTab extends StatelessWidget {
   }
 
   Widget _buildIndicator(
-    DropdownSelectorController controller,
-    _DropdownSelectorTabInfo info,
-    DropdownSelectorBarTheme? theme,
-    DropdownSelectorBarTheme defaults,
+    PopupSelectController controller,
+    _PopupSelectTabInfo info,
+    PopupSelectBarTheme? theme,
+    PopupSelectBarTheme defaults,
     bool unselected,
     bool isSelectorShowing,
   ) {
@@ -621,8 +653,8 @@ class DropdownTab extends StatelessWidget {
   }
 }
 
-class _DropdownSelectorTabInfo extends InheritedWidget {
-  const _DropdownSelectorTabInfo({
+class _PopupSelectTabInfo extends InheritedWidget {
+  const _PopupSelectTabInfo({
     required this.index,
     required this.onTap,
     required super.child,
@@ -635,28 +667,27 @@ class _DropdownSelectorTabInfo extends InheritedWidget {
   final Widget? indicator;
   final Widget? unselectedIndicator;
 
-  final void Function(DropdownTabData tabData) onTap;
+  final void Function(PopupTabData tabData) onTap;
 
-  static _DropdownSelectorTabInfo of(BuildContext context) {
-    final _DropdownSelectorTabInfo? result =
-        context.dependOnInheritedWidgetOfExactType<_DropdownSelectorTabInfo>();
+  static _PopupSelectTabInfo of(BuildContext context) {
+    final _PopupSelectTabInfo? result =
+        context.dependOnInheritedWidgetOfExactType<_PopupSelectTabInfo>();
     assert(
       result != null,
-      'DropdownTab need a _DropdownSelectorTabInfo parent, '
-      'which is usually provided by DropdownSelectorBar.',
+      'PopupTab need a _PopupSelectTabInfo parent, '
+      'which is usually provided by PopupSelectBar.',
     );
     return result!;
   }
 
   @override
-  bool updateShouldNotify(_DropdownSelectorTabInfo oldWidget) {
+  bool updateShouldNotify(_PopupSelectTabInfo oldWidget) {
     return index != oldWidget.index || onTap != oldWidget.onTap;
   }
 }
 
-class _DropdownSelectorBarDefaults extends DropdownSelectorBarTheme {
-  _DropdownSelectorBarDefaults(this.context)
-      : super(height: kDropdownSelectorBarHeight);
+class _PopupSelectBarDefaults extends PopupSelectBarTheme {
+  _PopupSelectBarDefaults(this.context) : super(height: kPopupSelectBarHeight);
 
   final BuildContext context;
   late final ColorScheme _colors = Theme.of(context).colorScheme;
@@ -694,3 +725,23 @@ class _DropdownSelectorBarDefaults extends DropdownSelectorBarTheme {
   //   });
   // }
 }
+
+/// Deprecated alias for [PopupSelectBar].
+///
+/// Use [PopupSelectBar] instead. This alias is kept only for backward
+/// compatibility and will be removed in a future minor version.
+@Deprecated(
+  'Use PopupSelectBar instead. '
+  'This alias will be removed in a future minor version.',
+)
+typedef DropdownSelectorBar = PopupSelectBar;
+
+/// Deprecated alias for [PopupTab].
+///
+/// Use [PopupTab] instead. This alias is kept only for backward
+/// compatibility and will be removed in a future minor version.
+@Deprecated(
+  'Use PopupTab instead. '
+  'This alias will be removed in a future minor version.',
+)
+typedef DropdownTab = PopupTab;

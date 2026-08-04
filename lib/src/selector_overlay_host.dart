@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 
 import 'dropdown_overlay.dart';
 import 'dropdown_overlay_style.dart';
-import 'dropdown_selector_controller.dart';
+import 'popup_select_controller.dart';
 import 'selector/selector_panel.dart';
 import 'selector/selector_theme_data.dart';
 
-/// Shared host that wires a trigger widget (a [DropdownSelectorBar] or a
-/// [DropdownSelectorButton]) to its selector overlay.
+/// Shared host that wires a trigger widget (a [PopupSelectBar] or a
+/// [PopupSelectButton]) to its selector overlay.
 ///
 /// This widget owns the boilerplate that used to be duplicated verbatim in both
 /// triggers:
-/// - [DropdownSelectorControllerProvider] to expose the [controller] to
+/// - [PopupSelectControllerProvider] to expose the [controller] to
 ///   descendants (e.g. [SelectorPanel]).
 /// - [CompositedTransformTarget] + [OverlayPortal] + [CompositedTransformFollower]
 ///   to anchor the overlay to the trigger's actual painted position, which is
@@ -36,14 +36,14 @@ class SelectorOverlayHost extends StatelessWidget {
     this.minWidthFromTrigger = false,
   });
 
-  final DropdownSelectorController controller;
-  final DropdownSelectorDirection direction;
+  final PopupSelectController controller;
+  final PopupSelectDirection direction;
   final DropdownOverlayStyle? style;
   final SelectorThemeData? selectorTheme;
 
   /// When true, the overlay panel's [DropdownOverlayStyle.minWidth] defaults to
-  /// the trigger's width ([DropdownSelectorButton]). When false, any explicit
-  /// [style.minWidth] is used as-is ([DropdownSelectorBar]).
+  /// the trigger's width ([PopupSelectButton]). When false, any explicit
+  /// [style.minWidth] is used as-is ([PopupSelectBar]).
   final bool minWidthFromTrigger;
 
   /// The trigger UI (the bar or the button) that toggles the overlay.
@@ -96,7 +96,7 @@ class SelectorOverlayHost extends StatelessWidget {
           )
         : style;
 
-    return DropdownSelectorControllerProvider(
+    return PopupSelectControllerProvider(
       controller: controller,
       child: CompositedTransformTarget(
         link: controller.layerLink,

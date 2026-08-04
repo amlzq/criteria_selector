@@ -82,15 +82,15 @@ class PlaygroundL10n {
   String get layoutList => _t('List', '列表');
 
   // Phone screen titles & labels.
-  String get phoneBoxTitle => 'SelectView';
-  String get phoneDropdownBarTitle => _t('Dropdown Bar', '下拉筛选栏');
-  String get phoneDropdownButtonTitle => _t('Dropdown Button', '下拉筛选按钮');
+  String get phoneViewTitle => 'SelectView';
+  String get phonePopupBarTitle => _t('Popup Bar', '弹出选择栏');
+  String get phonePopupButtonTitle => _t('Popup Button', '弹出选择按钮');
   String get phoneDialogTitle => _t('Dialog', '对话框');
   String get phoneBottomSheetTitle => _t('Bottom Sheet', '底部弹层');
 
   String get filterLabel => _t('Filter', '筛选');
-  String get tapBarHint => _t('Tap the bar to open the selector', '点击筛选栏打开选择器');
-  String get openSelector => _t('Open Selector', '打开选择器');
+  String get tapBarHint => _t('Tap the bar to open the select', '点击筛选栏打开选择器');
+  String get openSelect => _t('Open Select', '打开选择器');
 
   // Callback result panel.
   String get resultPanelTitle => _t('Callback results', '回调结果');

@@ -25,7 +25,7 @@ const _chipBarHeight = 48.0;
 const _filterHeaderHeight = _filterBarHeight + _chipBarHeight;
 
 class _HousePageState extends State<HousePage> {
-  final DropdownSelectorController _controller = DropdownSelectorController();
+  final PopupSelectController _controller = PopupSelectController();
   late final HouseRepository _repo;
   late final HouseFiltersRepository _filtersRepo;
   HouseFilter? _filter;
@@ -138,7 +138,7 @@ class _HousePageState extends State<HousePage> {
   }
 
   HouseFilter? _dropdownSelectorResultParser(
-      DropdownTabData tabData, SelectorEntries selected) {
+      PopupTabData tabData, SelectorEntries selected) {
     final filter = HouseFilter(cityId: userCityId);
     if (tabData.index == 0) {
       // Neighborhood filter
@@ -193,7 +193,7 @@ class _HousePageState extends State<HousePage> {
   }
 
   void _handleSelectorChange(
-      DropdownTabData tabData, SelectorEntries selected) async {
+      PopupTabData tabData, SelectorEntries selected) async {
     final l10n = AppLocalizations.of(context);
     _filter = _dropdownSelectorResultParser(tabData, selected);
     if (_filter == null) {
@@ -227,7 +227,7 @@ class _HousePageState extends State<HousePage> {
     }
   }
 
-  void _handleSelectorApply(DropdownTabData tabData, SelectorEntries selected) {
+  void _handleSelectorApply(PopupTabData tabData, SelectorEntries selected) {
     final l10n = AppLocalizations.of(context);
     // Persist the applied selection to the repo so it can be restored on reopen.
     if (tabData.index == 0) {
@@ -440,17 +440,17 @@ class _HousePageState extends State<HousePage> {
           key: _filterHeaderKey,
           mainAxisSize: MainAxisSize.min,
           children: [
-            DropdownSelectorBar(
+            PopupSelectBar(
               controller: _controller,
               isScrollable: true,
               tabs: [
-                DropdownTab(label: l10n?.neighborhood ?? ''),
-                DropdownTab(
+                PopupTab(label: l10n?.neighborhood ?? ''),
+                PopupTab(
                   label: l10n?.price ?? '',
                 ),
-                DropdownTab(label: l10n?.rooms ?? ''),
-                DropdownTab(label: l10n?.more ?? ''),
-                DropdownTab(
+                PopupTab(label: l10n?.rooms ?? ''),
+                PopupTab(label: l10n?.more ?? ''),
+                PopupTab(
                   child:
                       Image.asset('assets/sorting.png', width: 16, height: 16),
                 ),
@@ -512,7 +512,7 @@ class _HousePageState extends State<HousePage> {
                   selectionMode: SelectionMode.single,
                 ),
               ],
-              onSelectorWillShow: (DropdownTabData tabData) async {
+              onSelectorWillShow: (PopupTabData tabData) async {
                 // Programmatic sticky: scroll exactly enough so the filter bar
                 // (SliverPersistentHeader) pins just below the collapsed app
                 // bar, then let the overlay anchor to that final layout.
@@ -536,14 +536,14 @@ class _HousePageState extends State<HousePage> {
                 }
                 return true;
               },
-              onSelectorShowed: (DropdownTabData tabData) {
+              onSelectorShowed: (PopupTabData tabData) {
                 debugPrint('onShowed: ${tabData.label}');
               },
-              onSelectorWillHide: (DropdownTabData tabData) {
+              onSelectorWillHide: (PopupTabData tabData) {
                 debugPrint('onWillHide: ${tabData.label}');
                 return true;
               },
-              onSelectorHidden: (DropdownTabData tabData) {
+              onSelectorHidden: (PopupTabData tabData) {
                 debugPrint('onHidden: ${tabData.label}');
               },
               onChanged: (tabData, selected) {

@@ -18,7 +18,7 @@ class RentPage extends StatefulWidget {
 }
 
 class _RentPageState extends State<RentPage> {
-  final DropdownSelectorController _controller = DropdownSelectorController();
+  final PopupSelectController _controller = PopupSelectController();
   late final HouseRepository _repo;
   late final HouseFiltersRepository _filtersRepo;
   HouseFilter? _filter;
@@ -85,7 +85,7 @@ class _RentPageState extends State<RentPage> {
   }
 
   HouseFilter? _dropdownSelectorResultParser(
-      DropdownTabData tabData, SelectorEntries selected) {
+      PopupTabData tabData, SelectorEntries selected) {
     final filter = HouseFilter(cityId: userCityId);
     if (tabData.index == 0) {
       // 区域
@@ -152,7 +152,7 @@ class _RentPageState extends State<RentPage> {
   }
 
   void _handleSelectorChange(
-      DropdownTabData tabData, SelectorEntries selected) async {
+      PopupTabData tabData, SelectorEntries selected) async {
     final l10n = AppLocalizations.of(context);
     _filter = _dropdownSelectorResultParser(tabData, selected);
     if (_filter == null) {
@@ -187,7 +187,7 @@ class _RentPageState extends State<RentPage> {
     }
   }
 
-  void _handleSelectorApply(DropdownTabData tabData, SelectorEntries selected) {
+  void _handleSelectorApply(PopupTabData tabData, SelectorEntries selected) {
     final l10n = AppLocalizations.of(context);
     // Persist the applied selection to the repo so it can be restored on reopen.
     if (tabData.index == 0) {
@@ -228,7 +228,7 @@ class _RentPageState extends State<RentPage> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: DropdownSelectorBar(
+            child: PopupSelectBar(
               controller: _controller,
               // labelColor: Colors.orange,
               // indicator: Icon(Icons.arrow_upward, size: 16),
@@ -237,7 +237,7 @@ class _RentPageState extends State<RentPage> {
               //   backgroundColor: Colors.orange.withOpacity(0.54),
               // ),
               tabs: [
-                DropdownTab(
+                PopupTab(
                   // tag: 'region',
                   label: l10n?.region ?? '',
                   // labelLoader: (tabData, selected) {
@@ -245,9 +245,9 @@ class _RentPageState extends State<RentPage> {
                   //   return '自定义标签';
                   // },
                 ),
-                DropdownTab(label: l10n?.price ?? ''),
-                DropdownTab(label: l10n?.floorPlan ?? ''),
-                DropdownTab(
+                PopupTab(label: l10n?.price ?? ''),
+                PopupTab(label: l10n?.floorPlan ?? ''),
+                PopupTab(
                   child:
                       Image.asset('assets/sorting.png', width: 16, height: 16),
                 ),
@@ -321,10 +321,10 @@ class _RentPageState extends State<RentPage> {
                   },
                 ),
               ],
-              onSelectorShowed: (DropdownTabData tabData) {
+              onSelectorShowed: (PopupTabData tabData) {
                 largePrint('onShowed: ${tabData.label}');
               },
-              onSelectorHidden: (DropdownTabData tabData) {
+              onSelectorHidden: (PopupTabData tabData) {
                 largePrint('onHidden: ${tabData.label}');
               },
               onChanged: (tabData, selected) {

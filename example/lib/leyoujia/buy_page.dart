@@ -24,7 +24,7 @@ class BuyPage extends StatefulWidget {
 }
 
 class _BuyPageState extends State<BuyPage> {
-  final DropdownSelectorController _controller = DropdownSelectorController();
+  final PopupSelectController _controller = PopupSelectController();
   late final HouseRepository _repo;
   late final HouseFiltersRepository _filtersRepo;
   HouseFilter? _filter;
@@ -132,7 +132,7 @@ class _BuyPageState extends State<BuyPage> {
   }
 
   HouseFilter? _dropdownSelectorResultParser(
-      DropdownTabData tabData, SelectorEntries selected) {
+      PopupTabData tabData, SelectorEntries selected) {
     final filter = HouseFilter(cityId: userCityId);
     if (tabData.index == 0) {
       // 区域
@@ -219,7 +219,7 @@ class _BuyPageState extends State<BuyPage> {
   }
 
   void _handleSelectorChange(
-      DropdownTabData tabData, SelectorEntries selected) async {
+      PopupTabData tabData, SelectorEntries selected) async {
     final l10n = AppLocalizations.of(context);
     _filter = _dropdownSelectorResultParser(tabData, selected);
     if (_filter == null) {
@@ -254,7 +254,7 @@ class _BuyPageState extends State<BuyPage> {
     }
   }
 
-  void _handleSelectorApply(DropdownTabData tabData, SelectorEntries selected) {
+  void _handleSelectorApply(PopupTabData tabData, SelectorEntries selected) {
     final l10n = AppLocalizations.of(context);
     // Persist the applied selection to the repo so it can be restored on reopen.
     if (tabData.index == 0) {
@@ -472,14 +472,14 @@ class _BuyPageState extends State<BuyPage> {
           key: _filterHeaderKey,
           mainAxisSize: MainAxisSize.min,
           children: [
-            DropdownSelectorBar(
+            PopupSelectBar(
               controller: _controller,
               tabs: [
-                DropdownTab(label: l10n?.region ?? ''),
-                DropdownTab(label: l10n?.price ?? ''),
-                DropdownTab(label: l10n?.floorPlan ?? ''),
-                DropdownTab(label: l10n?.more ?? ''),
-                DropdownTab(
+                PopupTab(label: l10n?.region ?? ''),
+                PopupTab(label: l10n?.price ?? ''),
+                PopupTab(label: l10n?.floorPlan ?? ''),
+                PopupTab(label: l10n?.more ?? ''),
+                PopupTab(
                   child:
                       Image.asset('assets/sorting.png', width: 16, height: 16),
                 ),
@@ -569,7 +569,7 @@ class _BuyPageState extends State<BuyPage> {
                   },
                 ),
               ],
-              onSelectorWillShow: (DropdownTabData tabData) async {
+              onSelectorWillShow: (PopupTabData tabData) async {
                 // Programmatic sticky: scroll exactly enough so the filter bar
                 // (SliverPersistentHeader) pins just below the collapsed app
                 // bar, then let the overlay anchor to that final layout.
@@ -593,14 +593,14 @@ class _BuyPageState extends State<BuyPage> {
                 }
                 return true;
               },
-              onSelectorShowed: (DropdownTabData tabData) {
+              onSelectorShowed: (PopupTabData tabData) {
                 largePrint('onShowed: ${tabData.label}');
               },
-              onSelectorWillHide: (DropdownTabData tabData) {
+              onSelectorWillHide: (PopupTabData tabData) {
                 largePrint('onWillHide: ${tabData.label}');
                 return true;
               },
-              onSelectorHidden: (DropdownTabData tabData) {
+              onSelectorHidden: (PopupTabData tabData) {
                 largePrint('onHidden: ${tabData.label}');
               },
               onChanged: (tabData, selected) {

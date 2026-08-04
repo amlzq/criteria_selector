@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 
 /// Where the selector is rendered inside the simulated phone.
 enum EntryPoint {
-  box,
-  dropdownBar,
-  dropdownButton,
+  view,
+  popupBar,
+  popupButton,
   dialog,
   bottomSheet,
 }

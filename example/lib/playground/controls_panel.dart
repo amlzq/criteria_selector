@@ -21,10 +21,10 @@ class ControlsPanel extends StatelessWidget {
   bool get _gridRelevant =>
       params.delegate == Delegate.grid || params.delegate == Delegate.flatten;
 
-  // The dropdown bar demo owns 4 fixed tabs (one per delegate family), so the
+  // The popup bar demo owns 4 fixed tabs (one per delegate family), so the
   // global Delegate selector no longer affects it and is disabled for that
   // entry point.
-  bool get _delegateEnabled => params.entryPoint != EntryPoint.dropdownBar;
+  bool get _delegateEnabled => params.entryPoint != EntryPoint.popupBar;
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +35,9 @@ class ControlsPanel extends StatelessWidget {
         _EnumDropdown<EntryPoint>(
           value: params.entryPoint,
           items: const {
-            EntryPoint.box: 'SelectView',
-            EntryPoint.dropdownBar: 'DropdownSelectorBar',
-            EntryPoint.dropdownButton: 'DropdownSelectorButton',
+            EntryPoint.view: 'SelectView',
+            EntryPoint.popupBar: 'PopupSelectBar',
+            EntryPoint.popupButton: 'PopupSelectButton',
             EntryPoint.dialog: 'showSelect',
             EntryPoint.bottomSheet: 'showModalBottomSelect',
           },
