@@ -21,12 +21,12 @@ import 'widgets/widgets.dart';
 ///   without requiring the action bar.
 /// - In multi-selection mode, the action bar is shown and "Apply" produces the
 ///   final clipped selection tree.
-class GridSelector extends StatefulWidget {
+class GridSelect extends StatefulWidget {
   final GridSelectDelegate delegate;
   final List<SelectEntry> entries;
   final Set<SelectEntry>? previousSelected;
 
-  const GridSelector({
+  const GridSelect({
     super.key,
     required this.delegate,
     required this.entries,
@@ -34,10 +34,10 @@ class GridSelector extends StatefulWidget {
   });
 
   @override
-  State<GridSelector> createState() => GridSelectorState();
+  State<GridSelect> createState() => GridSelectState();
 }
 
-class GridSelectorState extends State<GridSelector> {
+class GridSelectState extends State<GridSelect> {
   /// Focused category entry
   late SelectCategoryEntry _tempSelectedCategory;
 
@@ -63,7 +63,7 @@ class GridSelectorState extends State<GridSelector> {
   }
 
   @override
-  void didUpdateWidget(covariant GridSelector oldWidget) {
+  void didUpdateWidget(covariant GridSelect oldWidget) {
     super.didUpdateWidget(oldWidget);
     _updateSelectController(context);
   }
@@ -297,9 +297,9 @@ class GridSelectorState extends State<GridSelector> {
   }
 }
 
-class GridSelectorSkeleton extends StatelessWidget {
-  /// Loading skeleton for [GridSelector].
-  const GridSelectorSkeleton({
+class GridSelectSkeleton extends StatelessWidget {
+  /// Loading skeleton for [GridSelect].
+  const GridSelectSkeleton({
     super.key,
     required this.itemCount,
     required this.crossAxisCount,

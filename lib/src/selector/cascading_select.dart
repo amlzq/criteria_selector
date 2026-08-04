@@ -21,8 +21,8 @@ import 'widgets/widgets.dart';
 ///   may be used to apply the final selection.
 /// - If an entry's `immediate` is true, selection is applied immediately
 ///   without requiring the action bar.
-class CascadingSelector extends StatefulWidget {
-  const CascadingSelector({
+class CascadingSelect extends StatefulWidget {
+  const CascadingSelect({
     super.key,
     required this.delegate,
     required this.entries,
@@ -36,10 +36,10 @@ class CascadingSelector extends StatefulWidget {
   final Set<SelectEntry>? previousSelected;
 
   @override
-  State<CascadingSelector> createState() => CascadingSelectorState();
+  State<CascadingSelect> createState() => CascadingSelectState();
 }
 
-class CascadingSelectorState extends State<CascadingSelector> {
+class CascadingSelectState extends State<CascadingSelect> {
   /// Temporarily selected (focused) item per level (usually a parent node)
   /// Terminal nodes do not need to be included in the temporary selection list
   final List<SelectEntry> _tempSelectedEntryPerLevel = [];
@@ -82,7 +82,7 @@ class CascadingSelectorState extends State<CascadingSelector> {
   }
 
   @override
-  void didUpdateWidget(covariant CascadingSelector oldWidget) {
+  void didUpdateWidget(covariant CascadingSelect oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Only rebuild the selection state when the data actually changes.
     // In playground's SelectView mode, the ancestor EntryPointScreen calls
@@ -772,8 +772,8 @@ class CascadingSelectorState extends State<CascadingSelector> {
   }
 }
 
-// class _CascadingSelectorDefaults extends SelectThemeData {
-//   _CascadingSelectorDefaults(this.context) : super();
+// class _CascadingSelectDefaults extends SelectThemeData {
+//   _CascadingSelectDefaults(this.context) : super();
 
 //   final BuildContext context;
 //   late final ColorScheme _colors = Theme.of(context).colorScheme;
@@ -789,8 +789,8 @@ class CascadingSelectorState extends State<CascadingSelector> {
 //   Color? get terminalBackgroundColor => _colors.surfaceContainerHighest;
 // }
 
-class CascadingSelectorSkeleton extends StatelessWidget {
-  const CascadingSelectorSkeleton({
+class CascadingSelectSkeleton extends StatelessWidget {
+  const CascadingSelectSkeleton({
     super.key,
     this.backgroundColor,
   });

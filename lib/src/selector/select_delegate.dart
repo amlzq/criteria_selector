@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'cascading_selector.dart';
+import 'cascading_select.dart';
 import 'constants.dart';
-import 'flatten_selector.dart';
-import 'grid_selector.dart';
-import 'list_selector.dart';
+import 'flatten_select.dart';
+import 'grid_select.dart';
+import 'list_select.dart';
 import 'select_entry.dart';
 import 'select_panel_theme.dart';
 import 'widgets/widgets.dart';
@@ -248,7 +248,7 @@ class CascadingSelectDelegate extends SelectDelegate {
     List<SelectEntry> entries,
     Set<SelectEntry>? previousSelected,
   ) {
-    return CascadingSelector(
+    return CascadingSelect(
       delegate: this,
       entries: entries,
       previousSelected: previousSelected,
@@ -258,7 +258,7 @@ class CascadingSelectDelegate extends SelectDelegate {
   @override
   Widget buildSkeleton(BuildContext context) {
     return skeletonBuilder?.call(context) ??
-        CascadingSelectorSkeleton(backgroundColor: backgroundColor);
+        CascadingSelectSkeleton(backgroundColor: backgroundColor);
   }
 }
 
@@ -306,7 +306,7 @@ class ListSelectDelegate extends SelectDelegate {
     List<SelectEntry> entries,
     Set<SelectEntry>? previousSelected,
   ) {
-    return ListSelector(
+    return ListSelect(
       delegate: this,
       entries: entries,
       previousSelected: previousSelected,
@@ -316,7 +316,7 @@ class ListSelectDelegate extends SelectDelegate {
   @override
   Widget buildSkeleton(BuildContext context) {
     return skeletonBuilder?.call(context) ??
-        ListSelectorSkeleton(selectionMode: selectionMode);
+        ListSelectSkeleton(selectionMode: selectionMode);
   }
 }
 
@@ -380,7 +380,7 @@ class GridSelectDelegate extends SelectDelegate {
     List<SelectEntry> entries,
     Set<SelectEntry>? previousSelected,
   ) {
-    return GridSelector(
+    return GridSelect(
       delegate: this,
       entries: entries,
       previousSelected: previousSelected,
@@ -390,7 +390,7 @@ class GridSelectDelegate extends SelectDelegate {
   @override
   Widget buildSkeleton(BuildContext context) {
     return skeletonBuilder?.call(context) ??
-        GridSelectorSkeleton(
+        GridSelectSkeleton(
           itemCount: 15,
           crossAxisCount: crossAxisCount,
           mainAxisSpacing: mainAxisSpacing,
@@ -453,7 +453,7 @@ class FlattenSelectDelegate extends SelectDelegate {
     List<SelectEntry> entries,
     Set<SelectEntry>? previousSelected,
   ) {
-    return FlattenSelector(
+    return FlattenSelect(
       delegate: this,
       entries: entries,
       previousSelected: previousSelected,
@@ -467,7 +467,7 @@ class FlattenSelectDelegate extends SelectDelegate {
   @override
   Widget buildSkeleton(BuildContext context) {
     return skeletonBuilder?.call(context) ??
-        PlattenSelectorSkeleton(
+        FlattenSelectSkeleton(
           sideBarWidth: sideBarTheme?.width,
           crossAxisCount: crossAxisCount,
           mainAxisSpacing: mainAxisSpacing,

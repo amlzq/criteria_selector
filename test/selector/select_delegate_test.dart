@@ -31,7 +31,7 @@ SelectCategoryEntry<dynamic> _category(
 }
 
 void main() {
-  group('CascadingSelector', () {
+  group('CascadingSelect', () {
     testWidgets('restores a connected deepest focused path', (tester) async {
       final branchALeaf = _text('a', 'a_leaf', 'BranchALeaf');
       final branchA = _text('c', 'a', 'BranchA', children: {branchALeaf});

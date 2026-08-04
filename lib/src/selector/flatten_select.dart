@@ -23,8 +23,8 @@ import 'widgets/widgets.dart';
 ///   without requiring the action bar.
 /// - In multi-selection mode, the action bar is shown and "Apply" produces the
 ///   final clipped selection tree.
-class FlattenSelector extends StatefulWidget {
-  const FlattenSelector({
+class FlattenSelect extends StatefulWidget {
+  const FlattenSelect({
     super.key,
     required this.delegate,
     required this.entries,
@@ -50,10 +50,10 @@ class FlattenSelector extends StatefulWidget {
   final double childAspectRatio;
 
   @override
-  State<FlattenSelector> createState() => FlattenSelectorState();
+  State<FlattenSelect> createState() => FlattenSelectState();
 }
 
-class FlattenSelectorState extends State<FlattenSelector> {
+class FlattenSelectState extends State<FlattenSelect> {
   /// Focused category entry
   int _tempSelectedCategoryIndex = 0;
 
@@ -76,7 +76,7 @@ class FlattenSelectorState extends State<FlattenSelector> {
   }
 
   @override
-  void didUpdateWidget(covariant FlattenSelector oldWidget) {
+  void didUpdateWidget(covariant FlattenSelect oldWidget) {
     super.didUpdateWidget(oldWidget);
     _updateSelectController(context);
   }
@@ -393,9 +393,9 @@ class FlattenSelectorState extends State<FlattenSelector> {
   }
 }
 
-class PlattenSelectorSkeleton extends StatelessWidget {
-  /// Loading skeleton for [FlattenSelector].
-  const PlattenSelectorSkeleton({
+class FlattenSelectSkeleton extends StatelessWidget {
+  /// Loading skeleton for [FlattenSelect].
+  const FlattenSelectSkeleton({
     super.key,
     this.sideBarWidth,
     this.categoryBackgroundColor,
