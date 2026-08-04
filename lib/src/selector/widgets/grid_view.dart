@@ -9,7 +9,7 @@ import 'field_tile.dart';
 import 'field_tile_theme.dart';
 import 'grid_tile.dart';
 import 'grid_tile_theme.dart';
-import 'skeleton_box.dart';
+import 'skeleton_view.dart';
 
 /// A grid view that can include a single input item.
 /// Only used in tabs or flatten; uses AutomaticKeepAliveClientMixin.
@@ -366,7 +366,7 @@ class SelectGridSkeleton extends StatelessWidget {
     final random = Random();
     return Padding(
       padding: padding ?? EdgeInsets.zero,
-      child: SkeletonBox(
+      child: SkeletonView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,

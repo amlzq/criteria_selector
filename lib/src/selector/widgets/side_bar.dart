@@ -7,7 +7,7 @@ import 'badge.dart';
 import 'constants.dart';
 import 'list_tile.dart';
 import 'side_bar_theme.dart';
-import 'skeleton_box.dart';
+import 'skeleton_view.dart';
 
 class SelectSideBar extends StatelessWidget {
   const SelectSideBar({
@@ -206,7 +206,7 @@ class SelectSideBarSkeleton extends StatelessWidget {
       width: effctiveWidth,
       padding: effectivePadding,
       color: effectiveBackgroundColor,
-      child: SkeletonBox(
+      child: SkeletonView(
         child: SingleChildScrollView(
           physics: const ClampingScrollPhysics(),
           child: Column(

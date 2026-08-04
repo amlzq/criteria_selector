@@ -4,7 +4,7 @@ import '../../i18n/select_localizations.dart';
 import '../select_theme.dart';
 import '../select_theme_data.dart';
 import 'action_bar_theme.dart';
-import 'skeleton_box.dart';
+import 'skeleton_view.dart';
 
 /// Action bar for selector panels.
 ///
@@ -141,7 +141,7 @@ class SelectActionBarSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SkeletonBox(
+    return SkeletonView(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         child: Row(

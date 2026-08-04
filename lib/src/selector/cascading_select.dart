@@ -812,7 +812,7 @@ class CascadingSelectSkeleton extends StatelessWidget {
               Container(
                 width: kSelectorCategoryTileWidth,
                 color: effectiveBackgroundColor,
-                child: SkeletonBox(
+                child: SkeletonView(
                   child: ListView.separated(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
@@ -836,7 +836,7 @@ class CascadingSelectSkeleton extends StatelessWidget {
               Flexible(
                 child: ColoredBox(
                   color: effectiveBackgroundColor,
-                  child: SkeletonBox(
+                  child: SkeletonView(
                     child: ListView.separated(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),

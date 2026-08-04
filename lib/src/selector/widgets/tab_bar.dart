@@ -4,7 +4,7 @@ import '../select_entry.dart';
 import '../select_theme.dart';
 import '../select_theme_data.dart';
 import 'constants.dart';
-import 'skeleton_box.dart';
+import 'skeleton_view.dart';
 import 'tab_bar_theme.dart';
 
 enum SelectTabBarIndicatorSize {
@@ -383,7 +383,7 @@ class SelectTabBarSkeleton extends StatelessWidget {
     return Container(
       padding: effectivePadding,
       color: effectiveBackgroundColor,
-      child: SkeletonBox(
+      child: SkeletonView(
         child: Row(
           children: [
             Expanded(

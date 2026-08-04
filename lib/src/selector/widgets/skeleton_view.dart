@@ -7,8 +7,8 @@ import '../select_theme.dart';
 /// A shimmering wrapper used for loading skeleton UIs.
 ///
 /// The shimmer is applied to [child] via a moving linear gradient shader.
-class SkeletonBox extends StatefulWidget {
-  const SkeletonBox({
+class SkeletonView extends StatefulWidget {
+  const SkeletonView({
     super.key,
     required this.child,
     this.duration = const Duration(milliseconds: 2000),
@@ -38,10 +38,10 @@ class SkeletonBox extends StatefulWidget {
   final List<Color>? colors;
 
   @override
-  State<SkeletonBox> createState() => _SkeletonBoxState();
+  State<SkeletonView> createState() => _SkeletonViewState();
 }
 
-class _SkeletonBoxState extends State<SkeletonBox>
+class _SkeletonViewState extends State<SkeletonView>
     with SingleTickerProviderStateMixin {
   late AnimationController controller;
 
@@ -116,7 +116,7 @@ class _SkeletonBoxState extends State<SkeletonBox>
   }
 }
 
-/// A rectangular placeholder used inside [SkeletonBox].
+/// A rectangular placeholder used inside [SkeletonView].
 class SkeletonTile extends StatelessWidget {
   /// The height of the placeholder tile.
   ///

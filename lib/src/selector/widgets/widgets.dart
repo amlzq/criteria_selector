@@ -18,6 +18,6 @@ export 'range_slider_theme.dart';
 export 'range_view.dart';
 export 'side_bar.dart';
 export 'side_bar_theme.dart';
-export 'skeleton_box.dart';
+export 'skeleton_view.dart';
 export 'tab_bar.dart';
 export 'tab_bar_theme.dart';

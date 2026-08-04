@@ -8,7 +8,7 @@ import '../select_entry.dart';
 import 'constants.dart';
 import 'field_tile.dart';
 import 'list_tile.dart';
-import 'skeleton_box.dart';
+import 'skeleton_view.dart';
 
 /// A list view that can include a single input item.
 /// Must be a terminal-node list.
@@ -354,7 +354,7 @@ class SelectListSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final random = Random();
-    return SkeletonBox(
+    return SkeletonView(
       child: ListView.separated(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
