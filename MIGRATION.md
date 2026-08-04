@@ -2,14 +2,14 @@
 
 ## Next
 
-### `SelectorListTile` / `SelectorListView` / `SelectorRange*` / `SelectorSideBar` / `SelectorTabBar` renamed to `Select*`
+### `SelectorListTile` / `SelectorListView` / `SelectorRange*` / `SelectorSideBar` / `SelectorTabBar` / `SelectorActionBar` / `SelectorChipBar` / `SelectorExpansionTile` / `SelectorFieldTile` / `SelectorGridTile` / `SelectorGridView` renamed to `Select*`
 
-The list, range, sidebar, and tab bar widgets and their themes have been renamed
-to drop the redundant `Selector` prefix. The old names are kept as deprecated
-type aliases (e.g. `typedef SelectorListTile = SelectListTile;`) and a deprecated
-constant for backward compatibility and **will be removed in a future minor
-version**. Since the aliases are exact `typedef`s, this is a pure rename — no
-behavior changes.
+The list, range, sidebar, tab bar, and panel-content widgets and their themes
+have been renamed to drop the redundant `Selector` prefix. The old names are
+kept as deprecated type aliases (e.g. `typedef SelectorListTile = SelectListTile;`)
+and a deprecated constant for backward compatibility and **will be removed in a
+future minor version**. Since the aliases are exact `typedef`s, this is a pure
+rename — no behavior changes.
 
 | Old name | New name | Deprecated alias? |
 | --- | --- | --- |
@@ -31,9 +31,33 @@ behavior changes.
 | `SelectorTabBarIndicatorSize` | `SelectTabBarIndicatorSize` | yes |
 | `SelectorTabBarSkeleton` | `SelectTabBarSkeleton` | yes |
 | `kSelectorListTileHeight` | `kSelectListTileHeight` | yes (deprecated constant) |
+| `SelectorActionBar` | `SelectActionBar` | yes |
+| `SelectorActionBarTheme` | `SelectActionBarTheme` | yes |
+| `SelectorActionBarSkeleton` | `SelectActionBarSkeleton` | yes |
+| `SelectorActionBarBuilder` | `SelectActionBarBuilder` | yes |
+| `SelectorChipBar` | `SelectChipBar` | yes |
+| `SelectorChipBarTheme` | `SelectChipBarTheme` | yes |
+| `SelectorChipVariant` | `SelectChipVariant` | yes |
+| `SelectorExpansionTile` | `SelectExpansionTile` | yes |
+| `SelectorExpansionTileTheme` | `SelectExpansionTileTheme` | yes |
+| `SelectorFieldTile` | `SelectFieldTile` | yes |
+| `SelectorFieldTileTheme` | `SelectFieldTileTheme` | yes |
+| `SelectorFieldTileVariant` | `SelectFieldTileVariant` | yes |
+| `SelectorGridTile` | `SelectGridTile` | yes |
+| `SelectorGridTileTheme` | `SelectGridTileTheme` | yes |
+| `SelectorGridTileVariant` | `SelectGridTileVariant` | yes |
+| `SelectorGridView` | `SelectGridView` | yes |
+| `SelectorGridViewState` | `SelectGridViewState` | yes |
+| `SelectorGridSkeleton` | `SelectGridSkeleton` | yes |
 
 The public export is updated, so no import change is required when using the
 package barrel.
+
+`SelectorActionBarVisibility` is package-internal (not re-exported from the
+public barrel) and is renamed cleanly to `SelectActionBarVisibility` without a
+deprecated alias. The internal constants `kSelectorChipBarHeight` and
+`kSelectorExpansionTileAnimationDuration` were renamed to `kSelectChipBarHeight`
+and `kSelectExpansionTileAnimationDuration`.
 
 Migration: replace each old name with its new counterpart at every call site.
 
@@ -61,6 +85,24 @@ const SelectorListTileTheme();
 // After
 const SelectSideBarTheme(width: 150);
 const SelectListTileTheme();
+```
+
+```dart
+// Before
+SelectorGridView(
+  crossAxisCount: 2,
+  gridTileTheme: const SelectorGridTileTheme(
+    variant: SelectorGridTileVariant.outlined,
+  ),
+);
+
+// After
+SelectGridView(
+  crossAxisCount: 2,
+  gridTileTheme: const SelectGridTileTheme(
+    variant: SelectGridTileVariant.outlined,
+  ),
+);
 ```
 
 ### `DropdownOverlay*` / `SelectorLabel*` renamed to `Select*`
@@ -495,62 +537,6 @@ MaterialApp(
     SelectLocalizationsDelegate(),
   ],
   supportedLocales: SelectLocalizationsDelegate.supportedLocales,
-);
-```
-
-### `SelectorActionBar` / `SelectorChipBar` / `SelectorExpansionTile` / `SelectorFieldTile` / `SelectorGridTile` / `SelectorGridView` renamed to `Select*`
-
-The widget, theme, and related types used to render the panel's content have been
-renamed to drop the redundant `Selector` prefix. The old names are kept as
-deprecated type aliases (e.g. `typedef SelectorActionBar = SelectActionBar;`) for
-backward compatibility and **will be removed in a future minor version**. Since
-the aliases are exact `typedef`s, this is a pure rename — no behavior changes.
-
-| Old name | New name |
-| --- | --- |
-| `SelectorActionBar` | `SelectActionBar` |
-| `SelectorActionBarTheme` | `SelectActionBarTheme` |
-| `SelectorActionBarSkeleton` | `SelectActionBarSkeleton` |
-| `SelectorActionBarBuilder` | `SelectActionBarBuilder` |
-| `SelectorChipBar` | `SelectChipBar` |
-| `SelectorChipBarTheme` | `SelectChipBarTheme` |
-| `SelectorChipVariant` | `SelectChipVariant` |
-| `SelectorExpansionTile` | `SelectExpansionTile` |
-| `SelectorExpansionTileTheme` | `SelectExpansionTileTheme` |
-| `SelectorFieldTile` | `SelectFieldTile` |
-| `SelectorFieldTileTheme` | `SelectFieldTileTheme` |
-| `SelectorFieldTileVariant` | `SelectFieldTileVariant` |
-| `SelectorGridTile` | `SelectGridTile` |
-| `SelectorGridTileTheme` | `SelectGridTileTheme` |
-| `SelectorGridTileVariant` | `SelectGridTileVariant` |
-| `SelectorGridView` | `SelectGridView` |
-| `SelectorGridViewState` | `SelectGridViewState` |
-| `SelectorGridSkeleton` | `SelectGridSkeleton` |
-
-`SelectorActionBarVisibility` is package-internal (not re-exported from the
-public barrel) and is renamed cleanly to `SelectActionBarVisibility` without a
-deprecated alias. The internal constants `kSelectorChipBarHeight` and
-`kSelectorExpansionTileAnimationDuration` were renamed to `kSelectChipBarHeight`
-and `kSelectExpansionTileAnimationDuration`. The public export is updated, so no
-import change is required when using the package barrel.
-
-Migration: replace each old name with its new counterpart at every call site.
-
-```dart
-// Before
-SelectorGridView(
-  crossAxisCount: 2,
-  gridTileTheme: const SelectorGridTileTheme(
-    variant: SelectorGridTileVariant.outlined,
-  ),
-);
-
-// After
-SelectGridView(
-  crossAxisCount: 2,
-  gridTileTheme: const SelectGridTileTheme(
-    variant: SelectGridTileVariant.outlined,
-  ),
 );
 ```
 
