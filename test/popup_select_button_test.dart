@@ -13,7 +13,7 @@ void main() {
           home: Scaffold(
             body: PopupSelectButton(
               label: 'Filter',
-              selectorDelegate: ListSelectorDelegate(
+              selectDelegate: ListSelectDelegate(
                 entriesLoader: () async => <SelectEntry<dynamic>>{
                   SelectTextEntry<dynamic>.name(id: 'a', name: 'A'),
                 },
@@ -58,7 +58,7 @@ void main() {
           home: Scaffold(
             body: PopupSelectButton(
               label: 'Sort',
-              selectorDelegate: ListSelectorDelegate(
+              selectDelegate: ListSelectDelegate(
                 entriesLoader: () async => <SelectEntry<dynamic>>{
                   SelectTextEntry<dynamic>.name(id: 'a', name: 'A'),
                   SelectTextEntry<dynamic>.name(id: 'b', name: 'B'),
@@ -93,7 +93,7 @@ void main() {
             body: PopupSelectButton(
               label: 'Sort',
               labelLoader: (selected) => '${selected.length} selected',
-              selectorDelegate: ListSelectorDelegate(
+              selectDelegate: ListSelectDelegate(
                 entriesLoader: () async => <SelectEntry<dynamic>>{
                   SelectTextEntry<dynamic>.name(id: 'a', name: 'A'),
                   SelectTextEntry<dynamic>.name(id: 'b', name: 'B'),
@@ -122,13 +122,13 @@ void main() {
               children: [
                 PopupSelectButton.elevated(
                   label: 'Elevated',
-                  selectorDelegate: ListSelectorDelegate(
+                  selectDelegate: ListSelectDelegate(
                     entriesLoader: () async => <SelectEntry<dynamic>>{},
                   ),
                 ),
                 PopupSelectButton.outlined(
                   label: 'Outlined',
-                  selectorDelegate: ListSelectorDelegate(
+                  selectDelegate: ListSelectDelegate(
                     entriesLoader: () async => <SelectEntry<dynamic>>{},
                   ),
                 ),

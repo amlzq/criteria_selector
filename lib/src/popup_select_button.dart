@@ -8,7 +8,7 @@ import 'i18n/localizations.dart';
 import 'popup_select_button_theme.dart';
 import 'popup_select_controller.dart';
 import 'selector/select_entry.dart';
-import 'selector/selector_delegate.dart';
+import 'selector/select_delegate.dart';
 import 'selector_label_state.dart';
 import 'selector_overlay_host.dart';
 
@@ -83,14 +83,19 @@ const kDropdownSelectorButtonHeight = kPopupSelectButtonHeight;
 /// animation, dismissal on outside tap, auto-close on apply) is driven by the
 /// same [PopupSelectController] machinery as [PopupSelectBar].
 ///
-/// Provide a [selectorDelegate] to define the selector content, and a [label]
+/// Provide a [selectDelegate] to define the selector content, and a [label]
 /// or [child] for the trigger. The trailing [icon] rotates while the overlay is
 /// open. After an apply, the button label is updated with the resulting label.
 class PopupSelectButton extends StatefulWidget {
   /// Creates a filled button (the default variant).
   const PopupSelectButton({
     super.key,
-    required this.selectorDelegate,
+    SelectDelegate? selectDelegate,
+    @Deprecated(
+      'Use selectDelegate instead. This parameter will be removed in a '
+      'future minor version.',
+    )
+    SelectDelegate? selectorDelegate,
     this.variant = PopupSelectButtonVariant.filled,
     this.label,
     this.child,
@@ -105,14 +110,25 @@ class PopupSelectButton extends StatefulWidget {
     this.onReset,
     this.labelLoader,
     this.direction = PopupSelectDirection.below,
-  }) : assert(label == null || child == null,
-            'Provide either label or child, not both.');
+  })  : assert(
+          selectDelegate == null || selectorDelegate == null,
+          'Provide either selectDelegate or the deprecated selectorDelegate, '
+          'but not both.',
+        ),
+        assert(label == null || child == null,
+            'Provide either label or child, not both.'),
+        selectDelegate = selectorDelegate ?? selectDelegate;
 
   /// Creates an elevated button. The [variant] is fixed to
   /// [PopupSelectButtonVariant.elevated].
   const PopupSelectButton.elevated({
     super.key,
-    required this.selectorDelegate,
+    SelectDelegate? selectDelegate,
+    @Deprecated(
+      'Use selectDelegate instead. This parameter will be removed in a '
+      'future minor version.',
+    )
+    SelectDelegate? selectorDelegate,
     this.label,
     this.child,
     this.icon,
@@ -126,15 +142,26 @@ class PopupSelectButton extends StatefulWidget {
     this.onReset,
     this.labelLoader,
     this.direction = PopupSelectDirection.below,
-  })  : variant = PopupSelectButtonVariant.elevated,
+  })  : assert(
+          selectDelegate == null || selectorDelegate == null,
+          'Provide either selectDelegate or the deprecated selectorDelegate, '
+          'but not both.',
+        ),
+        variant = PopupSelectButtonVariant.elevated,
         assert(label == null || child == null,
-            'Provide either label or child, not both.');
+            'Provide either label or child, not both.'),
+        selectDelegate = selectorDelegate ?? selectDelegate;
 
   /// Creates an outlined button. The [variant] is fixed to
   /// [PopupSelectButtonVariant.outlined].
   const PopupSelectButton.outlined({
     super.key,
-    required this.selectorDelegate,
+    SelectDelegate? selectDelegate,
+    @Deprecated(
+      'Use selectDelegate instead. This parameter will be removed in a '
+      'future minor version.',
+    )
+    SelectDelegate? selectorDelegate,
     this.label,
     this.child,
     this.icon,
@@ -148,12 +175,31 @@ class PopupSelectButton extends StatefulWidget {
     this.onReset,
     this.labelLoader,
     this.direction = PopupSelectDirection.below,
-  })  : variant = PopupSelectButtonVariant.outlined,
+  })  : assert(
+          selectDelegate == null || selectorDelegate == null,
+          'Provide either selectDelegate or the deprecated selectorDelegate, '
+          'but not both.',
+        ),
+        variant = PopupSelectButtonVariant.outlined,
         assert(label == null || child == null,
-            'Provide either label or child, not both.');
+            'Provide either label or child, not both.'),
+        selectDelegate = selectorDelegate ?? selectDelegate;
 
   /// Selector configuration for the single trigger.
-  final SelectorDelegate selectorDelegate;
+  ///
+  /// If the deprecated `selectorDelegate` parameter was supplied instead, this
+  /// resolves to that value.
+  final SelectDelegate? selectDelegate;
+
+  /// Deprecated alias for [selectDelegate].
+  ///
+  /// Use [selectDelegate] instead. This getter is kept only for backward
+  /// compatibility and will be removed in a future minor version.
+  @Deprecated(
+    'Use selectDelegate instead. This getter will be removed in a future '
+    'minor version.',
+  )
+  SelectDelegate? get selectorDelegate => selectDelegate;
 
   /// Visual style of the trigger button.
   final PopupSelectButtonVariant variant;
@@ -235,7 +281,7 @@ class _PopupSelectButtonState extends State<PopupSelectButton>
     _removeChangeListener = _controller.addChangeListener(_handleWidgetChange);
     _removeApplyListener = _controller.addApplyListener(_handleWidgetApply);
     _removeResetListener = _controller.addResetListener(_handleWidgetReset);
-    _controller.attachSelectorDelegates([widget.selectorDelegate]);
+    _controller.attachSelectDelegates([widget.selectDelegate!]);
     _controller.attachTickerProvider(this);
     _labelState.originalLabel = widget.label;
     _labelState.labelLoader = widget.labelLoader;
@@ -245,7 +291,7 @@ class _PopupSelectButtonState extends State<PopupSelectButton>
   @override
   void didUpdateWidget(covariant PopupSelectButton oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _controller.attachSelectorDelegates([widget.selectorDelegate]);
+    _controller.attachSelectDelegates([widget.selectDelegate!]);
     _controller.attachTickerProvider(this);
     if (oldWidget.label != widget.label) {
       _labelState.originalLabel = widget.label;
@@ -287,7 +333,7 @@ class _PopupSelectButtonState extends State<PopupSelectButton>
         ? await widget.onSelectorWillShow?.call() ?? true
         : await widget.onSelectorWillHide?.call() ?? true;
     if (!proceed) return;
-    _controller.previousSelectorDelegate = widget.selectorDelegate;
+    _controller.previousSelectDelegate = widget.selectDelegate!;
     _controller.toggleSelector(index: 0);
     if (_controller.isSelectorShowing) {
       widget.onSelectorShowed?.call();

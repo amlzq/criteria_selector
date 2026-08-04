@@ -40,7 +40,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
               onPressed: () async {
                 final result = await showSelect(
                   context: context,
-                  delegate: CascadingSelectorDelegate(
+                  delegate: CascadingSelectDelegate(
                     entriesLoader: _filtersRepo.fetchRegionData,
                     selectedEntriesLoader: _filtersRepo.fetchRegionResetData,
                     resetEntriesLoader: _filtersRepo.fetchRegionResetData,
@@ -73,7 +73,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
               onPressed: () async {
                 final result = await showSelect(
                   context: context,
-                  delegate: GridSelectorDelegate(
+                  delegate: GridSelectDelegate(
                     entriesLoader: _filtersRepo.fetchBuyPriceData,
                     selectedEntriesLoader:
                         _filtersRepo.fetchBuyPriceSelectedData,
@@ -107,7 +107,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
               onPressed: () async {
                 final result = await showSelect(
                   context: context,
-                  delegate: FlattenSelectorDelegate(
+                  delegate: FlattenSelectDelegate(
                     entriesLoader: _filtersRepo.fetchFloorPlanBuyData,
                     selectedEntriesLoader:
                         _filtersRepo.fetchFloorPlanBuySelectedData,
@@ -139,7 +139,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
               onPressed: () async {
                 final result = await showSelect(
                   context: context,
-                  delegate: FlattenSelectorDelegate(
+                  delegate: FlattenSelectDelegate(
                     entriesLoader: _filtersRepo.fetchMoreBuyData,
                     selectedEntriesLoader:
                         _filtersRepo.fetchMoreBuySelectedData,
@@ -169,7 +169,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
               onPressed: () async {
                 final result = await showSelect(
                   context: context,
-                  delegate: ListSelectorDelegate(
+                  delegate: ListSelectDelegate(
                     entriesLoader: _filtersRepo.fetchSortBuyData,
                     selectedEntriesLoader:
                         _filtersRepo.fetchSortBuySelectedData,
@@ -207,7 +207,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
               onPressed: () async {
                 final result = await showModalBottomSelect(
                   context: context,
-                  delegate: CascadingSelectorDelegate(
+                  delegate: CascadingSelectDelegate(
                     entriesLoader: _filtersRepo.fetchRegionData,
                     selectedEntriesLoader: _filtersRepo.fetchRegionResetData,
                     resetEntriesLoader: _filtersRepo.fetchRegionResetData,
@@ -237,7 +237,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
               onPressed: () async {
                 final result = await showModalBottomSelect(
                   context: context,
-                  delegate: GridSelectorDelegate(
+                  delegate: GridSelectDelegate(
                     entriesLoader: _filtersRepo.fetchBuyPriceData,
                     selectedEntriesLoader:
                         _filtersRepo.fetchBuyPriceSelectedData,
@@ -271,7 +271,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
               onPressed: () async {
                 final result = await showModalBottomSelect(
                   context: context,
-                  delegate: FlattenSelectorDelegate(
+                  delegate: FlattenSelectDelegate(
                     entriesLoader: _filtersRepo.fetchFloorPlanBuyData,
                     selectedEntriesLoader:
                         _filtersRepo.fetchFloorPlanBuySelectedData,
@@ -301,7 +301,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
               onPressed: () async {
                 final result = await showModalBottomSelect(
                   context: context,
-                  delegate: FlattenSelectorDelegate(
+                  delegate: FlattenSelectDelegate(
                     entriesLoader: _filtersRepo.fetchMoreBuyData,
                     selectedEntriesLoader:
                         _filtersRepo.fetchMoreBuySelectedData,
@@ -333,7 +333,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
               onPressed: () async {
                 final result = await showModalBottomSelect(
                   context: context,
-                  delegate: ListSelectorDelegate(
+                  delegate: ListSelectDelegate(
                     entriesLoader: _filtersRepo.fetchSortBuyData,
                     selectedEntriesLoader:
                         _filtersRepo.fetchSortBuySelectedData,

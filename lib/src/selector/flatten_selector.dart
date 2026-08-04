@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'action_bar_visibility.dart';
 import 'constants.dart';
 import 'selector_controller.dart';
-import 'selector_delegate.dart';
+import 'select_delegate.dart';
 import 'select_entry.dart';
 import 'selector_theme.dart';
 import 'widgets/widgets.dart';
@@ -35,7 +35,7 @@ class FlattenSelector extends StatefulWidget {
     this.childAspectRatio = 1.0,
   });
 
-  final FlattenSelectorDelegate delegate;
+  final FlattenSelectDelegate delegate;
 
   final List<SelectEntry> entries;
 
@@ -93,7 +93,7 @@ class FlattenSelectorState extends State<FlattenSelector> {
     );
   }
 
-  FlattenSelectorDelegate get delegate => widget.delegate;
+  FlattenSelectDelegate get delegate => widget.delegate;
 
   void _handleSelectorControllerTick() {
     if (mounted) setState(() {});

@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 /// not provide this widget, so the action bar remains visible there.
 ///
 /// This keeps the action bar's "render or not" decision out of the delegate
-/// (whose [SelectorDelegate.actionBarBuilder] only customizes the bar's UI),
+/// (whose [SelectDelegate.actionBarBuilder] only customizes the bar's UI),
 /// avoiding a per-subclass wrapping delegate.
 class SelectorActionBarVisibility extends InheritedWidget {
   const SelectorActionBarVisibility({

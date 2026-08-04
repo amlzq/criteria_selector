@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'selector/select_entry.dart';
 import 'selector/selector_controller.dart';
-import 'selector/selector_delegate.dart';
+import 'selector/select_delegate.dart';
 import 'selector/selector_utils.dart';
 import 'selector_label_state.dart';
 
@@ -153,8 +153,34 @@ class PopupSelectController extends ChangeNotifier {
   PopupTabData get currentTabData =>
       labelStateMap[currentIndex]! as PopupTabData;
 
+  SelectDelegate? _previousSelectDelegate;
+
   /// The selector previously used for the overlay.
-  SelectorDelegate? previousSelectorDelegate;
+  // ignore: unnecessary_getters_setters
+  SelectDelegate? get previousSelectDelegate => _previousSelectDelegate;
+  set previousSelectDelegate(SelectDelegate? value) =>
+      _previousSelectDelegate = value;
+
+  /// Deprecated alias for [previousSelectDelegate].
+  ///
+  /// Use [previousSelectDelegate] instead. This getter is kept only for
+  /// backward compatibility and will be removed in a future minor version.
+  @Deprecated(
+    'Use previousSelectDelegate instead. This getter will be removed in a '
+    'future minor version.',
+  )
+  SelectDelegate? get previousSelectorDelegate => _previousSelectDelegate;
+
+  /// Deprecated alias for [previousSelectDelegate].
+  ///
+  /// Use [previousSelectDelegate] instead. This setter is kept only for
+  /// backward compatibility and will be removed in a future minor version.
+  @Deprecated(
+    'Use previousSelectDelegate instead. This setter will be removed in a '
+    'future minor version.',
+  )
+  set previousSelectorDelegate(SelectDelegate? value) =>
+      _previousSelectDelegate = value;
 
   /// The [SelectorController] for the currently active selector panel, if any.
   ///
@@ -170,38 +196,51 @@ class PopupSelectController extends ChangeNotifier {
   /// overlay is shown.
   String? applyMultipleText;
 
-  List<SelectorDelegate>? _selectorDelegates;
+  List<SelectDelegate>? _selectDelegates;
 
-  void attachSelectorDelegates(List<SelectorDelegate> selectorDelegates) {
+  /// Attaches the list of [SelectDelegate] configurations to this controller.
+  ///
+  /// If the selector overlay is currently open, it is refreshed so that live
+  /// changes to the delegate (selection mode, tile variant, layout, spacing,
+  /// etc.) are reflected immediately in the open panel. The open animation is
+  /// not replayed — only the panel content is rebuilt against a fresh
+  /// [SelectorController] bound to the new delegate. The surrounding rebuild
+  /// (driven by the bar/button widget's own `didUpdateWidget`) already re-runs
+  /// the overlay entry builder, which reads [previousSelectDelegate] and
+  /// [selectorController], so no extra notify is required here.
+  ///
+  /// Stable apps that reuse the same delegate instances are unaffected: when
+  /// the new delegate is identical (`==`) to the one already shown, nothing
+  /// is rebuilt.
+  void attachSelectDelegates(List<SelectDelegate> selectDelegates) {
     if (_isDisposed) return;
-    _selectorDelegates = selectorDelegates;
+    _selectDelegates = selectDelegates;
 
-    // If the selector overlay is currently open, refresh it so that live
-    // changes to the delegate (selection mode, tile variant, layout, spacing,
-    // etc.) are reflected immediately in the open panel. The open animation is
-    // not replayed — only the panel content is rebuilt against a fresh
-    // [SelectorController] bound to the new delegate. The surrounding rebuild
-    // (driven by the bar/button widget's own `didUpdateWidget`) already re-runs
-    // the overlay entry builder, which reads [previousSelectorDelegate] and
-    // [selectorController], so no extra notify is required here.
-    //
-    // Stable apps that reuse the same delegate instances are unaffected: when
-    // the new delegate is identical (`==`) to the one already shown, nothing
-    // is rebuilt.
     if (_isExpanded && currentIndex != null) {
-      final newDelegate = _selectorAt(currentIndex!);
-      if (newDelegate != null && newDelegate != previousSelectorDelegate) {
-        previousSelectorDelegate = newDelegate;
+      final newDelegate = _selectDelegateAt(currentIndex!);
+      if (newDelegate != null && newDelegate != previousSelectDelegate) {
+        previousSelectDelegate = newDelegate;
         _createSelectorController();
       }
     }
   }
 
-  SelectorDelegate? _selectorAt(int tabIndex) {
-    final selectorDelegates = _selectorDelegates;
-    if (selectorDelegates == null) return null;
-    if (tabIndex < 0 || tabIndex >= selectorDelegates.length) return null;
-    return selectorDelegates[tabIndex];
+  /// Deprecated alias for [attachSelectDelegates].
+  ///
+  /// Use [attachSelectDelegates] instead. This method is kept only for
+  /// backward compatibility and will be removed in a future minor version.
+  @Deprecated(
+    'Use attachSelectDelegates instead. This method will be removed in a '
+    'future minor version.',
+  )
+  void attachSelectorDelegates(List<SelectDelegate> selectDelegates) =>
+      attachSelectDelegates(selectDelegates);
+
+  SelectDelegate? _selectDelegateAt(int tabIndex) {
+    final selectDelegates = _selectDelegates;
+    if (selectDelegates == null) return null;
+    if (tabIndex < 0 || tabIndex >= selectDelegates.length) return null;
+    return selectDelegates[tabIndex];
   }
 
   Animation<double> get overlayAnimation =>
@@ -350,7 +389,7 @@ class PopupSelectController extends ChangeNotifier {
     if (_isDisposed) return;
     if (index == null) return;
 
-    final newDelegate = _selectorAt(index);
+    final newDelegate = _selectDelegateAt(index);
     if (newDelegate == null) return;
 
     final wasShowing = portalCtrl.isShowing;
@@ -361,7 +400,7 @@ class PopupSelectController extends ChangeNotifier {
     // switching from an already-open panel to a different index would rebuild
     // the controller against the previously shown delegate, rendering the old
     // tab's content under the new index.
-    previousSelectorDelegate = newDelegate;
+    previousSelectDelegate = newDelegate;
 
     // Create (or refresh) the SelectorController for this selector session.
     _createSelectorController();
@@ -382,13 +421,13 @@ class PopupSelectController extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Creates a [SelectorController] bound to [previousSelectorDelegate] and wires the
+  /// Creates a [SelectorController] bound to [previousSelectDelegate] and wires the
   /// change/apply/reset listeners to this controller's handlers.
   ///
   /// Any previously created controller is disposed first.
   void _createSelectorController() {
     _disposeSelectorController();
-    final selector = previousSelectorDelegate;
+    final selector = previousSelectDelegate;
     if (selector == null) return;
     final ctrl = SelectorController(
       selectionMode: selector.selectionMode,
@@ -431,7 +470,7 @@ class PopupSelectController extends ChangeNotifier {
     // `previousSelected = selected`. Without this write-back, `selectedData`
     // keeps the initial `selectedEntriesLoader` value and the previous selection
     // is lost on reopen — even though `selectedEntriesLoader` was supplied.
-    previousSelectorDelegate?.selectedData = selected;
+    previousSelectDelegate?.selectedData = selected;
     for (final listener in List.of(_applyListeners)) {
       listener(labelState, selected);
     }
@@ -474,7 +513,7 @@ class PopupSelectController extends ChangeNotifier {
     if (labelState is! PopupTabData) return false;
     final tabData = labelState;
 
-    final selector = _selectorAt(tabIndex);
+    final selector = _selectDelegateAt(tabIndex);
     if (selector == null) return false;
 
     final dataFuture = selector.data;
@@ -506,10 +545,10 @@ class PopupSelectController extends ChangeNotifier {
     if (_isDisposed) return false;
     if (labelStateMap[tabIndex] is! PopupTabData) return false;
 
-    final selector = _selectorAt(tabIndex);
+    final selector = _selectDelegateAt(tabIndex);
     if (selector == null) return false;
 
-    previousSelectorDelegate = selector;
+    previousSelectDelegate = selector;
 
     final dataFuture = selector.data;
     if (dataFuture == null) return false;

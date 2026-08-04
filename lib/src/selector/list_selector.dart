@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'action_bar_visibility.dart';
 import 'constants.dart';
 import 'selector_controller.dart';
-import 'selector_delegate.dart';
+import 'select_delegate.dart';
 import 'select_entry.dart';
 import 'selector_layout.dart';
 import 'widgets/widgets.dart';
@@ -13,7 +13,7 @@ import 'widgets/widgets.dart';
 /// One-dimensional structured data
 ///
 class ListSelector extends StatefulWidget {
-  final ListSelectorDelegate delegate;
+  final ListSelectDelegate delegate;
   final List<SelectEntry> entries;
   final Set<SelectEntry>? previousSelected;
 
@@ -64,7 +64,7 @@ class ListSelectorState extends State<ListSelector> {
     );
   }
 
-  ListSelectorDelegate get delegate => widget.delegate;
+  ListSelectDelegate get delegate => widget.delegate;
 
   void _handleSelectorControllerTick() {
     if (mounted) setState(() {});

@@ -455,8 +455,8 @@ class _HousePageState extends State<HousePage> {
                       Image.asset('assets/sorting.png', width: 16, height: 16),
                 ),
               ],
-              selectorDelegates: [
-                CascadingSelectorDelegate(
+              selectDelegates: [
+                CascadingSelectDelegate(
                   entriesLoader: _filtersRepo.fetchNeighborhoodData,
                   selectedEntriesLoader:
                       _filtersRepo.fetchNeighborhoodSelectedData,
@@ -465,7 +465,7 @@ class _HousePageState extends State<HousePage> {
                   sideBarTheme: const SelectorSideBarTheme(width: 150),
                   isScrollable: true,
                 ),
-                GridSelectorDelegate(
+                GridSelectDelegate(
                   entriesLoader: _filtersRepo.fetchPriceData,
                   selectedEntriesLoader: _filtersRepo.fetchPriceSelectedData,
                   // resetEntriesLoader: _filtersRepo.fetchPriceResetData,
@@ -481,7 +481,7 @@ class _HousePageState extends State<HousePage> {
                     variant: SelectorFieldTileVariant.outlined,
                   ),
                 ),
-                GridSelectorDelegate(
+                GridSelectDelegate(
                   entriesLoader: _filtersRepo.fetchRoomsData,
                   selectedEntriesLoader: _filtersRepo.fetchRoomsSelectedData,
                   // resetEntriesLoader: _filtersRepo.fetchRoomsResetData,
@@ -497,7 +497,7 @@ class _HousePageState extends State<HousePage> {
                     variant: SelectorFieldTileVariant.outlined,
                   ),
                 ),
-                ListSelectorDelegate(
+                ListSelectDelegate(
                   entriesLoader: _filtersRepo.fetchMoreData,
                   selectedEntriesLoader: _filtersRepo.fetchMoreSelectedData,
                   resetEntriesLoader: _filtersRepo.fetchMoreResetData,
@@ -505,7 +505,7 @@ class _HousePageState extends State<HousePage> {
                   resetText: AppLocalizations.of(context)?.reset ?? '',
                   applyText: AppLocalizations.of(context)?.apply ?? '',
                 ),
-                ListSelectorDelegate(
+                ListSelectDelegate(
                   entriesLoader: _filtersRepo.fetchSortData,
                   selectedEntriesLoader: _filtersRepo.fetchSortSelectedData,
                   resetEntriesLoader: _filtersRepo.fetchSortResetData,

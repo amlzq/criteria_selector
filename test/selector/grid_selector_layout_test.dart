@@ -32,11 +32,11 @@ SelectCategoryEntry<dynamic> _category({
 
 Widget _buildGridSelector(
   List<SelectEntry<dynamic>> entries, {
-  GridSelectorDelegate? delegate,
+  GridSelectDelegate? delegate,
   Set<SelectEntry<dynamic>>? previousSelected,
 }) {
   final effectiveDelegate = delegate ??
-      GridSelectorDelegate(
+      GridSelectDelegate(
         crossAxisCount: 3,
         selectionMode: SelectionMode.single,
       );
@@ -194,7 +194,7 @@ void main() {
       await tester.pumpWidget(
         _buildGridSelector(
           [gridCategory, chipCategory],
-          delegate: GridSelectorDelegate(
+          delegate: GridSelectDelegate(
             crossAxisCount: 3,
             selectionMode: SelectionMode.single,
           ),
@@ -234,7 +234,7 @@ void main() {
       await tester.pumpWidget(
         _buildGridSelector(
           [category],
-          delegate: GridSelectorDelegate(
+          delegate: GridSelectDelegate(
             crossAxisCount: 2, // Different from layout's 5
             childAspectRatio: 1.0, // Different from layout's 2.0
             selectionMode: SelectionMode.single,

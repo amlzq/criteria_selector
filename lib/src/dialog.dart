@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'selector/select_entry.dart';
-import 'selector/selector_delegate.dart';
+import 'selector/select_delegate.dart';
 import 'selector/selector_panel.dart';
 
 /// Shows a selector in a modal dialog.
@@ -11,8 +11,8 @@ import 'selector/selector_panel.dart';
 /// when [barrierDismissible] is `true`, or via the system back gesture).
 ///
 /// The concrete selector type (Cascading, List, Grid or Flatten) is determined
-/// entirely by the concrete [SelectorDelegate] passed via [delegate]. Any
-/// [SelectorDelegate] subclass works, so no separate functions are required.
+/// entirely by the concrete [SelectDelegate] passed via [delegate]. Any
+/// [SelectDelegate] subclass works, so no separate functions are required.
 ///
 /// The interaction mirrors Flutter's [showTimePicker]:
 /// - In single-selection mode, tapping an item applies the selection
@@ -24,12 +24,12 @@ import 'selector/selector_panel.dart';
 ///
 /// The [elevation], [shape] and [clipBehavior] parameters are forwarded to the
 /// outer [Dialog] decoration. These are independent of
-/// [SelectorDelegate.panelTheme] (which decorates the panel background itself);
+/// [SelectDelegate.panelTheme] (which decorates the panel background itself);
 /// use either layer, or both, depending on the desired look. All other styling
 /// (colors, per-widget themes) is carried by [delegate].
 Future<SelectEntries?> showSelect({
   required BuildContext context,
-  required SelectorDelegate delegate,
+  required SelectDelegate delegate,
   bool barrierDismissible = true,
   bool useRootNavigator = true,
   Widget? title,
@@ -71,7 +71,7 @@ Future<SelectEntries?> showSelect({
     'Use showSelect instead. This will be removed in a future minor version.')
 Future<SelectEntries?> showSelector({
   required BuildContext context,
-  required SelectorDelegate delegate,
+  required SelectDelegate delegate,
   bool barrierDismissible = true,
   bool useRootNavigator = true,
   Widget? title,
@@ -151,7 +151,7 @@ class _SelectorDialog extends StatefulWidget {
     this.clipBehavior,
   });
 
-  final SelectorDelegate delegate;
+  final SelectDelegate delegate;
   final Widget? title;
   final double? elevation;
   final ShapeBorder? shape;

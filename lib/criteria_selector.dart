@@ -1,6 +1,6 @@
 /// Public API for the `criteria_selector` package.
 ///
-/// This library re-exports the core selector configuration types (e.g. [SelectorDelegate])
+/// This library re-exports the core selector configuration types (e.g. [SelectDelegate])
 /// and the UI widgets used to render and control selection panels.
 library criteria_selector;
 
@@ -18,7 +18,7 @@ export 'src/select_view.dart';
 export 'src/selector/constants.dart';
 export 'src/selector/select_entry.dart';
 export 'src/selector/selector_controller.dart';
-export 'src/selector/selector_delegate.dart';
+export 'src/selector/select_delegate.dart';
 export 'src/selector/selector_layout.dart';
 export 'src/selector/selector_panel_theme.dart';
 export 'src/selector/selector_theme.dart';

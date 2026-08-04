@@ -7,7 +7,7 @@ A highly customizable Flutter selector library. Supports SelectView, PopupSelect
 Two layers work together: **entry points** decide *where* the selector appears, and **delegates** decide *how* entries are laid out — any delegate plugs into any entry point.
 
 - **Entry points** — five ways to show a selector: `SelectView` (inline), `PopupSelectBar` (tab bar), `PopupSelectButton` (single trigger), `showSelect` (dialog), `showModalBottomSelect` (bottom sheet).
-- **Delegates** — four layouts: `CascadingSelectorDelegate` (tree), `GridSelectorDelegate` (grid), `ListSelectorDelegate` (single column), `FlattenSelectorDelegate` (grid that keeps category grouping).
+- **Delegates** — four layouts: `CascadingSelectDelegate` (tree), `GridSelectDelegate` (grid), `ListSelectDelegate` (single column), `FlattenSelectDelegate` (grid that keeps category grouping).
 - Single & multiple selection via `SelectionMode` (per category or as a delegate fallback).
 - Async data loading through `entriesLoader`.
 - Flexible entries: the "Any" entry clears a category, `SelectRangeEntry.custom` takes user min/max input, and an `immediate` entry applies on tap without the action bar.
@@ -80,10 +80,10 @@ The built-in delegates are:
 
 | Delegate | Description | Preview |
 | --- | --- | --- |
-| `CascadingSelectorDelegate` | A tree selector: categories on the left, a cascading list on the right. | ![CascadingSelectorDelegate](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/cascading.jpg) |
-| `GridSelectorDelegate` | A grid layout. `crossAxisCount` is required. | ![GridSelectorDelegate](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/grid.jpg) |
-| `ListSelectorDelegate` | A single-column list (use `.name(...)` leaves for a flat list). | ![ListSelectorDelegate](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/list.jpg) |
-| `FlattenSelectorDelegate` | Renders children in a grid while keeping the category hierarchy. Best with `SelectionMode.multiple` and an "Any" entry. | ![FlattenSelectorDelegate](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/flatten.jpg) |
+| `CascadingSelectDelegate` | A tree selector: categories on the left, a cascading list on the right. | ![CascadingSelectDelegate](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/cascading.jpg) |
+| `GridSelectDelegate` | A grid layout. `crossAxisCount` is required. | ![GridSelectDelegate](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/grid.jpg) |
+| `ListSelectDelegate` | A single-column list (use `.name(...)` leaves for a flat list). | ![ListSelectDelegate](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/list.jpg) |
+| `FlattenSelectDelegate` | Renders children in a grid while keeping the category hierarchy. Best with `SelectionMode.multiple` and an "Any" entry. | ![FlattenSelectDelegate](https://raw.githubusercontent.com/amlzq/criteria_selector/main/screenshots/atx/flatten.jpg) |
 
 #### SelectView
 
@@ -91,7 +91,7 @@ The built-in delegates are:
 
 ```dart
 SelectView(
-  delegate: CascadingSelectorDelegate(entriesLoader: _fetchNeighborhood),
+  delegate: CascadingSelectDelegate(entriesLoader: _fetchNeighborhood),
   onChanged: (selected) {
     // selected is the SelectEntries when the selection changes
   },
@@ -100,7 +100,7 @@ SelectView(
 
 #### PopupSelectBar
 
-A tab bar (`PreferredSizeWidget`) that opens an overlay selector when a tab is tapped. Provide `tabs` for the bar and a matching `selectorDelegates` list (one per tab). Results arrive via `onChanged` / `onApplied` / `onReset`.
+A tab bar (`PreferredSizeWidget`) that opens an overlay selector when a tab is tapped. Provide `tabs` for the bar and a matching `selectDelegates` list (one per tab). Results arrive via `onChanged` / `onApplied` / `onReset`.
 
 ```dart
 PopupSelectBar(
@@ -111,12 +111,12 @@ PopupSelectBar(
     PopupTab(label: 'More'),
     PopupTab(label: 'Sort'),
   ],
-  selectorDelegates: [
-    CascadingSelectorDelegate(entriesLoader: _fetchNeighborhood),
-    GridSelectorDelegate(crossAxisCount: 3, entriesLoader: _fetchPrice),
-    GridSelectorDelegate(crossAxisCount: 3, entriesLoader: _fetchRooms),
-    FlattenSelectorDelegate(crossAxisCount: 3, entriesLoader: _fetchMore),
-    ListSelectorDelegate(entriesLoader: _fetchSort),
+  selectDelegates: [
+    CascadingSelectDelegate(entriesLoader: _fetchNeighborhood),
+    GridSelectDelegate(crossAxisCount: 3, entriesLoader: _fetchPrice),
+    GridSelectDelegate(crossAxisCount: 3, entriesLoader: _fetchRooms),
+    FlattenSelectDelegate(crossAxisCount: 3, entriesLoader: _fetchMore),
+    ListSelectDelegate(entriesLoader: _fetchSort),
   ],
   onApplied: (tabData, selected) {
     // tabData is the PopupTabData; selected is the SelectEntries
@@ -128,24 +128,24 @@ PopupSelectBar(
 
 #### PopupSelectButton
 
-A single-trigger alternative to `PopupSelectBar` — opens a selector overlay on tap, like `PopupMenuButton`. It takes one `selectorDelegate` and a `label`/`child`. Three variants: filled (default), `.elevated(...)`, and `.outlined(...)`.
+A single-trigger alternative to `PopupSelectBar` — opens a selector overlay on tap, like `PopupMenuButton`. It takes one `selectDelegate` and a `label`/`child`. Three variants: filled (default), `.elevated(...)`, and `.outlined(...)`.
 
 ```dart
 PopupSelectButton(
   label: 'Neighborhood',
-  selectorDelegate: GridSelectorDelegate(crossAxisCount: 3, entriesLoader: _fetchNeighborhood),
+  selectDelegate: GridSelectDelegate(crossAxisCount: 3, entriesLoader: _fetchNeighborhood),
   onApplied: (tabData, selected) { /* ... */ },
 );
 
 PopupSelectButton.elevated(
   label: 'Price',
-  selectorDelegate: GridSelectorDelegate(crossAxisCount: 3, entriesLoader: _fetchPrice),
+  selectDelegate: GridSelectDelegate(crossAxisCount: 3, entriesLoader: _fetchPrice),
 );
 
 PopupSelectButton.outlined(
   label: 'Rooms',
   icon: const Icon(Icons.filter_alt_outlined),
-  selectorDelegate: GridSelectorDelegate(crossAxisCount: 3, entriesLoader: _fetchRooms),
+  selectDelegate: GridSelectDelegate(crossAxisCount: 3, entriesLoader: _fetchRooms),
 );
 ```
 
@@ -158,7 +158,7 @@ Shows a selector in a modal dialog. Returns the selected `SelectEntries` when ap
 ```dart
 final SelectEntries? selected = await showSelect(
   context: context,
-  delegate: FlattenSelectorDelegate(entriesLoader: _fetchRooms),
+  delegate: FlattenSelectDelegate(entriesLoader: _fetchRooms),
   title: const Text('Rooms'),
 );
 
@@ -176,7 +176,7 @@ Shows a selector in a modal bottom sheet built on Flutter's `showModalBottomShee
 ```dart
 final SelectEntries? selected = await showModalBottomSelect(
   context: context,
-  delegate: ListSelectorDelegate(
+  delegate: ListSelectDelegate(
     crossAxisCount: 3,
     selectionMode: SelectionMode.multiple,
     entriesLoader: _fetchMore,
@@ -197,7 +197,7 @@ if (selected != null) {
 
 ```dart
 SelectView(
-  delegate: ListSelectorDelegate(entriesLoader: _fetchSort),
+  delegate: ListSelectDelegate(entriesLoader: _fetchSort),
   selectorTheme: SelectorThemeData(
     Theme.of(context),
     selectedColor: Theme.of(context).colorScheme.primary,

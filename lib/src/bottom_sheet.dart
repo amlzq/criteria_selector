@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'selector/select_entry.dart';
-import 'selector/selector_delegate.dart';
+import 'selector/select_delegate.dart';
 import 'selector/selector_panel.dart';
 
 /// Shows a selector in a modal bottom sheet built with Flutter's
@@ -13,8 +13,8 @@ import 'selector/selector_panel.dart';
 /// gesture).
 ///
 /// The concrete selector type (Cascading, List, Grid or Flatten) is determined
-/// entirely by the concrete [SelectorDelegate] passed via [delegate]. Any
-/// [SelectorDelegate] subclass works, so no separate functions are required.
+/// entirely by the concrete [SelectDelegate] passed via [delegate]. Any
+/// [SelectDelegate] subclass works, so no separate functions are required.
 ///
 /// The interaction mirrors [showSelect]:
 /// - In single-selection mode, tapping an item applies the selection
@@ -36,10 +36,10 @@ import 'selector/selector_panel.dart';
 /// and the body scrolls internally, unless [constraints] is provided.
 ///
 /// Styling (colors, per-widget themes and the panel decoration via
-/// [SelectorDelegate.panelTheme]) is carried entirely by [delegate].
+/// [SelectDelegate.panelTheme]) is carried entirely by [delegate].
 Future<SelectEntries?> showModalBottomSelect({
   required BuildContext context,
-  required SelectorDelegate delegate,
+  required SelectDelegate delegate,
   bool isScrollControlled = false,
   bool useRootNavigator = false,
   bool isDismissible = true,
@@ -96,7 +96,7 @@ Future<SelectEntries?> showModalBottomSelect({
     'Use showModalBottomSelect instead. This will be removed in a future minor version.')
 Future<SelectEntries?> showModalBottomSelector({
   required BuildContext context,
-  required SelectorDelegate delegate,
+  required SelectDelegate delegate,
   bool isScrollControlled = false,
   bool useRootNavigator = false,
   bool isDismissible = true,
@@ -143,7 +143,7 @@ class _ModalBottomSheetContent extends StatefulWidget {
     this.title,
   });
 
-  final SelectorDelegate delegate;
+  final SelectDelegate delegate;
   final Widget? title;
 
   @override

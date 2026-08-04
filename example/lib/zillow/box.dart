@@ -116,7 +116,7 @@ class _BoxPageState extends State<BoxPage> {
                 SelectView(
                   margin:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  delegate: CascadingSelectorDelegate(
+                  delegate: CascadingSelectDelegate(
                     entriesLoader: _filtersRepo.fetchNeighborhoodData,
                     selectedEntriesLoader:
                         _filtersRepo.fetchNeighborhoodSelectedData,
@@ -145,7 +145,7 @@ class _BoxPageState extends State<BoxPage> {
                 SelectView(
                   margin:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  delegate: GridSelectorDelegate(
+                  delegate: GridSelectDelegate(
                     entriesLoader: _filtersRepo.fetchPriceData,
                     selectedEntriesLoader: _filtersRepo.fetchPriceSelectedData,
                     selectionMode: SelectionMode.multiple,
@@ -175,7 +175,7 @@ class _BoxPageState extends State<BoxPage> {
                 SelectView(
                   margin:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  delegate: ListSelectorDelegate(
+                  delegate: ListSelectDelegate(
                     entriesLoader: _filtersRepo.fetchPriceRangeData,
                     selectedEntriesLoader:
                         _filtersRepo.fetchPriceRangeSelectedData,
@@ -196,7 +196,7 @@ class _BoxPageState extends State<BoxPage> {
                 SelectView(
                   margin:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  delegate: FlattenSelectorDelegate(
+                  delegate: FlattenSelectDelegate(
                     entriesLoader: _filtersRepo.fetchRoomsData,
                     selectedEntriesLoader: _filtersRepo.fetchRoomsSelectedData,
                     selectionMode: SelectionMode.multiple,
@@ -220,7 +220,7 @@ class _BoxPageState extends State<BoxPage> {
                 SelectView(
                   margin:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  delegate: ListSelectorDelegate(
+                  delegate: ListSelectDelegate(
                     entriesLoader: _filtersRepo.fetchSortData,
                     selectedEntriesLoader: _filtersRepo.fetchSortSelectedData,
                     resetEntriesLoader: _filtersRepo.fetchSortResetData,

@@ -484,8 +484,8 @@ class _BuyPageState extends State<BuyPage> {
                       Image.asset('assets/sorting.png', width: 16, height: 16),
                 ),
               ],
-              selectorDelegates: [
-                CascadingSelectorDelegate(
+              selectDelegates: [
+                CascadingSelectDelegate(
                   entriesLoader: _filtersRepo.fetchRegionData,
                   selectedEntriesLoader: _filtersRepo.fetchRegionSelectedData,
                   resetEntriesLoader: _filtersRepo.fetchRegionResetData,
@@ -497,7 +497,7 @@ class _BuyPageState extends State<BuyPage> {
                     return MyCheckbox(value: selected);
                   },
                 ),
-                GridSelectorDelegate(
+                GridSelectDelegate(
                   entriesLoader: _filtersRepo.fetchBuyPriceData,
                   selectedEntriesLoader: _filtersRepo.fetchBuyPriceSelectedData,
                   resetEntriesLoader: _filtersRepo.fetchBuyPriceResetData,
@@ -514,7 +514,7 @@ class _BuyPageState extends State<BuyPage> {
                   ),
                   applyText: AppLocalizations.of(context)?.apply ?? '',
                 ),
-                FlattenSelectorDelegate(
+                FlattenSelectDelegate(
                   entriesLoader: _filtersRepo.fetchFloorPlanBuyData,
                   selectedEntriesLoader:
                       _filtersRepo.fetchFloorPlanBuySelectedData,
@@ -537,7 +537,7 @@ class _BuyPageState extends State<BuyPage> {
                     );
                   },
                 ),
-                FlattenSelectorDelegate(
+                FlattenSelectDelegate(
                   entriesLoader: _filtersRepo.fetchMoreBuyData,
                   selectedEntriesLoader: _filtersRepo.fetchMoreBuySelectedData,
                   resetEntriesLoader: _filtersRepo.fetchMoreBuyResetData,
@@ -559,7 +559,7 @@ class _BuyPageState extends State<BuyPage> {
                     );
                   },
                 ),
-                ListSelectorDelegate(
+                ListSelectDelegate(
                   entriesLoader: _filtersRepo.fetchSortBuyData,
                   selectedEntriesLoader: _filtersRepo.fetchSortBuySelectedData,
                   resetEntriesLoader: _filtersRepo.fetchSortBuyResetData,

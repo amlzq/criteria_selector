@@ -129,7 +129,7 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
           const SizedBox(height: 16),
           PopupSelectButton(
             label: 'Neighborhood',
-            selectorDelegate: CascadingSelectorDelegate(
+            selectDelegate: CascadingSelectDelegate(
               entriesLoader: _filtersRepo.fetchNeighborhoodData,
               selectedEntriesLoader: _filtersRepo.fetchNeighborhoodSelectedData,
               resetEntriesLoader: _filtersRepo.fetchNeighborhoodResetData,
@@ -160,7 +160,7 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
           Center(
             child: PopupSelectButton.elevated(
               label: 'Price',
-              selectorDelegate: GridSelectorDelegate(
+              selectDelegate: GridSelectDelegate(
                 entriesLoader: _filtersRepo.fetchPriceData,
                 selectedEntriesLoader: _filtersRepo.fetchPriceSelectedData,
                 selectionMode: SelectionMode.multiple,
@@ -195,7 +195,7 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
             alignment: Alignment.bottomRight,
             child: PopupSelectButton.outlined(
               label: 'Rooms',
-              selectorDelegate: FlattenSelectorDelegate(
+              selectDelegate: FlattenSelectDelegate(
                 entriesLoader: _filtersRepo.fetchRoomsData,
                 selectedEntriesLoader: _filtersRepo.fetchRoomsSelectedData,
                 selectionMode: SelectionMode.multiple,
@@ -232,7 +232,7 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
             child: PopupSelectButton(
               label: 'More',
               icon: const Icon(Icons.filter_alt_outlined),
-              selectorDelegate: ListSelectorDelegate(
+              selectDelegate: ListSelectDelegate(
                 entriesLoader: _filtersRepo.fetchMoreData,
                 selectedEntriesLoader: _filtersRepo.fetchMoreSelectedData,
                 resetEntriesLoader: _filtersRepo.fetchMoreResetData,

@@ -161,7 +161,7 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
           const SizedBox(height: 16),
           PopupSelectButton(
             label: '区域',
-            selectorDelegate: CascadingSelectorDelegate(
+            selectDelegate: CascadingSelectDelegate(
               entriesLoader: _filtersRepo.fetchRegionData,
               selectedEntriesLoader: _filtersRepo.fetchRegionSelectedData,
               resetEntriesLoader: _filtersRepo.fetchRegionResetData,
@@ -193,7 +193,7 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
               labelLoader: (selected) {
                 return '价格${selected.length}';
               },
-              selectorDelegate: GridSelectorDelegate(
+              selectDelegate: GridSelectDelegate(
                 entriesLoader: _filtersRepo.fetchBuyPriceData,
                 selectedEntriesLoader: _filtersRepo.fetchBuyPriceSelectedData,
                 resetEntriesLoader: _filtersRepo.fetchBuyPriceResetData,
@@ -236,7 +236,7 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
             alignment: Alignment.bottomRight,
             child: PopupSelectButton.outlined(
               label: '户型',
-              selectorDelegate: FlattenSelectorDelegate(
+              selectDelegate: FlattenSelectDelegate(
                 entriesLoader: _filtersRepo.fetchFloorPlanBuyData,
                 selectedEntriesLoader:
                     _filtersRepo.fetchFloorPlanBuySelectedData,
@@ -268,7 +268,7 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
             child: PopupSelectButton(
               label: '更多',
               icon: const Icon(Icons.filter_alt_outlined),
-              selectorDelegate: ListSelectorDelegate(
+              selectDelegate: ListSelectDelegate(
                 entriesLoader: _filtersRepo.fetchSortBuyData,
                 selectedEntriesLoader: _filtersRepo.fetchSortBuySelectedData,
                 resetEntriesLoader: _filtersRepo.fetchSortBuyResetData,

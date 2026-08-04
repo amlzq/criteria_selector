@@ -13,14 +13,14 @@ void main() {
       WidgetTester tester,
       PopupSelectController controller,
       List<PopupTab> tabs,
-      List<SelectorDelegate> delegates,
+      List<SelectDelegate> delegates,
     ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             appBar: PopupSelectBar(
               tabs: tabs,
-              selectorDelegates: delegates,
+              selectDelegates: delegates,
               controller: controller,
             ),
             body: const SizedBox.expand(),
@@ -36,12 +36,12 @@ void main() {
         controller,
         const [PopupTab(label: 'T0'), PopupTab(label: 'T1')],
         [
-          ListSelectorDelegate(
+          ListSelectDelegate(
             entriesLoader: () async => {
               SelectTextEntry<dynamic>.name(id: 'a0', name: 'A0'),
             },
           ),
-          ListSelectorDelegate(
+          ListSelectDelegate(
             entriesLoader: () async => {
               SelectTextEntry<dynamic>.name(id: 'a1', name: 'A1'),
             },
@@ -68,12 +68,12 @@ void main() {
         controller,
         const [PopupTab(label: 'T0'), PopupTab(label: 'T1')],
         [
-          ListSelectorDelegate(
+          ListSelectDelegate(
             entriesLoader: () async => {
               SelectTextEntry<dynamic>.name(id: 'a0', name: 'A0'),
             },
           ),
-          ListSelectorDelegate(
+          ListSelectDelegate(
             entriesLoader: () async => {
               SelectTextEntry<dynamic>.name(id: 'a1', name: 'A1'),
             },
@@ -107,12 +107,12 @@ void main() {
         controller,
         const [PopupTab(label: 'T0'), PopupTab(label: 'T1')],
         [
-          ListSelectorDelegate(
+          ListSelectDelegate(
             entriesLoader: () async => {
               SelectTextEntry<dynamic>.name(id: 'a0', name: 'A0'),
             },
           ),
-          ListSelectorDelegate(
+          ListSelectDelegate(
             entriesLoader: () async => {
               SelectTextEntry<dynamic>.name(id: 'a1', name: 'A1'),
             },
@@ -139,7 +139,7 @@ void main() {
         controller,
         const [PopupTab(label: 'T0')],
         [
-          ListSelectorDelegate(
+          ListSelectDelegate(
             entriesLoader: () async => {
               SelectTextEntry<dynamic>.name(id: 'a0', name: 'A0'),
             },
@@ -165,7 +165,7 @@ void main() {
         controller,
         const [PopupTab(label: 'T0')],
         [
-          ListSelectorDelegate(
+          ListSelectDelegate(
             entriesLoader: () async => {
               SelectTextEntry<dynamic>.name(id: 'a0', name: 'A0'),
             },

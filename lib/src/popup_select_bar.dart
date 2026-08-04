@@ -9,7 +9,7 @@ import 'i18n/localizations.dart';
 import 'popup_select_bar_theme.dart';
 import 'popup_select_controller.dart';
 import 'selector/select_entry.dart';
-import 'selector/selector_delegate.dart';
+import 'selector/select_delegate.dart';
 import 'selector/selector_theme_data.dart';
 import 'selector_label_state.dart';
 import 'selector_overlay_host.dart';
@@ -74,7 +74,7 @@ typedef DropdownSelectorBarCallback = PopupSelectBarResultCallback;
 ///
 /// Provide:
 /// - [tabs] to render the bar UI.
-/// - [selectorDelegates] to define the selector configuration for each tab.
+/// - [selectDelegates] to define the selector configuration for each tab.
 ///
 /// The overlay content is driven by [PopupSelectController] and the selected
 /// results are delivered via [onChanged] and [onApplied].
@@ -82,7 +82,12 @@ class PopupSelectBar extends StatefulWidget implements PreferredSizeWidget {
   const PopupSelectBar({
     super.key,
     required this.tabs,
-    this.selectorDelegates = const [],
+    List<SelectDelegate>? selectDelegates,
+    @Deprecated(
+      'Use selectDelegates instead. This parameter will be removed in a '
+      'future minor version.',
+    )
+    List<SelectDelegate>? selectorDelegates,
     this.height,
     this.isScrollable = false,
     this.backgroundColor,
@@ -105,17 +110,32 @@ class PopupSelectBar extends StatefulWidget implements PreferredSizeWidget {
     this.initialIndex,
     this.selectorTheme,
     this.direction = PopupSelectDirection.below,
-  });
+  })  : assert(
+          selectDelegates == null || selectorDelegates == null,
+          'Provide either selectDelegates or the deprecated '
+          'selectorDelegates, but not both.',
+        ),
+        selectDelegates = selectorDelegates ?? selectDelegates ?? const [];
 
   /// The set of tabs to display in the bar.
   ///
   /// Each entry renders a tab's UI and must have a matching entry in
-  /// [selectorDelegates]; the number of [tabs] must equal the number of
-  /// [selectorDelegates].
+  /// [selectDelegates]; the number of [tabs] must equal the number of
+  /// [selectDelegates].
   final List<PopupTab> tabs;
 
   /// Selector configuration for each tab.
-  final List<SelectorDelegate> selectorDelegates;
+  final List<SelectDelegate> selectDelegates;
+
+  /// Deprecated alias for [selectDelegates].
+  ///
+  /// Use [selectDelegates] instead. This getter is kept only for backward
+  /// compatibility and will be removed in a future minor version.
+  @Deprecated(
+    'Use selectDelegates instead. This getter will be removed in a future '
+    'minor version.',
+  )
+  List<SelectDelegate> get selectorDelegates => selectDelegates;
 
   /// The height of the [PopupSelectBar] itself.
   ///
@@ -269,7 +289,7 @@ class _PopupSelectBarState extends State<PopupSelectBar>
       _removeApplyListener = _controller!.addApplyListener(_handleWidgetApply);
       _removeResetListener = _controller!.addResetListener(_handleWidgetReset);
     }
-    _controller!.attachSelectorDelegates(widget.selectorDelegates);
+    _controller!.attachSelectDelegates(widget.selectDelegates);
     _controller!.attachTickerProvider(this);
   }
 
@@ -304,8 +324,8 @@ class _PopupSelectBarState extends State<PopupSelectBar>
         : await widget.onSelectorWillHide?.call(tabData) ?? true;
     if (!proceed) return;
 
-    final selector = widget.selectorDelegates.elementAt(tabData.index);
-    _controller!.previousSelectorDelegate = selector;
+    final selector = widget.selectDelegates.elementAt(tabData.index);
+    _controller!.previousSelectDelegate = selector;
 
     _controller!.toggleSelector(index: tabData.index);
 
@@ -341,10 +361,10 @@ class _PopupSelectBarState extends State<PopupSelectBar>
         return;
       }
       assert(() {
-        if (widget.tabs.length != widget.selectorDelegates.length) {
+        if (widget.tabs.length != widget.selectDelegates.length) {
           throw FlutterError(
             "The number of tabs (${widget.tabs.length}) in the PopupSelectBar does not match "
-            "the number of selectorDelegates(${widget.selectorDelegates.length}).",
+            "the number of selectDelegates(${widget.selectDelegates.length}).",
           );
         }
         return true;

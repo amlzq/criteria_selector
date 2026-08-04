@@ -5,9 +5,9 @@ import 'package:criteria_selector/src/selector/selector_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// A minimal [SelectorDelegate] used to drive [SelectorPanel] rendering and to
+/// A minimal [SelectDelegate] used to drive [SelectorPanel] rendering and to
 /// capture the active controller for assertions.
-class _TestDelegate extends SelectorDelegate {
+class _TestDelegate extends SelectDelegate {
   _TestDelegate({
     required this.bodyBuilder,
     super.entriesLoader,

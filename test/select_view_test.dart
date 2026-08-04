@@ -2,9 +2,9 @@ import 'package:criteria_selector/criteria_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// A minimal [SelectorDelegate] used to drive [SelectView] rendering and
+/// A minimal [SelectDelegate] used to drive [SelectView] rendering and
 /// to capture the active controller for assertions.
-class _TestDelegate extends SelectorDelegate {
+class _TestDelegate extends SelectDelegate {
   _TestDelegate({
     required this.bodyBuilder,
     super.entriesLoader,

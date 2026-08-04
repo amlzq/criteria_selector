@@ -11,15 +11,15 @@ void main() {
     test(
         'handleApply writes the applied selection back to delegate.selectedData',
         () {
-      final delegate = ListSelectorDelegate(
+      final delegate = ListSelectDelegate(
         entriesLoader: () async => <SelectEntry<dynamic>>{},
       );
       final controller = PopupSelectController();
-      controller.attachSelectorDelegates(<SelectorDelegate>[delegate]);
+      controller.attachSelectDelegates(<SelectDelegate>[delegate]);
       controller.currentIndex = 0;
-      // Opening the selector sets `previousSelectorDelegate`; `handleApply`
+      // Opening the selector sets `previousSelectDelegate`; `handleApply`
       // then writes the applied selection back onto it.
-      controller.previousSelectorDelegate = delegate;
+      controller.previousSelectDelegate = delegate;
       // `handleApply` writes the applied selection back to the active label
       // state, so a label state must exist at index 0.
       controller.labelStateMap[0] = SelectorLabelState();
@@ -33,11 +33,10 @@ void main() {
       expect(delegate.selectedData, applied);
     });
 
-    testWidgets(
-        'PopupSelectBar restores the previous selection when reopened',
+    testWidgets('PopupSelectBar restores the previous selection when reopened',
         (tester) async {
       final controller = PopupSelectController();
-      final delegate = ListSelectorDelegate(
+      final delegate = ListSelectDelegate(
         selectionMode: SelectionMode.multiple,
         entriesLoader: () async => <SelectEntry<dynamic>>{
           SelectTextEntry<dynamic>.name(id: 'a', name: 'A'),
@@ -50,7 +49,7 @@ void main() {
           home: Scaffold(
             appBar: PopupSelectBar(
               tabs: const [PopupTab(label: 'Filter')],
-              selectorDelegates: [delegate],
+              selectDelegates: [delegate],
               controller: controller,
             ),
             body: const SizedBox.expand(),

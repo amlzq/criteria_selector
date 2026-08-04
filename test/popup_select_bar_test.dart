@@ -16,8 +16,8 @@ void main() {
               tabs: const [
                 PopupTab(label: 'Filter'),
               ],
-              selectorDelegates: [
-                ListSelectorDelegate(
+              selectDelegates: [
+                ListSelectDelegate(
                   entriesLoader: () async => <SelectEntry<dynamic>>{
                     SelectTextEntry<dynamic>.name(id: 'a', name: 'A'),
                   },
@@ -81,8 +81,8 @@ void main() {
               tabs: const [
                 PopupTab(label: 'Sort'),
               ],
-              selectorDelegates: [
-                ListSelectorDelegate(
+              selectDelegates: [
+                ListSelectDelegate(
                   entriesLoader: () async => <SelectEntry<dynamic>>{
                     SelectTextEntry<dynamic>.name(id: 'a', name: 'A'),
                     SelectTextEntry<dynamic>.name(id: 'b', name: 'B'),
@@ -129,8 +129,8 @@ void main() {
                   labelLoader: (selected) => 'Custom',
                 ),
               ],
-              selectorDelegates: [
-                ListSelectorDelegate(
+              selectDelegates: [
+                ListSelectDelegate(
                   entriesLoader: () async => <SelectEntry<dynamic>>{
                     SelectTextEntry<dynamic>.name(id: 'a', name: 'A'),
                   },
@@ -172,8 +172,8 @@ void main() {
               tabs: const [
                 PopupTab(label: 'Multi'),
               ],
-              selectorDelegates: [
-                ListSelectorDelegate(
+              selectDelegates: [
+                ListSelectDelegate(
                   selectionMode: SelectionMode.multiple,
                   entriesLoader: () async => <SelectEntry<dynamic>>{
                     SelectTextEntry<dynamic>.name(id: 'a', name: 'A'),

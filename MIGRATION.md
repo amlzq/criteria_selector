@@ -2,6 +2,65 @@
 
 ## Next
 
+### `SelectorDelegate` renamed to `SelectDelegate`
+
+The selector configuration types have been renamed to drop the redundant
+`Selector` prefix. The old names are kept as deprecated type aliases (e.g.
+`typedef SelectorDelegate = SelectDelegate;`) for backward compatibility and
+**will be removed in a future minor version**. Since the aliases are exact
+`typedef`s, this is a pure rename — no behavior changes.
+
+| Old name | New name |
+| --- | --- |
+| `SelectorDelegate` | `SelectDelegate` |
+| `CascadingSelectorDelegate` | `CascadingSelectDelegate` |
+| `ListSelectorDelegate` | `ListSelectDelegate` |
+| `GridSelectorDelegate` | `GridSelectDelegate` |
+| `FlattenSelectorDelegate` | `FlattenSelectDelegate` |
+
+The source file was renamed along the way
+(`lib/src/selector/selector_delegate.dart` →
+`lib/src/selector/select_delegate.dart`), and the unit test
+`test/selector/selector_delegate_test.dart` →
+`test/selector/select_delegate_test.dart`. The public export is updated, so no
+import change is required when using the package barrel.
+
+The public member names that carried the `selectorDelegate(s)` spelling were
+renamed as well. The old names are retained as deprecated parameters /
+properties / a method for backward compatibility and will be removed in a
+future minor version:
+
+| Old member | New member |
+| --- | --- |
+| `PopupSelectBar.selectorDelegates` | `PopupSelectBar.selectDelegates` |
+| `PopupSelectButton.selectorDelegate` | `PopupSelectButton.selectDelegate` |
+| `PopupSelectController.previousSelectorDelegate` | `PopupSelectController.previousSelectDelegate` |
+| `PopupSelectController.attachSelectorDelegates(...)` | `PopupSelectController.attachSelectDelegates(...)` |
+
+Migration: replace each old name with its new counterpart at every call site.
+
+```dart
+// Before
+PopupSelectBar(
+  tabs: const [PopupTab(label: 'Filter')],
+  selectorDelegates: [CascadingSelectorDelegate()],
+);
+
+// After
+PopupSelectBar(
+  tabs: const [PopupTab(label: 'Filter')],
+  selectDelegates: [CascadingSelectDelegate()],
+);
+```
+
+```dart
+// Before
+PopupSelectButton(selectorDelegate: ListSelectorDelegate());
+
+// After
+PopupSelectButton(selectDelegate: ListSelectDelegate());
+```
+
 ### `Selector*Entry*` renamed to `Select*Entry*`
 
 The `Selector*Entry*` types have been renamed to drop the redundant `Selector`

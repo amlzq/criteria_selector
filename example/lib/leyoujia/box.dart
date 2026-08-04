@@ -139,7 +139,7 @@ class _BoxPageState extends State<BoxPage> {
                 SelectView(
                   margin:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  delegate: CascadingSelectorDelegate(
+                  delegate: CascadingSelectDelegate(
                     entriesLoader: _filtersRepo.fetchRegionData,
                     selectedEntriesLoader: _filtersRepo.fetchRegionSelectedData,
                     resetEntriesLoader: _filtersRepo.fetchRegionResetData,
@@ -165,7 +165,7 @@ class _BoxPageState extends State<BoxPage> {
                 SelectView(
                   margin:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  delegate: GridSelectorDelegate(
+                  delegate: GridSelectDelegate(
                     entriesLoader: _filtersRepo.fetchBuyPriceData,
                     selectedEntriesLoader:
                         _filtersRepo.fetchBuyPriceSelectedData,
@@ -197,7 +197,7 @@ class _BoxPageState extends State<BoxPage> {
                 SelectView(
                   margin:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  delegate: FlattenSelectorDelegate(
+                  delegate: FlattenSelectDelegate(
                     entriesLoader: _filtersRepo.fetchFloorPlanBuyData,
                     selectedEntriesLoader:
                         _filtersRepo.fetchFloorPlanBuySelectedData,
@@ -223,7 +223,7 @@ class _BoxPageState extends State<BoxPage> {
                 SelectView(
                   margin:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  delegate: ListSelectorDelegate(
+                  delegate: ListSelectDelegate(
                     entriesLoader: _filtersRepo.fetchSortBuyData,
                     selectedEntriesLoader:
                         _filtersRepo.fetchSortBuySelectedData,

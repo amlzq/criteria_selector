@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'action_bar_visibility.dart';
 import 'constants.dart';
 import 'selector_controller.dart';
-import 'selector_delegate.dart';
+import 'select_delegate.dart';
 import 'select_entry.dart';
 import 'selector_layout.dart';
 import 'widgets/widgets.dart';
@@ -22,7 +22,7 @@ import 'widgets/widgets.dart';
 /// - In multi-selection mode, the action bar is shown and "Apply" produces the
 ///   final clipped selection tree.
 class GridSelector extends StatefulWidget {
-  final GridSelectorDelegate delegate;
+  final GridSelectDelegate delegate;
   final List<SelectEntry> entries;
   final Set<SelectEntry>? previousSelected;
 
@@ -90,7 +90,7 @@ class GridSelectorState extends State<GridSelector> {
     }
   }
 
-  GridSelectorDelegate get delegate => widget.delegate;
+  GridSelectDelegate get delegate => widget.delegate;
 
   void _handleSelectorControllerTick() {
     if (mounted) setState(() {});

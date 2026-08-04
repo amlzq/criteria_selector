@@ -120,7 +120,7 @@ class SelectorOverlayHost extends StatelessWidget {
                 onOverlayTap: () => controller.hideSelector(),
                 child: SelectorPanel(
                   controller: controller.selectorController,
-                  delegate: controller.previousSelectorDelegate!,
+                  delegate: controller.previousSelectDelegate!,
                   selectorTheme: selectorTheme,
                 ),
               ),

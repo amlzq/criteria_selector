@@ -3,9 +3,9 @@ import 'package:criteria_selector/src/selector/selector_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// A [SelectorDelegate] whose body is a simple widget, so the dialog wrapper
+/// A [SelectDelegate] whose body is a simple widget, so the dialog wrapper
 /// can be exercised without relying on a concrete selector's data handling.
-class _DialogTestDelegate extends SelectorDelegate {
+class _DialogTestDelegate extends SelectDelegate {
   _DialogTestDelegate();
 
   @override

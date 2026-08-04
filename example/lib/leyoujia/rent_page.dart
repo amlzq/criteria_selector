@@ -252,8 +252,8 @@ class _RentPageState extends State<RentPage> {
                       Image.asset('assets/sorting.png', width: 16, height: 16),
                 ),
               ],
-              selectorDelegates: [
-                CascadingSelectorDelegate(
+              selectDelegates: [
+                CascadingSelectDelegate(
                   entriesLoader: () =>
                       _filtersRepo.fetchRegionData(singleAll: true),
                   selectedEntriesLoader: _filtersRepo.fetchRegionSelectedData,
@@ -272,7 +272,7 @@ class _RentPageState extends State<RentPage> {
                     return MyCheckbox(value: selected);
                   },
                 ),
-                GridSelectorDelegate(
+                GridSelectDelegate(
                   entriesLoader: _filtersRepo.fetchRentalData,
                   selectedEntriesLoader: _filtersRepo.fetchRentalSelectedData,
                   resetEntriesLoader: _filtersRepo.fetchRentalResetData,
@@ -288,7 +288,7 @@ class _RentPageState extends State<RentPage> {
                     variant: SelectorFieldTileVariant.outlined,
                   ),
                 ),
-                FlattenSelectorDelegate(
+                FlattenSelectDelegate(
                   entriesLoader: () =>
                       _filtersRepo.fetchFloorPlanRentData(singleAll: true),
                   selectedEntriesLoader:
@@ -311,7 +311,7 @@ class _RentPageState extends State<RentPage> {
                     );
                   },
                 ),
-                ListSelectorDelegate(
+                ListSelectDelegate(
                   entriesLoader: _filtersRepo.fetchSortRentData,
                   selectedEntriesLoader: _filtersRepo.fetchSortRentSelectedData,
                   resetEntriesLoader: _filtersRepo.fetchSortRentResetData,

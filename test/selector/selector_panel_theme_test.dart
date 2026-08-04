@@ -160,7 +160,7 @@ void main() {
   });
 }
 
-class _EmptyDelegate extends SelectorDelegate {
+class _EmptyDelegate extends SelectDelegate {
   _EmptyDelegate({super.panelTheme});
 
   @override

@@ -64,7 +64,7 @@ void main() {
       };
 
       final selector =
-          CascadingSelectorDelegate(selectionMode: SelectionMode.multiple);
+          CascadingSelectDelegate(selectionMode: SelectionMode.multiple);
       final controller = SelectorController(
         selectionMode: SelectionMode.multiple,
       );
@@ -134,7 +134,7 @@ void main() {
       };
 
       final selector =
-          CascadingSelectorDelegate(selectionMode: SelectionMode.multiple);
+          CascadingSelectDelegate(selectionMode: SelectionMode.multiple);
       final controller = SelectorController(
         selectionMode: SelectionMode.multiple,
       );

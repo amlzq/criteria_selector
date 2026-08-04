@@ -34,14 +34,13 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
 
   /// Cache of reusable delegates. See [buildDelegate] for why reusing the same
   /// instance across rebuilds is required (selection restoration).
-  final Map<String, SelectorDelegate> _delegateCache =
-      <String, SelectorDelegate>{};
+  final Map<String, SelectDelegate> _delegateCache = <String, SelectDelegate>{};
 
   /// Keeps the most recent delegate per selection-identity so [buildDelegate]
   /// can carry the applied selection over when the column count / aspect ratio
   /// / spacing changes (those recreate the delegate).
-  final Map<String, SelectorDelegate> _selectionCache =
-      <String, SelectorDelegate>{};
+  final Map<String, SelectDelegate> _selectionCache =
+      <String, SelectDelegate>{};
 
   var _params = const PlaygroundParams(
     entryPoint: EntryPoint.view,

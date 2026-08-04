@@ -21,15 +21,15 @@ typedef SelectorActionBarBuilder = Widget Function(
 
 /// Base configuration for a selector.
 ///
-/// A [SelectorDelegate] is responsible for:
+/// A [SelectDelegate] is responsible for:
 /// - Defining how entries are fetched and restored (via loader callbacks).
 /// - Defining UI/theme overrides (colors and per-widget themes).
 /// - Building the selector body widget, a loading skeleton and an error widget.
 ///
 /// The actual selection state is managed by [SelectorController] and widgets
 /// under `src/selector/`.
-abstract class SelectorDelegate {
-  SelectorDelegate({
+abstract class SelectDelegate {
+  SelectDelegate({
     this.selectionMode = SelectionMode.single,
     this.entriesLoader,
     this.selectedEntriesLoader,
@@ -194,8 +194,8 @@ abstract class SelectorDelegate {
 /// A cascading selector for tree-structured data.
 ///
 /// This layout shows categories on the left and a cascading list to the right.
-class CascadingSelectorDelegate extends SelectorDelegate {
-  CascadingSelectorDelegate({
+class CascadingSelectDelegate extends SelectDelegate {
+  CascadingSelectDelegate({
     this.categoryBackgroundColor,
     this.terminalBackgroundColor,
     this.checkboxBuilder,
@@ -263,8 +263,8 @@ class CascadingSelectorDelegate extends SelectorDelegate {
 }
 
 /// A single-column list selector.
-class ListSelectorDelegate extends SelectorDelegate {
-  ListSelectorDelegate({
+class ListSelectDelegate extends SelectDelegate {
+  ListSelectDelegate({
     this.checkboxBuilder,
     this.radioBuilder,
     super.selectionMode = SelectionMode.single,
@@ -321,8 +321,8 @@ class ListSelectorDelegate extends SelectorDelegate {
 }
 
 /// A grid selector.
-class GridSelectorDelegate extends SelectorDelegate {
-  GridSelectorDelegate({
+class GridSelectDelegate extends SelectDelegate {
+  GridSelectDelegate({
     required this.crossAxisCount,
     this.mainAxisSpacing = 0.0,
     this.crossAxisSpacing = 0.0,
@@ -402,8 +402,8 @@ class GridSelectorDelegate extends SelectorDelegate {
 
 /// A "flatten" selector that renders children in a grid while keeping the
 /// hierarchy behavior.
-class FlattenSelectorDelegate extends SelectorDelegate {
-  FlattenSelectorDelegate({
+class FlattenSelectDelegate extends SelectDelegate {
+  FlattenSelectDelegate({
     required this.crossAxisCount,
     this.mainAxisSpacing = 0.0,
     this.crossAxisSpacing = 0.0,
@@ -476,3 +476,58 @@ class FlattenSelectorDelegate extends SelectorDelegate {
         );
   }
 }
+
+/// Deprecated alias for [SelectDelegate].
+///
+/// The `SelectorDelegate` names were renamed to drop the redundant `Delegate`
+/// suffix and shorten the `Selector` prefix. This alias is kept for backward
+/// compatibility and will be removed in a future minor version.
+@Deprecated(
+  'Use SelectDelegate instead. This alias will be removed in a future minor '
+  'version.',
+)
+typedef SelectorDelegate = SelectDelegate;
+
+/// Deprecated alias for [CascadingSelectDelegate].
+///
+/// The `SelectorDelegate` names were renamed to drop the redundant `Delegate`
+/// suffix and shorten the `Selector` prefix. This alias is kept for backward
+/// compatibility and will be removed in a future minor version.
+@Deprecated(
+  'Use CascadingSelectDelegate instead. This alias will be removed in a future '
+  'minor version.',
+)
+typedef CascadingSelectorDelegate = CascadingSelectDelegate;
+
+/// Deprecated alias for [ListSelectDelegate].
+///
+/// The `SelectorDelegate` names were renamed to drop the redundant `Delegate`
+/// suffix and shorten the `Selector` prefix. This alias is kept for backward
+/// compatibility and will be removed in a future minor version.
+@Deprecated(
+  'Use ListSelectDelegate instead. This alias will be removed in a future '
+  'minor version.',
+)
+typedef ListSelectorDelegate = ListSelectDelegate;
+
+/// Deprecated alias for [GridSelectDelegate].
+///
+/// The `SelectorDelegate` names were renamed to drop the redundant `Delegate`
+/// suffix and shorten the `Selector` prefix. This alias is kept for backward
+/// compatibility and will be removed in a future minor version.
+@Deprecated(
+  'Use GridSelectDelegate instead. This alias will be removed in a future '
+  'minor version.',
+)
+typedef GridSelectorDelegate = GridSelectDelegate;
+
+/// Deprecated alias for [FlattenSelectDelegate].
+///
+/// The `SelectorDelegate` names were renamed to drop the redundant `Delegate`
+/// suffix and shorten the `Selector` prefix. This alias is kept for backward
+/// compatibility and will be removed in a future minor version.
+@Deprecated(
+  'Use FlattenSelectDelegate instead. This alias will be removed in a future '
+  'minor version.',
+)
+typedef FlattenSelectorDelegate = FlattenSelectDelegate;

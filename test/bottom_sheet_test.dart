@@ -3,10 +3,10 @@ import 'package:criteria_selector/src/selector/selector_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// A [SelectorDelegate] whose body is a simple widget, so the bottom sheet
+/// A [SelectDelegate] whose body is a simple widget, so the bottom sheet
 /// wrapper can be exercised without relying on a concrete selector's data
 /// handling.
-class _SheetTestDelegate extends SelectorDelegate {
+class _SheetTestDelegate extends SelectDelegate {
   _SheetTestDelegate();
 
   @override

@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 import 'constants.dart';
 import 'selector_controller.dart';
-import 'selector_delegate.dart';
+import 'select_delegate.dart';
 import 'select_entry.dart';
 import 'selector_theme.dart';
 import 'selector_theme_data.dart';
 
-/// A widget that renders a [SelectorDelegate] and manages its selection state.
+/// A widget that renders a [SelectDelegate] and manages its selection state.
 ///
-/// The panel loads [SelectorDelegate.data] and displays the selector body once the data
+/// The panel loads [SelectDelegate.data] and displays the selector body once the data
 /// is available, or a skeleton while it is loading. Selector widgets rendered by
 /// the panel are styled according to [selectorTheme].
 ///
@@ -35,7 +35,7 @@ class SelectorPanel extends StatefulWidget {
     this.selectorTheme,
   });
 
-  final SelectorDelegate delegate;
+  final SelectDelegate delegate;
 
   /// Optional controller that drives the selection state.
   ///

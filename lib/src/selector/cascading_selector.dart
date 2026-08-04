@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'action_bar_visibility.dart';
 import 'constants.dart';
 import 'selector_controller.dart';
-import 'selector_delegate.dart';
+import 'select_delegate.dart';
 import 'select_entry.dart';
 import 'selector_theme.dart';
 import 'widgets/widgets.dart';
@@ -29,7 +29,7 @@ class CascadingSelector extends StatefulWidget {
     required this.previousSelected,
   });
 
-  final CascadingSelectorDelegate delegate;
+  final CascadingSelectDelegate delegate;
 
   final List<SelectEntry> entries;
 
@@ -133,7 +133,7 @@ class CascadingSelectorState extends State<CascadingSelector> {
     setState(() {});
   }
 
-  CascadingSelectorDelegate get delegate => widget.delegate;
+  CascadingSelectDelegate get delegate => widget.delegate;
 
   void _rebuildSelectionState() {
     _tempSelectedEntryPerLevel.clear();

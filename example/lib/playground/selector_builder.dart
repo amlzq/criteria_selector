@@ -109,14 +109,14 @@ class PlaygroundDataSource {
 ///
 /// Column count / aspect ratio / spacing ARE part of the key: the grid and
 /// flatten delegates read `crossAxisCount`, `childAspectRatio` and the spacings
-/// from the delegate at build time (see [GridSelectorDelegate] /
-/// [FlattenSelectorDelegate]), so
+/// from the delegate at build time (see [GridSelectDelegate] /
+/// [FlattenSelectDelegate]), so
 /// excluding them would keep reusing a stale delegate and make the Columns /
 /// Aspect / Spacing controls have no effect.
 ///
 /// The delegate is still cached so that changing *other* params (e.g. seed
 /// color, theme) does not discard the applied selection stored in
-/// [SelectorDelegate.selectedData]; only the params in this key recreate it.
+/// [SelectDelegate.selectedData]; only the params in this key recreate it.
 String _delegateKey(
   PlaygroundLanguage language,
   PlaygroundParams p,
@@ -131,7 +131,7 @@ String _delegateKey(
 String _selectionKey(PlaygroundLanguage language, PlaygroundParams p) =>
     '${language.name}|${p.delegate}|${p.selectionMode}|${p.tileVariant}';
 
-/// Builds (or reuses) a [SelectorDelegate] for the current [PlaygroundParams].
+/// Builds (or reuses) a [SelectDelegate] for the current [PlaygroundParams].
 ///
 /// The delegate is cached in [delegateCache] (keyed by the full param set,
 /// including column count / aspect ratio / spacing) so changing those renders
@@ -140,17 +140,17 @@ String _selectionKey(PlaygroundLanguage language, PlaygroundParams p) =>
 /// build time.
 ///
 /// Because [handleApply] writes the applied selection back to the delegate via
-/// [SelectorDelegate.selectedData], recreating the delegate on a Columns /
+/// [SelectDelegate.selectedData], recreating the delegate on a Columns /
 /// Aspect / Spacing tweak would otherwise drop that state. [selectionCache]
 /// (keyed by the selection-identity params only) keeps the most recent delegate
 /// for a given selection, and its `selectedData` is carried over to the freshly
 /// built delegate so reopening the panel still restores the selection.
-SelectorDelegate buildDelegate(
+SelectDelegate buildDelegate(
   PlaygroundParams p,
   PlaygroundDataSource data,
   PlaygroundLanguage language, {
-  required Map<String, SelectorDelegate> delegateCache,
-  required Map<String, SelectorDelegate> selectionCache,
+  required Map<String, SelectDelegate> delegateCache,
+  required Map<String, SelectDelegate> selectionCache,
 }) {
   final key = _delegateKey(language, p);
   final existing = delegateCache[key];
@@ -165,13 +165,12 @@ SelectorDelegate buildDelegate(
   return delegate;
 }
 
-SelectorDelegate _createDelegate(
-    PlaygroundParams p, PlaygroundDataSource data) {
+SelectDelegate _createDelegate(PlaygroundParams p, PlaygroundDataSource data) {
   final chipBarTheme =
       SelectorChipBarTheme(variant: _chipVariant(p.tileVariant));
   switch (p.delegate) {
     case Delegate.cascading:
-      return CascadingSelectorDelegate(
+      return CascadingSelectDelegate(
         entriesLoader: data.cascading.entries,
         selectedEntriesLoader: data.cascading.selected,
         resetEntriesLoader: data.cascading.reset,
@@ -184,7 +183,7 @@ SelectorDelegate _createDelegate(
     case Delegate.grid:
       // Grid / Flatten delegates use the default radio & checkbox widgets, so
       // the custom [MyRadio]/[MyCheckbox] builders are not forwarded here.
-      return GridSelectorDelegate(
+      return GridSelectDelegate(
         entriesLoader: data.grid.entries,
         selectedEntriesLoader: data.grid.selected,
         resetEntriesLoader: data.grid.reset,
@@ -198,7 +197,7 @@ SelectorDelegate _createDelegate(
         chipBarTheme: chipBarTheme,
       );
     case Delegate.flatten:
-      return FlattenSelectorDelegate(
+      return FlattenSelectDelegate(
         entriesLoader: data.flatten.entries,
         selectedEntriesLoader: data.flatten.selected,
         resetEntriesLoader: data.flatten.reset,
@@ -213,7 +212,7 @@ SelectorDelegate _createDelegate(
         sideBarTheme: const SelectorSideBarTheme(width: 110),
       );
     case Delegate.list:
-      return ListSelectorDelegate(
+      return ListSelectDelegate(
         entriesLoader: data.list.entries,
         selectedEntriesLoader: data.list.selected,
         resetEntriesLoader: data.list.reset,
@@ -236,11 +235,11 @@ SelectorDelegate _createDelegate(
 /// (parameter-driven) theme rather than the surrounding app theme.
 Widget buildPhoneScreen(
   PlaygroundParams p,
-  SelectorDelegate delegate,
+  SelectDelegate delegate,
   PlaygroundL10n l10n, {
   required PlaygroundDataSource data,
-  required Map<String, SelectorDelegate> delegateCache,
-  required Map<String, SelectorDelegate> selectionCache,
+  required Map<String, SelectDelegate> delegateCache,
+  required Map<String, SelectDelegate> selectionCache,
 }) {
   // Keyed by the entry point so switching entry points resets the captured
   // callback results (each entry point exposes different callbacks).
@@ -279,11 +278,11 @@ class EntryPointScreen extends StatefulWidget {
   });
 
   final PlaygroundParams params;
-  final SelectorDelegate delegate;
+  final SelectDelegate delegate;
   final PlaygroundL10n l10n;
   final PlaygroundDataSource data;
-  final Map<String, SelectorDelegate> delegateCache;
-  final Map<String, SelectorDelegate> selectionCache;
+  final Map<String, SelectDelegate> delegateCache;
+  final Map<String, SelectDelegate> selectionCache;
 
   @override
   State<EntryPointScreen> createState() => _EntryPointScreenState();
@@ -299,7 +298,7 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
   /// Builds a selector delegate for one tab of the dropdown bar, using the
   /// current playground params but a fixed delegate family so each tab shows a
   /// distinct selector (cascading / grid / flatten / list).
-  SelectorDelegate _tabDelegate(Delegate delegate) {
+  SelectDelegate _tabDelegate(Delegate delegate) {
     final tabParams = widget.params.copyWith(delegate: delegate);
     return buildDelegate(
       tabParams,
@@ -356,7 +355,7 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
           ),
         );
       case EntryPoint.popupBar:
-        final tabDelegates = <SelectorDelegate>[
+        final tabDelegates = <SelectDelegate>[
           _tabDelegate(Delegate.cascading),
           _tabDelegate(Delegate.grid),
           _tabDelegate(Delegate.flatten),
@@ -372,7 +371,7 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
                 PopupTab(label: l10n.layoutFlatten),
                 PopupTab(label: l10n.layoutList),
               ],
-              selectorDelegates: tabDelegates,
+              selectDelegates: tabDelegates,
               onChanged: (tabData, selected) =>
                   _onChanged((tabData: tabData, selected: selected)),
               onApplied: (tabData, selected) =>
@@ -394,7 +393,7 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
               Expanded(
                 child: Center(
                   child: PopupSelectButton(
-                    selectorDelegate: widget.delegate,
+                    selectDelegate: widget.delegate,
                     label: l10n.filterLabel,
                     onChanged: (selected) => _onChanged(selected),
                     onApplied: (selected) => _onApplied(selected),
