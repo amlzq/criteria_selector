@@ -3,9 +3,9 @@ import 'package:collection/collection.dart';
 import '../constants.dart';
 import '../select_entry.dart';
 import '../selector_utils.dart';
-import 'selector_state_snapshot.dart';
+import 'state_snapshot.dart';
 
-class SelectorStateTree {
+class StateTree {
   final ListEquality<SelectEntry> _entryListEquality = const ListEquality();
   final SetEquality<SelectEntry> _entrySetEquality = const SetEquality();
 
@@ -26,7 +26,7 @@ class SelectorStateTree {
 
   int get levelCount => _selectedEntriesPerLevel.length;
 
-  SelectorStateSnapshot get snapshot => SelectorStateSnapshot(
+  StateSnapshot get snapshot => StateSnapshot(
         selectedEntriesPerLevel:
             _selectedEntriesPerLevel.map((e) => {...e}).toList(),
         selectedHeaderEntries:

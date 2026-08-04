@@ -489,7 +489,7 @@ class CascadingSelectorState extends State<CascadingSelector> {
       _currentLevel = level;
       controller?.toggleCascadingEntry(
         entry,
-        selectorSelectionMode: selectorSelectionMode ?? SelectionMode.single,
+        selectionMode: selectorSelectionMode ?? SelectionMode.single,
         childrenSelectionMode: childrenSelectionMode,
         focusedPath: _tempSelectedEntryPerLevel.take(cascadeIndex + 1).toList(),
         category: tempSelectedCategory,
@@ -500,7 +500,7 @@ class CascadingSelectorState extends State<CascadingSelector> {
 
     controller?.toggleCascadingEntry(
       entry,
-      selectorSelectionMode: selectorSelectionMode ?? SelectionMode.single,
+      selectionMode: selectorSelectionMode ?? SelectionMode.single,
       childrenSelectionMode: childrenSelectionMode,
       focusedPath: _tempSelectedEntryPerLevel.take(cascadeIndex + 1).toList(),
       category: tempSelectedCategory,
@@ -598,8 +598,8 @@ class CascadingSelectorState extends State<CascadingSelector> {
             final selected = _tempSelectedEntryPerLevel.contains(entry);
             final selectedCount = controller
                     ?.selectedEntriesAtLevel(level + 1)
-                    .where((e) =>
-                        e is SelectChildEntry && e.parentId == entry.id)
+                    .where(
+                        (e) => e is SelectChildEntry && e.parentId == entry.id)
                     .length ??
                 0;
             return SelectorListTile(

@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 
 import 'constants.dart';
 import 'select_entry.dart';
-import 'state/selector_selection_rules.dart';
-import 'state/selector_state_snapshot.dart';
-import 'state/selector_state_tree.dart';
+import 'state/selection_rules.dart';
+import 'state/state_snapshot.dart';
+import 'state/state_tree.dart';
 
 /// Controller for a single [SelectDelegate] instance.
 ///
@@ -37,8 +37,8 @@ class SelectController extends ChangeNotifier {
 
   /// The underlying state tree holding the bound entries and their selection
   /// state.
-  final SelectorStateTree stateTree = SelectorStateTree();
-  final SelectorSelectionRules _selectionRules = const SelectorSelectionRules();
+  final StateTree tree = StateTree();
+  final SelectionRules _rules = const SelectionRules();
   bool _isDisposed = false;
 
   final List<SelectCallback> _changeListeners = [];
@@ -96,7 +96,7 @@ class SelectController extends ChangeNotifier {
   bool get isDisposed => _isDisposed;
 
   /// A snapshot of the current selection state.
-  SelectorStateSnapshot get snapshot => stateTree.snapshot;
+  StateSnapshot get snapshot => tree.snapshot;
 
   void _notifyListenersIfAlive() {
     if (_isDisposed) return;
@@ -109,7 +109,7 @@ class SelectController extends ChangeNotifier {
     SelectEntries? previousSelectedOverride,
     SelectEntries? resetSelectedOverride,
   }) {
-    final changed = stateTree.bind(
+    final changed = tree.bind(
       entries,
       previousSelected: previousSelectedOverride ?? previousSelected,
       resetSelected: resetSelectedOverride ?? resetSelected,
@@ -121,24 +121,24 @@ class SelectController extends ChangeNotifier {
   }
 
   SelectEntries selectedEntriesAtLevel(int level) =>
-      stateTree.selectedEntriesAtLevel(level);
+      tree.selectedEntriesAtLevel(level);
 
   SelectEntries selectedEntriesForParent(String parentId,
           {required int level}) =>
-      stateTree.selectedEntriesForParent(parentId, level: level);
+      tree.selectedEntriesForParent(parentId, level: level);
 
   SelectEntries selectedHeaderEntriesFor(String categoryId) =>
-      stateTree.selectedHeaderEntriesFor(categoryId);
+      tree.selectedHeaderEntriesFor(categoryId);
 
   SelectEntries selectedFooterEntriesFor(String categoryId) =>
-      stateTree.selectedFooterEntriesFor(categoryId);
+      tree.selectedFooterEntriesFor(categoryId);
 
   void focusCategoryEntry(
     SelectCategoryEntry category, {
     required SelectionMode selectionMode,
   }) {
-    _selectionRules.focusCategory(
-      stateTree,
+    _rules.focusCategory(
+      tree,
       category,
       selectionMode: selectionMode,
     );
@@ -147,14 +147,14 @@ class SelectController extends ChangeNotifier {
 
   void toggleFlatEntry(
     SelectChildEntry entry, {
-    required SelectionMode selectorSelectionMode,
+    required SelectionMode selectionMode,
     required bool isCategoryTree,
     SelectCategoryEntry? category,
   }) {
-    _selectionRules.toggleFlatLeaf(
-      stateTree,
+    _rules.toggleFlatLeaf(
+      tree,
       entry,
-      selectorSelectionMode: selectorSelectionMode,
+      selectionMode: selectionMode,
       isCategoryTree: isCategoryTree,
       category: category,
     );
@@ -163,15 +163,15 @@ class SelectController extends ChangeNotifier {
 
   void toggleCascadingEntry(
     SelectChildEntry entry, {
-    required SelectionMode selectorSelectionMode,
+    required SelectionMode selectionMode,
     required SelectionMode childrenSelectionMode,
     required List<SelectEntry> focusedPath,
     required SelectCategoryEntry category,
   }) {
-    _selectionRules.toggleCascadingLeaf(
-      stateTree,
+    _rules.toggleCascadingLeaf(
+      tree,
       entry,
-      selectorSelectionMode: selectorSelectionMode,
+      selectionMode: selectionMode,
       childrenSelectionMode: childrenSelectionMode,
       focusedPath: focusedPath,
       category: category,
@@ -185,8 +185,8 @@ class SelectController extends ChangeNotifier {
     required SelectionMode selectionMode,
     required bool isHeader,
   }) {
-    _selectionRules.toggleHeaderOrFooter(
-      stateTree,
+    _rules.toggleHeaderOrFooter(
+      tree,
       categoryId: categoryId,
       entry: entry,
       selectionMode: selectionMode,
@@ -196,34 +196,34 @@ class SelectController extends ChangeNotifier {
   }
 
   void emitChangeFromState() {
-    change(stateTree.buildChangedEntries());
+    change(tree.buildChangedEntries());
   }
 
   void applyFromState() {
-    apply(stateTree.buildAppliedEntries());
+    apply(tree.buildAppliedEntries());
   }
 
   void resetState({required bool initializeAnyIfEmpty}) {
-    stateTree.reset(initializeAnyIfEmpty: initializeAnyIfEmpty);
+    tree.reset(initializeAnyIfEmpty: initializeAnyIfEmpty);
     _notifyListenersIfAlive();
   }
 
   void trimSelectionLevels(int count) {
-    stateTree.trimLevels(count);
-    stateTree.trimTrailingEmptyLevels();
+    tree.trimLevels(count);
+    tree.trimTrailingEmptyLevels();
     _notifyListenersIfAlive();
   }
 
   SelectEntry? findEntry(String id, {String? parentId}) {
-    return stateTree.findEntry(id, parentId: parentId);
+    return tree.findEntry(id, parentId: parentId);
   }
 
   List<SelectEntry>? findPath(String id, {String? parentId}) {
-    return stateTree.findPath(id, parentId: parentId);
+    return tree.findPath(id, parentId: parentId);
   }
 
   bool focusCategory(String categoryId) {
-    final category = stateTree.findCategory(categoryId);
+    final category = tree.findCategory(categoryId);
     if (category == null) return false;
     focusCategoryEntry(category, selectionMode: selectionMode);
     return true;
@@ -235,7 +235,7 @@ class SelectController extends ChangeNotifier {
     bool emitChange = true,
     bool applyIfImmediate = false,
   }) {
-    final entry = stateTree.findEntry(id, parentId: parentId);
+    final entry = tree.findEntry(id, parentId: parentId);
     if (entry == null) return false;
 
     if (entry is SelectCategoryEntry) {
@@ -246,21 +246,19 @@ class SelectController extends ChangeNotifier {
 
     if (entry is! SelectChildEntry) return false;
 
-    final path = stateTree.findPath(id, parentId: parentId);
+    final path = tree.findPath(id, parentId: parentId);
     final selectorMode = _effectiveSelectorSelectionMode();
 
     if (path == null || path.isEmpty) {
-      if (stateTree.entries.isEmpty ||
-          stateTree.entries.first is SelectCategoryEntry) {
+      if (tree.entries.isEmpty || tree.entries.first is SelectCategoryEntry) {
         return false;
       }
 
-      final alreadySelected =
-          stateTree.selectedEntriesAtLevel(0).contains(entry);
+      final alreadySelected = tree.selectedEntriesAtLevel(0).contains(entry);
       if (!alreadySelected) {
         toggleFlatEntry(
           entry,
-          selectorSelectionMode: selectorMode,
+          selectionMode: selectorMode,
           isCategoryTree: false,
         );
       }
@@ -281,11 +279,11 @@ class SelectController extends ChangeNotifier {
       if (leaf is! SelectChildEntry) return false;
 
       final alreadySelected =
-          stateTree.selectedEntriesForParent(root.id, level: 1).contains(leaf);
+          tree.selectedEntriesForParent(root.id, level: 1).contains(leaf);
       if (!alreadySelected) {
         toggleFlatEntry(
           leaf,
-          selectorSelectionMode: selectorMode,
+          selectionMode: selectorMode,
           isCategoryTree: true,
           category: root,
         );
@@ -304,12 +302,11 @@ class SelectController extends ChangeNotifier {
     if (leaf is! SelectChildEntry) return false;
     final focusedPath = path.sublist(0, path.length - 1);
     final level = focusedPath.length;
-    final alreadySelected =
-        stateTree.selectedEntriesAtLevel(level).contains(leaf);
+    final alreadySelected = tree.selectedEntriesAtLevel(level).contains(leaf);
     if (!alreadySelected) {
       toggleCascadingEntry(
         leaf,
-        selectorSelectionMode: selectorMode,
+        selectionMode: selectorMode,
         childrenSelectionMode: root.selectionMode,
         focusedPath: focusedPath,
         category: root,
@@ -330,17 +327,17 @@ class SelectController extends ChangeNotifier {
     String? parentId,
     bool emitChange = true,
   }) {
-    final entry = stateTree.findEntry(id, parentId: parentId);
+    final entry = tree.findEntry(id, parentId: parentId);
     if (entry == null || entry is! SelectChildEntry) return false;
 
     final selectorMode = _effectiveSelectorSelectionMode();
-    final path = stateTree.findPath(id, parentId: parentId);
+    final path = tree.findPath(id, parentId: parentId);
 
     if (path == null || path.isEmpty) {
-      final selected0 = stateTree.mutableSelectedEntriesAtLevel(0);
+      final selected0 = tree.mutableSelectedEntriesAtLevel(0);
       if (!selected0.contains(entry)) return true;
       if (selectorMode == SelectionMode.single) {
-        final any = stateTree.entries.singleWhereOrNull(testAnyElement);
+        final any = tree.entries.singleWhereOrNull(testAnyElement);
         selected0
           ..clear()
           ..addAll(any == null ? {} : {any});
@@ -358,7 +355,7 @@ class SelectController extends ChangeNotifier {
     if (path.length == 2) {
       final leaf = path.last;
       if (leaf is! SelectChildEntry) return false;
-      final selectedChildren = stateTree.mutableSelectedEntriesAtLevel(1);
+      final selectedChildren = tree.mutableSelectedEntriesAtLevel(1);
       if (!selectedChildren.contains(leaf)) return true;
 
       if (root.selectionMode == SelectionMode.single) {
@@ -367,14 +364,14 @@ class SelectController extends ChangeNotifier {
             .removeWhere((e) => e is SelectChildEntry && e.parentId == root.id);
         if (any != null) {
           selectedChildren.add(any);
-          stateTree.mutableSelectedEntriesAtLevel(0).add(root);
+          tree.mutableSelectedEntriesAtLevel(0).add(root);
         } else {
-          stateTree.mutableSelectedEntriesAtLevel(0).remove(root);
+          tree.mutableSelectedEntriesAtLevel(0).remove(root);
         }
       } else {
         toggleFlatEntry(
           leaf,
-          selectorSelectionMode: selectorMode,
+          selectionMode: selectorMode,
           isCategoryTree: true,
           category: root,
         );
@@ -388,7 +385,7 @@ class SelectController extends ChangeNotifier {
     if (leaf is! SelectChildEntry) return false;
     final focusedPath = path.sublist(0, path.length - 1);
     final level = focusedPath.length;
-    final selectedAtLevel = stateTree.mutableSelectedEntriesAtLevel(level);
+    final selectedAtLevel = tree.mutableSelectedEntriesAtLevel(level);
     if (!selectedAtLevel.contains(leaf)) return true;
 
     if (root.selectionMode == SelectionMode.single) {
@@ -405,7 +402,7 @@ class SelectController extends ChangeNotifier {
 
     toggleCascadingEntry(
       leaf,
-      selectorSelectionMode: selectorMode,
+      selectionMode: selectorMode,
       childrenSelectionMode: root.selectionMode,
       focusedPath: focusedPath,
       category: root,
@@ -416,7 +413,7 @@ class SelectController extends ChangeNotifier {
 
   SelectionMode _effectiveSelectorSelectionMode() {
     if (selectionMode == SelectionMode.multiple) return SelectionMode.multiple;
-    for (final entry in stateTree.entries) {
+    for (final entry in tree.entries) {
       if (entry is SelectCategoryEntry &&
           entry.selectionMode == SelectionMode.multiple) {
         return SelectionMode.multiple;
@@ -430,13 +427,11 @@ class SelectController extends ChangeNotifier {
     String childId, {
     bool emitChange = true,
   }) {
-    final category = stateTree.findCategory(categoryId);
+    final category = tree.findCategory(categoryId);
     final header = category?.header;
     final child = header?.children?.singleWhereOrNull((e) => e.id == childId);
     if (child is! SelectChildEntry) return false;
-    if (stateTree
-        .selectedHeaderEntriesFor(categoryId)
-        .any((e) => e.id == childId)) {
+    if (tree.selectedHeaderEntriesFor(categoryId).any((e) => e.id == childId)) {
       return true;
     }
     toggleHeaderOrFooterEntry(
@@ -454,13 +449,11 @@ class SelectController extends ChangeNotifier {
     String childId, {
     bool emitChange = true,
   }) {
-    final category = stateTree.findCategory(categoryId);
+    final category = tree.findCategory(categoryId);
     final footer = category?.footer;
     final child = footer?.children?.singleWhereOrNull((e) => e.id == childId);
     if (child is! SelectChildEntry) return false;
-    if (stateTree
-        .selectedFooterEntriesFor(categoryId)
-        .any((e) => e.id == childId)) {
+    if (tree.selectedFooterEntriesFor(categoryId).any((e) => e.id == childId)) {
       return true;
     }
     toggleHeaderOrFooterEntry(
@@ -478,7 +471,7 @@ class SelectController extends ChangeNotifier {
     String childId, {
     bool emitChange = true,
   }) {
-    final selected = stateTree.mutableHeaderEntriesFor(categoryId);
+    final selected = tree.mutableHeaderEntriesFor(categoryId);
     final hadSelected = selected.any((e) => e.id == childId);
     selected.removeWhere((e) => e.id == childId);
     if (hadSelected && emitChange) emitChangeFromState();
@@ -490,7 +483,7 @@ class SelectController extends ChangeNotifier {
     String childId, {
     bool emitChange = true,
   }) {
-    final selected = stateTree.mutableFooterEntriesFor(categoryId);
+    final selected = tree.mutableFooterEntriesFor(categoryId);
     final hadSelected = selected.any((e) => e.id == childId);
     selected.removeWhere((e) => e.id == childId);
     if (hadSelected && emitChange) emitChangeFromState();

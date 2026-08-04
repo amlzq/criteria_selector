@@ -256,7 +256,7 @@ class FlattenSelectorState extends State<FlattenSelector> {
     } else {
       controller?.toggleFlatEntry(
         item,
-        selectorSelectionMode: selectorSelectionMode ?? SelectionMode.single,
+        selectionMode: selectorSelectionMode ?? SelectionMode.single,
         isCategoryTree: true,
         category: category,
       );

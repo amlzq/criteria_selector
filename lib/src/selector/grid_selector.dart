@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 
 import 'action_bar_visibility.dart';
 import 'constants.dart';
+import 'select_controller.dart';
 import 'select_delegate.dart';
 import 'select_entry.dart';
 import 'select_layout.dart';
-import 'select_controller.dart';
 import 'widgets/widgets.dart';
 
 /// Vertical layout: category tabs on top and a grid of items below.
@@ -141,7 +141,7 @@ class GridSelectorState extends State<GridSelector> {
     } else {
       controller?.toggleFlatEntry(
         entry,
-        selectorSelectionMode: selectorSelectionMode ?? SelectionMode.single,
+        selectionMode: selectorSelectionMode ?? SelectionMode.single,
         isCategoryTree: true,
         category: category,
       );

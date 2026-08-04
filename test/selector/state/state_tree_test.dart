@@ -1,5 +1,5 @@
 import 'package:criteria_selector/criteria_selector.dart';
-import 'package:criteria_selector/src/selector/state/selector_state_tree.dart';
+import 'package:criteria_selector/src/selector/state/state_tree.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 SelectTextEntry<dynamic> _text(
@@ -39,16 +39,16 @@ SelectCategoryEntry<dynamic> _category(
 }
 
 void main() {
-  group('SelectorStateTree – bind', () {
+  group('StateTree – bind', () {
     test('bind returns true for new entries', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
       expect(tree.bind([c], initializeAnyIfEmpty: false), isTrue);
     });
 
     test('bind returns false for identical entries', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
       tree.bind([c], initializeAnyIfEmpty: false);
@@ -56,7 +56,7 @@ void main() {
     });
 
     test('bind returns true when previousSelected changes', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
       tree.bind([c], initializeAnyIfEmpty: false);
@@ -67,7 +67,7 @@ void main() {
     });
 
     test('bind returns true when resetSelected changes', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
       tree.bind([c], initializeAnyIfEmpty: false);
@@ -78,9 +78,9 @@ void main() {
     });
   });
 
-  group('SelectorStateTree – ensureLevels / trimLevels', () {
+  group('StateTree – ensureLevels / trimLevels', () {
     test('ensureLevels expands selected entries per level', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       tree.ensureLevels(3);
       expect(tree.levelCount, 3);
       expect(tree.selectedEntriesAtLevel(0), isEmpty);
@@ -88,23 +88,23 @@ void main() {
     });
 
     test('trimLevels reduces selected entries per level', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       tree.ensureLevels(3);
       tree.trimLevels(1);
       expect(tree.levelCount, 1);
     });
 
     test('trimLevels with count 0 clears all', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       tree.ensureLevels(3);
       tree.trimLevels(0);
       expect(tree.levelCount, 0);
     });
   });
 
-  group('SelectorStateTree – trimTrailingEmptyLevels', () {
+  group('StateTree – trimTrailingEmptyLevels', () {
     test('removes trailing empty levels', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       tree.ensureLevels(3);
       tree.mutableSelectedEntriesAtLevel(0).add(
             _category('c', 'C', children: {_text('c', 'a', 'A')}),
@@ -114,7 +114,7 @@ void main() {
     });
 
     test('does not remove non-empty trailing levels', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       tree.ensureLevels(2);
       tree.mutableSelectedEntriesAtLevel(0).add(
             _category('c', 'C', children: {_text('c', 'a', 'A')}),
@@ -125,7 +125,7 @@ void main() {
     });
 
     test('does nothing when all levels are non-empty', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final any = SelectTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {any, a});
@@ -136,9 +136,9 @@ void main() {
     });
   });
 
-  group('SelectorStateTree – clearSelections', () {
+  group('StateTree – clearSelections', () {
     test('clears all selected entries and header/footer selections', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
       tree.bind([c], initializeAnyIfEmpty: false);
@@ -155,9 +155,9 @@ void main() {
     });
   });
 
-  group('SelectorStateTree – snapshot', () {
+  group('StateTree – snapshot', () {
     test('snapshot returns an independent copy', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
       tree.bind([c], initializeAnyIfEmpty: false);
@@ -173,7 +173,7 @@ void main() {
     });
 
     test('snapshot copies header and footer selections', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
       tree.bind([c], initializeAnyIfEmpty: false);
@@ -186,9 +186,9 @@ void main() {
     });
   });
 
-  group('SelectorStateTree – findEntry', () {
+  group('StateTree – findEntry', () {
     test('finds entry by id', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
       tree.bind([c], initializeAnyIfEmpty: false);
@@ -198,7 +198,7 @@ void main() {
     });
 
     test('finds entry by id and parentId', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
       tree.bind([c], initializeAnyIfEmpty: false);
@@ -208,13 +208,13 @@ void main() {
     });
 
     test('returns null for non-existent id', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       tree.bind([], initializeAnyIfEmpty: false);
       expect(tree.findEntry('missing'), isNull);
     });
 
     test('finds entry in nested tree', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final leaf = _text('p', 'l', 'L');
       final parent = _text('c', 'p', 'P', children: {leaf});
       final c = _category('c', 'C', children: {parent});
@@ -224,9 +224,9 @@ void main() {
     });
   });
 
-  group('SelectorStateTree – findCategory', () {
+  group('StateTree – findCategory', () {
     test('finds category by id', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final c = _category('c', 'C', children: {_text('c', 'a', 'A')});
       tree.bind([c], initializeAnyIfEmpty: false);
 
@@ -235,7 +235,7 @@ void main() {
     });
 
     test('returns null for non-category entry', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
       tree.bind([c], initializeAnyIfEmpty: false);
@@ -244,9 +244,9 @@ void main() {
     });
   });
 
-  group('SelectorStateTree – findPath', () {
+  group('StateTree – findPath', () {
     test('returns path for a flat entry', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
       tree.bind([c], initializeAnyIfEmpty: false);
@@ -257,7 +257,7 @@ void main() {
     });
 
     test('returns path for nested cascading entry', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final leaf = _text('p', 'l', 'L');
       final parent = _text('c', 'p', 'P', children: {leaf});
       final c = _category('c', 'C', children: {parent});
@@ -269,7 +269,7 @@ void main() {
     });
 
     test('returns null for non-existent id', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final c = _category('c', 'C', children: {_text('c', 'a', 'A')});
       tree.bind([c], initializeAnyIfEmpty: false);
 
@@ -277,12 +277,12 @@ void main() {
     });
 
     test('returns null when entries are empty', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       expect(tree.findPath('any'), isNull);
     });
 
     test('finds path with parentId disambiguation', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final a1 = _text('c1', 'a', 'A1');
       final a2 = _text('c2', 'a', 'A2');
       final c1 = _category('c1', 'C1', children: {a1});
@@ -299,7 +299,7 @@ void main() {
     });
 
     test('finds path through header', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final hChild = _text('header', 'hc', 'HC');
       final header = _text('c', 'header', 'Header', children: {hChild});
       final c = _category(
@@ -316,9 +316,9 @@ void main() {
     });
   });
 
-  group('SelectorStateTree – selectedEntries queries', () {
+  group('StateTree – selectedEntries queries', () {
     test('selectedEntriesAtLevel returns entries at specific level', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
       tree.bind([c], initializeAnyIfEmpty: false);
@@ -332,7 +332,7 @@ void main() {
     });
 
     test('selectedEntriesForParent filters by parentId', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final a1 = _text('c1', 'a1', 'A1');
       final a2 = _text('c2', 'a2', 'A2');
       final c1 = _category('c1', 'C1', children: {a1});
@@ -357,25 +357,25 @@ void main() {
     });
 
     test('selectedHeaderEntriesFor returns header selections', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       tree.mutableHeaderEntriesFor('c').add(_text('c', 'h', 'H'));
       expect(tree.selectedHeaderEntriesFor('c').length, 1);
       expect(tree.selectedHeaderEntriesFor('missing'), isEmpty);
     });
 
     test('selectedFooterEntriesFor returns footer selections', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       tree.mutableFooterEntriesFor('c').add(_text('c', 'f', 'F'));
       expect(tree.selectedFooterEntriesFor('c').length, 1);
       expect(tree.selectedFooterEntriesFor('missing'), isEmpty);
     });
   });
 
-  group('SelectorStateTree – _initializeAnySelection', () {
+  group('StateTree – _initializeAnySelection', () {
     test(
         'initializes Any entries for category tree when initializeAnyIfEmpty is true',
         () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final any = SelectTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {any, a});
@@ -386,7 +386,7 @@ void main() {
     });
 
     test('does not initialize Any when initializeAnyIfEmpty is false', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
       tree.bind([c], initializeAnyIfEmpty: false);
@@ -395,7 +395,7 @@ void main() {
     });
 
     test('initializes Any for flat tree when no category entries', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final any = SelectTextEntry<dynamic>.any(parentId: '', name: 'Any');
       final a = _text('', 'a', 'A');
       tree.bind([any, a], initializeAnyIfEmpty: true);
@@ -404,15 +404,15 @@ void main() {
     });
 
     test('does nothing for empty entries', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       tree.bind([], initializeAnyIfEmpty: true);
       expect(tree.selectedEntriesAtLevel(0), isEmpty);
     });
   });
 
-  group('SelectorStateTree – _restoreSelections with previousSelected', () {
+  group('StateTree – _restoreSelections with previousSelected', () {
     test('restores previously selected entries', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
 
@@ -431,7 +431,7 @@ void main() {
     });
 
     test('restores cascading selections', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final leaf = _text('p', 'l', 'L');
       final parent = _text('c', 'p', 'P', children: {leaf});
       final c = _category('c', 'C', children: {parent});
@@ -460,7 +460,7 @@ void main() {
     test(
         'falls back to Any when previousSelected is empty and initializeAnyIfEmpty is true',
         () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final any = SelectTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {any, a});
@@ -471,9 +471,9 @@ void main() {
     });
   });
 
-  group('SelectorStateTree – reset', () {
+  group('StateTree – reset', () {
     test('reset restores resetSelected entries', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final a = _text('c', 'a', 'A');
       final b = _text('c', 'b', 'B');
       final c = _category('c', 'C', children: {a, b});
@@ -506,9 +506,9 @@ void main() {
     });
   });
 
-  group('SelectorStateTree – _restoreHeaderFooterSelected', () {
+  group('StateTree – _restoreHeaderFooterSelected', () {
     test('restores header selections from previousSelected', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final h1 = _text('header', 'h1', 'H1');
       final header = _text('c', 'header', 'Header', children: {h1});
       final c = _category(
@@ -538,7 +538,7 @@ void main() {
     });
 
     test('restores footer selections from previousSelected', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final f1 = _text('footer', 'f1', 'F1');
       final footer = _text('c', 'footer', 'Footer', children: {f1});
       final c = _category(
@@ -567,11 +567,11 @@ void main() {
     });
   });
 
-  group('SelectorStateTree – buildChangedEntries / buildAppliedEntries', () {
+  group('StateTree – buildChangedEntries / buildAppliedEntries', () {
     test(
         'buildChangedEntries returns selected tree with deepCloneSelectedSubtree=false',
         () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
       tree.bind([c], initializeAnyIfEmpty: false);
@@ -585,7 +585,7 @@ void main() {
     });
 
     test('buildAppliedEntries returns selected tree with full deep clone', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
       tree.bind([c], initializeAnyIfEmpty: false);
@@ -599,7 +599,7 @@ void main() {
     });
 
     test('returns empty set when nothing is selected', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
       tree.bind([c], initializeAnyIfEmpty: false);
@@ -609,9 +609,9 @@ void main() {
     });
   });
 
-  group('SelectorStateTree – previousSelected / resetSelected', () {
+  group('StateTree – previousSelected / resetSelected', () {
     test('previousSelected getter returns bound value', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
       tree.bind([c], initializeAnyIfEmpty: false, previousSelected: {a});
@@ -620,7 +620,7 @@ void main() {
     });
 
     test('resetSelected getter returns bound value', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
       tree.bind([c], initializeAnyIfEmpty: false, resetSelected: {a});
@@ -629,7 +629,7 @@ void main() {
     });
 
     test('previousSelected is null when not provided', () {
-      final tree = SelectorStateTree();
+      final tree = StateTree();
       final c = _category('c', 'C', children: {_text('c', 'a', 'A')});
       tree.bind([c], initializeAnyIfEmpty: false);
       expect(tree.previousSelected, isNull);

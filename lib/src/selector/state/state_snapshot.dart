@@ -1,7 +1,7 @@
 import '../select_entry.dart';
 
-class SelectorStateSnapshot {
-  const SelectorStateSnapshot({
+class StateSnapshot {
+  const StateSnapshot({
     required this.selectedEntriesPerLevel,
     required this.selectedHeaderEntries,
     required this.selectedFooterEntries,

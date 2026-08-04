@@ -102,7 +102,7 @@ class ListSelectorState extends State<ListSelector> {
     if (!isCategoryTree) {
       controller?.toggleFlatEntry(
         item,
-        selectorSelectionMode: selectorSelectionMode ?? SelectionMode.single,
+        selectionMode: selectorSelectionMode ?? SelectionMode.single,
         isCategoryTree: false,
       );
       _setStateOrImmediateApply(item);
@@ -117,7 +117,7 @@ class ListSelectorState extends State<ListSelector> {
     final category = categoryEntry;
     controller?.toggleFlatEntry(
       item,
-      selectorSelectionMode: selectorSelectionMode ?? SelectionMode.single,
+      selectionMode: selectorSelectionMode ?? SelectionMode.single,
       isCategoryTree: true,
       category: category,
     );

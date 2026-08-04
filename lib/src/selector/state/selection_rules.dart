@@ -2,13 +2,13 @@ import 'package:collection/collection.dart';
 
 import '../constants.dart';
 import '../select_entry.dart';
-import 'selector_state_tree.dart';
+import 'state_tree.dart';
 
-class SelectorSelectionRules {
-  const SelectorSelectionRules();
+class SelectionRules {
+  const SelectionRules();
 
   void focusCategory(
-    SelectorStateTree tree,
+    StateTree tree,
     SelectCategoryEntry category, {
     required SelectionMode selectionMode,
   }) {
@@ -45,9 +45,9 @@ class SelectorSelectionRules {
   }
 
   void toggleFlatLeaf(
-    SelectorStateTree tree,
+    StateTree tree,
     SelectChildEntry item, {
-    required SelectionMode selectorSelectionMode,
+    required SelectionMode selectionMode,
     required bool isCategoryTree,
     SelectCategoryEntry? category,
   }) {
@@ -63,7 +63,7 @@ class SelectorSelectionRules {
       }
 
       selectedEntries.removeWhere((e) => e is SelectChildEntry && e.isAny);
-      if (SelectionMode.single == selectorSelectionMode) {
+      if (SelectionMode.single == selectionMode) {
         if (selectedEntries.contains(item)) return;
         selectedEntries
           ..clear()
@@ -92,8 +92,7 @@ class SelectorSelectionRules {
       selectedEntries.add(item);
     } else {
       selectedEntries.removeWhere(
-        (e) =>
-            e is SelectChildEntry && e.parentId == item.parentId && e.isAny,
+        (e) => e is SelectChildEntry && e.parentId == item.parentId && e.isAny,
       );
 
       if (SelectionMode.single == category.selectionMode) {
@@ -127,9 +126,9 @@ class SelectorSelectionRules {
   }
 
   void toggleCascadingLeaf(
-    SelectorStateTree tree,
+    StateTree tree,
     SelectChildEntry entry, {
-    required SelectionMode selectorSelectionMode,
+    required SelectionMode selectionMode,
     required SelectionMode childrenSelectionMode,
     required List<SelectEntry> focusedPath,
     required SelectCategoryEntry category,
@@ -206,7 +205,7 @@ class SelectorSelectionRules {
   }
 
   void toggleHeaderOrFooter(
-    SelectorStateTree tree, {
+    StateTree tree, {
     required String categoryId,
     required SelectChildEntry entry,
     required SelectionMode selectionMode,

@@ -1,6 +1,6 @@
 import 'package:criteria_selector/criteria_selector.dart';
-import 'package:criteria_selector/src/selector/state/selector_selection_rules.dart';
-import 'package:criteria_selector/src/selector/state/selector_state_tree.dart';
+import 'package:criteria_selector/src/selector/state/selection_rules.dart';
+import 'package:criteria_selector/src/selector/state/state_tree.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 SelectTextEntry<dynamic> _text(
@@ -40,12 +40,12 @@ SelectCategoryEntry<dynamic> _category(
 }
 
 void main() {
-  group('SelectorSelectionRules – focusCategory', () {
+  group('SelectionRules – focusCategory', () {
     test(
         'single mode: clears all previous selections then adds Any for category',
         () {
-      final rules = const SelectorSelectionRules();
-      final tree = SelectorStateTree();
+      final rules = const SelectionRules();
+      final tree = StateTree();
       final any = SelectTextEntry<dynamic>.any(parentId: 'c1', name: 'Any');
       final a = _text('c1', 'a', 'A');
       final b = _text('c2', 'b', 'B');
@@ -68,8 +68,8 @@ void main() {
 
     test('single mode: clearSelections then adds Any for category with Any',
         () {
-      final rules = const SelectorSelectionRules();
-      final tree = SelectorStateTree();
+      final rules = const SelectionRules();
+      final tree = StateTree();
       final any = SelectTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {any, a});
@@ -89,8 +89,8 @@ void main() {
 
     test('single mode: category without selected children is removed from root',
         () {
-      final rules = const SelectorSelectionRules();
-      final tree = SelectorStateTree();
+      final rules = const SelectionRules();
+      final tree = StateTree();
       final a = _text('c1', 'a', 'A');
       final b = _text('c2', 'b', 'B');
       final c1 = _category('c1', 'C1', children: {a});
@@ -116,8 +116,8 @@ void main() {
     test(
         'multiple mode: adds category with Any when no previous child selections',
         () {
-      final rules = const SelectorSelectionRules();
-      final tree = SelectorStateTree();
+      final rules = const SelectionRules();
+      final tree = StateTree();
       final a = _text('c1', 'a', 'A');
       final any = SelectTextEntry<dynamic>.any(parentId: 'c2', name: 'Any');
       final b = _text('c2', 'b', 'B');
@@ -139,10 +139,10 @@ void main() {
     });
   });
 
-  group('SelectorSelectionRules – toggleFlatLeaf (non-category tree)', () {
+  group('SelectionRules – toggleFlatLeaf (non-category tree)', () {
     test('selecting Any clears all and selects Any', () {
-      final rules = const SelectorSelectionRules();
-      final tree = SelectorStateTree();
+      final rules = const SelectionRules();
+      final tree = StateTree();
       final any = SelectTextEntry<dynamic>.any(parentId: '', name: 'Any');
       final a = _text('', 'a', 'A');
       tree.bind([any, a], initializeAnyIfEmpty: false);
@@ -153,7 +153,7 @@ void main() {
       rules.toggleFlatLeaf(
         tree,
         any,
-        selectorSelectionMode: SelectionMode.single,
+        selectionMode: SelectionMode.single,
         isCategoryTree: false,
       );
 
@@ -162,8 +162,8 @@ void main() {
     });
 
     test('single mode: selecting non-any entry replaces previous', () {
-      final rules = const SelectorSelectionRules();
-      final tree = SelectorStateTree();
+      final rules = const SelectionRules();
+      final tree = StateTree();
       final a = _text('', 'a', 'A');
       final b = _text('', 'b', 'B');
       tree.bind([a, b], initializeAnyIfEmpty: false);
@@ -174,7 +174,7 @@ void main() {
       rules.toggleFlatLeaf(
         tree,
         b,
-        selectorSelectionMode: SelectionMode.single,
+        selectionMode: SelectionMode.single,
         isCategoryTree: false,
       );
 
@@ -183,8 +183,8 @@ void main() {
     });
 
     test('single mode: selecting same entry does not remove it', () {
-      final rules = const SelectorSelectionRules();
-      final tree = SelectorStateTree();
+      final rules = const SelectionRules();
+      final tree = StateTree();
       final a = _text('', 'a', 'A');
       tree.bind([a], initializeAnyIfEmpty: false);
 
@@ -194,7 +194,7 @@ void main() {
       rules.toggleFlatLeaf(
         tree,
         a,
-        selectorSelectionMode: SelectionMode.single,
+        selectionMode: SelectionMode.single,
         isCategoryTree: false,
       );
 
@@ -203,8 +203,8 @@ void main() {
     });
 
     test('multiple mode: selecting toggles entry', () {
-      final rules = const SelectorSelectionRules();
-      final tree = SelectorStateTree();
+      final rules = const SelectionRules();
+      final tree = StateTree();
       final a = _text('', 'a', 'A');
       final b = _text('', 'b', 'B');
       tree.bind([a, b], initializeAnyIfEmpty: false);
@@ -216,7 +216,7 @@ void main() {
       rules.toggleFlatLeaf(
         tree,
         b,
-        selectorSelectionMode: SelectionMode.multiple,
+        selectionMode: SelectionMode.multiple,
         isCategoryTree: false,
       );
       expect(tree.selectedEntriesAtLevel(0).contains(a), isTrue);
@@ -226,7 +226,7 @@ void main() {
       rules.toggleFlatLeaf(
         tree,
         a,
-        selectorSelectionMode: SelectionMode.multiple,
+        selectionMode: SelectionMode.multiple,
         isCategoryTree: false,
       );
       expect(tree.selectedEntriesAtLevel(0).contains(a), isFalse);
@@ -234,8 +234,8 @@ void main() {
     });
 
     test('removes Any entries when selecting non-Any', () {
-      final rules = const SelectorSelectionRules();
-      final tree = SelectorStateTree();
+      final rules = const SelectionRules();
+      final tree = StateTree();
       final any = SelectTextEntry<dynamic>.any(parentId: '', name: 'Any');
       final a = _text('', 'a', 'A');
       tree.bind([any, a], initializeAnyIfEmpty: false);
@@ -246,7 +246,7 @@ void main() {
       rules.toggleFlatLeaf(
         tree,
         a,
-        selectorSelectionMode: SelectionMode.single,
+        selectionMode: SelectionMode.single,
         isCategoryTree: false,
       );
 
@@ -254,10 +254,10 @@ void main() {
     });
   });
 
-  group('SelectorSelectionRules – toggleFlatLeaf (category tree)', () {
+  group('SelectionRules – toggleFlatLeaf (category tree)', () {
     test('category tree: selecting Any clears siblings under same parent', () {
-      final rules = const SelectorSelectionRules();
-      final tree = SelectorStateTree();
+      final rules = const SelectionRules();
+      final tree = StateTree();
       final any = SelectTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {any, a});
@@ -270,7 +270,7 @@ void main() {
       rules.toggleFlatLeaf(
         tree,
         any,
-        selectorSelectionMode: SelectionMode.single,
+        selectionMode: SelectionMode.single,
         isCategoryTree: true,
         category: c,
       );
@@ -280,8 +280,8 @@ void main() {
     });
 
     test('category tree: selecting custom range clears siblings', () {
-      final rules = const SelectorSelectionRules();
-      final tree = SelectorStateTree();
+      final rules = const SelectionRules();
+      final tree = StateTree();
       final custom = SelectRangeEntry<int, dynamic>.custom(
         parentId: 'c',
         name: 'Custom',
@@ -297,7 +297,7 @@ void main() {
       rules.toggleFlatLeaf(
         tree,
         custom,
-        selectorSelectionMode: SelectionMode.single,
+        selectionMode: SelectionMode.single,
         isCategoryTree: true,
         category: c,
       );
@@ -307,8 +307,8 @@ void main() {
     });
 
     test('category tree single mode: selecting non-any replaces siblings', () {
-      final rules = const SelectorSelectionRules();
-      final tree = SelectorStateTree();
+      final rules = const SelectionRules();
+      final tree = StateTree();
       final a = _text('c', 'a', 'A');
       final b = _text('c', 'b', 'B');
       final c = _category('c', 'C', children: {a, b});
@@ -321,7 +321,7 @@ void main() {
       rules.toggleFlatLeaf(
         tree,
         b,
-        selectorSelectionMode: SelectionMode.single,
+        selectionMode: SelectionMode.single,
         isCategoryTree: true,
         category: c,
       );
@@ -332,8 +332,8 @@ void main() {
 
     test('category tree single mode: selecting same entry does not remove it',
         () {
-      final rules = const SelectorSelectionRules();
-      final tree = SelectorStateTree();
+      final rules = const SelectionRules();
+      final tree = StateTree();
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
       tree.bind([c], initializeAnyIfEmpty: false);
@@ -345,7 +345,7 @@ void main() {
       rules.toggleFlatLeaf(
         tree,
         a,
-        selectorSelectionMode: SelectionMode.single,
+        selectionMode: SelectionMode.single,
         isCategoryTree: true,
         category: c,
       );
@@ -354,8 +354,8 @@ void main() {
     });
 
     test('category tree multiple mode: selecting toggles entries', () {
-      final rules = const SelectorSelectionRules();
-      final tree = SelectorStateTree();
+      final rules = const SelectionRules();
+      final tree = StateTree();
       final a = _text('c', 'a', 'A');
       final b = _text('c', 'b', 'B');
       final c = _category('c', 'C',
@@ -370,7 +370,7 @@ void main() {
       rules.toggleFlatLeaf(
         tree,
         b,
-        selectorSelectionMode: SelectionMode.multiple,
+        selectionMode: SelectionMode.multiple,
         isCategoryTree: true,
         category: c,
       );
@@ -381,7 +381,7 @@ void main() {
       rules.toggleFlatLeaf(
         tree,
         a,
-        selectorSelectionMode: SelectionMode.multiple,
+        selectionMode: SelectionMode.multiple,
         isCategoryTree: true,
         category: c,
       );
@@ -392,8 +392,8 @@ void main() {
     test(
         'category tree: toggling last selected entry in multiple mode re-adds Any if available',
         () {
-      final rules = const SelectorSelectionRules();
-      final tree = SelectorStateTree();
+      final rules = const SelectionRules();
+      final tree = StateTree();
       final any = SelectTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
       final a = _text('c', 'a', 'A');
       final b = _text('c', 'b', 'B');
@@ -409,7 +409,7 @@ void main() {
       rules.toggleFlatLeaf(
         tree,
         a,
-        selectorSelectionMode: SelectionMode.multiple,
+        selectionMode: SelectionMode.multiple,
         isCategoryTree: true,
         category: c,
       );
@@ -423,8 +423,8 @@ void main() {
     test(
         'category tree: toggling last selected entry in multiple mode removes category if no Any',
         () {
-      final rules = const SelectorSelectionRules();
-      final tree = SelectorStateTree();
+      final rules = const SelectionRules();
+      final tree = StateTree();
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C',
           children: {a}, selectionMode: SelectionMode.multiple);
@@ -438,7 +438,7 @@ void main() {
       rules.toggleFlatLeaf(
         tree,
         a,
-        selectorSelectionMode: SelectionMode.multiple,
+        selectionMode: SelectionMode.multiple,
         isCategoryTree: true,
         category: c,
       );
@@ -448,8 +448,8 @@ void main() {
     });
 
     test('category tree: null category returns early', () {
-      final rules = const SelectorSelectionRules();
-      final tree = SelectorStateTree();
+      final rules = const SelectionRules();
+      final tree = StateTree();
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
       tree.bind([c], initializeAnyIfEmpty: false);
@@ -461,7 +461,7 @@ void main() {
       rules.toggleFlatLeaf(
         tree,
         a,
-        selectorSelectionMode: SelectionMode.single,
+        selectionMode: SelectionMode.single,
         isCategoryTree: true,
         category: null,
       );
@@ -471,8 +471,8 @@ void main() {
     });
 
     test('category tree: removes Any entries before selecting non-Any', () {
-      final rules = const SelectorSelectionRules();
-      final tree = SelectorStateTree();
+      final rules = const SelectionRules();
+      final tree = StateTree();
       final any = SelectTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {any, a});
@@ -485,7 +485,7 @@ void main() {
       rules.toggleFlatLeaf(
         tree,
         a,
-        selectorSelectionMode: SelectionMode.single,
+        selectionMode: SelectionMode.single,
         isCategoryTree: true,
         category: c,
       );
@@ -495,10 +495,10 @@ void main() {
     });
   });
 
-  group('SelectorSelectionRules – toggleCascadingLeaf', () {
+  group('SelectionRules – toggleCascadingLeaf', () {
     test('single mode: selecting Any replaces all siblings', () {
-      final rules = const SelectorSelectionRules();
-      final tree = SelectorStateTree();
+      final rules = const SelectionRules();
+      final tree = StateTree();
       final any = SelectTextEntry<dynamic>.any(parentId: 'p', name: 'Any');
       final leaf = _text('p', 'l', 'L');
       final parent = _text('c', 'p', 'P', children: {any, leaf});
@@ -513,7 +513,7 @@ void main() {
       rules.toggleCascadingLeaf(
         tree,
         any,
-        selectorSelectionMode: SelectionMode.single,
+        selectionMode: SelectionMode.single,
         childrenSelectionMode: SelectionMode.single,
         focusedPath: [c, parent],
         category: c,
@@ -529,8 +529,8 @@ void main() {
     test(
         'single mode: selecting non-Any leaf removes Any from same level and upper levels',
         () {
-      final rules = const SelectorSelectionRules();
-      final tree = SelectorStateTree();
+      final rules = const SelectionRules();
+      final tree = StateTree();
       final any = SelectTextEntry<dynamic>.any(parentId: 'p', name: 'Any');
       final leaf = _text('p', 'l', 'L');
       final parent = _text('c', 'p', 'P', children: {any, leaf});
@@ -545,7 +545,7 @@ void main() {
       rules.toggleCascadingLeaf(
         tree,
         leaf,
-        selectorSelectionMode: SelectionMode.single,
+        selectionMode: SelectionMode.single,
         childrenSelectionMode: SelectionMode.single,
         focusedPath: [c, parent],
         category: c,
@@ -557,8 +557,8 @@ void main() {
     });
 
     test('single mode: selecting same entry does nothing', () {
-      final rules = const SelectorSelectionRules();
-      final tree = SelectorStateTree();
+      final rules = const SelectionRules();
+      final tree = StateTree();
       final leaf = _text('p', 'l', 'L');
       final parent = _text('c', 'p', 'P', children: {leaf});
       final c = _category('c', 'C', children: {parent});
@@ -572,7 +572,7 @@ void main() {
       rules.toggleCascadingLeaf(
         tree,
         leaf,
-        selectorSelectionMode: SelectionMode.single,
+        selectionMode: SelectionMode.single,
         childrenSelectionMode: SelectionMode.single,
         focusedPath: [c, parent],
         category: c,
@@ -582,8 +582,8 @@ void main() {
     });
 
     test('multiple mode: selecting toggles entries', () {
-      final rules = const SelectorSelectionRules();
-      final tree = SelectorStateTree();
+      final rules = const SelectionRules();
+      final tree = StateTree();
       final leaf1 = _text('p', 'l1', 'L1');
       final leaf2 = _text('p', 'l2', 'L2');
       final parent = _text('c', 'p', 'P', children: {leaf1, leaf2});
@@ -599,7 +599,7 @@ void main() {
       rules.toggleCascadingLeaf(
         tree,
         leaf2,
-        selectorSelectionMode: SelectionMode.multiple,
+        selectionMode: SelectionMode.multiple,
         childrenSelectionMode: SelectionMode.multiple,
         focusedPath: [c, parent],
         category: c,
@@ -611,7 +611,7 @@ void main() {
       rules.toggleCascadingLeaf(
         tree,
         leaf1,
-        selectorSelectionMode: SelectionMode.multiple,
+        selectionMode: SelectionMode.multiple,
         childrenSelectionMode: SelectionMode.multiple,
         focusedPath: [c, parent],
         category: c,
@@ -621,8 +621,8 @@ void main() {
     });
 
     test('multiple mode: selecting Any clears siblings and selects Any', () {
-      final rules = const SelectorSelectionRules();
-      final tree = SelectorStateTree();
+      final rules = const SelectionRules();
+      final tree = StateTree();
       final any = SelectTextEntry<dynamic>.any(parentId: 'p', name: 'Any');
       final leaf = _text('p', 'l', 'L');
       final parent = _text('c', 'p', 'P', children: {any, leaf});
@@ -637,7 +637,7 @@ void main() {
       rules.toggleCascadingLeaf(
         tree,
         any,
-        selectorSelectionMode: SelectionMode.multiple,
+        selectionMode: SelectionMode.multiple,
         childrenSelectionMode: SelectionMode.multiple,
         focusedPath: [c, parent],
         category: c,
@@ -648,8 +648,8 @@ void main() {
     });
 
     test('multiple mode: toggling Any removes it', () {
-      final rules = const SelectorSelectionRules();
-      final tree = SelectorStateTree();
+      final rules = const SelectionRules();
+      final tree = StateTree();
       final any = SelectTextEntry<dynamic>.any(parentId: 'p', name: 'Any');
       final parent = _text('c', 'p', 'P', children: {any});
       final c = _category('c', 'C', children: {parent});
@@ -663,7 +663,7 @@ void main() {
       rules.toggleCascadingLeaf(
         tree,
         any,
-        selectorSelectionMode: SelectionMode.multiple,
+        selectionMode: SelectionMode.multiple,
         childrenSelectionMode: SelectionMode.multiple,
         focusedPath: [c, parent],
         category: c,
@@ -675,8 +675,8 @@ void main() {
     test(
         'cascading: deselection removes ancestors that have no remaining selected children',
         () {
-      final rules = const SelectorSelectionRules();
-      final tree = SelectorStateTree();
+      final rules = const SelectionRules();
+      final tree = StateTree();
       final leaf = _text('p', 'l', 'L');
       final parent = _text('c', 'p', 'P', children: {leaf});
       final c = _category('c', 'C', children: {parent});
@@ -691,7 +691,7 @@ void main() {
       rules.toggleCascadingLeaf(
         tree,
         leaf,
-        selectorSelectionMode: SelectionMode.multiple,
+        selectionMode: SelectionMode.multiple,
         childrenSelectionMode: SelectionMode.multiple,
         focusedPath: [c, parent],
         category: c,
@@ -702,8 +702,8 @@ void main() {
     });
 
     test('cascading: deselecting last leaf adds Any if available', () {
-      final rules = const SelectorSelectionRules();
-      final tree = SelectorStateTree();
+      final rules = const SelectionRules();
+      final tree = StateTree();
       final any = SelectTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
       final leaf = _text('p', 'l', 'L');
       final parent = _text('c', 'p', 'P', children: {leaf});
@@ -719,7 +719,7 @@ void main() {
       rules.toggleCascadingLeaf(
         tree,
         leaf,
-        selectorSelectionMode: SelectionMode.multiple,
+        selectionMode: SelectionMode.multiple,
         childrenSelectionMode: SelectionMode.multiple,
         focusedPath: [c, parent],
         category: c,
@@ -731,8 +731,8 @@ void main() {
     });
 
     test('cascading: ensures enough levels for the focused path', () {
-      final rules = const SelectorSelectionRules();
-      final tree = SelectorStateTree();
+      final rules = const SelectionRules();
+      final tree = StateTree();
       final grandchild = _text('p2', 'gc', 'GC');
       final child = _text('p1', 'p2', 'P2', children: {grandchild});
       final parent = _text('c', 'p1', 'P1', children: {child});
@@ -743,7 +743,7 @@ void main() {
       rules.toggleCascadingLeaf(
         tree,
         grandchild,
-        selectorSelectionMode: SelectionMode.single,
+        selectionMode: SelectionMode.single,
         childrenSelectionMode: SelectionMode.single,
         focusedPath: [c, parent, child],
         category: c,
@@ -757,10 +757,10 @@ void main() {
     });
   });
 
-  group('SelectorSelectionRules – toggleHeaderOrFooter', () {
+  group('SelectionRules – toggleHeaderOrFooter', () {
     test('header single mode: selecting toggles entry', () {
-      final rules = const SelectorSelectionRules();
-      final tree = SelectorStateTree();
+      final rules = const SelectionRules();
+      final tree = StateTree();
       final h1 = _text('header', 'h1', 'H1');
       final h2 = _text('header', 'h2', 'H2');
       final header = _text('c', 'header', 'Header', children: {h1, h2});
@@ -795,8 +795,8 @@ void main() {
     });
 
     test('header single mode: deselecting by toggling same entry', () {
-      final rules = const SelectorSelectionRules();
-      final tree = SelectorStateTree();
+      final rules = const SelectionRules();
+      final tree = StateTree();
       final h1 = _text('header', 'h1', 'H1');
       final header = _text('c', 'header', 'Header', children: {h1});
       final c = _category(
@@ -828,8 +828,8 @@ void main() {
     });
 
     test('header multiple mode: selecting multiple entries', () {
-      final rules = const SelectorSelectionRules();
-      final tree = SelectorStateTree();
+      final rules = const SelectionRules();
+      final tree = StateTree();
       final h1 = _text('header', 'h1', 'H1');
       final h2 = _text('header', 'h2', 'H2');
       final header = _text('c', 'header', 'Header', children: {h1, h2});
@@ -862,8 +862,8 @@ void main() {
     });
 
     test('header multiple mode: toggling removes entry', () {
-      final rules = const SelectorSelectionRules();
-      final tree = SelectorStateTree();
+      final rules = const SelectionRules();
+      final tree = StateTree();
       final h1 = _text('header', 'h1', 'H1');
       final h2 = _text('header', 'h2', 'H2');
       final header = _text('c', 'header', 'Header', children: {h1, h2});
@@ -904,8 +904,8 @@ void main() {
     });
 
     test('footer single mode: selecting and deselecting', () {
-      final rules = const SelectorSelectionRules();
-      final tree = SelectorStateTree();
+      final rules = const SelectionRules();
+      final tree = StateTree();
       final f1 = _text('footer', 'f1', 'F1');
       final footer = _text('c', 'footer', 'Footer', children: {f1});
       final c = _category(
@@ -936,8 +936,8 @@ void main() {
     });
 
     test('footer multiple mode: selecting multiple entries', () {
-      final rules = const SelectorSelectionRules();
-      final tree = SelectorStateTree();
+      final rules = const SelectionRules();
+      final tree = StateTree();
       final f1 = _text('footer', 'f1', 'F1');
       final f2 = _text('footer', 'f2', 'F2');
       final footer = _text('c', 'footer', 'Footer', children: {f1, f2});
