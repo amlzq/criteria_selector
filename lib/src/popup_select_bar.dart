@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'dropdown_overlay.dart';
 import 'dropdown_overlay_style.dart';
-import 'i18n/localizations.dart';
+import 'i18n/select_localizations.dart';
 import 'popup_select_bar_theme.dart';
 import 'popup_select_controller.dart';
 import 'selector/select_delegate.dart';
@@ -408,7 +408,7 @@ class _PopupSelectBarState extends State<PopupSelectBar>
 
     final effectiveSelectTheme = widget.selectTheme ?? theme?.selectTheme;
 
-    final localizations = SelectorLocalizations.of(context);
+    final localizations = SelectLocalizations.of(context);
 
     final effectiveMultipleText = localizations?.multiple ?? 'Multiple';
 

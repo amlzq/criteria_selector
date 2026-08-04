@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../i18n/localizations.dart';
+import '../../i18n/select_localizations.dart';
 import '../select_theme.dart';
 import '../select_theme_data.dart';
 import 'action_bar_theme.dart';
@@ -95,7 +95,7 @@ class SelectorActionBar extends StatelessWidget {
     final effectiveApplyFlex =
         applyFlex ?? theme.applyFlex ?? defaults.applyFlex!;
 
-    final localizations = SelectorLocalizations.of(context);
+    final localizations = SelectLocalizations.of(context);
 
     final effectiveResetText = resetText ?? localizations?.reset ?? 'Reset';
 

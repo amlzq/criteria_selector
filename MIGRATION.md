@@ -354,6 +354,48 @@ PopupSelectBar(
 );
 ```
 
+### `SelectorLocalizations` / `SelectorLocalizationsDelegate` renamed to `SelectLocalizations` / `SelectLocalizationsDelegate`
+
+**Description**
+The i18n classes were renamed to drop the redundant `Selector` prefix. The old
+names are kept as deprecated type aliases (e.g.
+`typedef SelectorLocalizations = SelectLocalizations;`) for backward
+compatibility and **will be removed in a future minor version**. Since the
+aliases are exact `typedef`s, this is a pure rename — no behavior changes.
+
+The source files were renamed along the way
+(`lib/src/i18n/localizations.dart` → `lib/src/i18n/select_localizations.dart`
+and `lib/src/i18n/localizations_delegate.dart` →
+`lib/src/i18n/select_localizations_delegate.dart`), and unit tests were added
+under `test/i18n/select_localizations_test.dart` and
+`test/i18n/select_localizations_delegate_test.dart`. The public export is
+updated, so no import change is required when using the package barrel.
+
+| Old name | New name |
+| --- | --- |
+| `SelectorLocalizations` | `SelectLocalizations` |
+| `SelectorLocalizationsDelegate` | `SelectLocalizationsDelegate` |
+
+Migration: replace each old name with its new counterpart at every call site.
+
+```dart
+// Before
+MaterialApp(
+  localizationsDelegates: const [
+    SelectorLocalizationsDelegate(),
+  ],
+  supportedLocales: SelectorLocalizationsDelegate.supportedLocales,
+);
+
+// After
+MaterialApp(
+  localizationsDelegates: const [
+    SelectLocalizationsDelegate(),
+  ],
+  supportedLocales: SelectLocalizationsDelegate.supportedLocales,
+);
+```
+
 ## MIGRATE TO 0.4.0
 
 ### Single `layout` replaces `listConfig` / `gridConfig` / `chipConfig`

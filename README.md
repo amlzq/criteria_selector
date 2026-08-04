@@ -13,7 +13,7 @@ Two layers work together: **entry points** decide *where* the selector appears, 
 - Flexible entries: the "Any" entry clears a category, `SelectRangeEntry.custom` takes user min/max input, and an `immediate` entry applies on tap without the action bar.
 - `skeletonBuilder` & `errorBuilder` for loading and error states.
 - Theming via `SelectThemeData` and the `PopupSelectBarTheme` / `PopupSelectButtonTheme` extensions.
-- Built-in i18n in 10 languages via `SelectorLocalizationsDelegate`.
+- Built-in i18n in 10 languages via `SelectLocalizationsDelegate`.
 
 ### Getting started
 
@@ -228,16 +228,16 @@ MaterialApp(
 
 #### Internationalization
 
-Add `SelectorLocalizationsDelegate()` to your `MaterialApp`. It ships translations for `de`, `en`, `es`, `fr`, `id`, `ja`, `ko`, `pt`, `vi`, and `zh` (Hans/Hant), localizing the "Apply" / "Reset" / "Multiple" labels automatically.
+Add `SelectLocalizationsDelegate()` to your `MaterialApp`. It ships translations for `de`, `en`, `es`, `fr`, `id`, `ja`, `ko`, `pt`, `vi`, and `zh` (Hans/Hant), localizing the "Apply" / "Reset" / "Multiple" labels automatically.
 
 ```dart
 const localizationsDelegates = <LocalizationsDelegate>[
   GlobalMaterialLocalizations.delegate,
   GlobalWidgetsLocalizations.delegate,
-  SelectorLocalizationsDelegate(),
+  SelectLocalizationsDelegate(),
 ];
 
-const supportedLocales = SelectorLocalizationsDelegate.supportedLocales;
+const supportedLocales = SelectLocalizationsDelegate.supportedLocales;
 
 MaterialApp(
   localizationsDelegates: localizationsDelegates,

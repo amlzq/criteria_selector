@@ -7,6 +7,8 @@ library;
 
 import 'package:flutter/foundation.dart';
 
+import 'i18n/select_localizations.dart';
+import 'i18n/select_localizations_delegate.dart';
 import 'selector/select_layout.dart';
 
 /// Deprecated layout configuration for the children of a [SelectCategoryEntry].
@@ -109,3 +111,25 @@ typedef SelectorChipLayout = SelectChipLayout;
   'version.',
 )
 typedef SelectorRangeLayout = SelectRangeLayout;
+
+/// Deprecated alias for [SelectLocalizations].
+///
+/// The `Selector`-prefixed i18n class was renamed to drop the redundant
+/// `Selector` prefix. This alias is kept for backward compatibility and will
+/// be removed in a future minor version.
+@Deprecated(
+  'Use SelectLocalizations instead. This alias will be removed in a future '
+  'minor version.',
+)
+typedef SelectorLocalizations = SelectLocalizations;
+
+/// Deprecated alias for [SelectLocalizationsDelegate].
+///
+/// The `Selector`-prefixed i18n class was renamed to drop the redundant
+/// `Selector` prefix. This alias is kept for backward compatibility and will
+/// be removed in a future minor version.
+@Deprecated(
+  'Use SelectLocalizationsDelegate instead. This alias will be removed in a '
+  'future minor version.',
+)
+typedef SelectorLocalizationsDelegate = SelectLocalizationsDelegate;

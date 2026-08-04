@@ -68,7 +68,7 @@ class _MyAppState extends State<MyApp> {
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
-              SelectorLocalizationsDelegate(),
+              SelectLocalizationsDelegate(),
             ],
             supportedLocales: const [
               Locale('en'),

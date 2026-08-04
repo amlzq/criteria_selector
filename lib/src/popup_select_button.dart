@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'dropdown_overlay.dart';
 import 'dropdown_overlay_style.dart';
-import 'i18n/localizations.dart';
+import 'i18n/select_localizations.dart';
 import 'popup_select_button_theme.dart';
 import 'popup_select_controller.dart';
 import 'selector/select_delegate.dart';
@@ -368,7 +368,7 @@ class _PopupSelectButtonState extends State<PopupSelectButton>
     final overlayStyle = widget.overlayStyle ?? resolved.overlayStyle;
     final effectiveSelectTheme = resolved.selectTheme;
 
-    final localizations = SelectorLocalizations.of(context);
+    final localizations = SelectLocalizations.of(context);
     _controller.applyMultipleText = localizations?.multiple ?? 'Multiple';
 
     return SelectorOverlayHost(

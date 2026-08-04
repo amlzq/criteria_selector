@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 
-import 'localizations.dart';
+import 'select_localizations.dart';
 
-class SelectorLocalizationsDelegate
-    extends LocalizationsDelegate<SelectorLocalizations> {
-  const SelectorLocalizationsDelegate();
+/// The [LocalizationsDelegate] for [SelectLocalizations].
+///
+/// Add a const instance to your app's `localizationsDelegates` to enable the
+/// built-in translations for the selector widgets. It ships translations for
+/// `de`, `en`, `es`, `fr`, `id`, `ja`, `ko`, `pt`, `vi`, and `zh`
+/// (Hans/Hant), localizing the "Apply" / "Reset" / "Multiple" labels
+/// automatically.
+class SelectLocalizationsDelegate
+    extends LocalizationsDelegate<SelectLocalizations> {
+  const SelectLocalizationsDelegate();
 
   static const supportedLanguageCodes = <String>{
     'de',
@@ -45,13 +52,13 @@ class SelectorLocalizationsDelegate
   }
 
   @override
-  Future<SelectorLocalizations> load(Locale locale) async {
-    return SelectorLocalizations(locale);
+  Future<SelectLocalizations> load(Locale locale) async {
+    return SelectLocalizations(locale);
   }
 
   @override
   bool shouldReload(
-      covariant LocalizationsDelegate<SelectorLocalizations> old) {
+      covariant LocalizationsDelegate<SelectLocalizations> old) {
     return false;
   }
 }
