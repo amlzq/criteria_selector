@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'dropdown_overlay_style.dart';
+import 'select_overlay_style.dart';
 import 'selector/select_theme_data.dart';
 
 /// Theme extension for [PopupSelectButton].
@@ -69,8 +69,8 @@ class PopupSelectButtonTheme extends ThemeExtension<PopupSelectButtonTheme> {
   /// Overrides the default button elevation.
   final double? elevation;
 
-  /// Default overlay style applied to [DropdownOverlay].
-  final DropdownOverlayStyle? overlayStyle;
+  /// Default overlay style applied to [SelectOverlay].
+  final SelectOverlayStyle? overlayStyle;
 
   /// Default theme overrides applied to selector widgets inside the overlay.
   final SelectThemeData? selectTheme;
@@ -98,7 +98,7 @@ class PopupSelectButtonTheme extends ThemeExtension<PopupSelectButtonTheme> {
     Color? iconColor,
     EdgeInsetsGeometry? padding,
     double? elevation,
-    DropdownOverlayStyle? overlayStyle,
+    SelectOverlayStyle? overlayStyle,
     SelectThemeData? selectTheme,
   }) {
     return PopupSelectButtonTheme(

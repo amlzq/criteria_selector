@@ -49,4 +49,21 @@ void main() {
     expect(controller.previousSelectorDelegate, same(delegate));
     expect(controller.previousSelectDelegate, same(delegate));
   });
+
+  test('deprecated overlay / label type aliases resolve to Select* types', () {
+    // DropdownOverlayStyle -> SelectOverlayStyle
+    DropdownOverlayStyle style = const SelectOverlayStyle();
+    expect(style, isA<SelectOverlayStyle>());
+    expect(const DropdownOverlayStyle(), isA<SelectOverlayStyle>());
+
+    // SelectorLabelState -> SelectLabelState
+    SelectorLabelState labelState = SelectLabelState(originalLabel: 'All');
+    expect(labelState, isA<SelectLabelState>());
+    expect(labelState.originalLabel, 'All');
+
+    // SelectorLabelLoader -> SelectLabelLoader
+    String loader(SelectEntries selected) => '${selected.length} selected';
+    expect(loader, isA<SelectLabelLoader>());
+    expect(loader(<SelectEntry<dynamic>>{}), '0 selected');
+  });
 }

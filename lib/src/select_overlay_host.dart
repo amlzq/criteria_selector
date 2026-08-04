@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'dropdown_overlay.dart';
-import 'dropdown_overlay_style.dart';
 import 'popup_select_controller.dart';
+import 'select_overlay.dart';
+import 'select_overlay_style.dart';
 import 'selector/select_panel.dart';
 import 'selector/select_theme_data.dart';
 
@@ -15,9 +15,9 @@ import 'selector/select_theme_data.dart';
 ///   descendants (e.g. [SelectPanel]).
 /// - [CompositedTransformTarget] + [OverlayPortal] + [CompositedTransformFollower]
 ///   to anchor the overlay to the trigger's actual painted position, which is
-///   robust to scrolling and ancestor transforms ([DropdownOverlay] relies on
+///   robust to scrolling and ancestor transforms ([SelectOverlay] relies on
 ///   this follower to make the Stack origin equal the screen's top-left).
-/// - [DropdownOverlay] to position, animate, and clip the [SelectPanel].
+/// - [SelectOverlay] to position, animate, and clip the [SelectPanel].
 ///
 /// The trigger only supplies its own UI ([triggerChild]) plus the already
 /// resolved [style], [selectTheme], and [direction], and optionally whether
@@ -25,8 +25,8 @@ import 'selector/select_theme_data.dart';
 ///
 /// This widget is package-internal (kept in `lib/src/` and not re-exported from
 /// the public API barrel).
-class SelectorOverlayHost extends StatelessWidget {
-  const SelectorOverlayHost({
+class SelectOverlayHost extends StatelessWidget {
+  const SelectOverlayHost({
     super.key,
     required this.controller,
     required this.direction,
@@ -38,10 +38,10 @@ class SelectorOverlayHost extends StatelessWidget {
 
   final PopupSelectController controller;
   final PopupSelectDirection direction;
-  final DropdownOverlayStyle? style;
+  final SelectOverlayStyle? style;
   final SelectThemeData? selectTheme;
 
-  /// When true, the overlay panel's [DropdownOverlayStyle.minWidth] defaults to
+  /// When true, the overlay panel's [SelectOverlayStyle.minWidth] defaults to
   /// the trigger's width ([PopupSelectButton]). When false, any explicit
   /// [style.minWidth] is used as-is ([PopupSelectBar]).
   final bool minWidthFromTrigger;
@@ -50,7 +50,7 @@ class SelectorOverlayHost extends StatelessWidget {
   final Widget triggerChild;
 
   /// Rect of this host (= the trigger) expressed in the coordinate system of
-  /// the [overlay] it is inserted into, used by [DropdownOverlay] to position
+  /// the [overlay] it is inserted into, used by [SelectOverlay] to position
   /// the panel relative to the trigger and keep it on screen.
   ///
   /// Measuring relative to the overlay (rather than the global root) lets the
@@ -85,10 +85,10 @@ class SelectorOverlayHost extends StatelessWidget {
 
     // Keep the panel at least as wide as the trigger when requested (button).
     // An explicit style.minWidth always wins; any style maxWidth still applies
-    // as a hard cap. DropdownOverlay translates the panel to stay on screen
+    // as a hard cap. SelectOverlay translates the panel to stay on screen
     // rather than shrinking it.
     final resolvedStyle = minWidthFromTrigger
-        ? (style ?? const DropdownOverlayStyle()).copyWith(
+        ? (style ?? const SelectOverlayStyle()).copyWith(
             minWidth: style?.minWidth ??
                 (_targetSize(renderBox).width > 0
                     ? _targetSize(renderBox).width
@@ -112,7 +112,7 @@ class SelectorOverlayHost extends StatelessWidget {
               // so taps on panel areas that extend left of the trigger (when
               // the panel is clamped on screen) are not silently dropped.
               offset: Offset(-targetRect.left, -targetRect.top),
-              child: DropdownOverlay(
+              child: SelectOverlay(
                 targetRect: targetRect,
                 direction: direction,
                 style: resolvedStyle,

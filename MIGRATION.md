@@ -2,6 +2,47 @@
 
 ## Next
 
+### `DropdownOverlay*` / `SelectorLabel*` renamed to `Select*`
+
+The overlay and label types have been renamed to a consistent `Select*` naming
+scheme. The public types are kept as deprecated type aliases (e.g.
+`typedef DropdownOverlayStyle = SelectOverlayStyle;`) for backward
+compatibility and **will be removed in a future minor version**. Since the
+aliases are exact `typedef`s, this is a pure rename — no behavior changes.
+
+| Old name | New name | Deprecated alias? |
+| --- | --- | --- |
+| `DropdownOverlay` | `SelectOverlay` | no (package-internal) |
+| `DropdownOverlayStyle` | `SelectOverlayStyle` | yes |
+| `SelectorOverlayHost` | `SelectOverlayHost` | no (package-internal) |
+| `SelectorLabelState` | `SelectLabelState` | yes |
+| `SelectorLabelLoader` | `SelectLabelLoader` | yes |
+| `kDropdownOverlayMaxHeightFactor` | `kSelectOverlayMaxHeightFactor` | no (package-internal) |
+| `kDropdownOverlayScreenMargin` | `kSelectOverlayScreenMargin` | no (package-internal) |
+
+The source files were renamed along the way (`lib/src/dropdown_overlay.dart` →
+`lib/src/select_overlay.dart`, `lib/src/dropdown_overlay_style.dart` →
+`lib/src/select_overlay_style.dart`, `lib/src/selector_overlay_host.dart` →
+`lib/src/select_overlay_host.dart`, and `lib/src/selector_label_state.dart` →
+`lib/src/select_label_state.dart`). The public export is updated, so no import
+change is required when using the package barrel.
+
+Migration: replace each old name with its new counterpart at every call site.
+
+```dart
+// Before
+PopupSelectBarTheme(
+  overlayStyle: DropdownOverlayStyle(barrierColor: Colors.black54),
+);
+PopupSelectButton(labelLoader: (selected) => '${selected.length} selected');
+
+// After
+PopupSelectBarTheme(
+  overlayStyle: SelectOverlayStyle(barrierColor: Colors.black54),
+);
+PopupSelectButton(labelLoader: (selected) => '${selected.length} selected');
+```
+
 ### `Selector*Layout` renamed to `Select*Layout`
 
 The sealed layout descriptor and its subclasses have been renamed to drop the

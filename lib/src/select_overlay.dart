@@ -2,12 +2,12 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import 'dropdown_overlay_style.dart';
+import 'select_overlay_style.dart';
 
-const kDropdownOverlayMaxHeightFactor = 0.7;
+const kSelectOverlayMaxHeightFactor = 0.7;
 
 /// Minimum inset kept between the overlay panel and the screen edges.
-const kDropdownOverlayScreenMargin = 0.0;
+const kSelectOverlayScreenMargin = 0.0;
 
 /// Vertical placement strategy for the selector overlay relative to its trigger
 /// (a [PopupSelectButton] or [PopupSelectBar]).
@@ -45,8 +45,8 @@ typedef DropdownSelectorDirection = PopupSelectDirection;
 /// and space below is tight. Compared to the previous "shrink to fit the
 /// available side" approach, the panel now keeps its intrinsic size, exactly
 /// like [PopupMenuButton].
-class DropdownOverlay extends StatelessWidget {
-  const DropdownOverlay({
+class SelectOverlay extends StatelessWidget {
+  const SelectOverlay({
     super.key,
     required this.child,
     this.style,
@@ -54,13 +54,13 @@ class DropdownOverlay extends StatelessWidget {
     this.onOverlayTap,
     this.targetRect,
     this.direction = PopupSelectDirection.adaptive,
-    this.screenMargin = kDropdownOverlayScreenMargin,
+    this.screenMargin = kSelectOverlayScreenMargin,
   });
 
   /// The content displayed inside the overlay.
   final Widget child;
 
-  final DropdownOverlayStyle? style;
+  final SelectOverlayStyle? style;
 
   final Animation<double>? animation;
 
@@ -108,7 +108,7 @@ class DropdownOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DropdownOverlayStyle defaults = _DropdownOverlayDefaults(context);
+    final SelectOverlayStyle defaults = _SelectOverlayDefaults(context);
 
     final maxHeightFactor = style?.maxHeightFactor ?? defaults.maxHeightFactor!;
 
@@ -197,7 +197,7 @@ class DropdownOverlay extends StatelessWidget {
             // below: panel top = targetRect.bottom
             // above: panel top = targetRect.top - childHeight
             CustomSingleChildLayout(
-              delegate: _DropdownOverlayPositionDelegate(
+              delegate: _SelectOverlayPositionDelegate(
                 targetRect: targetRect,
                 screenSize: screenSize,
                 growUp: growUp,
@@ -237,8 +237,8 @@ class DropdownOverlay extends StatelessWidget {
 /// on screen by translating it. This mirrors the strategy used by
 /// [PopupMenuButton]'s [positionDependentBox] (preserve size, clamp position)
 /// rather than scaling the panel down.
-class _DropdownOverlayPositionDelegate extends SingleChildLayoutDelegate {
-  _DropdownOverlayPositionDelegate({
+class _SelectOverlayPositionDelegate extends SingleChildLayoutDelegate {
+  _SelectOverlayPositionDelegate({
     required this.targetRect,
     required this.screenSize,
     required this.growUp,
@@ -293,16 +293,16 @@ class _DropdownOverlayPositionDelegate extends SingleChildLayoutDelegate {
   }
 
   @override
-  bool shouldRelayout(covariant _DropdownOverlayPositionDelegate old) =>
+  bool shouldRelayout(covariant _SelectOverlayPositionDelegate old) =>
       old.targetRect != targetRect ||
       old.screenSize != screenSize ||
       old.growUp != growUp ||
       old.margin != margin;
 }
 
-class _DropdownOverlayDefaults extends DropdownOverlayStyle {
-  const _DropdownOverlayDefaults(this.context)
-      : super(maxHeightFactor: kDropdownOverlayMaxHeightFactor);
+class _SelectOverlayDefaults extends SelectOverlayStyle {
+  const _SelectOverlayDefaults(this.context)
+      : super(maxHeightFactor: kSelectOverlayMaxHeightFactor);
 
   final BuildContext context;
 

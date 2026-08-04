@@ -90,7 +90,7 @@ class _MyAppState extends State<MyApp> {
               final theme = baseTheme.copyWith(
                 extensions: <ThemeExtension<dynamic>>[
                   PopupSelectBarTheme(
-                    overlayStyle: const DropdownOverlayStyle(
+                    overlayStyle: const SelectOverlayStyle(
                         barrierColor: Colors.black54),
                     selectTheme: SelectThemeData(baseTheme),
                   ),

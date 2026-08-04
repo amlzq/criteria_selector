@@ -9,6 +9,8 @@ import 'package:flutter/foundation.dart';
 
 import 'i18n/select_localizations.dart';
 import 'i18n/select_localizations_delegate.dart';
+import 'select_label_state.dart';
+import 'select_overlay_style.dart';
 import 'selector/select_layout.dart';
 
 /// Deprecated layout configuration for the children of a [SelectCategoryEntry].
@@ -133,3 +135,36 @@ typedef SelectorLocalizations = SelectLocalizations;
   'future minor version.',
 )
 typedef SelectorLocalizationsDelegate = SelectLocalizationsDelegate;
+
+/// Deprecated alias for [SelectLabelLoader].
+///
+/// The `Selector`-prefixed label-loader typedef was renamed to drop the
+/// redundant `Selector` prefix. This alias is kept for backward compatibility
+/// and will be removed in a future minor version.
+@Deprecated(
+  'Use SelectLabelLoader instead. This alias will be removed in a future '
+  'minor version.',
+)
+typedef SelectorLabelLoader = SelectLabelLoader;
+
+/// Deprecated alias for [SelectLabelState].
+///
+/// The `Selector`-prefixed label-state class was renamed to drop the
+/// redundant `Selector` prefix. This alias is kept for backward compatibility
+/// and will be removed in a future minor version.
+@Deprecated(
+  'Use SelectLabelState instead. This alias will be removed in a future '
+  'minor version.',
+)
+typedef SelectorLabelState = SelectLabelState;
+
+/// Deprecated alias for [SelectOverlayStyle].
+///
+/// The `Dropdown`-prefixed overlay-style class was renamed to drop the
+/// redundant `Dropdown` prefix. This alias is kept for backward compatibility
+/// and will be removed in a future minor version.
+@Deprecated(
+  'Use SelectOverlayStyle instead. This alias will be removed in a future '
+  'minor version.',
+)
+typedef DropdownOverlayStyle = SelectOverlayStyle;

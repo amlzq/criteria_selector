@@ -2,15 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import 'dropdown_overlay.dart';
-import 'dropdown_overlay_style.dart';
 import 'i18n/select_localizations.dart';
 import 'popup_select_button_theme.dart';
 import 'popup_select_controller.dart';
+import 'select_label_state.dart';
+import 'select_overlay.dart';
+import 'select_overlay_host.dart';
+import 'select_overlay_style.dart';
 import 'selector/select_delegate.dart';
 import 'selector/select_entry.dart';
-import 'selector_label_state.dart';
-import 'selector_overlay_host.dart';
 
 /// Visual variants for [PopupSelectButton].
 enum PopupSelectButtonVariant {
@@ -215,8 +215,8 @@ class PopupSelectButton extends StatefulWidget {
   /// while the overlay is open.
   final Widget? icon;
 
-  /// Overrides the default value of [DropdownOverlayStyle].
-  final DropdownOverlayStyle? overlayStyle;
+  /// Overrides the default value of [SelectOverlayStyle].
+  final SelectOverlayStyle? overlayStyle;
 
   /// Fired when the selector overlay is shown.
   final VoidCallback? onSelectorShowed;
@@ -244,12 +244,12 @@ class PopupSelectButton extends StatefulWidget {
 
   /// Optional custom label loader based on the applied selection result.
   ///
-  /// Receives only the selected entries; the canonical [SelectorLabelLoader]
+  /// Receives only the selected entries; the canonical [SelectLabelLoader]
   /// form. When provided, the trigger label is built from the applied selection
   /// instead of the default [label] / result label. Mutually exclusive with
   /// [child] only in spirit — both may be set, but the loaded label replaces
   /// the displayed text.
-  final SelectorLabelLoader? labelLoader;
+  final SelectLabelLoader? labelLoader;
 
   /// Vertical placement of the selector panel relative to the trigger.
   ///
@@ -267,7 +267,7 @@ class PopupSelectButton extends StatefulWidget {
 class _PopupSelectButtonState extends State<PopupSelectButton>
     with SingleTickerProviderStateMixin {
   late final PopupSelectController _controller;
-  final SelectorLabelState _labelState = SelectorLabelState();
+  final SelectLabelState _labelState = SelectLabelState();
 
   VoidCallback? _removeChangeListener;
   VoidCallback? _removeApplyListener;
@@ -318,11 +318,11 @@ class _PopupSelectButtonState extends State<PopupSelectButton>
   void _handleControllerTick() => setState(() {});
 
   void _handleWidgetChange(
-          SelectorLabelState labelState, SelectEntries selected) =>
+          SelectLabelState labelState, SelectEntries selected) =>
       widget.onChanged?.call(selected);
 
   void _handleWidgetApply(
-          SelectorLabelState labelState, SelectEntries selected) =>
+          SelectLabelState labelState, SelectEntries selected) =>
       widget.onApplied?.call(selected);
 
   void _handleWidgetReset() => widget.onReset?.call();
@@ -371,7 +371,7 @@ class _PopupSelectButtonState extends State<PopupSelectButton>
     final localizations = SelectLocalizations.of(context);
     _controller.applyMultipleText = localizations?.multiple ?? 'Multiple';
 
-    return SelectorOverlayHost(
+    return SelectOverlayHost(
       controller: _controller,
       direction: widget.direction,
       style: overlayStyle,

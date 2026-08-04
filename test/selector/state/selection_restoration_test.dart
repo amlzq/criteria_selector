@@ -22,7 +22,7 @@ void main() {
       controller.previousSelectDelegate = delegate;
       // `handleApply` writes the applied selection back to the active label
       // state, so a label state must exist at index 0.
-      controller.labelStateMap[0] = SelectorLabelState();
+      controller.labelStateMap[0] = SelectLabelState();
 
       final applied = _entries('a');
       controller.handleApply(applied, 'Selected');

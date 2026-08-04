@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'selector/select_controller.dart';
 import 'selector/select_delegate.dart';
 import 'selector/select_entry.dart';
+import 'select_label_state.dart';
 import 'selector/selector_utils.dart';
-import 'selector_label_state.dart';
 
 /// Tab label data for [PopupSelectBar].
 ///
-/// Extends [SelectorLabelState] (which carries the label / result state shared
+/// Extends [SelectLabelState] (which carries the label / result state shared
 /// with [PopupSelectButton]) by adding the tab identity ([index] / [tag]).
 /// A standalone [PopupSelectButton] never creates a [PopupTabData]; it uses
-/// [SelectorLabelState] directly.
-class PopupTabData extends SelectorLabelState {
+/// [SelectLabelState] directly.
+class PopupTabData extends SelectLabelState {
   /// Tab index in the [PopupSelectBar].
   final int index;
 
@@ -36,7 +36,7 @@ class PopupTabData extends SelectorLabelState {
 /// Suitable for [PopupSelectButton], which has no tab concept, as well as
 /// multi-tab [PopupSelectBar].
 typedef SelectorLabelChangeCallback = void Function(
-    SelectorLabelState labelState, SelectEntries selected);
+    SelectLabelState labelState, SelectEntries selected);
 
 /// Controller for [PopupSelectBar] and its selector overlay.
 ///
@@ -96,8 +96,8 @@ class PopupSelectController extends ChangeNotifier {
   ///
   /// For [PopupSelectBar] these are [PopupTabData] (tab identity + label
   /// state); for a standalone [PopupSelectButton] the lone trigger is a
-  /// plain [SelectorLabelState] stored at index `0`.
-  final Map<int, SelectorLabelState> labelStateMap = {};
+  /// plain [SelectLabelState] stored at index `0`.
+  final Map<int, SelectLabelState> labelStateMap = {};
   bool _isDisposed = false;
 
   /// Returns the nearest controller provided by [PopupSelectControllerProvider]

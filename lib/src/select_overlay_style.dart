@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-/// Visual configuration for [DropdownOverlay].
+/// Visual configuration for [SelectOverlay].
 @immutable
-class DropdownOverlayStyle {
-  const DropdownOverlayStyle({
+class SelectOverlayStyle {
+  const SelectOverlayStyle({
     this.maxHeightFactor,
     @Deprecated(
         'Use [barrierColor] instead; this always controlled the scrim color.')
@@ -16,7 +16,7 @@ class DropdownOverlayStyle {
 
   /// Panel height = maxHeightFactor * available height (space from the bottom of the bar to the bottom of the screen).
   /// Note: this only affects scrollable selector content with unconstrained height. For constrained content, height is determined by Wrap.
-  /// Default value is [kDropdownOverlayMaxHeightFactor].
+  /// Default value is [kSelectOverlayMaxHeightFactor].
   final double? maxHeightFactor;
 
   /// @deprecated This has always controlled the scrim (backdrop) color, not the
@@ -48,7 +48,7 @@ class DropdownOverlayStyle {
   ///   below; the overlay is not dismissed by tapping the scrim.
   final bool barrierIntercept;
 
-  DropdownOverlayStyle copyWith({
+  SelectOverlayStyle copyWith({
     double? maxHeightFactor,
     Color? backgroundColor,
     double? minWidth,
@@ -56,7 +56,7 @@ class DropdownOverlayStyle {
     Color? barrierColor,
     bool? barrierIntercept,
   }) {
-    return DropdownOverlayStyle(
+    return SelectOverlayStyle(
       maxHeightFactor: maxHeightFactor ?? this.maxHeightFactor,
       // ignore: deprecated_member_use_from_same_package
       backgroundColor: backgroundColor ?? this.backgroundColor,
@@ -86,7 +86,7 @@ class DropdownOverlayStyle {
     if (other.runtimeType != runtimeType) {
       return false;
     }
-    return other is DropdownOverlayStyle &&
+    return other is SelectOverlayStyle &&
         other.maxHeightFactor == maxHeightFactor &&
         // ignore: deprecated_member_use_from_same_package
         other.backgroundColor == backgroundColor &&

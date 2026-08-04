@@ -192,7 +192,7 @@ class _SellPageState extends State<SellPage> {
               // labelColor: Colors.orange,
               // indicator: Icon(Icons.arrow_upward),
               // unselectedIndicator: Icon(Icons.arrow_downward),
-              // overlayStyle: DropdownOverlayStyle(
+              // overlayStyle: SelectOverlayStyle(
               //   backgroundColor: Colors.orange[100],
               // ),
               tabs: [

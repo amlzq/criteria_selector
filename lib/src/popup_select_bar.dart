@@ -3,16 +3,16 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import 'dropdown_overlay.dart';
-import 'dropdown_overlay_style.dart';
 import 'i18n/select_localizations.dart';
 import 'popup_select_bar_theme.dart';
 import 'popup_select_controller.dart';
+import 'select_label_state.dart';
+import 'select_overlay.dart';
+import 'select_overlay_host.dart';
+import 'select_overlay_style.dart';
 import 'selector/select_delegate.dart';
 import 'selector/select_entry.dart';
 import 'selector/select_theme_data.dart';
-import 'selector_label_state.dart';
-import 'selector_overlay_host.dart';
 
 /// Default height for [PopupSelectBar] when no theme override is provided.
 const kPopupSelectBarHeight = 44.0;
@@ -210,7 +210,7 @@ class PopupSelectBar extends StatefulWidget implements PreferredSizeWidget {
   /// Visual configuration for the selector overlay panel.
   ///
   /// If null, [PopupSelectBarTheme.overlayStyle] is used.
-  final DropdownOverlayStyle? overlayStyle;
+  final SelectOverlayStyle? overlayStyle;
 
   /// Theme overrides applied to selector widgets inside the overlay.
   final SelectThemeData? selectTheme;
@@ -322,11 +322,11 @@ class _PopupSelectBarState extends State<PopupSelectBar>
   }
 
   void _handleWidgetChange(
-          SelectorLabelState labelState, SelectEntries selected) =>
+          SelectLabelState labelState, SelectEntries selected) =>
       widget.onChanged?.call(labelState as PopupTabData, selected);
 
   void _handleWidgetApply(
-          SelectorLabelState labelState, SelectEntries selected) =>
+          SelectLabelState labelState, SelectEntries selected) =>
       widget.onApplied?.call(labelState as PopupTabData, selected);
 
   void _handleWidgetReset() => widget.onReset?.call();
@@ -414,7 +414,7 @@ class _PopupSelectBarState extends State<PopupSelectBar>
 
     _controller!.applyMultipleText = effectiveMultipleText;
 
-    return SelectorOverlayHost(
+    return SelectOverlayHost(
       controller: _controller!,
       direction: widget.direction,
       style: overlayStyle,
@@ -583,9 +583,9 @@ class PopupTab extends StatelessWidget {
   /// An optional loader that builds the label from the current selection
   /// result.
   ///
-  /// Receives only the selected entries; the canonical [SelectorLabelLoader]
+  /// Receives only the selected entries; the canonical [SelectLabelLoader]
   /// form.
-  final SelectorLabelLoader? labelLoader;
+  final SelectLabelLoader? labelLoader;
 
   /// A custom widget displayed in the tab instead of [label].
   ///

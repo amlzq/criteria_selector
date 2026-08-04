@@ -5,7 +5,7 @@ import 'selector/select_entry.dart';
 /// Receives only the [selected] entries. This is the canonical label-loader type
 /// and is used by [PopupTabData.labelLoader] / [PopupTab.labelLoader] /
 /// [PopupSelectButton.labelLoader].
-typedef SelectorLabelLoader = String Function(SelectEntries selected);
+typedef SelectLabelLoader = String Function(SelectEntries selected);
 
 /// Tab-agnostic label / selection state shared by [PopupSelectBar]
 /// (via [PopupTabData]) and [PopupSelectButton].
@@ -14,8 +14,8 @@ typedef SelectorLabelLoader = String Function(SelectEntries selected);
 /// an original (default) label, the currently displayed label, and whether a
 /// result has been applied. Tab identity ([PopupTabData.index] /
 /// [PopupTabData.tag]) lives exclusively in [PopupTabData].
-class SelectorLabelState {
-  SelectorLabelState({this.originalLabel, this.labelLoader});
+class SelectLabelState {
+  SelectLabelState({this.originalLabel, this.labelLoader});
 
   /// The default label shown before any result is applied.
   String? originalLabel;
@@ -25,9 +25,9 @@ class SelectorLabelState {
 
   /// Optional custom label loader based on the current selection result.
   ///
-  /// Receives only the selected entries; the canonical [SelectorLabelLoader]
+  /// Receives only the selected entries; the canonical [SelectLabelLoader]
   /// form.
-  SelectorLabelLoader? labelLoader;
+  SelectLabelLoader? labelLoader;
 
   /// The currently displayed label: the result label when one has been applied,
   /// otherwise the original label.
@@ -37,9 +37,9 @@ class SelectorLabelState {
   bool get isResulted => originalLabel != label;
 
   /// The effective label loader applied to the current selection.
-  SelectorLabelLoader? get resolvedLabelLoader => labelLoader;
+  SelectLabelLoader? get resolvedLabelLoader => labelLoader;
 
   @override
   String toString() =>
-      'SelectorLabelState(originalLabel: $originalLabel, resultLabel: $resultLabel)';
+      'SelectLabelState(originalLabel: $originalLabel, resultLabel: $resultLabel)';
 }

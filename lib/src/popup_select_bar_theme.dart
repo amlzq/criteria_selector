@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'dropdown_overlay_style.dart';
+import 'select_overlay_style.dart';
 import 'selector/select_theme_data.dart';
 
 /// Theme extension for [PopupSelectBar].
@@ -56,8 +56,8 @@ class PopupSelectBarTheme extends ThemeExtension<PopupSelectBarTheme> {
   /// Default indicator for the unselected state.
   final Widget? unselectedIndicator;
 
-  /// Default overlay style applied to [DropdownOverlay].
-  final DropdownOverlayStyle? overlayStyle;
+  /// Default overlay style applied to [SelectOverlay].
+  final SelectOverlayStyle? overlayStyle;
 
   /// Default theme overrides applied to selector widgets inside the overlay.
   final SelectThemeData? selectTheme;
@@ -82,7 +82,7 @@ class PopupSelectBarTheme extends ThemeExtension<PopupSelectBarTheme> {
     TextStyle? unselectedLabelStyle,
     Widget? indicator,
     Widget? unselectedIndicator,
-    DropdownOverlayStyle? overlayStyle,
+    SelectOverlayStyle? overlayStyle,
     SelectThemeData? selectTheme,
   }) {
     return PopupSelectBarTheme(
