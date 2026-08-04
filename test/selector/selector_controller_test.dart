@@ -1,13 +1,13 @@
 import 'package:criteria_selector/criteria_selector.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-SelectorTextEntry<dynamic> _text(
+SelectTextEntry<dynamic> _text(
   String parentId,
   String id,
   String name, {
-  Set<SelectorEntry<dynamic>>? children,
+  Set<SelectEntry<dynamic>>? children,
 }) {
-  return SelectorTextEntry<dynamic>(
+  return SelectTextEntry<dynamic>(
     parentId: parentId,
     id: id,
     name: name,
@@ -15,17 +15,17 @@ SelectorTextEntry<dynamic> _text(
   );
 }
 
-SelectorCategoryEntry<dynamic> _category(
+SelectCategoryEntry<dynamic> _category(
   String id,
   String name, {
-  required Set<SelectorEntry<dynamic>> children,
-  SelectorEntry<dynamic>? header,
+  required Set<SelectEntry<dynamic>> children,
+  SelectEntry<dynamic>? header,
   SelectionMode headerSelectionMode = SelectionMode.single,
-  SelectorEntry<dynamic>? footer,
+  SelectEntry<dynamic>? footer,
   SelectionMode footerSelectionMode = SelectionMode.single,
   SelectionMode selectionMode = SelectionMode.single,
 }) {
-  return SelectorCategoryEntry<dynamic>(
+  return SelectCategoryEntry<dynamic>(
     id: id,
     name: name,
     children: children,
@@ -66,7 +66,7 @@ void main() {
     test('bindState with initializeAnyIfEmpty initializes Any entries', () {
       final controller =
           SelectorController(selectionMode: SelectionMode.single);
-      final any = SelectorTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
+      final any = SelectTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {any, a});
       controller.bindState([c], initializeAnyIfEmpty: true);
@@ -147,7 +147,7 @@ void main() {
     test('select custom range entry works', () {
       final controller =
           SelectorController(selectionMode: SelectionMode.single);
-      final custom = SelectorRangeEntry<int, dynamic>.custom(
+      final custom = SelectRangeEntry<int, dynamic>.custom(
         parentId: 'c',
         name: 'Custom',
       );
@@ -159,7 +159,7 @@ void main() {
       expect(controller.select('custom', parentId: 'c'), isTrue);
       final selected = controller
           .selectedEntriesForParent('c', level: 1)
-          .whereType<SelectorRangeEntry>()
+          .whereType<SelectRangeEntry>()
           .firstOrNull;
       expect(selected, isNotNull);
       expect(selected!.min, 10);
@@ -188,7 +188,7 @@ void main() {
       var applyCalled = false;
       controller.addApplyListener((_) => applyCalled = true);
 
-      final a = SelectorTextEntry<dynamic>(
+      final a = SelectTextEntry<dynamic>(
         parentId: 'c',
         id: 'a',
         name: 'A',
@@ -233,7 +233,7 @@ void main() {
     test('unselect in single mode with Any restores Any', () {
       final controller =
           SelectorController(selectionMode: SelectionMode.single);
-      final any = SelectorTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
+      final any = SelectTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {any, a});
       controller.bindState([c], initializeAnyIfEmpty: false);
@@ -283,7 +283,7 @@ void main() {
     test('unselect cascading entry in single mode with Any restores Any', () {
       final controller =
           SelectorController(selectionMode: SelectionMode.single);
-      final any = SelectorTextEntry<dynamic>.any(parentId: 'p', name: 'Any');
+      final any = SelectTextEntry<dynamic>.any(parentId: 'p', name: 'Any');
       final leaf = _text('p', 'l', 'L');
       final parent = _text('c', 'p', 'P', children: {any, leaf});
       final c = _category('c', 'C', children: {parent});
@@ -479,7 +479,7 @@ void main() {
     test('addApplyListener receives applied entries', () {
       final controller =
           SelectorController(selectionMode: SelectionMode.single);
-      SelectorEntries? received;
+      SelectEntries? received;
       controller.addApplyListener((selected) => received = selected);
 
       final a = _text('c', 'a', 'A');
@@ -505,7 +505,7 @@ void main() {
       final controller =
           SelectorController(selectionMode: SelectionMode.single);
       var callCount = 0;
-      void listener(SelectorEntries _) => callCount++;
+      void listener(SelectEntries _) => callCount++;
       controller.addChangeListener(listener);
 
       final a = _text('c', 'a', 'A');
@@ -523,7 +523,7 @@ void main() {
       final controller =
           SelectorController(selectionMode: SelectionMode.single);
       var callCount = 0;
-      void listener(SelectorEntries _) => callCount++;
+      void listener(SelectEntries _) => callCount++;
       controller.addApplyListener(listener);
 
       controller.applyFromState();

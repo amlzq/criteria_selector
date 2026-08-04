@@ -26,7 +26,7 @@ class _BoxPageState extends State<BoxPage> {
     _filtersRepo = HouseFiltersRepository();
   }
 
-  void _handleNeighborhoodChange(SelectorEntries result) async {
+  void _handleNeighborhoodChange(SelectEntries result) async {
     final l10n = AppLocalizations.of(context);
     _filter ??= HouseFilter(cityId: userCityId);
     _filtersRepo.neighborhoodResult = result;
@@ -46,7 +46,7 @@ class _BoxPageState extends State<BoxPage> {
     }
   }
 
-  void _handlePriceChange(SelectorEntries result) async {
+  void _handlePriceChange(SelectEntries result) async {
     _filter ??= HouseFilter(cityId: userCityId);
     _filtersRepo.priceResult = result;
     final category = result.firstOrNull;
@@ -72,14 +72,14 @@ class _BoxPageState extends State<BoxPage> {
     }
   }
 
-  void _handleRoomsChange(SelectorEntries result) async {
+  void _handleRoomsChange(SelectEntries result) async {
     _filter ??= HouseFilter(cityId: userCityId);
     _filtersRepo.roomsResult = result;
     _filter?.bedrooms = result.childIdsOf('bedrooms');
     _filter?.bathrooms = result.childIdsOf('bathrooms');
   }
 
-  void _handleMoreChange(SelectorEntries result) async {
+  void _handleMoreChange(SelectEntries result) async {
     _filter ??= HouseFilter(cityId: userCityId);
     _filtersRepo.moreResult = result;
     _filter?.homeType = result.childIdsOf('home_type');
@@ -91,7 +91,7 @@ class _BoxPageState extends State<BoxPage> {
     _filter?.expandedSearch = result.childIdsOf('expanded_search');
   }
 
-  void _handleSortChange(SelectorEntries result) async {
+  void _handleSortChange(SelectEntries result) async {
     _filter ??= HouseFilter(cityId: userCityId);
     _filtersRepo.sortResult = result;
     _filter?.sort = result.firstSelectedId;

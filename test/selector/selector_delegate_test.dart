@@ -2,13 +2,13 @@ import 'package:criteria_selector/criteria_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-SelectorTextEntry<dynamic> _text(
+SelectTextEntry<dynamic> _text(
   String parentId,
   String id,
   String name, {
-  Set<SelectorEntry<dynamic>>? children,
+  Set<SelectEntry<dynamic>>? children,
 }) {
-  return SelectorTextEntry<dynamic>(
+  return SelectTextEntry<dynamic>(
     parentId: parentId,
     id: id,
     name: name,
@@ -16,13 +16,13 @@ SelectorTextEntry<dynamic> _text(
   );
 }
 
-SelectorCategoryEntry<dynamic> _category(
+SelectCategoryEntry<dynamic> _category(
   String id,
   String name, {
-  required Set<SelectorEntry<dynamic>> children,
+  required Set<SelectEntry<dynamic>> children,
   SelectionMode selectionMode = SelectionMode.single,
 }) {
-  return SelectorCategoryEntry<dynamic>(
+  return SelectCategoryEntry<dynamic>(
     id: id,
     name: name,
     children: children,
@@ -44,7 +44,7 @@ void main() {
         selectionMode: SelectionMode.multiple,
       );
 
-      final previousSelected = <SelectorEntry<dynamic>>{
+      final previousSelected = <SelectEntry<dynamic>>{
         _category(
           'c',
           'Category',
@@ -103,7 +103,7 @@ void main() {
       addTearDown(() => tester.binding.setSurfaceSize(null));
 
       final targetLeaf = _text('parent', 'target_leaf', 'TargetLeaf');
-      final leaves = <SelectorEntry<dynamic>>{
+      final leaves = <SelectEntry<dynamic>>{
         for (int i = 0; i < 16; i++) _text('parent', 'leaf_$i', 'Leaf $i'),
         targetLeaf,
       };
@@ -115,7 +115,7 @@ void main() {
         selectionMode: SelectionMode.multiple,
       );
 
-      final previousSelected = <SelectorEntry<dynamic>>{
+      final previousSelected = <SelectEntry<dynamic>>{
         _category(
           'c',
           'Category',

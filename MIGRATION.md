@@ -2,6 +2,57 @@
 
 ## Next
 
+### `Selector*Entry*` renamed to `Select*Entry*`
+
+The `Selector*Entry*` types have been renamed to drop the redundant `Selector`
+prefix. The old names are kept as deprecated type aliases (e.g.
+`typedef SelectorEntry<E> = SelectEntry<E>;`) for backward compatibility and
+**will be removed in a future minor version**. Since the aliases are exact
+`typedef`s, this is a pure rename — no behavior changes.
+
+| Old name | New name |
+| --- | --- |
+| `SelectorEntry` | `SelectEntry` |
+| `SelectorCategoryEntry` | `SelectCategoryEntry` |
+| `SelectorChildEntry` | `SelectChildEntry` |
+| `SelectorRangeEntry` | `SelectRangeEntry` |
+| `SelectorTextEntry` | `SelectTextEntry` |
+| `SelectorIntEntry` | `SelectIntEntry` |
+| `SelectorEntries` | `SelectEntries` |
+| `SelectorEntryExt` | `SelectEntryExt` |
+| `SelectorChildEntryExt` | `SelectChildEntryExt` |
+| `SelectorRangeEntryExt` | `SelectRangeEntryExt` |
+| `SelectorCategoryEntryExtension` | `SelectCategoryEntryExtension` |
+| `SelectorEntriesExtension` | `SelectEntriesExtension` |
+
+The source file was renamed along the way (`lib/src/selector/selector_entry.dart`
+→ `lib/src/selector/select_entry.dart`), and the unit test
+`test/selector/selector_entry_test.dart` → `test/selector/select_entry_test.dart`.
+The public export is updated, so no import change is required when using the
+package barrel.
+
+Migration: replace each old name with its new counterpart at every call site.
+
+```dart
+// Before
+SelectorCategoryEntry(
+  id: 'price',
+  name: 'Price',
+  children: {
+    SelectorRangeEntry<int, void>.any(parentId: 'price', name: 'Any'),
+  },
+);
+
+// After
+SelectCategoryEntry(
+  id: 'price',
+  name: 'Price',
+  children: {
+    SelectRangeEntry<int, void>.any(parentId: 'price', name: 'Any'),
+  },
+);
+```
+
 ### `SelectorBox` renamed to `SelectView`
 
 `SelectorBox` has been renamed to `SelectView`. The old name `SelectorBox` is

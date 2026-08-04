@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import 'constants.dart';
-import 'selector_entry.dart';
+import 'select_entry.dart';
 import 'state/selector_selection_rules.dart';
 import 'state/selector_state_snapshot.dart';
 import 'state/selector_state_tree.dart';
@@ -21,19 +21,19 @@ class SelectorController extends ChangeNotifier {
   /// The selection behavior applied at the top level of the selector.
   ///
   /// Determines how many entries can be selected at once. Per-category
-  /// [SelectorCategoryEntry.selectionMode] may override this for nested levels.
+  /// [SelectCategoryEntry.selectionMode] may override this for nested levels.
   final SelectionMode selectionMode;
 
   /// The initial selection state to restore when the controller is created.
   ///
   /// Typically the selection persisted from a previous session. If null, the
   /// controller starts with no selection.
-  final SelectorEntries? previousSelected;
+  final SelectEntries? previousSelected;
 
   /// The selection state used when the user triggers a reset.
   ///
   /// If null, reset falls back to [previousSelected] (or no selection).
-  final SelectorEntries? resetSelected;
+  final SelectEntries? resetSelected;
 
   /// The underlying state tree holding the bound entries and their selection
   /// state.
@@ -104,10 +104,10 @@ class SelectorController extends ChangeNotifier {
   }
 
   void bindState(
-    List<SelectorEntry> entries, {
+    List<SelectEntry> entries, {
     required bool initializeAnyIfEmpty,
-    SelectorEntries? previousSelectedOverride,
-    SelectorEntries? resetSelectedOverride,
+    SelectEntries? previousSelectedOverride,
+    SelectEntries? resetSelectedOverride,
   }) {
     final changed = stateTree.bind(
       entries,
@@ -120,21 +120,21 @@ class SelectorController extends ChangeNotifier {
     }
   }
 
-  SelectorEntries selectedEntriesAtLevel(int level) =>
+  SelectEntries selectedEntriesAtLevel(int level) =>
       stateTree.selectedEntriesAtLevel(level);
 
-  SelectorEntries selectedEntriesForParent(String parentId,
+  SelectEntries selectedEntriesForParent(String parentId,
           {required int level}) =>
       stateTree.selectedEntriesForParent(parentId, level: level);
 
-  SelectorEntries selectedHeaderEntriesFor(String categoryId) =>
+  SelectEntries selectedHeaderEntriesFor(String categoryId) =>
       stateTree.selectedHeaderEntriesFor(categoryId);
 
-  SelectorEntries selectedFooterEntriesFor(String categoryId) =>
+  SelectEntries selectedFooterEntriesFor(String categoryId) =>
       stateTree.selectedFooterEntriesFor(categoryId);
 
   void focusCategoryEntry(
-    SelectorCategoryEntry category, {
+    SelectCategoryEntry category, {
     required SelectionMode selectionMode,
   }) {
     _selectionRules.focusCategory(
@@ -146,10 +146,10 @@ class SelectorController extends ChangeNotifier {
   }
 
   void toggleFlatEntry(
-    SelectorChildEntry entry, {
+    SelectChildEntry entry, {
     required SelectionMode selectorSelectionMode,
     required bool isCategoryTree,
-    SelectorCategoryEntry? category,
+    SelectCategoryEntry? category,
   }) {
     _selectionRules.toggleFlatLeaf(
       stateTree,
@@ -162,11 +162,11 @@ class SelectorController extends ChangeNotifier {
   }
 
   void toggleCascadingEntry(
-    SelectorChildEntry entry, {
+    SelectChildEntry entry, {
     required SelectionMode selectorSelectionMode,
     required SelectionMode childrenSelectionMode,
-    required List<SelectorEntry> focusedPath,
-    required SelectorCategoryEntry category,
+    required List<SelectEntry> focusedPath,
+    required SelectCategoryEntry category,
   }) {
     _selectionRules.toggleCascadingLeaf(
       stateTree,
@@ -181,7 +181,7 @@ class SelectorController extends ChangeNotifier {
 
   void toggleHeaderOrFooterEntry({
     required String categoryId,
-    required SelectorChildEntry entry,
+    required SelectChildEntry entry,
     required SelectionMode selectionMode,
     required bool isHeader,
   }) {
@@ -214,11 +214,11 @@ class SelectorController extends ChangeNotifier {
     _notifyListenersIfAlive();
   }
 
-  SelectorEntry? findEntry(String id, {String? parentId}) {
+  SelectEntry? findEntry(String id, {String? parentId}) {
     return stateTree.findEntry(id, parentId: parentId);
   }
 
-  List<SelectorEntry>? findPath(String id, {String? parentId}) {
+  List<SelectEntry>? findPath(String id, {String? parentId}) {
     return stateTree.findPath(id, parentId: parentId);
   }
 
@@ -238,20 +238,20 @@ class SelectorController extends ChangeNotifier {
     final entry = stateTree.findEntry(id, parentId: parentId);
     if (entry == null) return false;
 
-    if (entry is SelectorCategoryEntry) {
+    if (entry is SelectCategoryEntry) {
       focusCategoryEntry(entry, selectionMode: selectionMode);
       if (emitChange) emitChangeFromState();
       return true;
     }
 
-    if (entry is! SelectorChildEntry) return false;
+    if (entry is! SelectChildEntry) return false;
 
     final path = stateTree.findPath(id, parentId: parentId);
     final selectorMode = _effectiveSelectorSelectionMode();
 
     if (path == null || path.isEmpty) {
       if (stateTree.entries.isEmpty ||
-          stateTree.entries.first is SelectorCategoryEntry) {
+          stateTree.entries.first is SelectCategoryEntry) {
         return false;
       }
 
@@ -274,11 +274,11 @@ class SelectorController extends ChangeNotifier {
     }
 
     final root = path.first;
-    if (root is! SelectorCategoryEntry) return false;
+    if (root is! SelectCategoryEntry) return false;
 
     if (path.length == 2) {
       final leaf = path.last;
-      if (leaf is! SelectorChildEntry) return false;
+      if (leaf is! SelectChildEntry) return false;
 
       final alreadySelected =
           stateTree.selectedEntriesForParent(root.id, level: 1).contains(leaf);
@@ -301,7 +301,7 @@ class SelectorController extends ChangeNotifier {
     }
 
     final leaf = path.last;
-    if (leaf is! SelectorChildEntry) return false;
+    if (leaf is! SelectChildEntry) return false;
     final focusedPath = path.sublist(0, path.length - 1);
     final level = focusedPath.length;
     final alreadySelected =
@@ -331,7 +331,7 @@ class SelectorController extends ChangeNotifier {
     bool emitChange = true,
   }) {
     final entry = stateTree.findEntry(id, parentId: parentId);
-    if (entry == null || entry is! SelectorChildEntry) return false;
+    if (entry == null || entry is! SelectChildEntry) return false;
 
     final selectorMode = _effectiveSelectorSelectionMode();
     final path = stateTree.findPath(id, parentId: parentId);
@@ -353,18 +353,18 @@ class SelectorController extends ChangeNotifier {
     }
 
     final root = path.first;
-    if (root is! SelectorCategoryEntry) return false;
+    if (root is! SelectCategoryEntry) return false;
 
     if (path.length == 2) {
       final leaf = path.last;
-      if (leaf is! SelectorChildEntry) return false;
+      if (leaf is! SelectChildEntry) return false;
       final selectedChildren = stateTree.mutableSelectedEntriesAtLevel(1);
       if (!selectedChildren.contains(leaf)) return true;
 
       if (root.selectionMode == SelectionMode.single) {
         final any = root.children?.singleWhereOrNull(testAnyElement);
         selectedChildren.removeWhere(
-            (e) => e is SelectorChildEntry && e.parentId == root.id);
+            (e) => e is SelectChildEntry && e.parentId == root.id);
         if (any != null) {
           selectedChildren.add(any);
           stateTree.mutableSelectedEntriesAtLevel(0).add(root);
@@ -385,7 +385,7 @@ class SelectorController extends ChangeNotifier {
     }
 
     final leaf = path.last;
-    if (leaf is! SelectorChildEntry) return false;
+    if (leaf is! SelectChildEntry) return false;
     final focusedPath = path.sublist(0, path.length - 1);
     final level = focusedPath.length;
     final selectedAtLevel = stateTree.mutableSelectedEntriesAtLevel(level);
@@ -394,7 +394,7 @@ class SelectorController extends ChangeNotifier {
     if (root.selectionMode == SelectionMode.single) {
       final parent = focusedPath.last;
       final any = parent.children
-          ?.whereType<SelectorChildEntry>()
+          ?.whereType<SelectChildEntry>()
           .singleWhereOrNull(testAnyElement);
       if (any != null && any != leaf) {
         select(any.id, parentId: any.parentId, emitChange: emitChange);
@@ -417,7 +417,7 @@ class SelectorController extends ChangeNotifier {
   SelectionMode _effectiveSelectorSelectionMode() {
     if (selectionMode == SelectionMode.multiple) return SelectionMode.multiple;
     for (final entry in stateTree.entries) {
-      if (entry is SelectorCategoryEntry &&
+      if (entry is SelectCategoryEntry &&
           entry.selectionMode == SelectionMode.multiple) {
         return SelectionMode.multiple;
       }
@@ -433,7 +433,7 @@ class SelectorController extends ChangeNotifier {
     final category = stateTree.findCategory(categoryId);
     final header = category?.header;
     final child = header?.children?.singleWhereOrNull((e) => e.id == childId);
-    if (child is! SelectorChildEntry) return false;
+    if (child is! SelectChildEntry) return false;
     if (stateTree
         .selectedHeaderEntriesFor(categoryId)
         .any((e) => e.id == childId)) {
@@ -457,7 +457,7 @@ class SelectorController extends ChangeNotifier {
     final category = stateTree.findCategory(categoryId);
     final footer = category?.footer;
     final child = footer?.children?.singleWhereOrNull((e) => e.id == childId);
-    if (child is! SelectorChildEntry) return false;
+    if (child is! SelectChildEntry) return false;
     if (stateTree
         .selectedFooterEntriesFor(categoryId)
         .any((e) => e.id == childId)) {
@@ -498,14 +498,14 @@ class SelectorController extends ChangeNotifier {
   }
 
   /// Notifies all registered change listeners that the selection changed.
-  void change(SelectorEntries selected) {
+  void change(SelectEntries selected) {
     for (final listener in List.of(_changeListeners)) {
       listener(selected);
     }
   }
 
   /// Notifies all registered apply listeners that the selection was applied.
-  void apply(SelectorEntries selected) {
+  void apply(SelectEntries selected) {
     for (final listener in List.of(_applyListeners)) {
       listener(selected);
     }

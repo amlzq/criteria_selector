@@ -5,7 +5,7 @@ import 'action_bar_visibility.dart';
 import 'constants.dart';
 import 'selector_controller.dart';
 import 'selector_delegate.dart';
-import 'selector_entry.dart';
+import 'select_entry.dart';
 import 'selector_layout.dart';
 import 'widgets/widgets.dart';
 
@@ -14,8 +14,8 @@ import 'widgets/widgets.dart';
 ///
 class ListSelector extends StatefulWidget {
   final ListSelectorDelegate delegate;
-  final List<SelectorEntry> entries;
-  final Set<SelectorEntry>? previousSelected;
+  final List<SelectEntry> entries;
+  final Set<SelectEntry>? previousSelected;
 
   const ListSelector({
     super.key,
@@ -82,12 +82,12 @@ class ListSelectorState extends State<ListSelector> {
 
   SelectionMode? get categorySelectionMode => controller?.selectionMode;
 
-  SelectorCategoryEntry? get selectedCategory =>
+  SelectCategoryEntry? get selectedCategory =>
       widget.entries.elementAtOrNull(_tempSelectedCategoryIndex)
-          as SelectorCategoryEntry;
+          as SelectCategoryEntry;
 
-  void _onTerminalItemTap(SelectorChildEntry item) {
-    if (item is SelectorRangeEntry && item.isCustom) {
+  void _onTerminalItemTap(SelectChildEntry item) {
+    if (item is SelectRangeEntry && item.isCustom) {
       final hasRange = item.min != null || item.max != null;
       if (hasRange) {
         controller?.select(item.id, parentId: item.parentId);
@@ -98,7 +98,7 @@ class ListSelectorState extends State<ListSelector> {
       return;
     }
 
-    final isCategoryTree = widget.entries.firstOrNull is SelectorCategoryEntry;
+    final isCategoryTree = widget.entries.firstOrNull is SelectCategoryEntry;
     if (!isCategoryTree) {
       controller?.toggleFlatEntry(
         item,
@@ -111,7 +111,7 @@ class ListSelectorState extends State<ListSelector> {
 
     final categoryEntry =
         widget.entries.singleWhereOrNull((e) => e.id == item.parentId);
-    if (categoryEntry is! SelectorCategoryEntry) {
+    if (categoryEntry is! SelectCategoryEntry) {
       return;
     }
     final category = categoryEntry;
@@ -124,7 +124,7 @@ class ListSelectorState extends State<ListSelector> {
     _setStateOrImmediateApply(item);
   }
 
-  void _setStateOrImmediateApply(SelectorChildEntry item) {
+  void _setStateOrImmediateApply(SelectChildEntry item) {
     if (SelectionMode.single == selectorSelectionMode || item.immediate) {
       // No need to tap "Apply"; return result immediately
       _onApplyTap();
@@ -158,7 +158,7 @@ class ListSelectorState extends State<ListSelector> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Flexible(
-          child: widget.entries.first is SelectorCategoryEntry
+          child: widget.entries.first is SelectCategoryEntry
               ? SingleChildScrollView(
                   physics: const ClampingScrollPhysics(),
                   padding:
@@ -167,7 +167,7 @@ class ListSelectorState extends State<ListSelector> {
                     mainAxisSize: MainAxisSize.min,
                     children: List.generate(widget.entries.length, (index) {
                       final category =
-                          widget.entries[index] as SelectorCategoryEntry;
+                          widget.entries[index] as SelectCategoryEntry;
                       final selectedEntries =
                           controller?.selectedEntriesAtLevel(1) ?? {};
                       final entries = category.children?.toList() ?? [];
@@ -185,7 +185,7 @@ class ListSelectorState extends State<ListSelector> {
                               entries: entries,
                               selectedEntries: selectedEntries,
                               onChanged: (_, entry) => _onTerminalItemTap(
-                                  entry as SelectorChildEntry),
+                                  entry as SelectChildEntry),
                               toText: toText,
                             ),
                           SelectorGridLayout(
@@ -208,7 +208,7 @@ class ListSelectorState extends State<ListSelector> {
                               entries: entries,
                               selectedEntries: selectedEntries,
                               onChanged: (_, entry) => _onTerminalItemTap(
-                                  entry as SelectorChildEntry),
+                                  entry as SelectChildEntry),
                               toText: toText,
                             ),
                           SelectorChipLayout() => SelectorChipBar(
@@ -228,7 +228,7 @@ class ListSelectorState extends State<ListSelector> {
                               selectedLabelStyle:
                                   chipBarTheme?.selectedLabelStyle,
                               onChanged: (_, item) => _onTerminalItemTap(
-                                  item as SelectorChildEntry),
+                                  item as SelectChildEntry),
                             ),
                           SelectorRangeLayout(:final toText) =>
                             SelectorRangeView(
@@ -239,7 +239,7 @@ class ListSelectorState extends State<ListSelector> {
                               entries: entries,
                               selectedEntries: selectedEntries,
                               onChanged: (_, entry) => _onTerminalItemTap(
-                                  entry as SelectorChildEntry),
+                                  entry as SelectChildEntry),
                             ),
                         },
                       );
@@ -250,7 +250,7 @@ class ListSelectorState extends State<ListSelector> {
                   entries: widget.entries,
                   selectedEntries: controller?.selectedEntriesAtLevel(0) ?? {},
                   onChanged: (_, entry) =>
-                      _onTerminalItemTap(entry as SelectorChildEntry),
+                      _onTerminalItemTap(entry as SelectChildEntry),
                   radioBuilder: delegate.radioBuilder,
                   checkboxBuilder: delegate.checkboxBuilder,
                 ),

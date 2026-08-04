@@ -31,7 +31,7 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
     super.dispose();
   }
 
-  HouseFilter? _parseFilter(String domain, SelectorEntries selected) {
+  HouseFilter? _parseFilter(String domain, SelectEntries selected) {
     final filter = HouseFilter(cityId: userCityId);
     if (domain == 'neighborhood') {
       // Neighborhood filter
@@ -85,7 +85,7 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
     return filter;
   }
 
-  void _handleSelectorChange(String domain, SelectorEntries selected) async {
+  void _handleSelectorChange(String domain, SelectEntries selected) async {
     final l10n = AppLocalizations.of(context);
     _filter = _parseFilter(domain, selected);
     if (_filter == null) {
@@ -96,7 +96,7 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
     }
   }
 
-  void _handleSelectorApply(String domain, SelectorEntries selected) {
+  void _handleSelectorApply(String domain, SelectEntries selected) {
     final l10n = AppLocalizations.of(context);
     // Persist the applied selection to the repo so it can be restored on reopen.
     if (domain == 'neighborhood') {

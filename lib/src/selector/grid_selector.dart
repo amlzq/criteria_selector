@@ -5,7 +5,7 @@ import 'action_bar_visibility.dart';
 import 'constants.dart';
 import 'selector_controller.dart';
 import 'selector_delegate.dart';
-import 'selector_entry.dart';
+import 'select_entry.dart';
 import 'selector_layout.dart';
 import 'widgets/widgets.dart';
 
@@ -15,7 +15,7 @@ import 'widgets/widgets.dart';
 /// Behavior notes:
 /// - This selector is fixed to a two-level structure: category -> children.
 /// - If a category contains an "Any" child entry, it may be selected by default.
-/// - If a category contains a custom range entry ([SelectorRangeEntry.custom]),
+/// - If a category contains a custom range entry ([SelectRangeEntry.custom]),
 ///   two numeric fields are shown for min/max input.
 /// - When an entry's `immediate` is true, selection is applied immediately
 ///   without requiring the action bar.
@@ -23,8 +23,8 @@ import 'widgets/widgets.dart';
 ///   final clipped selection tree.
 class GridSelector extends StatefulWidget {
   final GridSelectorDelegate delegate;
-  final List<SelectorEntry> entries;
-  final Set<SelectorEntry>? previousSelected;
+  final List<SelectEntry> entries;
+  final Set<SelectEntry>? previousSelected;
 
   const GridSelector({
     super.key,
@@ -39,7 +39,7 @@ class GridSelector extends StatefulWidget {
 
 class GridSelectorState extends State<GridSelector> {
   /// Focused category entry
-  late SelectorCategoryEntry _tempSelectedCategory;
+  late SelectCategoryEntry _tempSelectedCategory;
 
   SelectorController? controller;
   bool _didInitCategoryFromState = false;
@@ -47,7 +47,7 @@ class GridSelectorState extends State<GridSelector> {
   @override
   void initState() {
     super.initState();
-    _tempSelectedCategory = widget.entries.first as SelectorCategoryEntry;
+    _tempSelectedCategory = widget.entries.first as SelectCategoryEntry;
   }
 
   @override
@@ -81,7 +81,7 @@ class GridSelectorState extends State<GridSelector> {
     if (!_didInitCategoryFromState) {
       final selectedCategory = controller
           ?.selectedEntriesAtLevel(0)
-          .whereType<SelectorCategoryEntry>()
+          .whereType<SelectCategoryEntry>()
           .firstOrNull;
       if (selectedCategory != null) {
         _tempSelectedCategory = selectedCategory;
@@ -115,7 +115,7 @@ class GridSelectorState extends State<GridSelector> {
     return SelectionMode.single;
   }
 
-  void _onCategoryItemTap(SelectorCategoryEntry entry) {
+  void _onCategoryItemTap(SelectCategoryEntry entry) {
     if (entry == _tempSelectedCategory) return;
     _tempSelectedCategory = entry;
     controller?.focusCategoryEntry(
@@ -125,13 +125,13 @@ class GridSelectorState extends State<GridSelector> {
     setState(() {});
   }
 
-  void _onTerminalItemTap(SelectorChildEntry entry) {
+  void _onTerminalItemTap(SelectChildEntry entry) {
     final category = widget.entries
-        .whereType<SelectorCategoryEntry>()
+        .whereType<SelectCategoryEntry>()
         .singleWhereOrNull((e) => e.id == entry.parentId);
     if (category == null) return;
 
-    if (entry is SelectorRangeEntry && entry.isCustom) {
+    if (entry is SelectRangeEntry && entry.isCustom) {
       final hasRange = entry.min != null || entry.max != null;
       if (hasRange) {
         controller?.select(entry.id, parentId: entry.parentId);
@@ -150,7 +150,7 @@ class GridSelectorState extends State<GridSelector> {
     _setStateOrImmediateApply(entry);
   }
 
-  void _setStateOrImmediateApply(SelectorChildEntry entry) {
+  void _setStateOrImmediateApply(SelectChildEntry entry) {
     if (SelectionMode.single == selectorSelectionMode || entry.immediate) {
       // No need to tap "Apply"; return result immediately
       _onApplyTap();
@@ -171,7 +171,7 @@ class GridSelectorState extends State<GridSelector> {
   }
 
   Widget _buildCategoryView(
-    SelectorCategoryEntry category, {
+    SelectCategoryEntry category, {
     required int index,
   }) {
     final entries = category.children?.toList() ?? [];
@@ -193,7 +193,7 @@ class GridSelectorState extends State<GridSelector> {
           entries: entries,
           selectedEntries: selectedEntries,
           onChanged: (_, entry) =>
-              _onTerminalItemTap(entry as SelectorChildEntry),
+              _onTerminalItemTap(entry as SelectChildEntry),
           toText: toText,
           radioBuilder: delegate.radioBuilder,
           checkboxBuilder: delegate.checkboxBuilder,
@@ -218,7 +218,7 @@ class GridSelectorState extends State<GridSelector> {
           entries: entries,
           selectedEntries: selectedEntries,
           onChanged: (_, entry) =>
-              _onTerminalItemTap(entry as SelectorChildEntry),
+              _onTerminalItemTap(entry as SelectChildEntry),
           toText: toText,
         ),
       SelectorChipLayout() => SelectorChipBar(
@@ -236,7 +236,7 @@ class GridSelectorState extends State<GridSelector> {
           labelStyle: delegate.chipBarTheme?.labelStyle,
           selectedLabelStyle: delegate.chipBarTheme?.selectedLabelStyle,
           onChanged: (_, item) =>
-              _onTerminalItemTap(item as SelectorChildEntry),
+              _onTerminalItemTap(item as SelectChildEntry),
         ),
       SelectorRangeLayout(:final toText) => SelectorRangeView(
           key: ValueKey('category_$index'),
@@ -246,7 +246,7 @@ class GridSelectorState extends State<GridSelector> {
           entries: entries,
           selectedEntries: selectedEntries,
           onChanged: (_, entry) =>
-              _onTerminalItemTap(entry as SelectorChildEntry),
+              _onTerminalItemTap(entry as SelectChildEntry),
         ),
     };
   }
@@ -264,7 +264,7 @@ class GridSelectorState extends State<GridSelector> {
           SelectorTabBar(
             isScrollable: false,
             onChanged: (_, item) =>
-                _onCategoryItemTap(item as SelectorCategoryEntry),
+                _onCategoryItemTap(item as SelectCategoryEntry),
             entries: widget.entries,
             selectedCategories: {_tempSelectedCategory},
             focusedIndex: tempSelectedCategoryIndex,

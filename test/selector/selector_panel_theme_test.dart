@@ -166,8 +166,8 @@ class _EmptyDelegate extends SelectorDelegate {
   @override
   Widget buildBody(
     BuildContext context,
-    List<SelectorEntry> entries,
-    Set<SelectorEntry>? previousSelected,
+    List<SelectEntry> entries,
+    Set<SelectEntry>? previousSelected,
   ) =>
       const SizedBox();
 

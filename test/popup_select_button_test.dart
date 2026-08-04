@@ -14,8 +14,8 @@ void main() {
             body: PopupSelectButton(
               label: 'Filter',
               selectorDelegate: ListSelectorDelegate(
-                entriesLoader: () async => <SelectorEntry<dynamic>>{
-                  SelectorTextEntry<dynamic>.name(id: 'a', name: 'A'),
+                entriesLoader: () async => <SelectEntry<dynamic>>{
+                  SelectTextEntry<dynamic>.name(id: 'a', name: 'A'),
                 },
               ),
               onSelectorShowed: () => showed = true,
@@ -51,7 +51,7 @@ void main() {
 
     testWidgets('applies selection and updates the trigger label',
         (tester) async {
-      SelectorEntries? applied;
+      SelectEntries? applied;
 
       await tester.pumpWidget(
         MaterialApp(
@@ -59,9 +59,9 @@ void main() {
             body: PopupSelectButton(
               label: 'Sort',
               selectorDelegate: ListSelectorDelegate(
-                entriesLoader: () async => <SelectorEntry<dynamic>>{
-                  SelectorTextEntry<dynamic>.name(id: 'a', name: 'A'),
-                  SelectorTextEntry<dynamic>.name(id: 'b', name: 'B'),
+                entriesLoader: () async => <SelectEntry<dynamic>>{
+                  SelectTextEntry<dynamic>.name(id: 'a', name: 'A'),
+                  SelectTextEntry<dynamic>.name(id: 'b', name: 'B'),
                 },
               ),
               onApplied: (selected) => applied = selected,
@@ -94,9 +94,9 @@ void main() {
               label: 'Sort',
               labelLoader: (selected) => '${selected.length} selected',
               selectorDelegate: ListSelectorDelegate(
-                entriesLoader: () async => <SelectorEntry<dynamic>>{
-                  SelectorTextEntry<dynamic>.name(id: 'a', name: 'A'),
-                  SelectorTextEntry<dynamic>.name(id: 'b', name: 'B'),
+                entriesLoader: () async => <SelectEntry<dynamic>>{
+                  SelectTextEntry<dynamic>.name(id: 'a', name: 'A'),
+                  SelectTextEntry<dynamic>.name(id: 'b', name: 'B'),
                 },
               ),
             ),
@@ -123,13 +123,13 @@ void main() {
                 PopupSelectButton.elevated(
                   label: 'Elevated',
                   selectorDelegate: ListSelectorDelegate(
-                    entriesLoader: () async => <SelectorEntry<dynamic>>{},
+                    entriesLoader: () async => <SelectEntry<dynamic>>{},
                   ),
                 ),
                 PopupSelectButton.outlined(
                   label: 'Outlined',
                   selectorDelegate: ListSelectorDelegate(
-                    entriesLoader: () async => <SelectorEntry<dynamic>>{},
+                    entriesLoader: () async => <SelectEntry<dynamic>>{},
                   ),
                 ),
               ],

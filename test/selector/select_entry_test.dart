@@ -1,13 +1,13 @@
 import 'package:criteria_selector/criteria_selector.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-SelectorTextEntry<dynamic> _text(
+SelectTextEntry<dynamic> _text(
   String parentId,
   String id,
   String name, {
-  Set<SelectorEntry<dynamic>>? children,
+  Set<SelectEntry<dynamic>>? children,
 }) {
-  return SelectorTextEntry<dynamic>(
+  return SelectTextEntry<dynamic>(
     parentId: parentId,
     id: id,
     name: name,
@@ -15,18 +15,18 @@ SelectorTextEntry<dynamic> _text(
   );
 }
 
-SelectorCategoryEntry<dynamic> _category(
+SelectCategoryEntry<dynamic> _category(
   String id,
   String name, {
-  required Set<SelectorEntry<dynamic>> children,
-  SelectorEntry<dynamic>? header,
+  required Set<SelectEntry<dynamic>> children,
+  SelectEntry<dynamic>? header,
   SelectionMode headerSelectionMode = SelectionMode.single,
-  SelectorEntry<dynamic>? footer,
+  SelectEntry<dynamic>? footer,
   SelectionMode footerSelectionMode = SelectionMode.single,
   SelectionMode selectionMode = SelectionMode.single,
   SelectorLayout? layout,
 }) {
-  return SelectorCategoryEntry<dynamic>(
+  return SelectCategoryEntry<dynamic>(
     id: id,
     name: name,
     children: children,
@@ -40,9 +40,9 @@ SelectorCategoryEntry<dynamic> _category(
 }
 
 void main() {
-  group('SelectorEntry base', () {
+  group('SelectEntry base', () {
     test('default values are correct', () {
-      final entry = SelectorChildEntry<dynamic>(
+      final entry = SelectChildEntry<dynamic>(
         parentId: 'p',
         id: 'e',
         name: 'Entry',
@@ -54,7 +54,7 @@ void main() {
     });
 
     test('toString returns expected format', () {
-      final entry = SelectorChildEntry<dynamic>(
+      final entry = SelectChildEntry<dynamic>(
         parentId: 'p',
         id: 'e',
         name: 'Entry',
@@ -62,19 +62,19 @@ void main() {
 
       expect(
         entry.toString(),
-        'SelectorChildEntry(id: e, parentId: p, name: Entry)',
+        'SelectChildEntry(id: e, parentId: p, name: Entry)',
       );
     });
   });
 
-  group('SelectorChildEntry', () {
+  group('SelectChildEntry', () {
     test('== and hashCode: equal entries with same id, parentId, name', () {
-      final a = SelectorChildEntry<dynamic>(
+      final a = SelectChildEntry<dynamic>(
         parentId: 'p',
         id: 'e',
         name: 'E',
       );
-      final b = SelectorChildEntry<dynamic>(
+      final b = SelectChildEntry<dynamic>(
         parentId: 'p',
         id: 'e',
         name: 'E',
@@ -85,12 +85,12 @@ void main() {
     });
 
     test('== and hashCode: different parentId makes entries unequal', () {
-      final a = SelectorChildEntry<dynamic>(
+      final a = SelectChildEntry<dynamic>(
         parentId: 'p1',
         id: 'e',
         name: 'E',
       );
-      final b = SelectorChildEntry<dynamic>(
+      final b = SelectChildEntry<dynamic>(
         parentId: 'p2',
         id: 'e',
         name: 'E',
@@ -101,12 +101,12 @@ void main() {
     });
 
     test('== and hashCode: different name makes entries unequal', () {
-      final a = SelectorChildEntry<dynamic>(
+      final a = SelectChildEntry<dynamic>(
         parentId: 'p',
         id: 'e',
         name: 'A',
       );
-      final b = SelectorChildEntry<dynamic>(
+      final b = SelectChildEntry<dynamic>(
         parentId: 'p',
         id: 'e',
         name: 'B',
@@ -116,12 +116,12 @@ void main() {
     });
 
     test('== and hashCode: different id makes entries unequal', () {
-      final a = SelectorChildEntry<dynamic>(
+      final a = SelectChildEntry<dynamic>(
         parentId: 'p',
         id: 'e1',
         name: 'E',
       );
-      final b = SelectorChildEntry<dynamic>(
+      final b = SelectChildEntry<dynamic>(
         parentId: 'p',
         id: 'e2',
         name: 'E',
@@ -131,23 +131,23 @@ void main() {
     });
 
     test('== returns false for different runtime type', () {
-      final child = SelectorChildEntry<dynamic>(
+      final child = SelectChildEntry<dynamic>(
         parentId: 'p',
         id: 'e',
         name: 'E',
       );
-      final text = SelectorTextEntry<dynamic>(
+      final text = SelectTextEntry<dynamic>(
         parentId: 'p',
         id: 'e',
         name: 'E',
       );
 
-      // Different runtimeType (SelectorChildEntry vs SelectorTextEntry)
+      // Different runtimeType (SelectChildEntry vs SelectTextEntry)
       expect(child, isNot(equals(text)));
     });
 
     test('copyWith creates a copy with modified fields', () {
-      final entry = SelectorChildEntry<dynamic>(
+      final entry = SelectChildEntry<dynamic>(
         parentId: 'p',
         id: 'e',
         name: 'Old',
@@ -161,7 +161,7 @@ void main() {
     });
 
     test('copyWith preserves unchanged fields', () {
-      final entry = SelectorChildEntry<dynamic>(
+      final entry = SelectChildEntry<dynamic>(
         parentId: 'p',
         id: 'e',
         name: 'E',
@@ -183,7 +183,7 @@ void main() {
     });
 
     test('any constructor sets id to kAnyEntryId', () {
-      final any = SelectorChildEntry<dynamic>.any(
+      final any = SelectChildEntry<dynamic>.any(
         parentId: 'p',
         name: 'Any',
       );
@@ -194,7 +194,7 @@ void main() {
     });
 
     test('empty constructor creates empty placeholder', () {
-      final empty = SelectorChildEntry<dynamic>.empty(parentId: 'p');
+      final empty = SelectChildEntry<dynamic>.empty(parentId: 'p');
 
       expect(empty.id, '');
       expect(empty.parentId, 'p');
@@ -204,9 +204,9 @@ void main() {
     });
   });
 
-  group('SelectorChildEntryExt', () {
+  group('SelectChildEntryExt', () {
     test('isAny returns true for kAnyEntryId', () {
-      final any = SelectorChildEntry<dynamic>.any(
+      final any = SelectChildEntry<dynamic>.any(
         parentId: 'p',
         name: 'Any',
       );
@@ -214,7 +214,7 @@ void main() {
     });
 
     test('isAny returns false for non-any entries', () {
-      final entry = SelectorChildEntry<dynamic>(
+      final entry = SelectChildEntry<dynamic>(
         parentId: 'p',
         id: 'e',
         name: 'E',
@@ -223,13 +223,13 @@ void main() {
     });
 
     test('isEmpty returns true for empty id', () {
-      final empty = SelectorChildEntry<dynamic>.empty();
+      final empty = SelectChildEntry<dynamic>.empty();
       expect(empty.isEmpty, isTrue);
       expect(empty.isNotEmpty, isFalse);
     });
 
     test('isNotEmpty returns true for non-empty id', () {
-      final entry = SelectorChildEntry<dynamic>(
+      final entry = SelectChildEntry<dynamic>(
         parentId: 'p',
         id: 'e',
         name: 'E',
@@ -239,9 +239,9 @@ void main() {
     });
   });
 
-  group('SelectorTextEntry', () {
+  group('SelectTextEntry', () {
     test('any constructor sets id to kAnyEntryId', () {
-      final any = SelectorTextEntry<dynamic>.any(
+      final any = SelectTextEntry<dynamic>.any(
         parentId: 'p',
         name: 'Any',
       );
@@ -251,7 +251,7 @@ void main() {
     });
 
     test('id constructor creates entry with only id', () {
-      final entry = SelectorTextEntry<dynamic>.id(id: 'e');
+      final entry = SelectTextEntry<dynamic>.id(id: 'e');
 
       expect(entry.id, 'e');
       expect(entry.parentId, '');
@@ -259,7 +259,7 @@ void main() {
     });
 
     test('name constructor creates entry without parentId', () {
-      final entry = SelectorTextEntry<dynamic>.name(
+      final entry = SelectTextEntry<dynamic>.name(
         id: 'e',
         name: 'Entry',
         enabled: false,
@@ -273,14 +273,13 @@ void main() {
       expect(entry.immediate, true);
     });
 
-    test('inherits SelectorChildEntry == (runtimeType, id, parentId, name)',
-        () {
-      final a = SelectorTextEntry<dynamic>(
+    test('inherits SelectChildEntry == (runtimeType, id, parentId, name)', () {
+      final a = SelectTextEntry<dynamic>(
         parentId: 'p',
         id: 'e',
         name: 'E',
       );
-      final b = SelectorTextEntry<dynamic>(
+      final b = SelectTextEntry<dynamic>(
         parentId: 'p',
         id: 'e',
         name: 'E',
@@ -290,9 +289,9 @@ void main() {
     });
   });
 
-  group('SelectorRangeEntry', () {
+  group('SelectRangeEntry', () {
     test('custom constructor sets id to kCustomEntryId', () {
-      final custom = SelectorRangeEntry<int, dynamic>.custom(
+      final custom = SelectRangeEntry<int, dynamic>.custom(
         parentId: 'p',
         name: 'Custom',
         min: 10,
@@ -306,7 +305,7 @@ void main() {
     });
 
     test('any constructor sets id to kAnyEntryId', () {
-      final any = SelectorRangeEntry<int, dynamic>.any(
+      final any = SelectRangeEntry<int, dynamic>.any(
         parentId: 'p',
         name: 'Any',
       );
@@ -316,7 +315,7 @@ void main() {
     });
 
     test('copyWith creates copy with modified range fields', () {
-      final entry = SelectorRangeEntry<int, dynamic>(
+      final entry = SelectRangeEntry<int, dynamic>(
         parentId: 'p',
         id: 'e',
         name: 'E',
@@ -344,7 +343,7 @@ void main() {
     });
 
     test('copyWith preserves unchanged range fields', () {
-      final entry = SelectorRangeEntry<int, dynamic>.custom(
+      final entry = SelectRangeEntry<int, dynamic>.custom(
         parentId: 'p',
         name: 'Custom',
         min: 0,
@@ -362,9 +361,9 @@ void main() {
     });
   });
 
-  group('SelectorRangeEntryExt', () {
+  group('SelectRangeEntryExt', () {
     test('isCustom returns true for custom id', () {
-      final custom = SelectorRangeEntry<int, dynamic>.custom(
+      final custom = SelectRangeEntry<int, dynamic>.custom(
         parentId: 'p',
         name: 'Custom',
       );
@@ -372,7 +371,7 @@ void main() {
     });
 
     test('isCustom returns false for non-custom entries', () {
-      final entry = SelectorRangeEntry<int, dynamic>(
+      final entry = SelectRangeEntry<int, dynamic>(
         parentId: 'p',
         id: 'e',
         name: 'E',
@@ -381,7 +380,7 @@ void main() {
     });
 
     test('hasCustomValue returns true when min is set', () {
-      final entry = SelectorRangeEntry<int, dynamic>.custom(
+      final entry = SelectRangeEntry<int, dynamic>.custom(
         parentId: 'p',
         name: 'Custom',
         min: 10,
@@ -390,7 +389,7 @@ void main() {
     });
 
     test('hasCustomValue returns true when max is set', () {
-      final entry = SelectorRangeEntry<int, dynamic>.custom(
+      final entry = SelectRangeEntry<int, dynamic>.custom(
         parentId: 'p',
         name: 'Custom',
         max: 20,
@@ -399,7 +398,7 @@ void main() {
     });
 
     test('hasCustomValue returns false when no values set', () {
-      final entry = SelectorRangeEntry<int, dynamic>.custom(
+      final entry = SelectRangeEntry<int, dynamic>.custom(
         parentId: 'p',
         name: 'Custom',
       );
@@ -407,13 +406,13 @@ void main() {
     });
 
     test('name getter falls back to min-max format when base name is null', () {
-      // SelectorRangeEntry.custom with no explicit name: base name is null
-      final entry = SelectorRangeEntry<int, dynamic>.custom(
+      // SelectRangeEntry.custom with no explicit name: base name is null
+      final entry = SelectRangeEntry<int, dynamic>.custom(
         parentId: 'p',
         min: 10,
         max: 20,
       );
-      // The extension name getter on SelectorRangeEntryExt shadows the base
+      // The extension name getter on SelectRangeEntryExt shadows the base
       // field and returns '$min-$max' when this.name (base field) is null.
       // Due to Dart extension resolution, the behavior depends on static type.
       // Verify the entry has the expected values regardless.
@@ -425,7 +424,7 @@ void main() {
     });
   });
 
-  group('SelectorCategoryEntry', () {
+  group('SelectCategoryEntry', () {
     test(
         '== and hashCode: equal categories with same id, name, selectionMode, layout',
         () {
@@ -545,9 +544,9 @@ void main() {
     });
   });
 
-  group('SelectorCategoryEntryExtension', () {
+  group('SelectCategoryEntryExtension', () {
     test('firstCustomOrNull returns first custom range entry', () {
-      final custom = SelectorRangeEntry<int, dynamic>.custom(
+      final custom = SelectRangeEntry<int, dynamic>.custom(
         parentId: 'c',
         name: 'Custom',
       );
@@ -569,7 +568,7 @@ void main() {
     });
 
     test('lastCustomOrNull returns last custom range entry', () {
-      final custom = SelectorRangeEntry<int, dynamic>.custom(
+      final custom = SelectRangeEntry<int, dynamic>.custom(
         parentId: 'c',
         name: 'Custom',
       );
@@ -590,7 +589,7 @@ void main() {
     });
 
     test('hasCustomOrNull returns true when custom exists', () {
-      final custom = SelectorRangeEntry<int, dynamic>.custom(
+      final custom = SelectRangeEntry<int, dynamic>.custom(
         parentId: 'c',
         name: 'Custom',
       );
@@ -606,7 +605,7 @@ void main() {
     });
   });
 
-  group('SelectorEntryExt', () {
+  group('SelectEntryExt', () {
     test('firstChild returns first child', () {
       final a = _text('c', 'a', 'A');
       final b = _text('c', 'b', 'B');
@@ -645,7 +644,7 @@ void main() {
     });
 
     test('hasChildren returns false for null children', () {
-      final entry = SelectorChildEntry<dynamic>(
+      final entry = SelectChildEntry<dynamic>(
         parentId: 'p',
         id: 'e',
         name: 'E',
@@ -683,6 +682,54 @@ void main() {
 
     test('kCustomEntryId is "custom"', () {
       expect(kCustomEntryId, 'custom');
+    });
+  });
+
+  group('Deprecated Selector*Entry* aliases', () {
+    // ignore: deprecated_member_use
+    test('SelectorEntry aliases behave identically to SelectEntry', () {
+      SelectorEntry<dynamic> base = _text('c', 'e', 'E');
+      // ignore: deprecated_member_use
+      SelectorCategoryEntry<dynamic> category =
+          _category('c', 'C', children: {base});
+      // ignore: deprecated_member_use
+      final child = SelectorChildEntry<dynamic>(
+        parentId: 'c',
+        id: 'ch',
+        name: 'Child',
+      );
+      // ignore: deprecated_member_use
+      final text = SelectorTextEntry<dynamic>(
+        parentId: 'c',
+        id: 't',
+        name: 'Text',
+      );
+      // ignore: deprecated_member_use
+      final range = SelectorRangeEntry<int, dynamic>(
+        parentId: 'c',
+        id: 'r',
+        name: 'Range',
+      );
+      // ignore: deprecated_member_use
+      final intRange = SelectorIntEntry<dynamic>(
+        parentId: 'c',
+        id: 'ir',
+        name: 'IntRange',
+      );
+
+      expect(base.id, 'e');
+      expect(category, isA<SelectEntry<dynamic>>());
+      expect(child.parentId, 'c');
+      expect(text.id, 't');
+      expect(range.min, isNull);
+      expect(intRange, isA<SelectRangeEntry<int, dynamic>>());
+    });
+
+    // ignore: deprecated_member_use
+    test('SelectorEntries alias is a Set<SelectEntry>', () {
+      SelectorEntries<dynamic> entries = <SelectEntry<dynamic>>{};
+      entries.add(_text('c', 'a', 'A'));
+      expect(entries.length, 1);
     });
   });
 }

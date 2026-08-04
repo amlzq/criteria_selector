@@ -2,8 +2,8 @@ import 'package:criteria_selector/criteria_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-SelectorEntries _entries(String id) => <SelectorEntry<dynamic>>{
-      SelectorTextEntry<dynamic>.name(id: id, name: id.toUpperCase()),
+SelectEntries _entries(String id) => <SelectEntry<dynamic>>{
+      SelectTextEntry<dynamic>.name(id: id, name: id.toUpperCase()),
     };
 
 void main() {
@@ -12,7 +12,7 @@ void main() {
         'handleApply writes the applied selection back to delegate.selectedData',
         () {
       final delegate = ListSelectorDelegate(
-        entriesLoader: () async => <SelectorEntry<dynamic>>{},
+        entriesLoader: () async => <SelectEntry<dynamic>>{},
       );
       final controller = PopupSelectController();
       controller.attachSelectorDelegates(<SelectorDelegate>[delegate]);
@@ -39,9 +39,9 @@ void main() {
       final controller = PopupSelectController();
       final delegate = ListSelectorDelegate(
         selectionMode: SelectionMode.multiple,
-        entriesLoader: () async => <SelectorEntry<dynamic>>{
-          SelectorTextEntry<dynamic>.name(id: 'a', name: 'A'),
-          SelectorTextEntry<dynamic>.name(id: 'b', name: 'B'),
+        entriesLoader: () async => <SelectEntry<dynamic>>{
+          SelectTextEntry<dynamic>.name(id: 'a', name: 'A'),
+          SelectTextEntry<dynamic>.name(id: 'b', name: 'B'),
         },
       );
 

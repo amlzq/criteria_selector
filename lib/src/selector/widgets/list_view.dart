@@ -4,7 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
-import '../selector_entry.dart';
+import '../select_entry.dart';
 import 'constants.dart';
 import 'field_tile.dart';
 import 'list_tile.dart';
@@ -32,24 +32,24 @@ class SelectorListView extends StatefulWidget {
   ///
   /// If provided and [showTitle] is true, the category's name is displayed as
   /// a header above the list. Otherwise no header is shown.
-  final SelectorCategoryEntry? category;
+  final SelectCategoryEntry? category;
 
   /// The terminal-node entries to display as selectable list items.
   ///
   /// This list must be a terminal-node list (no further sub-categories). If it
   /// contains a range/custom entry, an input field is rendered at the header or
   /// footer.
-  final List<SelectorEntry> entries;
+  final List<SelectEntry> entries;
 
   /// The set of currently selected entries.
   ///
   /// An item is rendered as selected when it is contained in this set; the
   /// selection is reflected by the radio or checkbox tile.
-  final SelectorEntries? selectedEntries;
+  final SelectEntries? selectedEntries;
 
   /// Called when an item is tapped or a custom range value changes.
   ///
-  /// The callback receives the affected item's index and its [SelectorEntry].
+  /// The callback receives the affected item's index and its [SelectEntry].
   /// For custom range entries the view has already parsed and normalized the
   /// min/max values onto the entry before invoking this callback, so the
   /// listener only needs to update selection state.
@@ -86,10 +86,10 @@ class SelectorListView extends StatefulWidget {
 
 class SelectorListViewState extends State<SelectorListView>
     with AutomaticKeepAliveClientMixin {
-  SelectorRangeEntry? firstCustomEntry;
-  SelectorRangeEntry? lastCustomEntry;
+  SelectRangeEntry? firstCustomEntry;
+  SelectRangeEntry? lastCustomEntry;
 
-  late List<SelectorEntry> entriesWithoutCustom;
+  late List<SelectEntry> entriesWithoutCustom;
 
   TextEditingController? _minController;
   TextEditingController? _maxController;
@@ -97,7 +97,7 @@ class SelectorListViewState extends State<SelectorListView>
   FocusNode? _minFocusNode;
   FocusNode? _maxFocusNode;
 
-  late SelectorEntries _selectedEntries;
+  late SelectEntries _selectedEntries;
 
   @override
   void initState() {
@@ -137,9 +137,9 @@ class SelectorListViewState extends State<SelectorListView>
     // react to this transition (not every rebuild) to avoid clobbering text the
     // user is actively typing.
     final oldHadCustom = (oldWidget.selectedEntries ?? {})
-        .any((e) => e is SelectorRangeEntry && e.isCustom);
+        .any((e) => e is SelectRangeEntry && e.isCustom);
     final newHasCustom =
-        _selectedEntries.any((e) => e is SelectorRangeEntry && e.isCustom);
+        _selectedEntries.any((e) => e is SelectRangeEntry && e.isCustom);
     if (oldHadCustom && !newHasCustom) {
       _clearAllInput();
       _unfocusAllInput();
@@ -148,7 +148,7 @@ class SelectorListViewState extends State<SelectorListView>
 
   void _restoreCustomSelectionToInputs() {
     final selectedCustom = _selectedEntries
-        .whereType<SelectorRangeEntry>()
+        .whereType<SelectRangeEntry>()
         .firstWhereOrNull((e) => e.isCustom);
     // Temporarily remove listeners to avoid triggering _inputListener during
     // build phase (e.g. when called from didUpdateWidget), which would cause
@@ -194,7 +194,7 @@ class SelectorListViewState extends State<SelectorListView>
 
   /// Parses the current min/max input, normalizes it onto [custom], and notifies
   /// the listener via [OnChanged].
-  void _commitCustomRange(SelectorRangeEntry? custom) {
+  void _commitCustomRange(SelectRangeEntry? custom) {
     if (custom == null) return;
     var minInt = int.tryParse(_minController!.text) ?? 0;
     var maxInt = int.tryParse(_maxController!.text) ?? 0;
@@ -255,7 +255,7 @@ class SelectorListViewState extends State<SelectorListView>
     }
   }
 
-  void _onItemTap(int index, SelectorEntry entry) {
+  void _onItemTap(int index, SelectEntry entry) {
     // Clear custom input
     _clearAllInput();
     _unfocusAllInput();

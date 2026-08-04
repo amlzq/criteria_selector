@@ -9,14 +9,14 @@ import 'package:flutter/foundation.dart';
 
 import 'selector/selector_layout.dart';
 
-/// Deprecated layout configuration for the children of a [SelectorCategoryEntry].
+/// Deprecated layout configuration for the children of a [SelectCategoryEntry].
 ///
 /// Use [SelectorLayout] / [SelectorListLayout] via
-/// [SelectorCategoryEntry.layout] instead. This class is kept only for
+/// [SelectCategoryEntry.layout] instead. This class is kept only for
 /// backward compatibility and will be removed in a future minor version.
 @Deprecated(
   'Use SelectorLayout / SelectorListLayout via '
-  'SelectorCategoryEntry.layout instead. '
+  'SelectCategoryEntry.layout instead. '
   'This class will be removed in a future minor version.',
 )
 @immutable
@@ -24,14 +24,14 @@ class SelectorListConfig {
   const SelectorListConfig();
 }
 
-/// Deprecated layout configuration for the children of a [SelectorCategoryEntry].
+/// Deprecated layout configuration for the children of a [SelectCategoryEntry].
 ///
 /// Use [SelectorLayout] / [SelectorGridLayout] via
-/// [SelectorCategoryEntry.layout] instead. This class is kept only for
+/// [SelectCategoryEntry.layout] instead. This class is kept only for
 /// backward compatibility and will be removed in a future minor version.
 @Deprecated(
   'Use SelectorLayout / SelectorGridLayout via '
-  'SelectorCategoryEntry.layout instead. '
+  'SelectCategoryEntry.layout instead. '
   'This class will be removed in a future minor version.',
 )
 @immutable
@@ -56,14 +56,14 @@ class SelectorGridConfig {
   final double childAspectRatio;
 }
 
-/// Deprecated layout configuration for the children of a [SelectorCategoryEntry].
+/// Deprecated layout configuration for the children of a [SelectCategoryEntry].
 ///
 /// Use [SelectorLayout] / [SelectorChipLayout] via
-/// [SelectorCategoryEntry.layout] instead. This class is kept only for
+/// [SelectCategoryEntry.layout] instead. This class is kept only for
 /// backward compatibility and will be removed in a future minor version.
 @Deprecated(
   'Use SelectorLayout / SelectorChipLayout via '
-  'SelectorCategoryEntry.layout instead. '
+  'SelectCategoryEntry.layout instead. '
   'This class will be removed in a future minor version.',
 )
 @immutable

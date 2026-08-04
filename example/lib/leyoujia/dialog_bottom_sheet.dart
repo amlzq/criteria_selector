@@ -54,9 +54,9 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                   ),
                   title: const Text('区域选择器'),
                 );
-                // `result` is a bare `SelectorEntries?` (the return type of
+                // `result` is a bare `SelectEntries?` (the return type of
                 // showSelect). The query helpers now live on
-                // `SelectorEntriesExtension`, so they can be called directly.
+                // `SelectEntriesExtension`, so they can be called directly.
                 if (result == null) return;
                 _filtersRepo.regionResult = result;
                 if (context.mounted) showSelectResult(context, result);

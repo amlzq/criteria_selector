@@ -27,40 +27,40 @@ class HouseFiltersRepository {
     if (noMaxHintText != null) this.noMaxHintText = noMaxHintText;
   }
 
-  SelectorEntries? neighborhoodResult;
+  SelectEntries? neighborhoodResult;
 
   final neighborhoodIniteialSelected = {
-    SelectorCategoryEntry(
+    SelectCategoryEntry(
       id: 'neighborhood',
       name: '',
-      children: {SelectorTextEntry.any(parentId: 'neighborhood', name: '')},
+      children: {SelectTextEntry.any(parentId: 'neighborhood', name: '')},
     )
   };
 
-  SelectorEntries? fetchNeighborhoodSelectedData() =>
+  SelectEntries? fetchNeighborhoodSelectedData() =>
       neighborhoodResult ?? neighborhoodIniteialSelected;
 
-  SelectorEntries? fetchNeighborhoodResetData() => neighborhoodIniteialSelected;
+  SelectEntries? fetchNeighborhoodResetData() => neighborhoodIniteialSelected;
 
-  Future<SelectorEntries> fetchNeighborhoodData() async {
+  Future<SelectEntries> fetchNeighborhoodData() async {
     // simulate network delay
     await Future.delayed(const Duration(milliseconds: 250));
     final neighborhood =
         neighborhoodFromJson(await loadJsonData('neighborhood.json'));
     debugPrint('neighborhood length: ${neighborhood.length}');
-    SelectorEntries entries = neighborhood
+    SelectEntries entries = neighborhood
         .map(
-          (category) => SelectorCategoryEntry(
+          (category) => SelectCategoryEntry(
             id: category.id!,
             name: category.name!,
             children: category.data
-                ?.map((l1) => SelectorTextEntry(
+                ?.map((l1) => SelectTextEntry(
                       parentId: category.id!,
                       id: l1.id!,
                       name: l1.name!,
                       enabled: l1.enabled ?? true,
                       children: l1.data
-                          ?.map((l2) => SelectorTextEntry(
+                          ?.map((l2) => SelectTextEntry(
                                 parentId: l1.id!,
                                 id: l2.id!,
                                 name: l2.name!,
@@ -78,21 +78,21 @@ class HouseFiltersRepository {
     return Future.value(entries);
   }
 
-  SelectorEntries? priceResult;
+  SelectEntries? priceResult;
 
-  SelectorEntries? fetchPriceSelectedData() => priceResult;
+  SelectEntries? fetchPriceSelectedData() => priceResult;
 
-  Future<SelectorEntries> fetchPriceData() async {
+  Future<SelectEntries> fetchPriceData() async {
     // simulate network delay
     await Future.delayed(const Duration(milliseconds: 250));
     final prices = priceFromJson(await loadJsonData('price.json'));
-    SelectorEntries entries = prices
+    SelectEntries entries = prices
         .map(
-          (category) => SelectorCategoryEntry(
+          (category) => SelectCategoryEntry(
             id: category.id!,
             name: category.name!,
             children: category.data
-                ?.map((l1) => SelectorIntEntry(
+                ?.map((l1) => SelectIntEntry(
                       parentId: category.id!,
                       id: l1.id!,
                       name: l1.name,
@@ -106,16 +106,16 @@ class HouseFiltersRepository {
         .toSet();
 
     // Insert some special entries
-    for (SelectorEntry category in entries) {
+    for (SelectEntry category in entries) {
       // Insert the "Any" entry
       category.children?.insert(
           0,
-          SelectorIntEntry.any(
+          SelectIntEntry.any(
               parentId: category.id, name: anyEntryText, immediate: false));
       // Insert the "Custom" entry
       category.children?.insert(
           0,
-          SelectorIntEntry.custom(
+          SelectIntEntry.custom(
               parentId: category.id,
               minHintText: noMinHintText,
               maxHintText: noMaxHintText));
@@ -125,27 +125,27 @@ class HouseFiltersRepository {
     return Future.value(entries);
   }
 
-  SelectorEntries? priceRangeResult;
+  SelectEntries? priceRangeResult;
 
-  SelectorEntries? fetchPriceRangeSelectedData() => priceRangeResult;
+  SelectEntries? fetchPriceRangeSelectedData() => priceRangeResult;
 
-  final _priceRangeReset = <SelectorCategoryEntry>{};
+  final _priceRangeReset = <SelectCategoryEntry>{};
 
-  SelectorEntries? fetchPriceRangeResetData() => _priceRangeReset;
+  SelectEntries? fetchPriceRangeResetData() => _priceRangeReset;
 
   /// A price category rendered with [SelectorRangeLayout]: a single custom
-  /// [SelectorRangeEntry] shown as a price-range slider above two synced
+  /// [SelectRangeEntry] shown as a price-range slider above two synced
   /// text fields.
-  Future<SelectorEntries> fetchPriceRangeData() async {
+  Future<SelectEntries> fetchPriceRangeData() async {
     // simulate network delay
     await Future.delayed(const Duration(milliseconds: 250));
-    final category = SelectorCategoryEntry(
+    final category = SelectCategoryEntry(
       id: 'list_price',
       name: 'Price',
       selectionMode: SelectionMode.single,
       layout: const SelectorRangeLayout(toText: 'to'),
       children: {
-        SelectorIntEntry.custom(
+        SelectIntEntry.custom(
           parentId: 'list_price',
           min: 0,
           max: 2000000,
@@ -155,43 +155,43 @@ class HouseFiltersRepository {
         ),
       },
     );
-    final SelectorEntries entries = {category};
+    final SelectEntries entries = {category};
     return Future.value(entries);
   }
 
-  SelectorEntries? roomsResult;
+  SelectEntries? roomsResult;
 
   final roomsIniteialSelected = {
-    SelectorCategoryEntry(
+    SelectCategoryEntry(
       id: 'bedrooms',
       name: '',
-      children: {SelectorTextEntry(parentId: 'bedrooms', id: '203', name: '')},
+      children: {SelectTextEntry(parentId: 'bedrooms', id: '203', name: '')},
     ),
-    SelectorCategoryEntry(
+    SelectCategoryEntry(
       id: 'bathrooms',
       name: '',
-      children: {SelectorTextEntry(parentId: 'bathrooms', id: '104', name: '')},
+      children: {SelectTextEntry(parentId: 'bathrooms', id: '104', name: '')},
     ),
   };
 
-  SelectorEntries? fetchRoomsSelectedData() =>
+  SelectEntries? fetchRoomsSelectedData() =>
       roomsResult; // ?? roomsIniteialSelected;
 
-  SelectorEntries? fetchRoomsResetData() => roomsIniteialSelected;
+  SelectEntries? fetchRoomsResetData() => roomsIniteialSelected;
 
-  Future<SelectorEntries> fetchRoomsData() async {
+  Future<SelectEntries> fetchRoomsData() async {
     // simulate network delay
     await Future.delayed(const Duration(milliseconds: 250));
 
     final rooms = roomsFromJson(await loadJsonData('rooms.json'));
 
-    SelectorEntries entries = rooms
+    SelectEntries entries = rooms
         .map(
-          (category) => SelectorCategoryEntry(
+          (category) => SelectCategoryEntry(
             id: category.id!,
             name: category.name!,
             children: category.data
-                ?.map((l1) => SelectorTextEntry(
+                ?.map((l1) => SelectTextEntry(
                       parentId: category.id!,
                       id: l1.id!,
                       name: l1.name,
@@ -203,11 +203,11 @@ class HouseFiltersRepository {
         .toSet();
 
     // Insert some special entries
-    for (SelectorEntry category in entries) {
+    for (SelectEntry category in entries) {
       // Insert the "Any" entry
       category.children?.insert(
           0,
-          SelectorTextEntry.any(
+          SelectTextEntry.any(
               parentId: category.id, name: anyEntryText, immediate: false));
     }
 
@@ -215,16 +215,16 @@ class HouseFiltersRepository {
     return Future.value(entries);
   }
 
-  SelectorEntries? moreResult;
+  SelectEntries? moreResult;
 
-  final moreIniteialSelected = <SelectorCategoryEntry>{};
+  final moreIniteialSelected = <SelectCategoryEntry>{};
 
-  SelectorEntries? fetchMoreSelectedData() =>
+  SelectEntries? fetchMoreSelectedData() =>
       moreResult ?? moreIniteialSelected;
 
-  SelectorEntries? fetchMoreResetData() => moreIniteialSelected;
+  SelectEntries? fetchMoreResetData() => moreIniteialSelected;
 
-  Future<SelectorEntries> fetchMoreData() async {
+  Future<SelectEntries> fetchMoreData() async {
     // simulate network delay
     await Future.delayed(const Duration(milliseconds: 250));
     final more = moreFromJson(await loadJsonData('more.json'));
@@ -262,22 +262,22 @@ class HouseFiltersRepository {
       return null;
     }
 
-    SelectorEntries entries = more
+    SelectEntries entries = more
         .map(
-          (category) => SelectorCategoryEntry(
+          (category) => SelectCategoryEntry(
             id: category.id!,
             name: category.name!,
             children: category.data
                 ?.map((l1) =>
                     (category.id == 'square_feet' || category.id == 'lot_size')
-                        ? SelectorRangeEntry(
+                        ? SelectRangeEntry(
                             parentId: category.id!,
                             id: l1.id!,
                             name: l1.name,
                             min: l1.min,
                             max: l1.max,
                           )
-                        : SelectorTextEntry(
+                        : SelectTextEntry(
                             parentId: category.id!,
                             id: l1.id!,
                             name: l1.name,
@@ -295,24 +295,24 @@ class HouseFiltersRepository {
     return Future.value(entries);
   }
 
-  SelectorEntries? sortResult;
+  SelectEntries? sortResult;
 
-  final sortIniteialSelected = <SelectorTextEntry>{
-    SelectorTextEntry.id(id: 'comprehensive_sort')
+  final sortIniteialSelected = <SelectTextEntry>{
+    SelectTextEntry.id(id: 'comprehensive_sort')
   };
 
-  SelectorEntries? fetchSortSelectedData() =>
+  SelectEntries? fetchSortSelectedData() =>
       sortResult ?? sortIniteialSelected;
 
-  SelectorEntries? fetchSortResetData() => sortIniteialSelected;
+  SelectEntries? fetchSortResetData() => sortIniteialSelected;
 
-  Future<SelectorEntries> fetchSortData() async {
+  Future<SelectEntries> fetchSortData() async {
     // simulate network delay
     await Future.delayed(const Duration(milliseconds: 250));
     final sort = sortFromJson(await loadJsonData('sort.json'));
     debugPrint('sort length: ${sort.length}');
-    SelectorEntries entries = sort
-        .map((e) => SelectorTextEntry.name(
+    SelectEntries entries = sort
+        .map((e) => SelectTextEntry.name(
               id: e.id!,
               name: e.name!,
               immediate: true,

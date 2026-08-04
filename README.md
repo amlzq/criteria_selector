@@ -10,7 +10,7 @@ Two layers work together: **entry points** decide *where* the selector appears, 
 - **Delegates** — four layouts: `CascadingSelectorDelegate` (tree), `GridSelectorDelegate` (grid), `ListSelectorDelegate` (single column), `FlattenSelectorDelegate` (grid that keeps category grouping).
 - Single & multiple selection via `SelectionMode` (per category or as a delegate fallback).
 - Async data loading through `entriesLoader`.
-- Flexible entries: the "Any" entry clears a category, `SelectorRangeEntry.custom` takes user min/max input, and an `immediate` entry applies on tap without the action bar.
+- Flexible entries: the "Any" entry clears a category, `SelectRangeEntry.custom` takes user min/max input, and an `immediate` entry applies on tap without the action bar.
 - `skeletonBuilder` & `errorBuilder` for loading and error states.
 - Theming via `SelectorThemeData` and the `PopupSelectBarTheme` / `PopupSelectButtonTheme` extensions.
 - Built-in i18n in 10 languages via `SelectorLocalizationsDelegate`.
@@ -37,43 +37,43 @@ A delegate controls both data loading and how the body is rendered, and any dele
 
 ##### Common concepts
 
-Entries form a tree. `SelectorCategoryEntry` is the root (a category) and `SelectorChildEntry` is any non-root node, identified by its `parentId`.
+Entries form a tree. `SelectCategoryEntry` is the root (a category) and `SelectChildEntry` is any non-root node, identified by its `parentId`.
 
 | Entry | Purpose |
 | --- | --- |
-| `SelectorCategoryEntry` | Root node. Holds `children` and the `selectionMode` for them. |
-| `SelectorTextEntry` | A plain text leaf. Use `.any(...)` for the "Any" (clear) entry. `.name(...)` creates a parentless leaf for flat lists. |
-| `SelectorRangeEntry<N, E>` | A numeric range leaf (`min`/`max`). Use `.any(...)` for "Any" and `.custom(...)` for a user-input range. `SelectorIntEntry<E>` is a handy alias for `SelectorRangeEntry<int, E>`. |
+| `SelectCategoryEntry` | Root node. Holds `children` and the `selectionMode` for them. |
+| `SelectTextEntry` | A plain text leaf. Use `.any(...)` for the "Any" (clear) entry. `.name(...)` creates a parentless leaf for flat lists. |
+| `SelectRangeEntry<N, E>` | A numeric range leaf (`min`/`max`). Use `.any(...)` for "Any" and `.custom(...)` for a user-input range. `SelectIntEntry<E>` is a handy alias for `SelectRangeEntry<int, E>`. |
 
-Selection is controlled by `SelectionMode` (`single` by default, or `multiple`), set on a `SelectorCategoryEntry` (per category) or on the delegate (fallback). In multiple-selection mode, an entry with `immediate: true` applies on tap and skips the action bar.
+Selection is controlled by `SelectionMode` (`single` by default, or `multiple`), set on a `SelectCategoryEntry` (per category) or on the delegate (fallback). In multiple-selection mode, an entry with `immediate: true` applies on tap and skips the action bar.
 
-Entries load asynchronously via `entriesLoader`, which returns a `Future<SelectorEntries>` where `SelectorEntries` is `Set<SelectorEntry>`.
+Entries load asynchronously via `entriesLoader`, which returns a `Future<SelectEntries>` where `SelectEntries` is `Set<SelectEntry>`.
 
 ```dart
 // A category with single-selection children
-SelectorCategoryEntry(
+SelectCategoryEntry(
   id: 'price',
   name: 'Price',
   children: {
-    SelectorRangeEntry<int, void>.any(parentId: 'price', name: 'Any'),
-    SelectorRangeEntry<int, void>(parentId: 'price', id: '0-100', name: '0-100', min: 0, max: 100),
-    SelectorRangeEntry<int, void>.custom(parentId: 'price', name: 'Custom'),
+    SelectRangeEntry<int, void>.any(parentId: 'price', name: 'Any'),
+    SelectRangeEntry<int, void>(parentId: 'price', id: '0-100', name: '0-100', min: 0, max: 100),
+    SelectRangeEntry<int, void>.custom(parentId: 'price', name: 'Custom'),
   },
 );
 
 // A multi-selection category
-SelectorCategoryEntry(
+SelectCategoryEntry(
   id: 'more',
   name: 'More',
   selectionMode: SelectionMode.multiple,
   children: {
-    SelectorTextEntry.any(parentId: 'more', name: 'Any'),
-    SelectorTextEntry(parentId: 'more', id: 'near_subway', name: 'Near subway'),
+    SelectTextEntry.any(parentId: 'more', name: 'Any'),
+    SelectTextEntry(parentId: 'more', id: 'near_subway', name: 'Near subway'),
   },
 );
 
 // Parentless leaves for a flat list
-SelectorTextEntry.name(id: 'default', name: 'Default');
+SelectTextEntry.name(id: 'default', name: 'Default');
 ```
 
 The built-in delegates are:
@@ -93,7 +93,7 @@ The built-in delegates are:
 SelectView(
   delegate: CascadingSelectorDelegate(entriesLoader: _fetchNeighborhood),
   onChanged: (selected) {
-    // selected is the SelectorEntries when the selection changes
+    // selected is the SelectEntries when the selection changes
   },
 );
 ```
@@ -119,7 +119,7 @@ PopupSelectBar(
     ListSelectorDelegate(entriesLoader: _fetchSort),
   ],
   onApplied: (tabData, selected) {
-    // tabData is the PopupTabData; selected is the SelectorEntries
+    // tabData is the PopupTabData; selected is the SelectEntries
   },
 );
 ```
@@ -153,10 +153,10 @@ PopupSelectButton.outlined(
 
 #### showSelect
 
-Shows a selector in a modal dialog. Returns the selected `SelectorEntries` when applied, or `null` when dismissed. In single-selection mode, tapping an item applies immediately; in multi-selection mode, "Apply" in the action bar confirms.
+Shows a selector in a modal dialog. Returns the selected `SelectEntries` when applied, or `null` when dismissed. In single-selection mode, tapping an item applies immediately; in multi-selection mode, "Apply" in the action bar confirms.
 
 ```dart
-final SelectorEntries? selected = await showSelect(
+final SelectEntries? selected = await showSelect(
   context: context,
   delegate: FlattenSelectorDelegate(entriesLoader: _fetchRooms),
   title: const Text('Rooms'),
@@ -174,7 +174,7 @@ if (selected != null) {
 Shows a selector in a modal bottom sheet built on Flutter's `showModalBottomSheet`. Same interaction as `showSelect` (and its deprecated alias `showSelector`). Standard sheet parameters (`isScrollControlled`, `isDismissible`, `enableDrag`, `showDragHandle`, `constraints`, etc.) are forwarded.
 
 ```dart
-final SelectorEntries? selected = await showModalBottomSelect(
+final SelectEntries? selected = await showModalBottomSelect(
   context: context,
   delegate: ListSelectorDelegate(
     crossAxisCount: 3,

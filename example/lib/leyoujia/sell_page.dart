@@ -77,7 +77,7 @@ class _SellPageState extends State<SellPage> {
     super.dispose();
   }
 
-  void _handleSelectorApply(PopupTabData tabData, SelectorEntries selected) {
+  void _handleSelectorApply(PopupTabData tabData, SelectEntries selected) {
     _filter ??= HouseFilter(cityId: userCityId);
     if (tabData.index == 0) {
       // 区域筛选

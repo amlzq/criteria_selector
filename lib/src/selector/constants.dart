@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../selector/selector_controller.dart';
-import 'selector_entry.dart';
+import 'select_entry.dart';
 
 /// Callback invoked with the currently selected entries.
-typedef SelectorCallback = void Function(SelectorEntries selected);
+typedef SelectorCallback = void Function(SelectEntries selected);
 
 /// Badge rendering style.
 enum BadgeStyle {
@@ -27,7 +27,7 @@ const kSelectorCategoryTileWidth = 80.0;
 /// Builds a selector widget from async data and its controller.
 typedef SelectorBuilder = Widget Function(
   BuildContext context,
-  Future<SelectorEntries>? asyncData,
+  Future<SelectEntries>? asyncData,
   SelectorController selectorController,
 );
 
@@ -36,27 +36,27 @@ typedef SkeletonBuilder = Widget Function(BuildContext context);
 
 /// Returns true if the entry is a multi-selection category.
 bool testMultipleElement(e) =>
-    e is SelectorCategoryEntry && e.selectionMode == SelectionMode.multiple;
+    e is SelectCategoryEntry && e.selectionMode == SelectionMode.multiple;
 
 /// Returns true if the entry is an "Any" child entry.
-bool testAnyElement(e) => e is SelectorChildEntry && e.isAny;
+bool testAnyElement(e) => e is SelectChildEntry && e.isAny;
 
 /// Returns true if the entry is a custom range entry.
-bool testCustomElement(e) => e is SelectorRangeEntry && e.isCustom;
+bool testCustomElement(e) => e is SelectRangeEntry && e.isCustom;
 
 /// Returns true if the entry is not a custom range entry.
-bool testNotCustomItem(e) => e is! SelectorRangeEntry || (!e.isCustom);
+bool testNotCustomItem(e) => e is! SelectRangeEntry || (!e.isCustom);
 
 /// Returns true if the entry has the same parent as the given [parentId].
 bool testSameParentElement(e, parentId) =>
-    (e as SelectorChildEntry).parentId == parentId;
+    (e as SelectChildEntry).parentId == parentId;
 
 /// Returns true if the entry has the same parent as the given [parentId] and is an "Any" or a custom range entry.
 bool testSameParentAnyOrCustomElement(e, parentId) =>
-    (e as SelectorChildEntry).parentId == parentId &&
-    (e.isAny || (e is SelectorRangeEntry && e.isCustom));
+    (e as SelectChildEntry).parentId == parentId &&
+    (e.isAny || (e is SelectRangeEntry && e.isCustom));
 
-extension IterableExtension<SelectorEntry> on Iterable<SelectorEntry> {
+extension IterableExtension<SelectEntry> on Iterable<SelectEntry> {
   /// Whether this iterable contains an "Any" child entry.
   bool get hasAnyItem => any(testAnyElement);
 
@@ -64,18 +64,18 @@ extension IterableExtension<SelectorEntry> on Iterable<SelectorEntry> {
   bool get hasCustomItem => any(testCustomElement);
 
   /// Returns the first element if it is a custom range entry.
-  SelectorRangeEntry? get firstCustomOrNull {
+  SelectRangeEntry? get firstCustomOrNull {
     final element = firstOrNull;
-    if (element != null && element is SelectorRangeEntry && element.isCustom) {
+    if (element != null && element is SelectRangeEntry && element.isCustom) {
       return element;
     }
     return null;
   }
 
   /// Returns the last element if it is a custom range entry.
-  SelectorRangeEntry? get lastCustomOrNull {
+  SelectRangeEntry? get lastCustomOrNull {
     final element = lastOrNull;
-    if (element != null && element is SelectorRangeEntry && element.isCustom) {
+    if (element != null && element is SelectRangeEntry && element.isCustom) {
       return element;
     }
     return null;

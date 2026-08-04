@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
+import 'selector/select_entry.dart';
 import 'selector/selector_delegate.dart';
-import 'selector/selector_entry.dart';
 import 'selector/selector_panel.dart';
 
 /// Shows a selector in a modal dialog.
 ///
-/// Returns the selected [SelectorEntries] when the user applies the selection,
+/// Returns the selected [SelectEntries] when the user applies the selection,
 /// or `null` when the dialog is dismissed (for example by tapping the barrier
 /// when [barrierDismissible] is `true`, or via the system back gesture).
 ///
@@ -27,7 +27,7 @@ import 'selector/selector_panel.dart';
 /// [SelectorDelegate.panelTheme] (which decorates the panel background itself);
 /// use either layer, or both, depending on the desired look. All other styling
 /// (colors, per-widget themes) is carried by [delegate].
-Future<SelectorEntries?> showSelect({
+Future<SelectEntries?> showSelect({
   required BuildContext context,
   required SelectorDelegate delegate,
   bool barrierDismissible = true,
@@ -41,7 +41,7 @@ Future<SelectorEntries?> showSelect({
   RouteSettings? routeSettings,
   Offset? anchorPoint,
 }) {
-  final route = _SelectorDialogRoute<SelectorEntries?>(
+  final route = _SelectorDialogRoute<SelectEntries?>(
     pageBuilder: (innerContext) => _SelectorDialog(
       delegate: delegate,
       title: title,
@@ -60,7 +60,7 @@ Future<SelectorEntries?> showSelect({
   );
 
   return Navigator.of(context, rootNavigator: useRootNavigator)
-      .push<SelectorEntries?>(route);
+      .push<SelectEntries?>(route);
 }
 
 /// Shows a selector in a modal dialog.
@@ -69,7 +69,7 @@ Future<SelectorEntries?> showSelect({
 /// removed in a future minor version.
 @Deprecated(
     'Use showSelect instead. This will be removed in a future minor version.')
-Future<SelectorEntries?> showSelector({
+Future<SelectEntries?> showSelector({
   required BuildContext context,
   required SelectorDelegate delegate,
   bool barrierDismissible = true,
@@ -166,7 +166,7 @@ class _SelectorDialogState extends State<_SelectorDialog> {
   // race (e.g. on some platforms).
   bool _popped = false;
 
-  void _popWith(SelectorEntries? result) {
+  void _popWith(SelectEntries? result) {
     if (_popped) return;
     _popped = true;
     Navigator.of(context).pop(result);

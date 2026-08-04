@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'constants.dart';
 import 'selector_controller.dart';
 import 'selector_delegate.dart';
-import 'selector_entry.dart';
+import 'select_entry.dart';
 import 'selector_theme.dart';
 import 'selector_theme_data.dart';
 
@@ -158,7 +158,7 @@ class _SelectorPanelState extends State<SelectorPanel> {
       child: _PanelDecoratedBox(
         child: SelectorControllerProvider(
           controller: _controller,
-          child: FutureBuilder<SelectorEntries>(
+          child: FutureBuilder<SelectEntries>(
             future: widget.delegate.data,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
@@ -169,7 +169,7 @@ class _SelectorPanelState extends State<SelectorPanel> {
                     snapshot.stackTrace,
                   );
                 } else {
-                  final entries = snapshot.data?.toList() ?? <SelectorEntry>[];
+                  final entries = snapshot.data?.toList() ?? <SelectEntry>[];
                   return GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: () {

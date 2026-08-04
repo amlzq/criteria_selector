@@ -3,12 +3,12 @@ import 'constants.dart';
 import 'selector_layout.dart';
 import 'selector_utils.dart';
 
-/// A set of selected [SelectorEntry] values.
-typedef SelectorEntries<E> = Set<SelectorEntry<E>>;
+/// A set of selected [SelectEntry] values.
+typedef SelectEntries<E> = Set<SelectEntry<E>>;
 
-extension SelectorEntriesExtension on SelectorEntries {
+extension SelectEntriesExtension on SelectEntries {
   /// Inserts [entry] at the given [index] while preserving set iteration order.
-  void insert(int index, SelectorEntry entry) {
+  void insert(int index, SelectEntry entry) {
     final temp = toList();
     temp.insert(index, entry);
     clear();
@@ -16,17 +16,17 @@ extension SelectorEntriesExtension on SelectorEntries {
   }
 
   /// Flattens a selection tree into a list of selections per depth level.
-  List<SelectorEntries>? flatten() {
+  List<SelectEntries>? flatten() {
     if (isEmpty) return null;
 
-    List<SelectorEntries> result = [];
-    void traverse(SelectorEntries entries, int level) {
+    List<SelectEntries> result = [];
+    void traverse(SelectEntries entries, int level) {
       if (result.length <= level) {
         result.add({});
       }
       for (var entry in entries) {
         result[level].add(entry);
-        if (entry is SelectorCategoryEntry) {
+        if (entry is SelectCategoryEntry) {
           final header = entry.header;
           final headerChildren = header?.children;
           if (header != null &&
@@ -58,9 +58,9 @@ extension SelectorEntriesExtension on SelectorEntries {
   ///
   /// This is the entry point for most of the convenience query helpers below.
   /// Because it lives on this extension it is available on a bare
-  /// [SelectorEntries] — e.g. the return value of `showSelect` /
+  /// [SelectEntries] — e.g. the return value of `showSelect` /
   /// `showModalBottomSelect`.
-  SelectorEntry? findCategory(String categoryId) =>
+  SelectEntry? findCategory(String categoryId) =>
       where((e) => e.id == categoryId).firstOrNull;
 
   /// Returns the ids of all direct children of the category with [categoryId].
@@ -75,16 +75,16 @@ extension SelectorEntriesExtension on SelectorEntries {
   }
 
   /// Returns all direct children of the category with [categoryId] that are
-  /// [SelectorRangeEntry] values (e.g. price/area ranges carrying `min`/`max`).
+  /// [SelectRangeEntry] values (e.g. price/area ranges carrying `min`/`max`).
   ///
   /// Returns an empty list when the category is not selected or has no range
   /// children. The returned entries expose `min`/`max` as `dynamic`, so
   /// callers can cast them to the expected numeric type as needed.
-  List<SelectorRangeEntry> childRangesOf(String categoryId) {
+  List<SelectRangeEntry> childRangesOf(String categoryId) {
     final category = findCategory(categoryId);
     if (category?.children == null) return const [];
     return category!.children!
-        .whereType<SelectorRangeEntry>()
+        .whereType<SelectRangeEntry>()
         .toList(growable: false);
   }
 
@@ -100,7 +100,7 @@ extension SelectorEntriesExtension on SelectorEntries {
     final category = findCategory(categoryId);
     if (category?.children == null) return const [];
     return category!.children!.map((parent) {
-      final childIds = (parent.children ?? const <SelectorEntry>[])
+      final childIds = (parent.children ?? const <SelectEntry>[])
           .map((c) => c.id)
           .toList(growable: false);
       return (id: parent.id, childIds: childIds);
@@ -111,20 +111,20 @@ extension SelectorEntriesExtension on SelectorEntries {
   ///
   /// A level of `0` returns [entry] itself; level `1` returns its direct
   /// children; deeper levels walk further down the tree.
-  Set<SelectorEntry> findChildrenAtLevel(SelectorEntry entry, int level) =>
+  Set<SelectEntry> findChildrenAtLevel(SelectEntry entry, int level) =>
       SelectorUtils.findChildrenAtLevel(entry, level);
 
   /// Returns the ids of the children of [entry] located at the given tree [level].
   ///
   /// See [findChildrenAtLevel] for the level semantics.
-  Set<String> findIdsAtLevel(SelectorEntry entry, int level) =>
+  Set<String> findIdsAtLevel(SelectEntry entry, int level) =>
       SelectorUtils.findIdsAtLevel(entry, level);
 
   /// Returns the extra ids of the children of [entry] located at the given tree
   /// [level].
   ///
   /// See [findChildrenAtLevel] for the level semantics.
-  List<String> findExtrasAtLevel(SelectorEntry entry, int level) =>
+  List<String> findExtrasAtLevel(SelectEntry entry, int level) =>
       SelectorUtils.findExtrasAtLevel(entry, level);
 
   /// Returns the id of the first selected entry, or `null` when nothing is
@@ -140,17 +140,17 @@ const kAnyEntryId = 'any';
 const kCustomEntryId = 'custom';
 
 /// Convenience alias for an integer range entry.
-typedef SelectorIntEntry<E> = SelectorRangeEntry<int, E>;
+typedef SelectIntEntry<E> = SelectRangeEntry<int, E>;
 
-// typedef SelectorDoubleOption<E> = SelectorRangeEntry<double, E>;
+// typedef SelectDoubleOption<E> = SelectRangeEntry<double, E>;
 
-// typedef SelectorDateTimeOption<E> = SelectorRangeEntry<DateTime, E>;
+// typedef SelectDateTimeOption<E> = SelectRangeEntry<DateTime, E>;
 
 /// A range-based entry (e.g. min/max).
 ///
 /// This is commonly used for numeric ranges such as price or area.
-class SelectorRangeEntry<N, E> extends SelectorChildEntry<E> {
-  SelectorRangeEntry({
+class SelectRangeEntry<N, E> extends SelectChildEntry<E> {
+  SelectRangeEntry({
     this.min,
     this.max,
     this.divisions,
@@ -193,7 +193,7 @@ class SelectorRangeEntry<N, E> extends SelectorChildEntry<E> {
 
   /// Custom range entry
   /// This entry is usually rendered as an input field or a slider/progress bar in the UI.
-  SelectorRangeEntry.custom({
+  SelectRangeEntry.custom({
     this.min,
     this.max,
     this.divisions,
@@ -209,7 +209,7 @@ class SelectorRangeEntry<N, E> extends SelectorChildEntry<E> {
         );
 
   /// "Any" entry
-  SelectorRangeEntry.any({
+  SelectRangeEntry.any({
     this.min,
     this.max,
     this.divisions,
@@ -223,11 +223,11 @@ class SelectorRangeEntry<N, E> extends SelectorChildEntry<E> {
   }) : super.any();
 
   @override
-  SelectorRangeEntry<N, E> copyWith({
+  SelectRangeEntry<N, E> copyWith({
     String? parentId,
     String? id,
     String? name,
-    Set<SelectorEntry<E>>? children,
+    Set<SelectEntry<E>>? children,
     bool? enabled,
     bool? immediate,
     E? extra,
@@ -238,7 +238,7 @@ class SelectorRangeEntry<N, E> extends SelectorChildEntry<E> {
     String? minHintText,
     String? maxHintText,
   }) {
-    return SelectorRangeEntry<N, E>(
+    return SelectRangeEntry<N, E>(
       parentId: parentId ?? this.parentId,
       id: id ?? this.id,
       name: name ?? this.name,
@@ -257,10 +257,10 @@ class SelectorRangeEntry<N, E> extends SelectorChildEntry<E> {
 
   @override
   String toString() =>
-      'SelectorRangeEntry(id: $id, parentId: $parentId, name: $name, min: $min, max: $max, divisions: $divisions)';
+      'SelectRangeEntry(id: $id, parentId: $parentId, name: $name, min: $min, max: $max, divisions: $divisions)';
 }
 
-extension SelectorRangeEntryExt on SelectorRangeEntry {
+extension SelectRangeEntryExt on SelectRangeEntry {
   /// Whether this entry represents a custom value input.
   bool get isCustom => id == kCustomEntryId;
 
@@ -273,8 +273,8 @@ extension SelectorRangeEntryExt on SelectorRangeEntry {
 }
 
 /// A plain text entry.
-class SelectorTextEntry<E> extends SelectorChildEntry<E> {
-  SelectorTextEntry({
+class SelectTextEntry<E> extends SelectChildEntry<E> {
+  SelectTextEntry({
     required super.parentId,
     required super.id,
     required super.name,
@@ -283,10 +283,10 @@ class SelectorTextEntry<E> extends SelectorChildEntry<E> {
     super.immediate,
   });
 
-  SelectorTextEntry.id({required super.id}) : super(parentId: '', name: '');
+  SelectTextEntry.id({required super.id}) : super(parentId: '', name: '');
 
   /// Creates a leaf entry without a parent id.
-  SelectorTextEntry.name({
+  SelectTextEntry.name({
     required super.id,
     required super.name,
     super.enabled,
@@ -294,7 +294,7 @@ class SelectorTextEntry<E> extends SelectorChildEntry<E> {
   }) : super(parentId: '');
 
   /// "Any" entry
-  SelectorTextEntry.any({
+  SelectTextEntry.any({
     required super.parentId,
     required super.name,
     super.enabled,
@@ -303,12 +303,12 @@ class SelectorTextEntry<E> extends SelectorChildEntry<E> {
 
   @override
   String toString() =>
-      'SelectorTextEntry(id: $id, parentId: $parentId, name: $name)';
+      'SelectTextEntry(id: $id, parentId: $parentId, name: $name)';
 }
 
 /// A child entry (i.e. a non-root node).
-class SelectorChildEntry<E> extends SelectorEntry<E> {
-  SelectorChildEntry({
+class SelectChildEntry<E> extends SelectEntry<E> {
+  SelectChildEntry({
     required this.parentId,
     required super.id,
     super.name,
@@ -322,7 +322,7 @@ class SelectorChildEntry<E> extends SelectorEntry<E> {
   final String parentId;
 
   /// "Any" entry
-  SelectorChildEntry.any({
+  SelectChildEntry.any({
     required this.parentId,
     required super.name,
     super.enabled,
@@ -332,7 +332,7 @@ class SelectorChildEntry<E> extends SelectorEntry<E> {
           id: kAnyEntryId,
         );
 
-  SelectorChildEntry.empty({this.parentId = ''})
+  SelectChildEntry.empty({this.parentId = ''})
       : super(
           id: '',
           name: null,
@@ -342,16 +342,16 @@ class SelectorChildEntry<E> extends SelectorEntry<E> {
           extra: null,
         );
 
-  SelectorChildEntry<E> copyWith({
+  SelectChildEntry<E> copyWith({
     String? parentId,
     String? id,
     String? name,
-    Set<SelectorEntry<E>>? children,
+    Set<SelectEntry<E>>? children,
     bool? enabled,
     bool? immediate,
     E? extra,
   }) {
-    return SelectorChildEntry<E>(
+    return SelectChildEntry<E>(
       parentId: parentId ?? this.parentId,
       id: id ?? this.id,
       name: name ?? this.name,
@@ -365,7 +365,7 @@ class SelectorChildEntry<E> extends SelectorEntry<E> {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is SelectorChildEntry<E> &&
+        other is SelectChildEntry<E> &&
             runtimeType == other.runtimeType &&
             other.id == id &&
             other.parentId == parentId &&
@@ -377,10 +377,10 @@ class SelectorChildEntry<E> extends SelectorEntry<E> {
 
   @override
   String toString() =>
-      'SelectorChildEntry(id: $id, parentId: $parentId, name: $name)';
+      'SelectChildEntry(id: $id, parentId: $parentId, name: $name)';
 }
 
-extension SelectorChildEntryExt on SelectorChildEntry {
+extension SelectChildEntryExt on SelectChildEntry {
   /// Whether this entry is the special "Any" entry.
   bool get isAny => id == kAnyEntryId;
 
@@ -392,8 +392,8 @@ extension SelectorChildEntryExt on SelectorChildEntry {
 }
 
 /// A category entry (i.e. a root node).
-class SelectorCategoryEntry<E> extends SelectorEntry<E> {
-  SelectorCategoryEntry({
+class SelectCategoryEntry<E> extends SelectEntry<E> {
+  SelectCategoryEntry({
     this.selectionMode = SelectionMode.single,
     this.header,
     this.headerSelectionMode = SelectionMode.single,
@@ -446,7 +446,7 @@ class SelectorCategoryEntry<E> extends SelectorEntry<E> {
   final SelectionMode selectionMode;
 
   /// An optional header entry rendered above this category's children.
-  SelectorEntry<E>? header;
+  SelectEntry<E>? header;
 
   /// The selection mode applied to [header].
   ///
@@ -454,7 +454,7 @@ class SelectorCategoryEntry<E> extends SelectorEntry<E> {
   final SelectionMode headerSelectionMode;
 
   /// An optional footer entry rendered below this category's children.
-  SelectorEntry<E>? footer;
+  SelectEntry<E>? footer;
 
   /// The selection mode applied to [footer].
   ///
@@ -501,16 +501,16 @@ class SelectorCategoryEntry<E> extends SelectorEntry<E> {
   SelectorChipConfig? get chipConfig =>
       layout is SelectorChipLayout ? const SelectorChipConfig() : null;
 
-  SelectorCategoryEntry<E> copyWith({
+  SelectCategoryEntry<E> copyWith({
     String? id,
     String? name,
-    Set<SelectorEntry<E>>? children,
+    Set<SelectEntry<E>>? children,
     bool? enabled,
     bool? immediate,
     SelectionMode? selectionMode,
-    SelectorEntry<E>? header,
+    SelectEntry<E>? header,
     SelectionMode? headerSelectionMode,
-    SelectorEntry<E>? footer,
+    SelectEntry<E>? footer,
     SelectionMode? footerSelectionMode,
     SelectorLayout? layout,
     @Deprecated(
@@ -542,7 +542,7 @@ class SelectorCategoryEntry<E> extends SelectorEntry<E> {
                 : chipConfig != null
                     ? const SelectorChipLayout()
                     : this.layout);
-    return SelectorCategoryEntry<E>(
+    return SelectCategoryEntry<E>(
       id: id ?? this.id,
       name: name ?? this.name,
       children: children ?? this.children,
@@ -560,7 +560,7 @@ class SelectorCategoryEntry<E> extends SelectorEntry<E> {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is SelectorCategoryEntry<E> &&
+        other is SelectCategoryEntry<E> &&
             runtimeType == other.runtimeType &&
             other.id == id &&
             other.name == name &&
@@ -573,26 +573,26 @@ class SelectorCategoryEntry<E> extends SelectorEntry<E> {
 
   @override
   String toString() =>
-      'SelectorCategoryEntry(id: $id, name: $name, selectionMode: $selectionMode, header: $header, footer: $footer, layout: $layout, children: $children)';
+      'SelectCategoryEntry(id: $id, name: $name, selectionMode: $selectionMode, header: $header, footer: $footer, layout: $layout, children: $children)';
 }
 
-extension SelectorCategoryEntryExtension on SelectorCategoryEntry {
+extension SelectCategoryEntryExtension on SelectCategoryEntry {
   bool get hasCustomOrNull =>
       firstCustomOrNull != null || lastCustomOrNull != null;
 
   /// Returns the first child if it is a custom range entry.
-  SelectorRangeEntry? get firstCustomOrNull {
+  SelectRangeEntry? get firstCustomOrNull {
     final element = children?.firstOrNull;
-    if (element != null && element is SelectorRangeEntry && element.isCustom) {
+    if (element != null && element is SelectRangeEntry && element.isCustom) {
       return element;
     }
     return null;
   }
 
   /// Returns the last child if it is a custom range entry.
-  SelectorRangeEntry? get lastCustomOrNull {
+  SelectRangeEntry? get lastCustomOrNull {
     final element = children?.lastOrNull;
-    if (element != null && element is SelectorRangeEntry && element.isCustom) {
+    if (element != null && element is SelectRangeEntry && element.isCustom) {
       return element;
     }
     return null;
@@ -601,10 +601,10 @@ extension SelectorCategoryEntryExtension on SelectorCategoryEntry {
 
 /// Base class for all selector entries.
 ///
-/// Entries form a tree: [SelectorCategoryEntry] is typically the root and
-/// [SelectorChildEntry] represents non-root nodes.
-abstract class SelectorEntry<E> {
-  SelectorEntry({
+/// Entries form a tree: [SelectCategoryEntry] is typically the root and
+/// [SelectChildEntry] represents non-root nodes.
+abstract class SelectEntry<E> {
+  SelectEntry({
     required this.id,
     this.name,
     this.children,
@@ -620,7 +620,7 @@ abstract class SelectorEntry<E> {
   String? name;
 
   /// The child entries of this entry, or null if it is a leaf.
-  final Set<SelectorEntry<E>>? children;
+  final Set<SelectEntry<E>>? children;
 
   /// Whether this entry can be selected or interacted with.
   ///
@@ -638,16 +638,15 @@ abstract class SelectorEntry<E> {
   final E? extra;
 
   @override
-  String toString() =>
-      'SelectorEntry(id: $id, name: $name, children: $children)';
+  String toString() => 'SelectEntry(id: $id, name: $name, children: $children)';
 }
 
-extension SelectorEntryExt on SelectorEntry {
+extension SelectEntryExt on SelectEntry {
   /// Returns the first child entry if present.
-  SelectorEntry? get firstChild => children?.firstOrNull;
+  SelectEntry? get firstChild => children?.firstOrNull;
 
   /// Returns the last child entry if present.
-  SelectorEntry? get lastChild => children?.lastOrNull;
+  SelectEntry? get lastChild => children?.lastOrNull;
 
   /// Whether this entry has any children.
   bool get hasChildren => children?.isNotEmpty ?? false;
@@ -670,3 +669,60 @@ extension SelectorEntryExt on SelectorEntry {
     return childMaxLevel + 1;
   }
 }
+
+/// Deprecated alias for [SelectEntries].
+///
+/// The `Selector`-prefixed entry names were renamed to drop the redundant
+/// `Selector` prefix. This alias is kept for backward compatibility and will be
+/// removed in a future minor version.
+@Deprecated(
+  'Use SelectEntries instead. This alias will be removed in a future minor '
+  'version.',
+)
+typedef SelectorEntries<E> = SelectEntries<E>;
+
+/// Deprecated alias for [SelectEntry].
+///
+/// The `Selector`-prefixed entry names were renamed to drop the redundant
+/// `Selector` prefix. This alias is kept for backward compatibility and will be
+/// removed in a future minor version.
+@Deprecated(
+  'Use SelectEntry instead. This alias will be removed in a future minor '
+  'version.',
+)
+typedef SelectorEntry<E> = SelectEntry<E>;
+
+/// Deprecated alias for [SelectChildEntry].
+@Deprecated(
+  'Use SelectChildEntry instead. This alias will be removed in a future minor '
+  'version.',
+)
+typedef SelectorChildEntry<E> = SelectChildEntry<E>;
+
+/// Deprecated alias for [SelectCategoryEntry].
+@Deprecated(
+  'Use SelectCategoryEntry instead. This alias will be removed in a future '
+  'minor version.',
+)
+typedef SelectorCategoryEntry<E> = SelectCategoryEntry<E>;
+
+/// Deprecated alias for [SelectRangeEntry].
+@Deprecated(
+  'Use SelectRangeEntry instead. This alias will be removed in a future minor '
+  'version.',
+)
+typedef SelectorRangeEntry<N, E> = SelectRangeEntry<N, E>;
+
+/// Deprecated alias for [SelectTextEntry].
+@Deprecated(
+  'Use SelectTextEntry instead. This alias will be removed in a future minor '
+  'version.',
+)
+typedef SelectorTextEntry<E> = SelectTextEntry<E>;
+
+/// Deprecated alias for [SelectIntEntry].
+@Deprecated(
+  'Use SelectIntEntry instead. This alias will be removed in a future minor '
+  'version.',
+)
+typedef SelectorIntEntry<E> = SelectIntEntry<E>;

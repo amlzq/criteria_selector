@@ -1,28 +1,28 @@
 import 'package:collection/collection.dart';
 
 import '../constants.dart';
-import '../selector_entry.dart';
+import '../select_entry.dart';
 import '../selector_utils.dart';
 import 'selector_state_snapshot.dart';
 
 class SelectorStateTree {
-  final ListEquality<SelectorEntry> _entryListEquality = const ListEquality();
-  final SetEquality<SelectorEntry> _entrySetEquality = const SetEquality();
+  final ListEquality<SelectEntry> _entryListEquality = const ListEquality();
+  final SetEquality<SelectEntry> _entrySetEquality = const SetEquality();
 
-  List<SelectorEntry> _entries = const [];
-  final Map<String, List<SelectorEntry>> _idIndex = {};
-  SelectorEntries? _previousSelected;
-  SelectorEntries? _resetSelected;
+  List<SelectEntry> _entries = const [];
+  final Map<String, List<SelectEntry>> _idIndex = {};
+  SelectEntries? _previousSelected;
+  SelectEntries? _resetSelected;
 
-  final List<SelectorEntries> _selectedEntriesPerLevel = [];
-  final Map<String, SelectorEntries> _selectedHeaderEntries = {};
-  final Map<String, SelectorEntries> _selectedFooterEntries = {};
+  final List<SelectEntries> _selectedEntriesPerLevel = [];
+  final Map<String, SelectEntries> _selectedHeaderEntries = {};
+  final Map<String, SelectEntries> _selectedFooterEntries = {};
 
-  List<SelectorEntry> get entries => _entries;
+  List<SelectEntry> get entries => _entries;
 
-  SelectorEntries? get previousSelected => _previousSelected;
+  SelectEntries? get previousSelected => _previousSelected;
 
-  SelectorEntries? get resetSelected => _resetSelected;
+  SelectEntries? get resetSelected => _resetSelected;
 
   int get levelCount => _selectedEntriesPerLevel.length;
 
@@ -36,9 +36,9 @@ class SelectorStateTree {
       );
 
   bool bind(
-    List<SelectorEntry> entries, {
-    SelectorEntries? previousSelected,
-    SelectorEntries? resetSelected,
+    List<SelectEntry> entries, {
+    SelectEntries? previousSelected,
+    SelectEntries? resetSelected,
     required bool initializeAnyIfEmpty,
   }) {
     final isSameEntries = _entryListEquality.equals(_entries, entries);
@@ -64,23 +64,23 @@ class SelectorStateTree {
         initializeAnyIfEmpty: initializeAnyIfEmpty);
   }
 
-  SelectorEntries selectedEntriesAtLevel(int level) {
+  SelectEntries selectedEntriesAtLevel(int level) {
     return _selectedEntriesPerLevel.elementAtOrNull(level) ?? {};
   }
 
-  SelectorEntries selectedEntriesForParent(String parentId,
+  SelectEntries selectedEntriesForParent(String parentId,
       {required int level}) {
     return selectedEntriesAtLevel(level)
-        .whereType<SelectorChildEntry>()
+        .whereType<SelectChildEntry>()
         .where((entry) => entry.parentId == parentId)
         .toSet();
   }
 
-  SelectorEntries selectedHeaderEntriesFor(String categoryId) {
+  SelectEntries selectedHeaderEntriesFor(String categoryId) {
     return _selectedHeaderEntries[categoryId] ?? {};
   }
 
-  SelectorEntries selectedFooterEntriesFor(String categoryId) {
+  SelectEntries selectedFooterEntriesFor(String categoryId) {
     return _selectedFooterEntries[categoryId] ?? {};
   }
 
@@ -109,22 +109,22 @@ class SelectorStateTree {
     _selectedFooterEntries.clear();
   }
 
-  SelectorEntries mutableSelectedEntriesAtLevel(int level) {
+  SelectEntries mutableSelectedEntriesAtLevel(int level) {
     ensureLevels(level + 1);
     return _selectedEntriesPerLevel[level];
   }
 
-  SelectorEntries mutableHeaderEntriesFor(String categoryId) {
+  SelectEntries mutableHeaderEntriesFor(String categoryId) {
     return _selectedHeaderEntries.putIfAbsent(
-        categoryId, () => <SelectorEntry>{});
+        categoryId, () => <SelectEntry>{});
   }
 
-  SelectorEntries mutableFooterEntriesFor(String categoryId) {
+  SelectEntries mutableFooterEntriesFor(String categoryId) {
     return _selectedFooterEntries.putIfAbsent(
-        categoryId, () => <SelectorEntry>{});
+        categoryId, () => <SelectEntry>{});
   }
 
-  SelectorEntries buildChangedEntries() {
+  SelectEntries buildChangedEntries() {
     return SelectorUtils.cloneTree(
       _entries,
       _selectedEntriesPerLevel,
@@ -134,7 +134,7 @@ class SelectorStateTree {
     );
   }
 
-  SelectorEntries buildAppliedEntries() {
+  SelectEntries buildAppliedEntries() {
     return SelectorUtils.cloneTree(
       _entries,
       _selectedEntriesPerLevel,
@@ -143,43 +143,43 @@ class SelectorStateTree {
     );
   }
 
-  SelectorEntry? findEntry(String id, {String? parentId}) {
+  SelectEntry? findEntry(String id, {String? parentId}) {
     final candidates = _idIndex[id];
     if (candidates == null || candidates.isEmpty) return null;
     if (parentId == null) return candidates.first;
     for (final entry in candidates) {
-      if (entry is SelectorChildEntry && entry.parentId == parentId) {
+      if (entry is SelectChildEntry && entry.parentId == parentId) {
         return entry;
       }
     }
     return null;
   }
 
-  SelectorCategoryEntry? findCategory(String categoryId) {
+  SelectCategoryEntry? findCategory(String categoryId) {
     final entry = findEntry(categoryId);
-    if (entry is SelectorCategoryEntry) return entry;
+    if (entry is SelectCategoryEntry) return entry;
     return null;
   }
 
-  List<SelectorEntry>? findPath(String id, {String? parentId}) {
+  List<SelectEntry>? findPath(String id, {String? parentId}) {
     if (_entries.isEmpty) return null;
 
-    List<SelectorEntry>? result;
+    List<SelectEntry>? result;
 
-    bool visit(SelectorEntry entry, List<SelectorEntry> stack) {
+    bool visit(SelectEntry entry, List<SelectEntry> stack) {
       final nextStack = [...stack, entry];
       if (entry.id == id) {
         if (parentId == null) {
           result = nextStack;
           return true;
         }
-        if (entry is SelectorChildEntry && entry.parentId == parentId) {
+        if (entry is SelectChildEntry && entry.parentId == parentId) {
           result = nextStack;
           return true;
         }
       }
 
-      if (entry is SelectorCategoryEntry) {
+      if (entry is SelectCategoryEntry) {
         final header = entry.header;
         if (header != null && visit(header, nextStack)) return true;
         final footer = entry.footer;
@@ -202,7 +202,7 @@ class SelectorStateTree {
   }
 
   void _restoreSelections(
-    SelectorEntries? selected, {
+    SelectEntries? selected, {
     required bool initializeAnyIfEmpty,
   }) {
     clearSelections();
@@ -223,9 +223,9 @@ class SelectorStateTree {
 
   void _rebuildIdIndex() {
     _idIndex.clear();
-    void add(SelectorEntry entry) {
+    void add(SelectEntry entry) {
       _idIndex.putIfAbsent(entry.id, () => []).add(entry);
-      if (entry is SelectorCategoryEntry) {
+      if (entry is SelectCategoryEntry) {
         final header = entry.header;
         if (header != null) add(header);
         final footer = entry.footer;
@@ -247,9 +247,9 @@ class SelectorStateTree {
   void _initializeAnySelection() {
     if (_entries.isEmpty) return;
 
-    if (_entries.first is SelectorCategoryEntry) {
+    if (_entries.first is SelectCategoryEntry) {
       ensureLevels(2);
-      for (final category in _entries.whereType<SelectorCategoryEntry>()) {
+      for (final category in _entries.whereType<SelectCategoryEntry>()) {
         final anyItem = category.children?.singleWhereOrNull(testAnyElement);
         if (anyItem == null) continue;
         _selectedEntriesPerLevel[0].add(category);
@@ -266,12 +266,12 @@ class SelectorStateTree {
   }
 
   void _restoreHeaderFooterSelected(
-    List<SelectorEntry> entries,
-    Set<SelectorEntry> selected,
+    List<SelectEntry> entries,
+    Set<SelectEntry> selected,
   ) {
-    final categories = entries.whereType<SelectorCategoryEntry>().toList();
+    final categories = entries.whereType<SelectCategoryEntry>().toList();
     for (final selectedEntry in selected) {
-      if (selectedEntry is! SelectorCategoryEntry) continue;
+      if (selectedEntry is! SelectCategoryEntry) continue;
       final category =
           categories.singleWhereOrNull((e) => e.id == selectedEntry.id);
       if (category == null) continue;

@@ -3,13 +3,13 @@ import 'package:criteria_selector/src/selector/state/selector_selection_rules.da
 import 'package:criteria_selector/src/selector/state/selector_state_tree.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-SelectorTextEntry<dynamic> _text(
+SelectTextEntry<dynamic> _text(
   String parentId,
   String id,
   String name, {
-  Set<SelectorEntry<dynamic>>? children,
+  Set<SelectEntry<dynamic>>? children,
 }) {
-  return SelectorTextEntry<dynamic>(
+  return SelectTextEntry<dynamic>(
     parentId: parentId,
     id: id,
     name: name,
@@ -17,17 +17,17 @@ SelectorTextEntry<dynamic> _text(
   );
 }
 
-SelectorCategoryEntry<dynamic> _category(
+SelectCategoryEntry<dynamic> _category(
   String id,
   String name, {
-  required Set<SelectorEntry<dynamic>> children,
-  SelectorEntry<dynamic>? header,
+  required Set<SelectEntry<dynamic>> children,
+  SelectEntry<dynamic>? header,
   SelectionMode headerSelectionMode = SelectionMode.single,
-  SelectorEntry<dynamic>? footer,
+  SelectEntry<dynamic>? footer,
   SelectionMode footerSelectionMode = SelectionMode.single,
   SelectionMode selectionMode = SelectionMode.single,
 }) {
-  return SelectorCategoryEntry<dynamic>(
+  return SelectCategoryEntry<dynamic>(
     id: id,
     name: name,
     children: children,
@@ -46,7 +46,7 @@ void main() {
         () {
       final rules = const SelectorSelectionRules();
       final tree = SelectorStateTree();
-      final any = SelectorTextEntry<dynamic>.any(parentId: 'c1', name: 'Any');
+      final any = SelectTextEntry<dynamic>.any(parentId: 'c1', name: 'Any');
       final a = _text('c1', 'a', 'A');
       final b = _text('c2', 'b', 'B');
       final c1 = _category('c1', 'C1', children: {any, a});
@@ -70,7 +70,7 @@ void main() {
         () {
       final rules = const SelectorSelectionRules();
       final tree = SelectorStateTree();
-      final any = SelectorTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
+      final any = SelectTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {any, a});
       tree.bind([c], initializeAnyIfEmpty: false);
@@ -108,7 +108,7 @@ void main() {
       expect(tree.selectedEntriesAtLevel(0).contains(c1), isFalse);
       expect(
           tree.selectedEntriesAtLevel(1).where(
-                (e) => e is SelectorChildEntry && e.parentId == 'c1',
+                (e) => e is SelectChildEntry && e.parentId == 'c1',
               ),
           isEmpty);
     });
@@ -119,7 +119,7 @@ void main() {
       final rules = const SelectorSelectionRules();
       final tree = SelectorStateTree();
       final a = _text('c1', 'a', 'A');
-      final any = SelectorTextEntry<dynamic>.any(parentId: 'c2', name: 'Any');
+      final any = SelectTextEntry<dynamic>.any(parentId: 'c2', name: 'Any');
       final b = _text('c2', 'b', 'B');
       final c1 = _category('c1', 'C1', children: {a});
       final c2 = _category('c2', 'C2', children: {any, b});
@@ -143,7 +143,7 @@ void main() {
     test('selecting Any clears all and selects Any', () {
       final rules = const SelectorSelectionRules();
       final tree = SelectorStateTree();
-      final any = SelectorTextEntry<dynamic>.any(parentId: '', name: 'Any');
+      final any = SelectTextEntry<dynamic>.any(parentId: '', name: 'Any');
       final a = _text('', 'a', 'A');
       tree.bind([any, a], initializeAnyIfEmpty: false);
 
@@ -236,7 +236,7 @@ void main() {
     test('removes Any entries when selecting non-Any', () {
       final rules = const SelectorSelectionRules();
       final tree = SelectorStateTree();
-      final any = SelectorTextEntry<dynamic>.any(parentId: '', name: 'Any');
+      final any = SelectTextEntry<dynamic>.any(parentId: '', name: 'Any');
       final a = _text('', 'a', 'A');
       tree.bind([any, a], initializeAnyIfEmpty: false);
 
@@ -258,7 +258,7 @@ void main() {
     test('category tree: selecting Any clears siblings under same parent', () {
       final rules = const SelectorSelectionRules();
       final tree = SelectorStateTree();
-      final any = SelectorTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
+      final any = SelectTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {any, a});
       tree.bind([c], initializeAnyIfEmpty: false);
@@ -282,7 +282,7 @@ void main() {
     test('category tree: selecting custom range clears siblings', () {
       final rules = const SelectorSelectionRules();
       final tree = SelectorStateTree();
-      final custom = SelectorRangeEntry<int, dynamic>.custom(
+      final custom = SelectRangeEntry<int, dynamic>.custom(
         parentId: 'c',
         name: 'Custom',
       );
@@ -394,7 +394,7 @@ void main() {
         () {
       final rules = const SelectorSelectionRules();
       final tree = SelectorStateTree();
-      final any = SelectorTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
+      final any = SelectTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
       final a = _text('c', 'a', 'A');
       final b = _text('c', 'b', 'B');
       final c = _category('c', 'C',
@@ -473,7 +473,7 @@ void main() {
     test('category tree: removes Any entries before selecting non-Any', () {
       final rules = const SelectorSelectionRules();
       final tree = SelectorStateTree();
-      final any = SelectorTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
+      final any = SelectTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {any, a});
       tree.bind([c], initializeAnyIfEmpty: false);
@@ -499,7 +499,7 @@ void main() {
     test('single mode: selecting Any replaces all siblings', () {
       final rules = const SelectorSelectionRules();
       final tree = SelectorStateTree();
-      final any = SelectorTextEntry<dynamic>.any(parentId: 'p', name: 'Any');
+      final any = SelectTextEntry<dynamic>.any(parentId: 'p', name: 'Any');
       final leaf = _text('p', 'l', 'L');
       final parent = _text('c', 'p', 'P', children: {any, leaf});
       final c = _category('c', 'C', children: {parent});
@@ -531,7 +531,7 @@ void main() {
         () {
       final rules = const SelectorSelectionRules();
       final tree = SelectorStateTree();
-      final any = SelectorTextEntry<dynamic>.any(parentId: 'p', name: 'Any');
+      final any = SelectTextEntry<dynamic>.any(parentId: 'p', name: 'Any');
       final leaf = _text('p', 'l', 'L');
       final parent = _text('c', 'p', 'P', children: {any, leaf});
       final c = _category('c', 'C', children: {parent});
@@ -623,7 +623,7 @@ void main() {
     test('multiple mode: selecting Any clears siblings and selects Any', () {
       final rules = const SelectorSelectionRules();
       final tree = SelectorStateTree();
-      final any = SelectorTextEntry<dynamic>.any(parentId: 'p', name: 'Any');
+      final any = SelectTextEntry<dynamic>.any(parentId: 'p', name: 'Any');
       final leaf = _text('p', 'l', 'L');
       final parent = _text('c', 'p', 'P', children: {any, leaf});
       final c = _category('c', 'C', children: {parent});
@@ -650,7 +650,7 @@ void main() {
     test('multiple mode: toggling Any removes it', () {
       final rules = const SelectorSelectionRules();
       final tree = SelectorStateTree();
-      final any = SelectorTextEntry<dynamic>.any(parentId: 'p', name: 'Any');
+      final any = SelectTextEntry<dynamic>.any(parentId: 'p', name: 'Any');
       final parent = _text('c', 'p', 'P', children: {any});
       final c = _category('c', 'C', children: {parent});
       tree.bind([c], initializeAnyIfEmpty: false);
@@ -704,7 +704,7 @@ void main() {
     test('cascading: deselecting last leaf adds Any if available', () {
       final rules = const SelectorSelectionRules();
       final tree = SelectorStateTree();
-      final any = SelectorTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
+      final any = SelectTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
       final leaf = _text('p', 'l', 'L');
       final parent = _text('c', 'p', 'P', children: {leaf});
       final c = _category('c', 'C', children: {any, parent});

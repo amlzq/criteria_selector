@@ -7,8 +7,8 @@ import 'dropdown_overlay_style.dart';
 import 'i18n/localizations.dart';
 import 'popup_select_button_theme.dart';
 import 'popup_select_controller.dart';
+import 'selector/select_entry.dart';
 import 'selector/selector_delegate.dart';
-import 'selector/selector_entry.dart';
 import 'selector_label_state.dart';
 import 'selector_overlay_host.dart';
 
@@ -26,8 +26,7 @@ enum PopupSelectButtonVariant {
 }
 
 /// Callback invoked with the selected entries only — used by
-typedef PopupSelectButtonResultCallback = void Function(
-    SelectorEntries selected);
+typedef PopupSelectButtonResultCallback = void Function(SelectEntries selected);
 
 typedef PopupSelectButtonWillToggleCallback = FutureOr<bool> Function();
 
@@ -273,11 +272,11 @@ class _PopupSelectButtonState extends State<PopupSelectButton>
   void _handleControllerTick() => setState(() {});
 
   void _handleWidgetChange(
-          SelectorLabelState labelState, SelectorEntries selected) =>
+          SelectorLabelState labelState, SelectEntries selected) =>
       widget.onChanged?.call(selected);
 
   void _handleWidgetApply(
-          SelectorLabelState labelState, SelectorEntries selected) =>
+          SelectorLabelState labelState, SelectEntries selected) =>
       widget.onApplied?.call(selected);
 
   void _handleWidgetReset() => widget.onReset?.call();

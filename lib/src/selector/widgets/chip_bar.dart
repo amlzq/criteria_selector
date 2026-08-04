@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
-import '../selector_entry.dart';
+import '../select_entry.dart';
 import '../selector_theme.dart';
 import '../selector_theme_data.dart';
 import 'chip_bar_theme.dart';
@@ -35,18 +35,18 @@ class SelectorChipBar extends StatelessWidget {
     required this.onChanged,
   });
 
-  /// The parent [SelectorEntry] whose [SelectorEntry.name] is displayed as the
+  /// The parent [SelectEntry] whose [SelectEntry.name] is displayed as the
   /// bar's title when [showTitle] is true.
-  final SelectorEntry? category;
+  final SelectEntry? category;
 
   /// The sibling entries to display as chips in the bar.
-  final List<SelectorEntry> entries;
+  final List<SelectEntry> entries;
 
   /// The set of currently selected entries.
   ///
   /// Chips whose entry is contained in this set are rendered in the selected
   /// state. When null, no chip is considered selected.
-  final SelectorEntries? selectedEntries;
+  final SelectEntries? selectedEntries;
 
   /// How many chips can be selected at the same time.
   ///
@@ -151,7 +151,7 @@ class SelectorChipBar extends StatelessWidget {
       for (final entry in entries.asMap().entries)
         (() {
           final index = entry.key;
-          final item = entry.value as SelectorChildEntry;
+          final item = entry.value as SelectChildEntry;
           final selected = (selectedEntries?.contains(item) ?? false);
           return _Chip(
             label: item.name ?? '',

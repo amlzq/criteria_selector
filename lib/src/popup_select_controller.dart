@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'selector/select_entry.dart';
 import 'selector/selector_controller.dart';
 import 'selector/selector_delegate.dart';
-import 'selector/selector_entry.dart';
 import 'selector/selector_utils.dart';
 import 'selector_label_state.dart';
 
@@ -36,7 +36,7 @@ class PopupTabData extends SelectorLabelState {
 /// Suitable for [PopupSelectButton], which has no tab concept, as well as
 /// multi-tab [PopupSelectBar].
 typedef SelectorLabelChangeCallback = void Function(
-    SelectorLabelState labelState, SelectorEntries selected);
+    SelectorLabelState labelState, SelectEntries selected);
 
 /// Controller for [PopupSelectBar] and its selector overlay.
 ///
@@ -410,7 +410,7 @@ class PopupSelectController extends ChangeNotifier {
   }
 
   /// Dispatches a selection change event.
-  void handleChange(SelectorEntries selected) {
+  void handleChange(SelectEntries selected) {
     if (_isDisposed) return;
     final labelState = labelStateMap[currentIndex];
     if (labelState == null) return;
@@ -420,7 +420,7 @@ class PopupSelectController extends ChangeNotifier {
   }
 
   /// Dispatches an apply event and updates the tab result label.
-  void handleApply(SelectorEntries selected, String multipleText) {
+  void handleApply(SelectEntries selected, String multipleText) {
     if (_isDisposed) return;
     final labelState = labelStateMap[currentIndex];
     if (labelState == null) return;
@@ -480,7 +480,7 @@ class PopupSelectController extends ChangeNotifier {
     final dataFuture = selector.data;
     if (dataFuture == null) return false;
 
-    late final SelectorEntries entries;
+    late final SelectEntries entries;
     try {
       entries = await dataFuture;
     } catch (_) {
@@ -516,7 +516,7 @@ class PopupSelectController extends ChangeNotifier {
 
     selector.resetData;
 
-    late final SelectorEntries entries;
+    late final SelectEntries entries;
     try {
       entries = await dataFuture;
     } catch (_) {
@@ -534,11 +534,11 @@ class PopupSelectController extends ChangeNotifier {
     return true;
   }
 
-  static SelectorEntries _buildAppliedSelection(
-    List<SelectorEntry> roots,
+  static SelectEntries _buildAppliedSelection(
+    List<SelectEntry> roots,
     _PopupSelectApplyContext ctx,
   ) {
-    final SelectorEntries result = {};
+    final SelectEntries result = {};
     for (final root in roots) {
       final cropped = _cropEntry(root, ctx);
       if (ctx.invalidCategoryHit || ctx.invalidCustomHit) return {};
@@ -547,17 +547,17 @@ class PopupSelectController extends ChangeNotifier {
     return result;
   }
 
-  static SelectorEntry? _cropEntry(
-    SelectorEntry entry,
+  static SelectEntry? _cropEntry(
+    SelectEntry entry,
     _PopupSelectApplyContext ctx,
   ) {
-    if (entry is SelectorCategoryEntry) {
+    if (entry is SelectCategoryEntry) {
       if (ctx.selectedEntryIds.contains(entry.id)) {
         ctx.invalidCategoryHit = true;
         return null;
       }
 
-      final Set<SelectorEntry> croppedChildren = {};
+      final Set<SelectEntry> croppedChildren = {};
       final children = entry.children;
       if (children != null) {
         for (final child in children) {
@@ -579,7 +579,7 @@ class PopupSelectController extends ChangeNotifier {
         return null;
       }
 
-      return SelectorCategoryEntry(
+      return SelectCategoryEntry(
         selectionMode: entry.selectionMode,
         header: header,
         headerSelectionMode: entry.headerSelectionMode,
@@ -596,14 +596,14 @@ class PopupSelectController extends ChangeNotifier {
 
     final bool isHit = ctx.selectedEntryIds.contains(entry.id);
     if (isHit) {
-      if (entry is SelectorRangeEntry && entry.id == kCustomEntryId) {
+      if (entry is SelectRangeEntry && entry.id == kCustomEntryId) {
         ctx.invalidCustomHit = true;
         return null;
       }
       ctx.matchedCount++;
     }
 
-    final Set<SelectorEntry> croppedChildren = {};
+    final Set<SelectEntry> croppedChildren = {};
     final children = entry.children;
     if (children != null) {
       for (final child in children) {
@@ -619,12 +619,12 @@ class PopupSelectController extends ChangeNotifier {
         children: croppedChildren.isEmpty ? null : croppedChildren);
   }
 
-  static SelectorEntry _cloneEntry(
-    SelectorEntry entry, {
-    required Set<SelectorEntry>? children,
+  static SelectEntry _cloneEntry(
+    SelectEntry entry, {
+    required Set<SelectEntry>? children,
   }) {
-    if (entry is SelectorTextEntry) {
-      return SelectorTextEntry(
+    if (entry is SelectTextEntry) {
+      return SelectTextEntry(
         parentId: entry.parentId,
         id: entry.id,
         name: entry.name,
@@ -634,8 +634,8 @@ class PopupSelectController extends ChangeNotifier {
       );
     }
 
-    if (entry is SelectorRangeEntry) {
-      return SelectorRangeEntry(
+    if (entry is SelectRangeEntry) {
+      return SelectRangeEntry(
         min: entry.min,
         max: entry.max,
         inputLabel: entry.inputLabel,
@@ -651,8 +651,8 @@ class PopupSelectController extends ChangeNotifier {
       );
     }
 
-    if (entry is SelectorChildEntry) {
-      return SelectorChildEntry(
+    if (entry is SelectChildEntry) {
+      return SelectChildEntry(
         parentId: entry.parentId,
         id: entry.id,
         name: entry.name,
@@ -664,7 +664,7 @@ class PopupSelectController extends ChangeNotifier {
     }
 
     throw UnsupportedError(
-        'Unsupported SelectorEntry type: ${entry.runtimeType}');
+        'Unsupported SelectEntry type: ${entry.runtimeType}');
   }
 
   /// Dispatches a reset event.

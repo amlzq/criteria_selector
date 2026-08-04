@@ -13,15 +13,15 @@ class _TestDelegate extends SelectorDelegate {
 
   final Widget Function(
     BuildContext context,
-    List<SelectorEntry> entries,
-    Set<SelectorEntry>? previousSelected,
+    List<SelectEntry> entries,
+    Set<SelectEntry>? previousSelected,
   ) bodyBuilder;
 
   @override
   Widget buildBody(
     BuildContext context,
-    List<SelectorEntry> entries,
-    Set<SelectorEntry>? previousSelected,
+    List<SelectEntry> entries,
+    Set<SelectEntry>? previousSelected,
   ) =>
       bodyBuilder(context, entries, previousSelected);
 
@@ -37,8 +37,8 @@ void main() {
           home: Scaffold(
             body: SelectView(
               delegate: _TestDelegate(
-                entriesLoader: () async => <SelectorEntry<dynamic>>{
-                  SelectorTextEntry<dynamic>.name(id: 'a', name: 'A'),
+                entriesLoader: () async => <SelectEntry<dynamic>>{
+                  SelectTextEntry<dynamic>.name(id: 'a', name: 'A'),
                 },
                 bodyBuilder: (context, entries, _) =>
                     Text('entries:${entries.length}'),
@@ -62,7 +62,7 @@ void main() {
           home: Scaffold(
             body: SelectView(
               delegate: _TestDelegate(
-                entriesLoader: () async => <SelectorEntry<dynamic>>{},
+                entriesLoader: () async => <SelectEntry<dynamic>>{},
                 bodyBuilder: (context, _, __) {
                   captured = SelectorController.of(context);
                   return const SizedBox();
@@ -76,7 +76,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(captured, isNotNull);
-      captured!.change(<SelectorEntry>{});
+      captured!.change(<SelectEntry>{});
 
       expect(changed, isTrue);
     });
@@ -89,7 +89,7 @@ void main() {
           home: Scaffold(
             body: SelectView(
               delegate: _TestDelegate(
-                entriesLoader: () async => <SelectorEntry<dynamic>>{},
+                entriesLoader: () async => <SelectEntry<dynamic>>{},
                 bodyBuilder: (context, _, __) {
                   captured = SelectorController.of(context);
                   return const SizedBox();
@@ -115,7 +115,7 @@ void main() {
           home: Scaffold(
             body: SelectView(
               delegate: _TestDelegate(
-                entriesLoader: () async => <SelectorEntry<dynamic>>{},
+                entriesLoader: () async => <SelectEntry<dynamic>>{},
                 bodyBuilder: (_, __, ___) => const SizedBox(),
               ),
               controller: controller,
@@ -139,7 +139,7 @@ void main() {
               body: SelectView(
                 maxHeightFactor: 0.5,
                 delegate: _TestDelegate(
-                  entriesLoader: () async => <SelectorEntry<dynamic>>{},
+                  entriesLoader: () async => <SelectEntry<dynamic>>{},
                   // A tall, unconstrained body to verify the cap is applied.
                   bodyBuilder: (_, __, ___) => Container(height: 5000.0),
                 ),
@@ -172,8 +172,8 @@ void main() {
           home: Scaffold(
             body: SelectorBox(
               delegate: _TestDelegate(
-                entriesLoader: () async => <SelectorEntry<dynamic>>{
-                  SelectorTextEntry<dynamic>.name(id: 'a', name: 'A'),
+                entriesLoader: () async => <SelectEntry<dynamic>>{
+                  SelectTextEntry<dynamic>.name(id: 'a', name: 'A'),
                 },
                 bodyBuilder: (context, entries, _) =>
                     Text('entries:${entries.length}'),

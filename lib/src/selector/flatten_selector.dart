@@ -5,7 +5,7 @@ import 'action_bar_visibility.dart';
 import 'constants.dart';
 import 'selector_controller.dart';
 import 'selector_delegate.dart';
-import 'selector_entry.dart';
+import 'select_entry.dart';
 import 'selector_theme.dart';
 import 'widgets/widgets.dart';
 
@@ -15,9 +15,9 @@ import 'widgets/widgets.dart';
 ///
 /// Behavior notes:
 /// - This selector is fixed to a two-level structure: category -> children.
-/// - Child selection mode is determined per category by [SelectorCategoryEntry.selectionMode].
+/// - Child selection mode is determined per category by [SelectCategoryEntry.selectionMode].
 /// - The right-side content is scroll-synced with the left category list.
-/// - Custom range entries ([SelectorRangeEntry.custom]) are rendered as an input
+/// - Custom range entries ([SelectRangeEntry.custom]) are rendered as an input
 ///   row; typing clears existing child selections for that category.
 /// - When an entry's `immediate` is true, selection is applied immediately
 ///   without requiring the action bar.
@@ -37,9 +37,9 @@ class FlattenSelector extends StatefulWidget {
 
   final FlattenSelectorDelegate delegate;
 
-  final List<SelectorEntry> entries;
+  final List<SelectEntry> entries;
 
-  final Set<SelectorEntry>? previousSelected;
+  final Set<SelectEntry>? previousSelected;
 
   final int crossAxisCount;
 
@@ -114,9 +114,9 @@ class FlattenSelectorState extends State<FlattenSelector> {
   /// Selection Mode for category entries
   SelectionMode? get categorySelectionMode => delegate.selectionMode;
 
-  SelectorCategoryEntry? get selectedCategory =>
+  SelectCategoryEntry? get selectedCategory =>
       widget.entries.elementAtOrNull(_tempSelectedCategoryIndex)
-          as SelectorCategoryEntry;
+          as SelectCategoryEntry;
 
   bool _onScrollNotification(ScrollNotification notification) {
     // If this scroll was triggered programmatically, ignore it
@@ -200,7 +200,7 @@ class FlattenSelectorState extends State<FlattenSelector> {
   void _onCategoryItemTap(int index) {
     if (_tempSelectedCategoryIndex == index) return;
 
-    final category = widget.entries[index] as SelectorCategoryEntry;
+    final category = widget.entries[index] as SelectCategoryEntry;
     controller?.focusCategoryEntry(
       category,
       selectionMode: categorySelectionMode ?? SelectionMode.single,
@@ -240,13 +240,13 @@ class FlattenSelectorState extends State<FlattenSelector> {
     });
   }
 
-  void _onTerminalItemTap(SelectorChildEntry item) {
+  void _onTerminalItemTap(SelectChildEntry item) {
     final categoryEntry =
         widget.entries.singleWhereOrNull((e) => e.id == item.parentId);
-    if (categoryEntry is! SelectorCategoryEntry) return;
+    if (categoryEntry is! SelectCategoryEntry) return;
     final category = categoryEntry;
 
-    if (item is SelectorRangeEntry && item.isCustom) {
+    if (item is SelectRangeEntry && item.isCustom) {
       final hasRange = item.min != null || item.max != null;
       if (hasRange) {
         controller?.select(item.id, parentId: item.parentId);
@@ -265,7 +265,7 @@ class FlattenSelectorState extends State<FlattenSelector> {
     _setStateOrImmediateApply(item);
   }
 
-  void _setStateOrImmediateApply(SelectorChildEntry item) {
+  void _setStateOrImmediateApply(SelectChildEntry item) {
     if (SelectionMode.single == selectorSelectionMode || item.immediate) {
       // No need to tap "Apply"; return result immediately
       _onApplyTap();
@@ -295,10 +295,10 @@ class FlattenSelectorState extends State<FlattenSelector> {
     // Selecting only "Any" must not trigger the badge.
     final rawSelectedCategories = controller?.selectedEntriesAtLevel(0) ?? {};
     final selectedCategories = rawSelectedCategories.where((entry) {
-      if (entry is! SelectorCategoryEntry) return false;
+      if (entry is! SelectCategoryEntry) return false;
       final children =
           controller?.selectedEntriesForParent(entry.id, level: 1) ?? {};
-      return children.any((e) => e is SelectorChildEntry && !e.isAny);
+      return children.any((e) => e is SelectChildEntry && !e.isAny);
     }).toSet();
 
     final categoryBackgroundColor = theme.backgroundColor;
@@ -342,7 +342,7 @@ class FlattenSelectorState extends State<FlattenSelector> {
                           .onDrag, // Automatically dismiss the soft keyboard while dragging.
                       children: widget.entries.mapIndexed((index, item) {
                         final category =
-                            widget.entries[index] as SelectorCategoryEntry;
+                            widget.entries[index] as SelectCategoryEntry;
                         final entries = category.children?.toList() ?? [];
                         final selectedEntries =
                             controller?.selectedEntriesForParent(category.id,
@@ -361,7 +361,7 @@ class FlattenSelectorState extends State<FlattenSelector> {
                           entries: entries,
                           selectedEntries: selectedEntries,
                           onChanged: (_, entry) =>
-                              _onTerminalItemTap(entry as SelectorChildEntry),
+                              _onTerminalItemTap(entry as SelectChildEntry),
                           padding:
                               EdgeInsets.only(top: 18, bottom: isLast ? 18 : 0),
                         );

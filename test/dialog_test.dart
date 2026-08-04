@@ -11,8 +11,8 @@ class _DialogTestDelegate extends SelectorDelegate {
   @override
   Widget buildBody(
     BuildContext context,
-    List<SelectorEntry> entries,
-    Set<SelectorEntry>? previousSelected,
+    List<SelectEntry> entries,
+    Set<SelectEntry>? previousSelected,
   ) =>
       const Text('body');
 
@@ -45,7 +45,7 @@ void main() {
       // Simulate a barrier dismiss (returns null).
       Navigator.of(navigatorKey.currentContext!, rootNavigator: true).pop(null);
 
-      final SelectorEntries? result = await future;
+      final SelectEntries? result = await future;
       expect(result, isNull);
     });
 
@@ -65,11 +65,11 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      final selection = <SelectorEntry>{};
+      final selection = <SelectEntry>{};
       Navigator.of(navigatorKey.currentContext!, rootNavigator: true)
           .pop(selection);
 
-      final SelectorEntries? result = await future;
+      final SelectEntries? result = await future;
       expect(result, selection);
     });
 
@@ -96,7 +96,7 @@ void main() {
       // ignore: deprecated_member_use
       Navigator.of(navigatorKey.currentContext!, rootNavigator: true).pop(null);
 
-      final SelectorEntries? result = await future;
+      final SelectEntries? result = await future;
       expect(result, isNull);
     });
   });

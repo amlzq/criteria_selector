@@ -1,13 +1,13 @@
-import 'package:criteria_selector/src/selector/selector_entry.dart';
+import 'package:criteria_selector/src/selector/select_entry.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-SelectorTextEntry<dynamic> _text(
+SelectTextEntry<dynamic> _text(
   String parentId,
   String id, {
   String? name,
-  Set<SelectorEntry<dynamic>>? children,
+  Set<SelectEntry<dynamic>>? children,
 }) {
-  return SelectorTextEntry<dynamic>(
+  return SelectTextEntry<dynamic>(
     parentId: parentId,
     id: id,
     name: name ?? id,
@@ -15,9 +15,9 @@ SelectorTextEntry<dynamic> _text(
   );
 }
 
-SelectorRangeEntry<int, dynamic> _range(String parentId, String id,
+SelectRangeEntry<int, dynamic> _range(String parentId, String id,
     {int? min, int? max}) {
-  return SelectorRangeEntry<int, dynamic>(
+  return SelectRangeEntry<int, dynamic>(
     parentId: parentId,
     id: id,
     name: id,
@@ -26,21 +26,21 @@ SelectorRangeEntry<int, dynamic> _range(String parentId, String id,
   );
 }
 
-SelectorCategoryEntry<dynamic> _category(
+SelectCategoryEntry<dynamic> _category(
   String id, {
-  required Set<SelectorEntry<dynamic>> children,
+  required Set<SelectEntry<dynamic>> children,
 }) {
-  return SelectorCategoryEntry<dynamic>(
+  return SelectCategoryEntry<dynamic>(
     id: id,
     name: id,
     children: children,
   );
 }
 
-/// Shared selection set used to verify that the bare `SelectorEntries` query
+/// Shared selection set used to verify that the bare `SelectEntries` query
 /// helpers (e.g. for `showSelect` / `showModalBottomSelect` return values)
 /// work correctly.
-final SelectorEntries _sharedSelected = {
+final SelectEntries _sharedSelected = {
   _category('text', children: {
     _text('text', 'a'),
     _text('text', 'b'),
@@ -62,10 +62,10 @@ final SelectorEntries _sharedSelected = {
 };
 
 void main() {
-  // Query helpers on a bare `SelectorEntries` — the type returned by
+  // Query helpers on a bare `SelectEntries` — the type returned by
   // `showSelect` / `showModalBottomSelect` — to prove the
   // dialog/bottom-sheet path can query results without a wrapper.
-  group('SelectorEntries query helpers (bare set, dialog/bottom-sheet path)',
+  group('SelectEntries query helpers (bare set, dialog/bottom-sheet path)',
       () {
     final entries = _sharedSelected;
 
@@ -101,7 +101,7 @@ void main() {
     });
 
     test('bare empty set returns empty / null', () {
-      final empty = <SelectorEntry<dynamic>>{};
+      final empty = <SelectEntry<dynamic>>{};
       expect(empty.findCategory('text'), isNull);
       expect(empty.childIdsOf('text'), isEmpty);
       expect(empty.firstSelectedId, isNull);

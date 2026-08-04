@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('SelectorRangeEntry.divisions', () {
+  group('SelectRangeEntry.divisions', () {
     test('defaults to null and is forward-compatible', () {
-      final entry = SelectorRangeEntry<int, dynamic>.custom(
+      final entry = SelectRangeEntry<int, dynamic>.custom(
         parentId: 'price',
         min: 0,
         max: 100,
@@ -15,7 +15,7 @@ void main() {
     });
 
     test('is preserved by copyWith', () {
-      final entry = SelectorRangeEntry<int, dynamic>.custom(
+      final entry = SelectRangeEntry<int, dynamic>.custom(
         parentId: 'price',
         min: 0,
         max: 100,
@@ -29,7 +29,7 @@ void main() {
     });
 
     test('is included in toString for diagnostics', () {
-      final entry = SelectorRangeEntry<int, dynamic>.custom(
+      final entry = SelectRangeEntry<int, dynamic>.custom(
         parentId: 'price',
         min: 0,
         max: 100,
@@ -38,26 +38,26 @@ void main() {
       expect(entry.toString(), contains('divisions: 25'));
     });
 
-    test('is preserved by deep clone (SelectorIntEntry path)', () {
-      final entry = SelectorIntEntry<dynamic>.custom(
+    test('is preserved by deep clone (SelectIntEntry path)', () {
+      final entry = SelectIntEntry<dynamic>.custom(
         parentId: 'price',
         min: 0,
         max: 100,
         divisions: 20,
       );
       final cloned =
-          SelectorUtils.deepCloneEntries({entry}).single as SelectorIntEntry;
+          SelectorUtils.deepCloneEntries({entry}).single as SelectIntEntry;
       expect(cloned.divisions, 20);
     });
 
     test('is preserved by cloneTree / _cloneEntryWithChildren', () {
-      final entry = SelectorIntEntry<dynamic>.custom(
+      final entry = SelectIntEntry<dynamic>.custom(
         parentId: 'price',
         min: 0,
         max: 100,
         divisions: 10,
       );
-      final category = SelectorCategoryEntry<dynamic>(
+      final category = SelectCategoryEntry<dynamic>(
         id: 'cat',
         name: 'cat',
         children: {entry},
@@ -71,9 +71,9 @@ void main() {
         ],
         deepCloneSelectedSubtree: true,
       );
-      final clonedCat = cloned.single as SelectorCategoryEntry;
+      final clonedCat = cloned.single as SelectCategoryEntry;
       final clonedEntry =
-          clonedCat.children!.single as SelectorRangeEntry<int, dynamic>;
+          clonedCat.children!.single as SelectRangeEntry<int, dynamic>;
       expect(clonedEntry.divisions, 10);
     });
   });
@@ -354,12 +354,12 @@ void main() {
   group('SelectorRangeView', () {
     testWidgets('renders the category name as title when showTitle is true',
         (tester) async {
-      final category = SelectorCategoryEntry<dynamic>(
+      final category = SelectCategoryEntry<dynamic>(
         id: 'price',
         name: 'Price range',
         selectionMode: SelectionMode.single,
         children: {
-          SelectorIntEntry<dynamic>.custom(
+          SelectIntEntry<dynamic>.custom(
             parentId: 'price',
             min: 0,
             max: 1000,
@@ -374,7 +374,7 @@ void main() {
             body: SelectorRangeView(
               category: category,
               entries: category.children!.toList(),
-              selectedEntries: const <SelectorEntry>{},
+              selectedEntries: const <SelectEntry>{},
               toText: const SelectorRangeLayout().toText,
               showTitle: true,
               onChanged: (_, __) {},
@@ -387,12 +387,12 @@ void main() {
     });
 
     testWidgets('omits the title when showTitle is false', (tester) async {
-      final category = SelectorCategoryEntry<dynamic>(
+      final category = SelectCategoryEntry<dynamic>(
         id: 'price',
         name: 'Price range',
         selectionMode: SelectionMode.single,
         children: {
-          SelectorIntEntry<dynamic>.custom(
+          SelectIntEntry<dynamic>.custom(
             parentId: 'price',
             min: 0,
             max: 1000,
@@ -407,7 +407,7 @@ void main() {
             body: SelectorRangeView(
               category: category,
               entries: category.children!.toList(),
-              selectedEntries: const <SelectorEntry>{},
+              selectedEntries: const <SelectEntry>{},
               toText: const SelectorRangeLayout().toText,
               showTitle: false,
               onChanged: (_, __) {},
@@ -420,14 +420,14 @@ void main() {
     });
 
     testWidgets('keeps slider and field values in sync', (tester) async {
-      final customEntry = SelectorIntEntry<dynamic>.custom(
+      final customEntry = SelectIntEntry<dynamic>.custom(
         parentId: 'price',
         min: 0,
         max: 1000,
         minHintText: 'No min',
         maxHintText: 'No max',
       );
-      final category = SelectorCategoryEntry<dynamic>(
+      final category = SelectCategoryEntry<dynamic>(
         id: 'price',
         name: 'Price',
         selectionMode: SelectionMode.single,
@@ -441,7 +441,7 @@ void main() {
             body: SelectorRangeView(
               category: category,
               entries: category.children!.toList(),
-              selectedEntries: const <SelectorEntry>{},
+              selectedEntries: const <SelectEntry>{},
               toText: const SelectorRangeLayout().toText,
               onChanged: (_, __) {},
             ),
@@ -472,14 +472,14 @@ void main() {
 
     testWidgets('shows the extreme min/max labels under the slider',
         (tester) async {
-      final customEntry = SelectorIntEntry<dynamic>.custom(
+      final customEntry = SelectIntEntry<dynamic>.custom(
         parentId: 'price',
         min: 0,
         max: 1000,
         minHintText: 'No min',
         maxHintText: 'No max',
       );
-      final category = SelectorCategoryEntry<dynamic>(
+      final category = SelectCategoryEntry<dynamic>(
         id: 'price',
         name: 'Price',
         selectionMode: SelectionMode.single,
@@ -492,7 +492,7 @@ void main() {
             body: SelectorRangeView(
               category: category,
               entries: category.children!.toList(),
-              selectedEntries: const <SelectorEntry>{},
+              selectedEntries: const <SelectEntry>{},
               toText: const SelectorRangeLayout().toText,
               onChanged: (_, __) {},
             ),
@@ -508,13 +508,13 @@ void main() {
       String? lastCategory;
       String? lastMin;
       String? lastMax;
-      final customEntry = SelectorIntEntry<dynamic>.custom(
+      final customEntry = SelectIntEntry<dynamic>.custom(
         parentId: 'price',
         min: 0,
         max: 100,
         divisions: 10,
       );
-      final category = SelectorCategoryEntry<dynamic>(
+      final category = SelectCategoryEntry<dynamic>(
         id: 'price',
         name: 'Price',
         selectionMode: SelectionMode.single,
@@ -531,10 +531,10 @@ void main() {
                 child: SelectorRangeView(
                   category: category,
                   entries: category.children!.toList(),
-                  selectedEntries: const <SelectorEntry>{},
+                  selectedEntries: const <SelectEntry>{},
                   toText: const SelectorRangeLayout().toText,
                   onChanged: (index, entry) {
-                    lastCategory = (entry as SelectorRangeEntry).parentId;
+                    lastCategory = (entry as SelectRangeEntry).parentId;
                     lastMin = entry.min?.toString();
                     lastMax = entry.max?.toString();
                   },
@@ -573,14 +573,14 @@ void main() {
 
     testWidgets('keeps field text after a parent rebuild (didUpdateWidget)',
         (tester) async {
-      final customEntry = SelectorIntEntry<dynamic>.custom(
+      final customEntry = SelectIntEntry<dynamic>.custom(
         parentId: 'price',
         min: 0,
         max: 1000,
         minHintText: 'No min',
         maxHintText: 'No max',
       );
-      final category = SelectorCategoryEntry<dynamic>(
+      final category = SelectCategoryEntry<dynamic>(
         id: 'price',
         name: 'Price',
         selectionMode: SelectionMode.single,
@@ -590,7 +590,7 @@ void main() {
       final base = SelectorRangeView(
         category: category,
         entries: category.children!.toList(),
-        selectedEntries: const <SelectorEntry>{},
+        selectedEntries: const <SelectEntry>{},
         toText: const SelectorRangeLayout().toText,
         onChanged: (_, __) {},
       );
@@ -615,7 +615,7 @@ void main() {
         category: category,
         entries: category.children!.toList(),
         selectedEntries: {
-          SelectorIntEntry<dynamic>.custom(
+          SelectIntEntry<dynamic>.custom(
             parentId: 'price',
             min: 250,
             max: 1000,
@@ -630,14 +630,14 @@ void main() {
     });
 
     testWidgets('snaps to whole numbers for an int entry', (tester) async {
-      final customEntry = SelectorIntEntry<dynamic>.custom(
+      final customEntry = SelectIntEntry<dynamic>.custom(
         parentId: 'price',
         min: 0,
         max: 1000,
         minHintText: 'No min',
         maxHintText: 'No max',
       );
-      final category = SelectorCategoryEntry<dynamic>(
+      final category = SelectCategoryEntry<dynamic>(
         id: 'price',
         name: 'Price',
         selectionMode: SelectionMode.single,
@@ -651,10 +651,10 @@ void main() {
             body: SelectorRangeView(
               category: category,
               entries: category.children!.toList(),
-              selectedEntries: const <SelectorEntry>{},
+              selectedEntries: const <SelectEntry>{},
               toText: const SelectorRangeLayout().toText,
               onChanged: (index, entry) {
-                lastMin = (entry as SelectorRangeEntry).min?.toString();
+                lastMin = (entry as SelectRangeEntry).min?.toString();
               },
             ),
           ),
@@ -689,14 +689,14 @@ void main() {
 
     testWidgets('does not move the slider until a field is committed',
         (tester) async {
-      final customEntry = SelectorIntEntry<dynamic>.custom(
+      final customEntry = SelectIntEntry<dynamic>.custom(
         parentId: 'price',
         min: 0,
         max: 1000,
         minHintText: 'No min',
         maxHintText: 'No max',
       );
-      final category = SelectorCategoryEntry<dynamic>(
+      final category = SelectCategoryEntry<dynamic>(
         id: 'price',
         name: 'Price',
         selectionMode: SelectionMode.single,
@@ -709,7 +709,7 @@ void main() {
             body: SelectorRangeView(
               category: category,
               entries: category.children!.toList(),
-              selectedEntries: const <SelectorEntry>{},
+              selectedEntries: const <SelectEntry>{},
               toText: const SelectorRangeLayout().toText,
               onChanged: (_, __) {},
             ),
@@ -749,14 +749,14 @@ void main() {
 
     testWidgets('swaps bounds when the max field is typed below the min field',
         (tester) async {
-      final customEntry = SelectorIntEntry<dynamic>.custom(
+      final customEntry = SelectIntEntry<dynamic>.custom(
         parentId: 'price',
         min: 0,
         max: 1000,
         minHintText: 'No min',
         maxHintText: 'No max',
       );
-      final category = SelectorCategoryEntry<dynamic>(
+      final category = SelectCategoryEntry<dynamic>(
         id: 'price',
         name: 'Price',
         selectionMode: SelectionMode.single,
@@ -769,7 +769,7 @@ void main() {
             body: SelectorRangeView(
               category: category,
               entries: category.children!.toList(),
-              selectedEntries: const <SelectorEntry>{},
+              selectedEntries: const <SelectEntry>{},
               toText: const SelectorRangeLayout().toText,
               onChanged: (_, __) {},
             ),

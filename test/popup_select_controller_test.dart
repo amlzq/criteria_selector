@@ -38,12 +38,12 @@ void main() {
         [
           ListSelectorDelegate(
             entriesLoader: () async => {
-              SelectorTextEntry<dynamic>.name(id: 'a0', name: 'A0'),
+              SelectTextEntry<dynamic>.name(id: 'a0', name: 'A0'),
             },
           ),
           ListSelectorDelegate(
             entriesLoader: () async => {
-              SelectorTextEntry<dynamic>.name(id: 'a1', name: 'A1'),
+              SelectTextEntry<dynamic>.name(id: 'a1', name: 'A1'),
             },
           ),
         ],
@@ -70,12 +70,12 @@ void main() {
         [
           ListSelectorDelegate(
             entriesLoader: () async => {
-              SelectorTextEntry<dynamic>.name(id: 'a0', name: 'A0'),
+              SelectTextEntry<dynamic>.name(id: 'a0', name: 'A0'),
             },
           ),
           ListSelectorDelegate(
             entriesLoader: () async => {
-              SelectorTextEntry<dynamic>.name(id: 'a1', name: 'A1'),
+              SelectTextEntry<dynamic>.name(id: 'a1', name: 'A1'),
             },
           ),
         ],
@@ -109,12 +109,12 @@ void main() {
         [
           ListSelectorDelegate(
             entriesLoader: () async => {
-              SelectorTextEntry<dynamic>.name(id: 'a0', name: 'A0'),
+              SelectTextEntry<dynamic>.name(id: 'a0', name: 'A0'),
             },
           ),
           ListSelectorDelegate(
             entriesLoader: () async => {
-              SelectorTextEntry<dynamic>.name(id: 'a1', name: 'A1'),
+              SelectTextEntry<dynamic>.name(id: 'a1', name: 'A1'),
             },
           ),
         ],
@@ -141,7 +141,7 @@ void main() {
         [
           ListSelectorDelegate(
             entriesLoader: () async => {
-              SelectorTextEntry<dynamic>.name(id: 'a0', name: 'A0'),
+              SelectTextEntry<dynamic>.name(id: 'a0', name: 'A0'),
             },
           ),
         ],
@@ -167,7 +167,7 @@ void main() {
         [
           ListSelectorDelegate(
             entriesLoader: () async => {
-              SelectorTextEntry<dynamic>.name(id: 'a0', name: 'A0'),
+              SelectTextEntry<dynamic>.name(id: 'a0', name: 'A0'),
             },
           ),
         ],

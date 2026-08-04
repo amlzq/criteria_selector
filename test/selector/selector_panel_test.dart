@@ -17,15 +17,15 @@ class _TestDelegate extends SelectorDelegate {
 
   final Widget Function(
     BuildContext context,
-    List<SelectorEntry> entries,
-    Set<SelectorEntry>? previousSelected,
+    List<SelectEntry> entries,
+    Set<SelectEntry>? previousSelected,
   ) bodyBuilder;
 
   @override
   Widget buildBody(
     BuildContext context,
-    List<SelectorEntry> entries,
-    Set<SelectorEntry>? previousSelected,
+    List<SelectEntry> entries,
+    Set<SelectEntry>? previousSelected,
   ) =>
       bodyBuilder(context, entries, previousSelected);
 
@@ -37,7 +37,7 @@ class _TestDelegate extends SelectorDelegate {
 void main() {
   group('SelectorPanel', () {
     testWidgets('shows the skeleton while data is loading', (tester) async {
-      final completer = Completer<SelectorEntries>();
+      final completer = Completer<SelectEntries>();
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -54,7 +54,7 @@ void main() {
       expect(find.text('skeleton'), findsOneWidget);
       expect(find.text('body'), findsNothing);
 
-      completer.complete(<SelectorEntry>{});
+      completer.complete(<SelectEntry>{});
       await tester.pumpAndSettle();
       expect(find.text('skeleton'), findsNothing);
       expect(find.text('body'), findsOneWidget);
@@ -66,8 +66,8 @@ void main() {
           home: Scaffold(
             body: SelectorPanel(
               delegate: _TestDelegate(
-                entriesLoader: () async => <SelectorEntry<dynamic>>{
-                  SelectorTextEntry<dynamic>.name(id: 'a', name: 'A'),
+                entriesLoader: () async => <SelectEntry<dynamic>>{
+                  SelectTextEntry<dynamic>.name(id: 'a', name: 'A'),
                 },
                 bodyBuilder: (context, entries, _) =>
                     Text('entries:${entries.length}'),
@@ -133,7 +133,7 @@ void main() {
           home: Scaffold(
             body: SelectorPanel(
               delegate: _TestDelegate(
-                entriesLoader: () async => <SelectorEntry<dynamic>>{},
+                entriesLoader: () async => <SelectEntry<dynamic>>{},
                 bodyBuilder: (_, __, ___) => const SizedBox(),
               ),
               controller: controller,
@@ -146,8 +146,8 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      controller.change(<SelectorEntry>{});
-      controller.apply(<SelectorEntry>{});
+      controller.change(<SelectEntry>{});
+      controller.apply(<SelectEntry>{});
       controller.reset();
 
       expect(changed, isTrue);
@@ -165,7 +165,7 @@ void main() {
           home: Scaffold(
             body: SelectorPanel(
               delegate: _TestDelegate(
-                entriesLoader: () async => <SelectorEntry<dynamic>>{},
+                entriesLoader: () async => <SelectEntry<dynamic>>{},
                 bodyBuilder: (context, _, __) {
                   captured = SelectorController.of(context);
                   return const SizedBox();
@@ -179,7 +179,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(captured, isNotNull);
-      captured!.change(<SelectorEntry>{});
+      captured!.change(<SelectEntry>{});
       expect(changed, isTrue);
     });
 
@@ -192,7 +192,7 @@ void main() {
           home: Scaffold(
             body: SelectorPanel(
               delegate: _TestDelegate(
-                entriesLoader: () async => <SelectorEntry<dynamic>>{},
+                entriesLoader: () async => <SelectEntry<dynamic>>{},
                 bodyBuilder: (_, __, ___) => const SizedBox(),
               ),
               controller: controller,
@@ -212,7 +212,7 @@ void main() {
           home: Scaffold(
             body: SelectorPanel(
               delegate: _TestDelegate(
-                entriesLoader: () async => <SelectorEntry<dynamic>>{},
+                entriesLoader: () async => <SelectEntry<dynamic>>{},
                 bodyBuilder: (context, _, __) {
                   captured = SelectorController.of(context);
                   return const SizedBox();
@@ -241,7 +241,7 @@ void main() {
           home: Scaffold(
             body: SelectorPanel(
               delegate: _TestDelegate(
-                entriesLoader: () async => <SelectorEntry<dynamic>>{},
+                entriesLoader: () async => <SelectEntry<dynamic>>{},
                 bodyBuilder: (_, __, ___) => const SizedBox(),
               ),
               controller: first,
@@ -258,7 +258,7 @@ void main() {
           home: Scaffold(
             body: SelectorPanel(
               delegate: _TestDelegate(
-                entriesLoader: () async => <SelectorEntry<dynamic>>{},
+                entriesLoader: () async => <SelectEntry<dynamic>>{},
                 bodyBuilder: (_, __, ___) => const SizedBox(),
               ),
               controller: second,
@@ -272,7 +272,7 @@ void main() {
       // The first controller must not have been disposed by the panel, and the
       // second controller's callbacks must now fire.
       expect(first.isDisposed, isFalse);
-      second.apply(<SelectorEntry>{});
+      second.apply(<SelectEntry>{});
       expect(appliedOnSecond, isTrue);
       expect(appliedOnFirst, isFalse);
     });
@@ -280,15 +280,15 @@ void main() {
     testWidgets('initializes the internal controller from delegate state',
         (tester) async {
       SelectorController? captured;
-      final previous = <SelectorEntry<dynamic>>{
-        SelectorTextEntry<dynamic>.name(id: 'a', name: 'A'),
+      final previous = <SelectEntry<dynamic>>{
+        SelectTextEntry<dynamic>.name(id: 'a', name: 'A'),
       };
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: SelectorPanel(
               delegate: _TestDelegate(
-                entriesLoader: () async => <SelectorEntry<dynamic>>{},
+                entriesLoader: () async => <SelectEntry<dynamic>>{},
                 selectedEntriesLoader: () => previous,
                 bodyBuilder: (context, _, __) {
                   captured = SelectorController.of(context);

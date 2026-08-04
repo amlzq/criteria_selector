@@ -1,13 +1,13 @@
 import 'package:criteria_selector/criteria_selector.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-SelectorTextEntry<dynamic> _text(
+SelectTextEntry<dynamic> _text(
   String parentId,
   String id,
   String name, {
-  Set<SelectorEntry<dynamic>>? children,
+  Set<SelectEntry<dynamic>>? children,
 }) {
-  return SelectorTextEntry<dynamic>(
+  return SelectTextEntry<dynamic>(
     parentId: parentId,
     id: id,
     name: name,
@@ -15,17 +15,17 @@ SelectorTextEntry<dynamic> _text(
   );
 }
 
-SelectorCategoryEntry<dynamic> _category(
+SelectCategoryEntry<dynamic> _category(
   String id,
   String name, {
-  required Set<SelectorEntry<dynamic>> children,
-  SelectorEntry<dynamic>? header,
+  required Set<SelectEntry<dynamic>> children,
+  SelectEntry<dynamic>? header,
   SelectionMode headerSelectionMode = SelectionMode.single,
-  SelectorEntry<dynamic>? footer,
+  SelectEntry<dynamic>? footer,
   SelectionMode footerSelectionMode = SelectionMode.single,
   SelectionMode selectionMode = SelectionMode.single,
 }) {
-  return SelectorCategoryEntry<dynamic>(
+  return SelectCategoryEntry<dynamic>(
     id: id,
     name: name,
     children: children,
@@ -61,8 +61,8 @@ void main() {
     });
 
     test('custom range replaces existing selection within same parent', () {
-      final any = SelectorTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
-      final custom = SelectorRangeEntry<int, dynamic>.custom(
+      final any = SelectTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
+      final custom = SelectRangeEntry<int, dynamic>.custom(
         parentId: 'c',
         name: 'Custom',
       );
@@ -91,7 +91,7 @@ void main() {
           isFalse);
       final selectedCustom = controller
           .selectedEntriesForParent('c', level: 1)
-          .whereType<SelectorRangeEntry>()
+          .whereType<SelectRangeEntry>()
           .single;
       expect(selectedCustom.isCustom, isTrue);
       expect(selectedCustom.min, 10);

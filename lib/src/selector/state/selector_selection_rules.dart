@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 
 import '../constants.dart';
-import '../selector_entry.dart';
+import '../select_entry.dart';
 import 'selector_state_tree.dart';
 
 class SelectorSelectionRules {
@@ -9,7 +9,7 @@ class SelectorSelectionRules {
 
   void focusCategory(
     SelectorStateTree tree,
-    SelectorCategoryEntry category, {
+    SelectCategoryEntry category, {
     required SelectionMode selectionMode,
   }) {
     if (SelectionMode.single == selectionMode) {
@@ -19,7 +19,7 @@ class SelectorSelectionRules {
     tree.ensureLevels(2);
     final selectedChildren = tree.mutableSelectedEntriesAtLevel(1);
     final hasChildOfCategory = selectedChildren.any(
-      (e) => e is SelectorChildEntry && e.parentId == category.id,
+      (e) => e is SelectChildEntry && e.parentId == category.id,
     );
     if (hasChildOfCategory) {
       return;
@@ -28,14 +28,14 @@ class SelectorSelectionRules {
     final anyItem = category.children?.singleWhereOrNull(testAnyElement);
     if (anyItem != null) {
       selectedChildren.removeWhere(
-        (e) => e is SelectorChildEntry && e.parentId == category.id,
+        (e) => e is SelectChildEntry && e.parentId == category.id,
       );
       selectedChildren.add(anyItem);
     }
 
     final rootSelected = tree.mutableSelectedEntriesAtLevel(0);
     final hasSelectionInCategory = selectedChildren.any(
-      (e) => e is SelectorChildEntry && e.parentId == category.id,
+      (e) => e is SelectChildEntry && e.parentId == category.id,
     );
     if (hasSelectionInCategory) {
       rootSelected.add(category);
@@ -46,10 +46,10 @@ class SelectorSelectionRules {
 
   void toggleFlatLeaf(
     SelectorStateTree tree,
-    SelectorChildEntry item, {
+    SelectChildEntry item, {
     required SelectionMode selectorSelectionMode,
     required bool isCategoryTree,
-    SelectorCategoryEntry? category,
+    SelectCategoryEntry? category,
   }) {
     if (!isCategoryTree) {
       tree.ensureLevels(1);
@@ -62,7 +62,7 @@ class SelectorSelectionRules {
         return;
       }
 
-      selectedEntries.removeWhere((e) => e is SelectorChildEntry && e.isAny);
+      selectedEntries.removeWhere((e) => e is SelectChildEntry && e.isAny);
       if (SelectionMode.single == selectorSelectionMode) {
         if (selectedEntries.contains(item)) return;
         selectedEntries
@@ -86,14 +86,14 @@ class SelectorSelectionRules {
       selectedEntries
           .removeWhere((e) => testSameParentElement(e, item.parentId));
       selectedEntries.add(item);
-    } else if (item is SelectorRangeEntry && item.isCustom) {
+    } else if (item is SelectRangeEntry && item.isCustom) {
       selectedEntries
           .removeWhere((e) => testSameParentElement(e, item.parentId));
       selectedEntries.add(item);
     } else {
       selectedEntries.removeWhere(
         (e) =>
-            e is SelectorChildEntry && e.parentId == item.parentId && e.isAny,
+            e is SelectChildEntry && e.parentId == item.parentId && e.isAny,
       );
 
       if (SelectionMode.single == category.selectionMode) {
@@ -128,11 +128,11 @@ class SelectorSelectionRules {
 
   void toggleCascadingLeaf(
     SelectorStateTree tree,
-    SelectorChildEntry entry, {
+    SelectChildEntry entry, {
     required SelectionMode selectorSelectionMode,
     required SelectionMode childrenSelectionMode,
-    required List<SelectorEntry> focusedPath,
-    required SelectorCategoryEntry category,
+    required List<SelectEntry> focusedPath,
+    required SelectCategoryEntry category,
   }) {
     final level = focusedPath.length;
     while (level - tree.levelCount >= 0) {
@@ -152,15 +152,15 @@ class SelectorSelectionRules {
           selectedEntries.remove(entry);
         } else {
           selectedEntries.removeWhere(
-              (e) => (e as SelectorTextEntry).parentId == entry.parentId);
+              (e) => (e as SelectTextEntry).parentId == entry.parentId);
           selectedEntries.add(entry);
         }
       }
     } else {
       tree.mutableSelectedEntriesAtLevel(1).removeWhere((e) =>
-          e is SelectorChildEntry && e.parentId == entry.parentId && e.isAny);
+          e is SelectChildEntry && e.parentId == entry.parentId && e.isAny);
       selectedEntries.removeWhere((e) =>
-          e is SelectorChildEntry && e.parentId == entry.parentId && e.isAny);
+          e is SelectChildEntry && e.parentId == entry.parentId && e.isAny);
 
       if (SelectionMode.single == childrenSelectionMode) {
         if (!selectedEntries.contains(entry)) {
@@ -188,7 +188,7 @@ class SelectorSelectionRules {
       final parent = focusedPath[i];
       final sameParentSelected = tree
           .mutableSelectedEntriesAtLevel(i + 1)
-          .where((e) => e is SelectorChildEntry && e.parentId == parent.id);
+          .where((e) => e is SelectChildEntry && e.parentId == parent.id);
       if (sameParentSelected.isEmpty) {
         tree.mutableSelectedEntriesAtLevel(i).remove(parent);
       }
@@ -208,7 +208,7 @@ class SelectorSelectionRules {
   void toggleHeaderOrFooter(
     SelectorStateTree tree, {
     required String categoryId,
-    required SelectorChildEntry entry,
+    required SelectChildEntry entry,
     required SelectionMode selectionMode,
     required bool isHeader,
   }) {

@@ -85,7 +85,7 @@ class _RentPageState extends State<RentPage> {
   }
 
   HouseFilter? _dropdownSelectorResultParser(
-      PopupTabData tabData, SelectorEntries selected) {
+      PopupTabData tabData, SelectEntries selected) {
     final filter = HouseFilter(cityId: userCityId);
     if (tabData.index == 0) {
       // 区域
@@ -152,7 +152,7 @@ class _RentPageState extends State<RentPage> {
   }
 
   void _handleSelectorChange(
-      PopupTabData tabData, SelectorEntries selected) async {
+      PopupTabData tabData, SelectEntries selected) async {
     final l10n = AppLocalizations.of(context);
     _filter = _dropdownSelectorResultParser(tabData, selected);
     if (_filter == null) {
@@ -187,7 +187,7 @@ class _RentPageState extends State<RentPage> {
     }
   }
 
-  void _handleSelectorApply(PopupTabData tabData, SelectorEntries selected) {
+  void _handleSelectorApply(PopupTabData tabData, SelectEntries selected) {
     final l10n = AppLocalizations.of(context);
     // Persist the applied selection to the repo so it can be restored on reopen.
     if (tabData.index == 0) {

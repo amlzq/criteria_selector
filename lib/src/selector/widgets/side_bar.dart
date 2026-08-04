@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../selector_entry.dart';
+import '../select_entry.dart';
 import '../selector_theme.dart';
 import '../selector_theme_data.dart';
 import 'badge.dart';
@@ -29,13 +29,13 @@ class SelectorSideBar extends StatelessWidget {
   ///
   /// Each entry renders a [SelectorListTile]; the number of tiles equals the
   /// length of this list.
-  final List<SelectorEntry> entries;
+  final List<SelectEntry> entries;
 
   /// The set of currently selected categories.
   ///
   /// A tile is rendered as selected when its entry is contained in this set,
   /// and its badge is shown accordingly.
-  final SelectorEntries selectedCategories;
+  final SelectEntries selectedCategories;
 
   /// The index of the tile that should be considered focused.
   ///
@@ -89,7 +89,7 @@ class SelectorSideBar extends StatelessWidget {
 
   /// Called when a tile is tapped.
   ///
-  /// The callback receives the tapped tile's index and its [SelectorEntry].
+  /// The callback receives the tapped tile's index and its [SelectEntry].
   final OnChanged onChanged;
 
   @override

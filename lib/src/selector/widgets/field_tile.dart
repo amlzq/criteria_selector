@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../selector_entry.dart';
+import '../select_entry.dart';
 import '../selector_theme.dart';
 import '../selector_theme_data.dart';
 import 'field_tile_theme.dart';
 
-/// A range input tile for a [SelectorRangeEntry].
+/// A range input tile for a [SelectRangeEntry].
 ///
 /// This widget renders two numeric text fields for min/max input.
 class SelectorFieldTile extends StatelessWidget {
@@ -34,7 +34,7 @@ class SelectorFieldTile extends StatelessWidget {
   ///
   /// Provides the min/max hint text and an optional input label rendered before
   /// the two fields.
-  final SelectorRangeEntry entry;
+  final SelectRangeEntry entry;
 
   /// The padding around the whole tile.
   ///

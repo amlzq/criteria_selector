@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
+import 'selector/select_entry.dart';
 import 'selector/selector_delegate.dart';
-import 'selector/selector_entry.dart';
 import 'selector/selector_panel.dart';
 
 /// Shows a selector in a modal bottom sheet built with Flutter's
 /// [showModalBottomSheet].
 ///
-/// Returns the selected [SelectorEntries] when the user applies the selection,
+/// Returns the selected [SelectEntries] when the user applies the selection,
 /// or `null` when the sheet is dismissed (for example by tapping the barrier
 /// when [isDismissible] is `true`, dragging it down, or via the system back
 /// gesture).
@@ -37,7 +37,7 @@ import 'selector/selector_panel.dart';
 ///
 /// Styling (colors, per-widget themes and the panel decoration via
 /// [SelectorDelegate.panelTheme]) is carried entirely by [delegate].
-Future<SelectorEntries?> showModalBottomSelect({
+Future<SelectEntries?> showModalBottomSelect({
   required BuildContext context,
   required SelectorDelegate delegate,
   bool isScrollControlled = false,
@@ -64,7 +64,7 @@ Future<SelectorEntries?> showModalBottomSelect({
       BoxConstraints(
         maxHeight: MediaQuery.of(context).size.height * 0.9,
       );
-  return showModalBottomSheet<SelectorEntries?>(
+  return showModalBottomSheet<SelectEntries?>(
     context: context,
     isScrollControlled: isScrollControlled,
     useRootNavigator: useRootNavigator,
@@ -94,7 +94,7 @@ Future<SelectorEntries?> showModalBottomSelect({
 /// alias will be removed in a future minor version.
 @Deprecated(
     'Use showModalBottomSelect instead. This will be removed in a future minor version.')
-Future<SelectorEntries?> showModalBottomSelector({
+Future<SelectEntries?> showModalBottomSelector({
   required BuildContext context,
   required SelectorDelegate delegate,
   bool isScrollControlled = false,
@@ -156,7 +156,7 @@ class _ModalBottomSheetContentState extends State<_ModalBottomSheetContent> {
   // dismiss race.
   bool _popped = false;
 
-  void _popWith(SelectorEntries? result) {
+  void _popWith(SelectEntries? result) {
     if (_popped) return;
     _popped = true;
     Navigator.of(context).pop(result);

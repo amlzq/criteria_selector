@@ -2,26 +2,26 @@ import 'package:criteria_selector/criteria_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-SelectorTextEntry<dynamic> _child({
+SelectTextEntry<dynamic> _child({
   required String parentId,
   required String id,
   required String name,
 }) {
-  return SelectorTextEntry<dynamic>(
+  return SelectTextEntry<dynamic>(
     parentId: parentId,
     id: id,
     name: name,
   );
 }
 
-SelectorCategoryEntry<dynamic> _category({
+SelectCategoryEntry<dynamic> _category({
   required String id,
   required String name,
-  required Set<SelectorEntry<dynamic>> children,
+  required Set<SelectEntry<dynamic>> children,
   SelectorLayout? layout,
   SelectionMode selectionMode = SelectionMode.single,
 }) {
-  return SelectorCategoryEntry<dynamic>(
+  return SelectCategoryEntry<dynamic>(
     id: id,
     name: name,
     children: children,
@@ -31,9 +31,9 @@ SelectorCategoryEntry<dynamic> _category({
 }
 
 Widget _buildGridSelector(
-  List<SelectorEntry<dynamic>> entries, {
+  List<SelectEntry<dynamic>> entries, {
   GridSelectorDelegate? delegate,
-  Set<SelectorEntry<dynamic>>? previousSelected,
+  Set<SelectEntry<dynamic>>? previousSelected,
 }) {
   final effectiveDelegate = delegate ??
       GridSelectorDelegate(
@@ -146,8 +146,8 @@ void main() {
     });
 
     testWidgets('renders SelectorRangeLayout as range view', (tester) async {
-      final children = <SelectorEntry<dynamic>>{
-        SelectorRangeEntry.custom(
+      final children = <SelectEntry<dynamic>>{
+        SelectRangeEntry.custom(
           parentId: 'c',
           name: 'Custom Range',
           min: 0,

@@ -2,13 +2,13 @@ import 'package:criteria_selector/criteria_selector.dart';
 import 'package:criteria_selector/src/selector/state/selector_state_tree.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-SelectorTextEntry<dynamic> _text(
+SelectTextEntry<dynamic> _text(
   String parentId,
   String id,
   String name, {
-  Set<SelectorEntry<dynamic>>? children,
+  Set<SelectEntry<dynamic>>? children,
 }) {
-  return SelectorTextEntry<dynamic>(
+  return SelectTextEntry<dynamic>(
     parentId: parentId,
     id: id,
     name: name,
@@ -16,17 +16,17 @@ SelectorTextEntry<dynamic> _text(
   );
 }
 
-SelectorCategoryEntry<dynamic> _category(
+SelectCategoryEntry<dynamic> _category(
   String id,
   String name, {
-  required Set<SelectorEntry<dynamic>> children,
-  SelectorEntry<dynamic>? header,
+  required Set<SelectEntry<dynamic>> children,
+  SelectEntry<dynamic>? header,
   SelectionMode headerSelectionMode = SelectionMode.single,
-  SelectorEntry<dynamic>? footer,
+  SelectEntry<dynamic>? footer,
   SelectionMode footerSelectionMode = SelectionMode.single,
   SelectionMode selectionMode = SelectionMode.single,
 }) {
-  return SelectorCategoryEntry<dynamic>(
+  return SelectCategoryEntry<dynamic>(
     id: id,
     name: name,
     children: children,
@@ -126,7 +126,7 @@ void main() {
 
     test('does nothing when all levels are non-empty', () {
       final tree = SelectorStateTree();
-      final any = SelectorTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
+      final any = SelectTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {any, a});
       tree.bind([c], initializeAnyIfEmpty: true);
@@ -376,7 +376,7 @@ void main() {
         'initializes Any entries for category tree when initializeAnyIfEmpty is true',
         () {
       final tree = SelectorStateTree();
-      final any = SelectorTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
+      final any = SelectTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {any, a});
       tree.bind([c], initializeAnyIfEmpty: true);
@@ -396,7 +396,7 @@ void main() {
 
     test('initializes Any for flat tree when no category entries', () {
       final tree = SelectorStateTree();
-      final any = SelectorTextEntry<dynamic>.any(parentId: '', name: 'Any');
+      final any = SelectTextEntry<dynamic>.any(parentId: '', name: 'Any');
       final a = _text('', 'a', 'A');
       tree.bind([any, a], initializeAnyIfEmpty: true);
 
@@ -418,7 +418,7 @@ void main() {
 
       // previousSelected must contain a category entry with its selected
       // children so restorePreviousSelected can rebuild the tree.
-      final selectedCategory = SelectorCategoryEntry<dynamic>(
+      final selectedCategory = SelectCategoryEntry<dynamic>(
         id: 'c',
         name: 'C',
         children: {a},
@@ -437,11 +437,11 @@ void main() {
       final c = _category('c', 'C', children: {parent});
 
       // previousSelected must contain a category entry with nested children
-      final selectedCategory = SelectorCategoryEntry<dynamic>(
+      final selectedCategory = SelectCategoryEntry<dynamic>(
         id: 'c',
         name: 'C',
         children: {
-          SelectorTextEntry<dynamic>(
+          SelectTextEntry<dynamic>(
             parentId: 'c',
             id: 'p',
             name: 'P',
@@ -461,7 +461,7 @@ void main() {
         'falls back to Any when previousSelected is empty and initializeAnyIfEmpty is true',
         () {
       final tree = SelectorStateTree();
-      final any = SelectorTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
+      final any = SelectTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {any, a});
       tree.bind([c], initializeAnyIfEmpty: true, previousSelected: {});
@@ -479,7 +479,7 @@ void main() {
       final c = _category('c', 'C', children: {a, b});
 
       // First bind with a selected via a category entry
-      final selectedWithA = SelectorCategoryEntry<dynamic>(
+      final selectedWithA = SelectCategoryEntry<dynamic>(
         id: 'c',
         name: 'C',
         children: {a},
@@ -489,7 +489,7 @@ void main() {
       expect(tree.selectedEntriesAtLevel(1).contains(a), isTrue);
 
       // Reset with b via a category entry
-      final selectedWithB = SelectorCategoryEntry<dynamic>(
+      final selectedWithB = SelectCategoryEntry<dynamic>(
         id: 'c',
         name: 'C',
         children: {b},
@@ -520,11 +520,11 @@ void main() {
 
       // Create a category entry with header children that are selected
       final selectedHeader = _text('header', 'h1', 'H1');
-      final selectedCategory = SelectorCategoryEntry<dynamic>(
+      final selectedCategory = SelectCategoryEntry<dynamic>(
         id: 'c',
         name: 'C',
         children: {},
-        header: SelectorTextEntry<dynamic>(
+        header: SelectTextEntry<dynamic>(
           parentId: 'c',
           id: 'header',
           name: 'Header',
@@ -549,11 +549,11 @@ void main() {
       );
 
       final selectedFooter = _text('footer', 'f1', 'F1');
-      final selectedCategory = SelectorCategoryEntry<dynamic>(
+      final selectedCategory = SelectCategoryEntry<dynamic>(
         id: 'c',
         name: 'C',
         children: {},
-        footer: SelectorTextEntry<dynamic>(
+        footer: SelectTextEntry<dynamic>(
           parentId: 'c',
           id: 'footer',
           name: 'Footer',

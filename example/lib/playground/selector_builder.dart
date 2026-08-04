@@ -25,9 +25,9 @@ Widget _checkboxBuilder(BuildContext context, bool selected) =>
 /// delegate family. Keeping them together lets the playground swap the whole demo
 /// data set (Zillow ↔ Leyoujia) behind one interface.
 class DelegateLoaders {
-  final Future<SelectorEntries> Function() entries;
-  final SelectorEntries? Function() selected;
-  final SelectorEntries? Function() reset;
+  final Future<SelectEntries> Function() entries;
+  final SelectEntries? Function() selected;
+  final SelectEntries? Function() reset;
 
   const DelegateLoaders({
     required this.entries,

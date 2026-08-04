@@ -18,8 +18,8 @@ void main() {
               ],
               selectorDelegates: [
                 ListSelectorDelegate(
-                  entriesLoader: () async => <SelectorEntry<dynamic>>{
-                    SelectorTextEntry<dynamic>.name(id: 'a', name: 'A'),
+                  entriesLoader: () async => <SelectEntry<dynamic>>{
+                    SelectTextEntry<dynamic>.name(id: 'a', name: 'A'),
                   },
                 ),
               ],
@@ -71,7 +71,7 @@ void main() {
     });
 
     testWidgets('applies selection and updates tab label', (tester) async {
-      ({PopupTabData tabData, SelectorEntries selected})? applied;
+      ({PopupTabData tabData, SelectEntries selected})? applied;
       final controller = PopupSelectController();
 
       await tester.pumpWidget(
@@ -83,9 +83,9 @@ void main() {
               ],
               selectorDelegates: [
                 ListSelectorDelegate(
-                  entriesLoader: () async => <SelectorEntry<dynamic>>{
-                    SelectorTextEntry<dynamic>.name(id: 'a', name: 'A'),
-                    SelectorTextEntry<dynamic>.name(id: 'b', name: 'B'),
+                  entriesLoader: () async => <SelectEntry<dynamic>>{
+                    SelectTextEntry<dynamic>.name(id: 'a', name: 'A'),
+                    SelectTextEntry<dynamic>.name(id: 'b', name: 'B'),
                   },
                 ),
               ],
@@ -116,7 +116,7 @@ void main() {
     });
 
     testWidgets('uses labelGetter when provided', (tester) async {
-      ({PopupTabData tabData, SelectorEntries selected})? applied;
+      ({PopupTabData tabData, SelectEntries selected})? applied;
       final controller = PopupSelectController();
 
       await tester.pumpWidget(
@@ -131,8 +131,8 @@ void main() {
               ],
               selectorDelegates: [
                 ListSelectorDelegate(
-                  entriesLoader: () async => <SelectorEntry<dynamic>>{
-                    SelectorTextEntry<dynamic>.name(id: 'a', name: 'A'),
+                  entriesLoader: () async => <SelectEntry<dynamic>>{
+                    SelectTextEntry<dynamic>.name(id: 'a', name: 'A'),
                   },
                 ),
               ],
@@ -161,7 +161,7 @@ void main() {
 
     testWidgets('fires onChanged and onReset in multiple selection',
         (tester) async {
-      ({PopupTabData tabData, SelectorEntries selected})? changed;
+      ({PopupTabData tabData, SelectEntries selected})? changed;
       var resetCalled = false;
       final controller = PopupSelectController();
 
@@ -175,9 +175,9 @@ void main() {
               selectorDelegates: [
                 ListSelectorDelegate(
                   selectionMode: SelectionMode.multiple,
-                  entriesLoader: () async => <SelectorEntry<dynamic>>{
-                    SelectorTextEntry<dynamic>.name(id: 'a', name: 'A'),
-                    SelectorTextEntry<dynamic>.name(id: 'b', name: 'B'),
+                  entriesLoader: () async => <SelectEntry<dynamic>>{
+                    SelectTextEntry<dynamic>.name(id: 'a', name: 'A'),
+                    SelectTextEntry<dynamic>.name(id: 'b', name: 'B'),
                   },
                 ),
               ],

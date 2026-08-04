@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../selector_entry.dart';
+import '../select_entry.dart';
 import '../selector_theme.dart';
 import '../selector_theme_data.dart';
 import 'constants.dart';
@@ -34,15 +34,15 @@ class SelectorTabBar extends StatelessWidget {
 
   /// The category entries to display as tabs in this bar.
   ///
-  /// Each entry renders a tab UI and must be a [SelectorCategoryEntry]; the
+  /// Each entry renders a tab UI and must be a [SelectCategoryEntry]; the
   /// number of tabs equals the length of this list.
-  final List<SelectorEntry> entries;
+  final List<SelectEntry> entries;
 
   /// The set of currently selected categories.
   ///
   /// A tab is rendered as selected when its entry is contained in this set,
   /// and its indicator is shown accordingly.
-  final SelectorEntries selectedCategories;
+  final SelectEntries selectedCategories;
 
   /// The index of the tab that should be considered focused.
   ///
@@ -121,7 +121,7 @@ class SelectorTabBar extends StatelessWidget {
 
   /// Called when a tab is tapped.
   ///
-  /// The callback receives the tapped tab's index and its [SelectorEntry].
+  /// The callback receives the tapped tab's index and its [SelectEntry].
   final OnChanged onChanged;
 
   double _measureLabelWidth(
@@ -174,7 +174,7 @@ class SelectorTabBar extends StatelessWidget {
         defaults.indicatorAnimationDuration!;
 
     final tabs = List<Widget>.generate(entries.length, (int index) {
-      final entry = entries[index] as SelectorCategoryEntry;
+      final entry = entries[index] as SelectCategoryEntry;
       final selected = selectedCategories.contains(entry);
       final label = entry.name ?? '';
 

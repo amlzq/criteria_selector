@@ -10,12 +10,12 @@ import '../generated/l10n/app_localizations.dart';
 const Duration _resultDebounceInterval = Duration(seconds: 1);
 
 Timer? _debounceTimer;
-SelectorEntries? _latestResult;
+SelectEntries? _latestResult;
 
 /// Shows a snack bar that displays the selected filter result.
 ///
 /// Tapping the "view" action opens a bottom sheet with the flattened
-/// [SelectorEntries] result.
+/// [SelectEntries] result.
 ///
 /// Calls are debounced by [debounceInterval]: intermediate calls cancel the
 /// previous pending timer so that only the last result within the window is
@@ -23,7 +23,7 @@ SelectorEntries? _latestResult;
 /// frequently.
 void showSelectResult(
   BuildContext context,
-  SelectorEntries result, {
+  SelectEntries result, {
   Duration debounceInterval = _resultDebounceInterval,
 }) {
   _latestResult = result;
@@ -33,7 +33,7 @@ void showSelectResult(
   });
 }
 
-void _showSnackBar(BuildContext context, SelectorEntries result) {
+void _showSnackBar(BuildContext context, SelectEntries result) {
   final l10n = AppLocalizations.of(context);
 
   ScaffoldMessenger.of(context).showSnackBar(

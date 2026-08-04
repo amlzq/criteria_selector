@@ -26,7 +26,7 @@ class _BoxPageState extends State<BoxPage> {
     _filtersRepo = HouseFiltersRepository();
   }
 
-  void _handleRegionChange(SelectorEntries result) async {
+  void _handleRegionChange(SelectEntries result) async {
     final l10n = AppLocalizations.of(context);
     _filter ??= HouseFilter(cityId: userCityId);
     // 区域
@@ -66,7 +66,7 @@ class _BoxPageState extends State<BoxPage> {
     }
   }
 
-  void _handlePriceChange(SelectorEntries result) async {
+  void _handlePriceChange(SelectEntries result) async {
     _filter ??= HouseFilter(cityId: userCityId);
     // 价格筛选
     _filtersRepo.buyPriceResult = result;
@@ -96,7 +96,7 @@ class _BoxPageState extends State<BoxPage> {
     }
   }
 
-  void _handleFloorPlanChange(SelectorEntries result) async {
+  void _handleFloorPlanChange(SelectEntries result) async {
     _filter ??= HouseFilter(cityId: userCityId);
     // 户型筛选
     _filtersRepo.floorPlanBuyResult = result;
@@ -113,7 +113,7 @@ class _BoxPageState extends State<BoxPage> {
         .toList(growable: false);
   }
 
-  void _handleSortChange(SelectorEntries result) async {
+  void _handleSortChange(SelectEntries result) async {
     _filter = HouseFilter(cityId: userCityId);
     // 排序筛选
     _filtersRepo.sortBuyResult = result;

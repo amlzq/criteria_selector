@@ -8,8 +8,8 @@ import 'dropdown_overlay_style.dart';
 import 'i18n/localizations.dart';
 import 'popup_select_bar_theme.dart';
 import 'popup_select_controller.dart';
+import 'selector/select_entry.dart';
 import 'selector/selector_delegate.dart';
-import 'selector/selector_entry.dart';
 import 'selector/selector_theme_data.dart';
 import 'selector_label_state.dart';
 import 'selector_overlay_host.dart';
@@ -27,7 +27,7 @@ typedef PopupSelectBarToggleCallback = void Function(PopupTabData tabData);
 ///
 /// Receives the tab metadata and the selected entries directly.
 typedef PopupSelectBarResultCallback = void Function(
-    PopupTabData tabData, SelectorEntries selected);
+    PopupTabData tabData, SelectEntries selected);
 
 /// Deprecated alias for [kPopupSelectBarHeight].
 ///
@@ -281,11 +281,11 @@ class _PopupSelectBarState extends State<PopupSelectBar>
   }
 
   void _handleWidgetChange(
-          SelectorLabelState labelState, SelectorEntries selected) =>
+          SelectorLabelState labelState, SelectEntries selected) =>
       widget.onChanged?.call(labelState as PopupTabData, selected);
 
   void _handleWidgetApply(
-          SelectorLabelState labelState, SelectorEntries selected) =>
+          SelectorLabelState labelState, SelectEntries selected) =>
       widget.onApplied?.call(labelState as PopupTabData, selected);
 
   void _handleWidgetReset() => widget.onReset?.call();

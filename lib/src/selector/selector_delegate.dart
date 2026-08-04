@@ -5,7 +5,7 @@ import 'constants.dart';
 import 'flatten_selector.dart';
 import 'grid_selector.dart';
 import 'list_selector.dart';
-import 'selector_entry.dart';
+import 'select_entry.dart';
 import 'selector_panel_theme.dart';
 import 'widgets/widgets.dart';
 
@@ -64,37 +64,37 @@ abstract class SelectorDelegate {
   ///
   /// When provided, the selector panel can display a loading skeleton while
   /// awaiting the result.
-  final Future<SelectorEntries> Function()? entriesLoader;
+  final Future<SelectEntries> Function()? entriesLoader;
 
-  Future<SelectorEntries>? _data;
+  Future<SelectEntries>? _data;
 
   /// The selectable entries future, lazily initialized from [entriesLoader]
   /// on first access.
-  Future<SelectorEntries>? get data => _data ??= entriesLoader?.call();
+  Future<SelectEntries>? get data => _data ??= entriesLoader?.call();
 
   /// Returns the previously selected entries to restore.
   ///
   /// This is typically used for restoring state when reopening the selector.
-  final SelectorEntries? Function()? selectedEntriesLoader;
+  final SelectEntries? Function()? selectedEntriesLoader;
 
-  SelectorEntries? _selectedData;
+  SelectEntries? _selectedData;
 
   /// The previously selected entries, lazily initialized from
   /// [selectedEntriesLoader] on first access.
   ///
   /// Can be set explicitly to override the cached value.
-  SelectorEntries? get selectedData =>
+  SelectEntries? get selectedData =>
       _selectedData ??= selectedEntriesLoader?.call();
-  set selectedData(SelectorEntries? value) => _selectedData = value;
+  set selectedData(SelectEntries? value) => _selectedData = value;
 
   /// Returns the selection that should be used when "Reset" is tapped.
-  final SelectorEntries? Function()? resetEntriesLoader;
+  final SelectEntries? Function()? resetEntriesLoader;
 
-  SelectorEntries? _resetData;
+  SelectEntries? _resetData;
 
   /// The reset selection entries, lazily initialized from [resetEntriesLoader]
   /// on first access.
-  SelectorEntries? get resetData => _resetData ??= resetEntriesLoader?.call();
+  SelectEntries? get resetData => _resetData ??= resetEntriesLoader?.call();
 
   /// Optional builder to customize the action bar UI.
   final SelectorActionBarBuilder? actionBarBuilder;
@@ -170,8 +170,8 @@ abstract class SelectorDelegate {
   /// a previously applied selection, if any.
   Widget buildBody(
     BuildContext context,
-    List<SelectorEntry> entries,
-    Set<SelectorEntry>? previousSelected,
+    List<SelectEntry> entries,
+    Set<SelectEntry>? previousSelected,
   );
 
   /// Builds the loading skeleton.
@@ -245,8 +245,8 @@ class CascadingSelectorDelegate extends SelectorDelegate {
   @override
   Widget buildBody(
     BuildContext context,
-    List<SelectorEntry> entries,
-    Set<SelectorEntry>? previousSelected,
+    List<SelectEntry> entries,
+    Set<SelectEntry>? previousSelected,
   ) {
     return CascadingSelector(
       delegate: this,
@@ -303,8 +303,8 @@ class ListSelectorDelegate extends SelectorDelegate {
   @override
   Widget buildBody(
     BuildContext context,
-    List<SelectorEntry> entries,
-    Set<SelectorEntry>? previousSelected,
+    List<SelectEntry> entries,
+    Set<SelectEntry>? previousSelected,
   ) {
     return ListSelector(
       delegate: this,
@@ -377,8 +377,8 @@ class GridSelectorDelegate extends SelectorDelegate {
   @override
   Widget buildBody(
     BuildContext context,
-    List<SelectorEntry> entries,
-    Set<SelectorEntry>? previousSelected,
+    List<SelectEntry> entries,
+    Set<SelectEntry>? previousSelected,
   ) {
     return GridSelector(
       delegate: this,
@@ -450,8 +450,8 @@ class FlattenSelectorDelegate extends SelectorDelegate {
   @override
   Widget buildBody(
     BuildContext context,
-    List<SelectorEntry> entries,
-    Set<SelectorEntry>? previousSelected,
+    List<SelectEntry> entries,
+    Set<SelectEntry>? previousSelected,
   ) {
     return FlattenSelector(
       delegate: this,

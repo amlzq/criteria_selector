@@ -2,13 +2,13 @@ import 'package:criteria_selector/criteria_selector.dart';
 import 'package:criteria_selector/src/selector/selector_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-SelectorTextEntry<dynamic> _text(
+SelectTextEntry<dynamic> _text(
   String parentId,
   String id,
   String name, {
-  Set<SelectorEntry<dynamic>>? children,
+  Set<SelectEntry<dynamic>>? children,
 }) {
-  return SelectorTextEntry<dynamic>(
+  return SelectTextEntry<dynamic>(
     parentId: parentId,
     id: id,
     name: name,
@@ -16,17 +16,17 @@ SelectorTextEntry<dynamic> _text(
   );
 }
 
-SelectorCategoryEntry<dynamic> _category(
+SelectCategoryEntry<dynamic> _category(
   String id,
   String name, {
-  required Set<SelectorEntry<dynamic>> children,
-  SelectorEntry<dynamic>? header,
+  required Set<SelectEntry<dynamic>> children,
+  SelectEntry<dynamic>? header,
   SelectionMode headerSelectionMode = SelectionMode.single,
-  SelectorEntry<dynamic>? footer,
+  SelectEntry<dynamic>? footer,
   SelectionMode footerSelectionMode = SelectionMode.single,
   SelectionMode selectionMode = SelectionMode.single,
 }) {
-  return SelectorCategoryEntry<dynamic>(
+  return SelectCategoryEntry<dynamic>(
     id: id,
     name: name,
     children: children,
@@ -44,11 +44,11 @@ void main() {
       // Two categories that both have a "custom" entry.
       // Without the parentId filtering fix, the selected "custom" from c1
       // would leak into c2's cloned subtree.
-      final custom1 = SelectorRangeEntry<int, dynamic>.custom(
+      final custom1 = SelectRangeEntry<int, dynamic>.custom(
         parentId: 'c1',
         name: 'Custom',
       );
-      final custom2 = SelectorRangeEntry<int, dynamic>.custom(
+      final custom2 = SelectRangeEntry<int, dynamic>.custom(
         parentId: 'c2',
         name: 'Custom',
       );
@@ -60,8 +60,8 @@ void main() {
       final cloned = SelectorUtils.cloneTree(
         {c1, c2},
         [
-          <SelectorEntry<dynamic>>{c1, c2},
-          <SelectorEntry<dynamic>>{custom1, a2},
+          <SelectEntry<dynamic>>{c1, c2},
+          <SelectEntry<dynamic>>{custom1, a2},
         ],
       );
 
@@ -86,7 +86,7 @@ void main() {
     test(
         'cloneTree includes selected custom range entry from original children',
         () {
-      final custom = SelectorRangeEntry<int, dynamic>.custom(
+      final custom = SelectRangeEntry<int, dynamic>.custom(
         parentId: 'c',
         name: 'Custom',
         min: 10,
@@ -96,7 +96,7 @@ void main() {
       final c = _category('c', 'C', children: {custom, a});
 
       // Selection marks custom as selected
-      final selectedCustom = SelectorRangeEntry<int, dynamic>.custom(
+      final selectedCustom = SelectRangeEntry<int, dynamic>.custom(
         parentId: 'c',
         name: 'Custom',
         min: 50,
@@ -106,14 +106,14 @@ void main() {
       final cloned = SelectorUtils.cloneTree(
         {c},
         [
-          <SelectorEntry<dynamic>>{c},
-          <SelectorEntry<dynamic>>{selectedCustom},
+          <SelectEntry<dynamic>>{c},
+          <SelectEntry<dynamic>>{selectedCustom},
         ],
       );
 
-      final clonedC = cloned.single as SelectorCategoryEntry<dynamic>;
+      final clonedC = cloned.single as SelectCategoryEntry<dynamic>;
       final clonedCustom = clonedC.children!
-          .whereType<SelectorRangeEntry<int, dynamic>>()
+          .whereType<SelectRangeEntry<int, dynamic>>()
           .single;
       expect(clonedCustom.isCustom, isTrue);
       // cloneTree uses original children matched by == (id/parentId/name),
@@ -129,7 +129,7 @@ void main() {
       final cloned = SelectorUtils.cloneTree(
         {c},
         [
-          <SelectorEntry<dynamic>>{}, // empty root selection
+          <SelectEntry<dynamic>>{}, // empty root selection
         ],
       );
 
@@ -150,14 +150,14 @@ void main() {
       final cloned = SelectorUtils.cloneTree(
         {c},
         [
-          <SelectorEntry<dynamic>>{c},
+          <SelectEntry<dynamic>>{c},
         ],
         selectedHeaderEntries: {
-          'c': <SelectorEntry<dynamic>>{h1},
+          'c': <SelectEntry<dynamic>>{h1},
         },
       );
 
-      final clonedC = cloned.single as SelectorCategoryEntry<dynamic>;
+      final clonedC = cloned.single as SelectCategoryEntry<dynamic>;
       expect(clonedC.header, isNotNull);
       expect(clonedC.header!.children!.map((e) => e.id).toSet(), {'h1'});
     });
@@ -171,16 +171,16 @@ void main() {
       final cloned = SelectorUtils.cloneTree(
         {root},
         [
-          <SelectorEntry<dynamic>>{root},
-          <SelectorEntry<dynamic>>{c1},
-          <SelectorEntry<dynamic>>{g1},
+          <SelectEntry<dynamic>>{root},
+          <SelectEntry<dynamic>>{c1},
+          <SelectEntry<dynamic>>{g1},
         ],
         deepCloneSelectedSubtree: false,
       );
 
-      final clonedRoot = cloned.single as SelectorCategoryEntry<dynamic>;
+      final clonedRoot = cloned.single as SelectCategoryEntry<dynamic>;
       final clonedC1 =
-          clonedRoot.children!.single as SelectorTextEntry<dynamic>;
+          clonedRoot.children!.single as SelectTextEntry<dynamic>;
       // g1 should be cloned without its children (shallow)
       final clonedG1 = clonedC1.children!.single;
       expect(clonedG1.id, 'g1');
@@ -195,13 +195,13 @@ void main() {
       final c1 = _category('c1', 'C1', children: {a1});
       final c2 = _category('c2', 'C2', children: {a2});
 
-      final entries = <SelectorEntry<dynamic>>{c1, c2};
+      final entries = <SelectEntry<dynamic>>{c1, c2};
 
       SelectorUtils.clippingTree(
         entries,
         [
-          <SelectorEntry<dynamic>>{c1, c2},
-          <SelectorEntry<dynamic>>{a1}, // only a1 selected
+          <SelectEntry<dynamic>>{c1, c2},
+          <SelectEntry<dynamic>>{a1}, // only a1 selected
         ],
         0,
       );
@@ -219,14 +219,14 @@ void main() {
     });
 
     test('clippingTree handles empty entries', () {
-      SelectorUtils.clippingTree(<SelectorEntry<dynamic>>{}, [], 0);
+      SelectorUtils.clippingTree(<SelectEntry<dynamic>>{}, [], 0);
       // Should not throw
     });
 
     test('clippingTree handles empty selectedItemsPerLevel', () {
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
-      final entries = <SelectorEntry<dynamic>>{c};
+      final entries = <SelectEntry<dynamic>>{c};
 
       SelectorUtils.clippingTree(entries, [], 0);
       // Entries should be unchanged
@@ -239,13 +239,13 @@ void main() {
       final leaf = _text('p', 'l', 'L');
       final parent = _text('c', 'p', 'P', children: {leaf});
       final c = _category('c', 'C', children: {parent});
-      final items = <SelectorEntry<dynamic>>{c}.toList();
+      final items = <SelectEntry<dynamic>>{c}.toList();
 
-      final selectedCategory = SelectorCategoryEntry<dynamic>(
+      final selectedCategory = SelectCategoryEntry<dynamic>(
         id: 'c',
         name: 'C',
         children: {
-          SelectorTextEntry<dynamic>(
+          SelectTextEntry<dynamic>(
             parentId: 'c',
             id: 'p',
             name: 'P',
@@ -264,13 +264,13 @@ void main() {
     });
 
     test('clears stale min/max on unrestored custom entries', () {
-      final customInItems = SelectorRangeEntry<int, dynamic>.custom(
+      final customInItems = SelectRangeEntry<int, dynamic>.custom(
         parentId: 'r',
         name: 'Custom',
         min: 100,
         max: 200,
       );
-      final items = <SelectorEntry<dynamic>>{customInItems}.toList();
+      final items = <SelectEntry<dynamic>>{customInItems}.toList();
 
       // Restore with an empty selection — custom should be cleared
       SelectorUtils.restorePreviousSelected(items, {});
@@ -287,7 +287,7 @@ void main() {
 
     test('handles empty selectedEntries gracefully', () {
       final a = _text('c', 'a', 'A');
-      final items = <SelectorEntry<dynamic>>{a}.toList();
+      final items = <SelectEntry<dynamic>>{a}.toList();
 
       final restored = SelectorUtils.restorePreviousSelected(items, {});
       expect(restored, isEmpty);
@@ -315,7 +315,7 @@ void main() {
     });
 
     test('ignores "any" leaf whose parent is the category', () {
-      final any = SelectorTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
+      final any = SelectTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
       final c = _category('c', 'C', children: {any});
 
       // Any under category directly is ignored
@@ -323,7 +323,7 @@ void main() {
     });
 
     test('uses parent name for "any" leaf with non-category parent', () {
-      final any = SelectorTextEntry<dynamic>.any(parentId: 'p', name: 'Any');
+      final any = SelectTextEntry<dynamic>.any(parentId: 'p', name: 'Any');
       final p = _text('c', 'p', 'Parent', children: {any});
       final c = _category('c', 'C', children: {p});
 
@@ -342,8 +342,8 @@ void main() {
   });
 
   group('SelectorUtils – deepCloneEntries with all entry types', () {
-    test('clones SelectorTextEntry', () {
-      final entry = SelectorTextEntry<dynamic>(
+    test('clones SelectTextEntry', () {
+      final entry = SelectTextEntry<dynamic>(
         parentId: 'p',
         id: 'e',
         name: 'E',
@@ -355,7 +355,7 @@ void main() {
       final cloned = SelectorUtils.deepCloneEntries({entry});
       expect(cloned.length, 1);
       expect(identical(cloned.single, entry), isFalse);
-      final clonedEntry = cloned.single as SelectorTextEntry<dynamic>;
+      final clonedEntry = cloned.single as SelectTextEntry<dynamic>;
       expect(clonedEntry.parentId, 'p');
       expect(clonedEntry.id, 'e');
       expect(clonedEntry.name, 'E');
@@ -364,8 +364,8 @@ void main() {
       expect(clonedEntry.children!.length, 1);
     });
 
-    test('clones SelectorIntEntry (via SelectorRangeEntry<int>)', () {
-      final entry = SelectorRangeEntry<int, dynamic>(
+    test('clones SelectIntEntry (via SelectRangeEntry<int>)', () {
+      final entry = SelectRangeEntry<int, dynamic>(
         parentId: 'p',
         id: 'e',
         name: 'E',
@@ -380,7 +380,7 @@ void main() {
 
       final cloned = SelectorUtils.deepCloneEntries({entry});
       expect(cloned.length, 1);
-      final clonedEntry = cloned.single as SelectorRangeEntry<int, dynamic>;
+      final clonedEntry = cloned.single as SelectRangeEntry<int, dynamic>;
       expect(clonedEntry.min, 0);
       expect(clonedEntry.max, 100);
       expect(clonedEntry.divisions, 10);
@@ -390,12 +390,12 @@ void main() {
       expect(clonedEntry.extra, 'extra_data');
     });
 
-    test('clones SelectorCategoryEntry with header and footer', () {
+    test('clones SelectCategoryEntry with header and footer', () {
       final h = _text('header', 'h', 'H');
       final header = _text('c', 'header', 'Header', children: {h});
       final f = _text('footer', 'f', 'F');
       final footer = _text('c', 'footer', 'Footer', children: {f});
-      final c = SelectorCategoryEntry<dynamic>(
+      final c = SelectCategoryEntry<dynamic>(
         id: 'c',
         name: 'C',
         children: {_text('c', 'a', 'A')},
@@ -409,7 +409,7 @@ void main() {
 
       final cloned = SelectorUtils.deepCloneEntries({c});
       expect(cloned.length, 1);
-      final clonedC = cloned.single as SelectorCategoryEntry<dynamic>;
+      final clonedC = cloned.single as SelectCategoryEntry<dynamic>;
       expect(clonedC.selectionMode, SelectionMode.multiple);
       expect(clonedC.headerSelectionMode, SelectionMode.multiple);
       expect(clonedC.footerSelectionMode, SelectionMode.multiple);
@@ -421,12 +421,12 @@ void main() {
     });
 
     test('deepCloneEntries with skipAny excludes any entries', () {
-      final any = SelectorTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
+      final any = SelectTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {any, a});
 
       final cloned = SelectorUtils.deepCloneEntries({c}, skipAny: true);
-      final clonedC = cloned.single as SelectorCategoryEntry<dynamic>;
+      final clonedC = cloned.single as SelectCategoryEntry<dynamic>;
       final childIds = clonedC.children!.map((e) => e.id).toSet();
       expect(childIds, {'a'});
       expect(childIds, isNot(contains('any')));

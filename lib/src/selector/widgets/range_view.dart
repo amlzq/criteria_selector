@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../selector_entry.dart';
+import '../select_entry.dart';
 import 'constants.dart';
 import 'field_tile.dart';
 import 'range_slider.dart';
@@ -10,7 +10,7 @@ import 'range_slider.dart';
 ///
 /// This is the canonical render target for
 /// [SelectorRangeLayout] — drop the layout on a category that contains
-/// a custom [SelectorRangeEntry] and you get a "price-range" style control
+/// a custom [SelectRangeEntry] and you get a "price-range" style control
 /// out of the box:
 ///
 /// * The slider is the primary input.
@@ -39,23 +39,23 @@ class SelectorRangeView extends StatefulWidget {
   /// Defaults to true. Has no effect when [category] is null.
   final bool showTitle;
 
-  /// The category that owns the layout; supplies the [SelectorRangeEntry]
-  /// to render via [SelectorCategoryEntryExtension.firstCustomOrNull].
+  /// The category that owns the layout; supplies the [SelectRangeEntry]
+  /// to render via [SelectCategoryEntryExtension.firstCustomOrNull].
   ///
   /// When null, the view falls back to [entries] to locate a custom
-  /// [SelectorRangeEntry].
-  final SelectorCategoryEntry? category;
+  /// [SelectRangeEntry].
+  final SelectCategoryEntry? category;
 
   /// The full child-entry list, used as a fallback to locate a custom
-  /// [SelectorRangeEntry] when [category] does not provide one.
-  final List<SelectorEntry> entries;
+  /// [SelectRangeEntry] when [category] does not provide one.
+  final List<SelectEntry> entries;
 
   /// The set of currently selected entries. Used to restore the custom
   /// entry's previous min/max on first build.
-  final SelectorEntries? selectedEntries;
+  final SelectEntries? selectedEntries;
 
   /// Called when the range changes. The view has already normalized the
-  /// current start/end onto the custom [SelectorRangeEntry] (writing `null`
+  /// current start/end onto the custom [SelectRangeEntry] (writing `null`
   /// for bounds that sit at the slider's extremes) before invoking this
   /// callback, so the listener only needs to update selection state.
   final OnChanged onChanged;
@@ -97,7 +97,7 @@ class _SelectorRangeViewState extends State<SelectorRangeView> {
   num? _initialMax;
 
   /// Whether the underlying entry is integral (both bounds are `int`, e.g.
-  /// a [SelectorIntEntry]). When true, slider/field values are snapped to
+  /// a [SelectIntEntry]). When true, slider/field values are snapped to
   /// whole numbers and never exposed as floating-point text.
   bool _isInt = false;
 
@@ -139,10 +139,10 @@ class _SelectorRangeViewState extends State<SelectorRangeView> {
     // We only react to an explicit reset: when the custom range was selected
     // and is now gone, restore the fields to their empty (extreme)
     // placeholders.
-    final oldHadCustom = (oldWidget.selectedEntries ?? const <SelectorEntry>{})
-        .any((e) => e is SelectorRangeEntry && e.isCustom);
-    final newHasCustom = (widget.selectedEntries ?? const <SelectorEntry>{})
-        .any((e) => e is SelectorRangeEntry && e.isCustom);
+    final oldHadCustom = (oldWidget.selectedEntries ?? const <SelectEntry>{})
+        .any((e) => e is SelectRangeEntry && e.isCustom);
+    final newHasCustom = (widget.selectedEntries ?? const <SelectEntry>{})
+        .any((e) => e is SelectRangeEntry && e.isCustom);
     if (oldHadCustom && !newHasCustom) {
       _currentRange = RangeValues(_min, _max);
       _minController.clear();
@@ -181,16 +181,16 @@ class _SelectorRangeViewState extends State<SelectorRangeView> {
     _initialMin = entry.min;
     _initialMax = entry.max;
     // Treat the range as integral when both bounds are integers (e.g. a
-    // SelectorIntEntry); the slider then snaps the displayed/returned value
+    // SelectIntEntry); the slider then snaps the displayed/returned value
     // to whole numbers instead of exposing floating-point text.
     _isInt = entry.min is int && entry.max is int;
   }
 
-  SelectorRangeEntry? _findEntry() {
+  SelectRangeEntry? _findEntry() {
     final fromCategory = widget.category?.firstCustomOrNull;
     if (fromCategory != null) return fromCategory;
     for (final e in widget.entries) {
-      if (e is SelectorRangeEntry && e.isCustom) return e;
+      if (e is SelectRangeEntry && e.isCustom) return e;
     }
     return null;
   }

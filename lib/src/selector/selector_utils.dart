@@ -2,15 +2,15 @@ import 'dart:collection';
 
 import 'package:collection/collection.dart';
 
-import 'selector_entry.dart';
+import 'select_entry.dart';
 
-/// Utility methods for working with [SelectorEntry] trees and selections.
+/// Utility methods for working with [SelectEntry] trees and selections.
 class SelectorUtils {
   /// Returns the entries at the given tree [level] starting from [entry].
   ///
   /// - If [level] is 0, returns a set containing [entry].
   /// - If [level] is greater than the depth under [entry], returns an empty set.
-  static SelectorEntries findChildrenAtLevel(SelectorEntry entry, int level) {
+  static SelectEntries findChildrenAtLevel(SelectEntry entry, int level) {
     // If level == 0, the current entry is the target.
     if (level == 0) return {entry};
 
@@ -18,7 +18,7 @@ class SelectorUtils {
     if (entry.children == null || entry.children!.isEmpty) return {};
 
     // Recurse into the next level
-    SelectorEntries result = {};
+    SelectEntries result = {};
     for (var child in entry.children ?? {}) {
       result.addAll(findChildrenAtLevel(child, level - 1));
     }
@@ -26,7 +26,7 @@ class SelectorUtils {
   }
 
   /// Returns the entry ids at the given tree [level] starting from [entry].
-  static Set<String> findIdsAtLevel(SelectorEntry entry, int level) {
+  static Set<String> findIdsAtLevel(SelectEntry entry, int level) {
     // If level == 0, the current entry is the target.
     if (level == 0) return {entry.id};
 
@@ -47,7 +47,7 @@ class SelectorUtils {
   /// The result contains values in traversal order, and each value is cast to
   /// [E]. If a node's `extra` is not assignable to [E], a runtime error may be
   /// thrown.
-  static List<E> findExtrasAtLevel<E>(SelectorEntry entry, int level) {
+  static List<E> findExtrasAtLevel<E>(SelectEntry entry, int level) {
     // If level == 0, the current node is the target.
     if (level == 0) return [entry.extra as E];
 
@@ -63,24 +63,24 @@ class SelectorUtils {
   }
 
   /// Flattens a tree into a list of entry sets grouped by depth level.
-  static List<SelectorEntries> flattenTree(SelectorEntry? root) {
+  static List<SelectEntries> flattenTree(SelectEntry? root) {
     if (root == null) return [];
 
-    final List<SelectorEntries> resultLevels = [];
+    final List<SelectEntries> resultLevels = [];
 
     // Use a Queue to store nodes to be processed
-    final Queue<SelectorEntry> queue = Queue()..add(root);
+    final Queue<SelectEntry> queue = Queue()..add(root);
 
     while (queue.isNotEmpty) {
       // Key step: record the current queue size at the start of processing this level
       final int levelSize = queue.length;
 
       // Create a Set for the current level to ensure uniqueness
-      final SelectorEntries currentLevelSet = {};
+      final SelectEntries currentLevelSet = {};
 
       // Loop levelSize times to process only nodes in this level
       for (int i = 0; i < levelSize; i++) {
-        final SelectorEntry entry = queue.removeFirst();
+        final SelectEntry entry = queue.removeFirst();
         currentLevelSet.add(entry);
 
         // Add all children to the queue; they will be processed as the next level
@@ -97,28 +97,28 @@ class SelectorUtils {
   }
 
   /// Returns the maximum depth of a tree structure rooted at [root].
-  int treeDepth(SelectorEntry? root) {
+  int treeDepth(SelectEntry? root) {
     if (root?.children == null || root?.children?.isEmpty == true) return 1;
     return 1 + root!.children!.map(treeDepth).fold(0, (a, b) => a > b ? a : b);
   }
 
-  static SelectorEntries removeAnyEntries(Iterable<SelectorEntry> entries) {
-    final SelectorEntries result =
-        entries is Set<SelectorEntry> ? entries : entries.toSet();
+  static SelectEntries removeAnyEntries(Iterable<SelectEntry> entries) {
+    final SelectEntries result =
+        entries is Set<SelectEntry> ? entries : entries.toSet();
 
-    void removeAnyInChildren(SelectorEntry entry) {
+    void removeAnyInChildren(SelectEntry entry) {
       final children = entry.children;
       if (children == null || children.isEmpty) return;
 
       children
-          .removeWhere((child) => child is SelectorChildEntry && child.isAny);
+          .removeWhere((child) => child is SelectChildEntry && child.isAny);
 
       for (final child in children) {
         removeAnyInChildren(child);
       }
     }
 
-    result.removeWhere((entry) => entry is SelectorChildEntry && entry.isAny);
+    result.removeWhere((entry) => entry is SelectChildEntry && entry.isAny);
     for (final entry in result) {
       removeAnyInChildren(entry);
     }
@@ -133,29 +133,29 @@ class SelectorUtils {
   ///
   /// If [skipAny] is true, nodes marked as "Any" are excluded from the cloned
   /// result.
-  static SelectorEntries deepCloneEntries(
-    Iterable<SelectorEntry> entries, {
+  static SelectEntries deepCloneEntries(
+    Iterable<SelectEntry> entries, {
     bool skipAny = false,
   }) {
     return entries
         .where((entry) =>
-            !skipAny || !(entry is SelectorChildEntry && entry.isAny))
+            !skipAny || !(entry is SelectChildEntry && entry.isAny))
         .map((entry) => _cloneEntry(entry, skipAny: skipAny))
         .toSet();
   }
 
-  static SelectorEntry _cloneEntry(
-    SelectorEntry entry, {
+  static SelectEntry _cloneEntry(
+    SelectEntry entry, {
     bool skipAny = false,
   }) {
     final clonedChildren = entry.children
         ?.where((child) =>
-            !skipAny || !(child is SelectorChildEntry && child.isAny))
+            !skipAny || !(child is SelectChildEntry && child.isAny))
         .map((child) => _cloneEntry(child, skipAny: skipAny))
         .toSet();
 
-    if (entry is SelectorTextEntry) {
-      return SelectorTextEntry(
+    if (entry is SelectTextEntry) {
+      return SelectTextEntry(
         parentId: entry.parentId,
         id: entry.id,
         name: entry.name,
@@ -165,8 +165,8 @@ class SelectorUtils {
       );
     }
 
-    if (entry is SelectorIntEntry) {
-      return SelectorRangeEntry<int, dynamic>(
+    if (entry is SelectIntEntry) {
+      return SelectRangeEntry<int, dynamic>(
         min: entry.min,
         max: entry.max,
         divisions: entry.divisions,
@@ -183,8 +183,8 @@ class SelectorUtils {
       );
     }
 
-    if (entry is SelectorRangeEntry) {
-      return SelectorRangeEntry(
+    if (entry is SelectRangeEntry) {
+      return SelectRangeEntry(
         min: entry.min,
         max: entry.max,
         divisions: entry.divisions,
@@ -201,8 +201,8 @@ class SelectorUtils {
       );
     }
 
-    if (entry is SelectorChildEntry) {
-      return SelectorChildEntry(
+    if (entry is SelectChildEntry) {
+      return SelectChildEntry(
         parentId: entry.parentId,
         id: entry.id,
         name: entry.name,
@@ -213,8 +213,8 @@ class SelectorUtils {
       );
     }
 
-    if (entry is SelectorCategoryEntry) {
-      return SelectorCategoryEntry(
+    if (entry is SelectCategoryEntry) {
+      return SelectCategoryEntry(
         selectionMode: entry.selectionMode,
         header: entry.header == null
             ? null
@@ -234,18 +234,18 @@ class SelectorUtils {
     }
 
     throw UnsupportedError(
-      'Unsupported SelectorEntry type: ${entry.runtimeType}',
+      'Unsupported SelectEntry type: ${entry.runtimeType}',
     );
   }
 
-  static SelectorEntry _cloneEntryWithChildren(
-    SelectorEntry entry,
-    Set<SelectorEntry>? children, {
-    SelectorEntry? header,
-    SelectorEntry? footer,
+  static SelectEntry _cloneEntryWithChildren(
+    SelectEntry entry,
+    Set<SelectEntry>? children, {
+    SelectEntry? header,
+    SelectEntry? footer,
   }) {
-    if (entry is SelectorTextEntry) {
-      return SelectorTextEntry(
+    if (entry is SelectTextEntry) {
+      return SelectTextEntry(
         parentId: entry.parentId,
         id: entry.id,
         name: entry.name,
@@ -255,8 +255,8 @@ class SelectorUtils {
       );
     }
 
-    if (entry is SelectorIntEntry) {
-      return SelectorRangeEntry<int, dynamic>(
+    if (entry is SelectIntEntry) {
+      return SelectRangeEntry<int, dynamic>(
         min: entry.min,
         max: entry.max,
         divisions: entry.divisions,
@@ -273,8 +273,8 @@ class SelectorUtils {
       );
     }
 
-    if (entry is SelectorRangeEntry) {
-      return SelectorRangeEntry(
+    if (entry is SelectRangeEntry) {
+      return SelectRangeEntry(
         min: entry.min,
         max: entry.max,
         divisions: entry.divisions,
@@ -291,8 +291,8 @@ class SelectorUtils {
       );
     }
 
-    if (entry is SelectorChildEntry) {
-      return SelectorChildEntry(
+    if (entry is SelectChildEntry) {
+      return SelectChildEntry(
         parentId: entry.parentId,
         id: entry.id,
         name: entry.name,
@@ -303,8 +303,8 @@ class SelectorUtils {
       );
     }
 
-    if (entry is SelectorCategoryEntry) {
-      return SelectorCategoryEntry(
+    if (entry is SelectCategoryEntry) {
+      return SelectCategoryEntry(
         selectionMode: entry.selectionMode,
         header: header,
         headerSelectionMode: entry.headerSelectionMode,
@@ -320,28 +320,28 @@ class SelectorUtils {
     }
 
     throw UnsupportedError(
-      'Unsupported SelectorEntry type: ${entry.runtimeType}',
+      'Unsupported SelectEntry type: ${entry.runtimeType}',
     );
   }
 
-  static SelectorEntry _cloneEntryWithoutChildren(SelectorEntry entry) {
+  static SelectEntry _cloneEntryWithoutChildren(SelectEntry entry) {
     return _cloneEntryWithChildren(entry, null);
   }
 
-  static SelectorEntry _cloneHeaderFooterEntry(
-    SelectorEntry entry,
-    SelectorEntries? selectedChildren, {
+  static SelectEntry _cloneHeaderFooterEntry(
+    SelectEntry entry,
+    SelectEntries? selectedChildren, {
     required bool deepCloneSelectedSubtree,
   }) {
     final originalChildren =
-        entry.children?.toList() ?? const <SelectorEntry>[];
+        entry.children?.toList() ?? const <SelectEntry>[];
     final selectedIds =
         selectedChildren?.map((e) => e.id).toSet() ?? const <String>{};
 
-    Set<SelectorEntry>? clonedChildren;
+    Set<SelectEntry>? clonedChildren;
     if (entry.children != null) {
       if (selectedIds.isEmpty) {
-        clonedChildren = <SelectorEntry>{};
+        clonedChildren = <SelectEntry>{};
       } else {
         final selectedOrdered =
             originalChildren.where((child) => selectedIds.contains(child.id));
@@ -367,16 +367,16 @@ class SelectorUtils {
   /// avoids false matches by id alone (e.g. `custom`/`any` exist under every
   /// category).
   static void clippingTree(
-    SelectorEntries? entries,
-    List<SelectorEntries> selectedItemsPerLevel,
+    SelectEntries? entries,
+    List<SelectEntries> selectedItemsPerLevel,
     int level, [
-    Map<String, SelectorEntries>? selectedHeaderEntries,
-    Map<String, SelectorEntries>? selectedFooterEntries,
+    Map<String, SelectEntries>? selectedHeaderEntries,
+    Map<String, SelectEntries>? selectedFooterEntries,
   ]) {
     if (entries == null || entries.isEmpty || selectedItemsPerLevel.isEmpty) {
       return;
     }
-    SelectorEntries? selectedEntries =
+    SelectEntries? selectedEntries =
         selectedItemsPerLevel.elementAtOrNull(level);
     if (selectedEntries == null || selectedEntries.isEmpty) {
       return;
@@ -385,7 +385,7 @@ class SelectorUtils {
 
     if (selectedHeaderEntries != null || selectedFooterEntries != null) {
       for (final entry in entries) {
-        if (entry is! SelectorCategoryEntry) continue;
+        if (entry is! SelectCategoryEntry) continue;
         final category = entry;
 
         if (selectedHeaderEntries != null) {
@@ -422,13 +422,13 @@ class SelectorUtils {
       // `item`'s subtree before recursing, so clipping only removes nodes that
       // are not selected under this specific parent.
       final filteredPerLevel =
-          List<SelectorEntries>.from(selectedItemsPerLevel);
+          List<SelectEntries>.from(selectedItemsPerLevel);
       final nextLevel = level + 1;
       if (nextLevel < filteredPerLevel.length) {
         filteredPerLevel[nextLevel] = filteredPerLevel[nextLevel]
             .where((e) =>
-                e is SelectorCategoryEntry ||
-                (e is SelectorChildEntry && e.parentId == item.id))
+                e is SelectCategoryEntry ||
+                (e is SelectChildEntry && e.parentId == item.id))
             .toSet();
       }
       clippingTree(
@@ -441,12 +441,12 @@ class SelectorUtils {
     }
   }
 
-  static SelectorEntries cloneTree(
-    Iterable<SelectorEntry> entries,
-    List<SelectorEntries> selectedItemsPerLevel, {
+  static SelectEntries cloneTree(
+    Iterable<SelectEntry> entries,
+    List<SelectEntries> selectedItemsPerLevel, {
     bool deepCloneSelectedSubtree = true,
-    Map<String, SelectorEntries>? selectedHeaderEntries,
-    Map<String, SelectorEntries>? selectedFooterEntries,
+    Map<String, SelectEntries>? selectedHeaderEntries,
+    Map<String, SelectEntries>? selectedFooterEntries,
   }) {
     // Returns the selected entries at [level] that belong to [parent]'s
     // subtree. Root-level category entries are always kept (they have no
@@ -456,18 +456,18 @@ class SelectorUtils {
     // (e.g. `list_price`'s custom range) would leak into another category's
     // (e.g. `monthly_payment`'s) subtree during cloning, and id-only matches
     // (`custom`/`any` exist under every category) would produce wrong results.
-    SelectorEntries selectedForParent(SelectorEntry parent, int level) {
+    SelectEntries selectedForParent(SelectEntry parent, int level) {
       final all = selectedItemsPerLevel.elementAtOrNull(level);
       if (all == null || all.isEmpty) return {};
       return all
           .where((e) =>
-              e is SelectorCategoryEntry ||
-              (e is SelectorChildEntry && e.parentId == parent.id))
+              e is SelectCategoryEntry ||
+              (e is SelectChildEntry && e.parentId == parent.id))
           .toSet();
     }
 
-    SelectorEntry cloneEntryAtLevel(SelectorEntry entry, int level) {
-      Set<SelectorEntry>? clonedChildren;
+    SelectEntry cloneEntryAtLevel(SelectEntry entry, int level) {
+      Set<SelectEntry>? clonedChildren;
       final children = entry.children;
 
       if (children != null && children.isNotEmpty) {
@@ -491,7 +491,7 @@ class SelectorUtils {
             // the latter, the cloned children would end up empty/null even
             // though a range was actually selected.
             final childIds = children.map((c) => c.id).toSet();
-            final selectedOrdered = <SelectorEntry>[
+            final selectedOrdered = <SelectEntry>[
               for (final child in children)
                 if (selectedNext.contains(child)) child,
               for (final s in selectedNext)
@@ -505,7 +505,7 @@ class SelectorUtils {
         }
       }
 
-      if (entry is SelectorCategoryEntry) {
+      if (entry is SelectCategoryEntry) {
         final clonedHeader = entry.header == null
             ? null
             : selectedHeaderEntries == null
@@ -538,7 +538,7 @@ class SelectorUtils {
     final selectedRoot = selectedItemsPerLevel.elementAtOrNull(0) ?? {};
     if (selectedRoot.isEmpty) return {};
 
-    final result = <SelectorEntry>{};
+    final result = <SelectEntry>{};
     for (final entry in entries) {
       if (!selectedRoot.contains(entry)) continue;
       result.add(cloneEntryAtLevel(entry, 0));
@@ -548,7 +548,7 @@ class SelectorUtils {
 
   // Computes an effective label from the current selection and returns it.
   static String? getResultLabel(
-    SelectorEntries? resultEntries,
+    SelectEntries? resultEntries,
     String multipleText,
   ) {
     if (resultEntries == null) return null;
@@ -563,15 +563,15 @@ class SelectorUtils {
     String? firstLabel;
 
     bool collectCandidateLabels(
-      SelectorEntry entry, {
-      SelectorEntry? parent,
+      SelectEntry entry, {
+      SelectEntry? parent,
     }) {
       final children = entry.children;
       final isLeaf = children == null || children.isEmpty;
       if (isLeaf) {
         String? label;
-        if (entry is SelectorChildEntry && entry.isAny) {
-          if (parent == null || parent is SelectorCategoryEntry) return false;
+        if (entry is SelectChildEntry && entry.isAny) {
+          if (parent == null || parent is SelectCategoryEntry) return false;
           label = parent.name;
         } else {
           label = entry.name;
@@ -601,15 +601,15 @@ class SelectorUtils {
   ///
   /// Returns selected entries per level. For custom range entries, previously
   /// entered values are restored into the matched entries.
-  static List<SelectorEntries> restorePreviousSelected(
-      List<SelectorEntry>? items, Set<SelectorEntry>? selectedEntries) {
-    final result = <SelectorEntries>[];
+  static List<SelectEntries> restorePreviousSelected(
+      List<SelectEntry>? items, Set<SelectEntry>? selectedEntries) {
+    final result = <SelectEntries>[];
     _initializeSelectedEntriesPerLevel(items, selectedEntries, 0, result);
     // Drop any stale min/max on custom range entries that were not part of the
     // restored selection, so previously entered values don't linger after a
     // reset (which would otherwise re-populate the input fields).
     final restored = result.expand((e) => e).toSet();
-    items?.whereType<SelectorRangeEntry>().forEach((entry) {
+    items?.whereType<SelectRangeEntry>().forEach((entry) {
       if (entry.isCustom && !restored.contains(entry)) {
         entry.min = null;
         entry.max = null;
@@ -619,10 +619,10 @@ class SelectorUtils {
   }
 
   static void _initializeSelectedEntriesPerLevel(
-      List<SelectorEntry>? items,
-      Set<SelectorEntry>? selectedEntries,
+      List<SelectEntry>? items,
+      Set<SelectEntry>? selectedEntries,
       int level,
-      List<SelectorEntries> result) {
+      List<SelectEntries> result) {
     if (items == null ||
         items.isEmpty ||
         selectedEntries == null ||
@@ -634,9 +634,9 @@ class SelectorUtils {
       final item = items.singleWhereOrNull((e) => e.id == selectedItem.id);
       if (item != null) {
         result[level].add(item);
-        if (item is SelectorRangeEntry && item.isCustom) {
+        if (item is SelectRangeEntry && item.isCustom) {
           // If it's a custom entry, restore the previous input values.
-          selectedItem as SelectorRangeEntry;
+          selectedItem as SelectRangeEntry;
           item.min = selectedItem.min;
           item.max = selectedItem.max;
         }

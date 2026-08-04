@@ -1,13 +1,13 @@
 import 'package:criteria_selector/criteria_selector.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-SelectorTextEntry<dynamic> _text(
+SelectTextEntry<dynamic> _text(
   String parentId,
   String id,
   String name, {
-  Set<SelectorEntry<dynamic>>? children,
+  Set<SelectEntry<dynamic>>? children,
 }) {
-  return SelectorTextEntry<dynamic>(
+  return SelectTextEntry<dynamic>(
     parentId: parentId,
     id: id,
     name: name,
@@ -15,17 +15,17 @@ SelectorTextEntry<dynamic> _text(
   );
 }
 
-SelectorCategoryEntry<dynamic> _category(
+SelectCategoryEntry<dynamic> _category(
   String id,
   String name, {
-  required Set<SelectorEntry<dynamic>> children,
-  SelectorEntry<dynamic>? header,
+  required Set<SelectEntry<dynamic>> children,
+  SelectEntry<dynamic>? header,
   SelectionMode headerSelectionMode = SelectionMode.single,
-  SelectorEntry<dynamic>? footer,
+  SelectEntry<dynamic>? footer,
   SelectionMode footerSelectionMode = SelectionMode.single,
   SelectionMode selectionMode = SelectionMode.single,
 }) {
-  return SelectorCategoryEntry<dynamic>(
+  return SelectCategoryEntry<dynamic>(
     id: id,
     name: name,
     children: children,
@@ -38,9 +38,9 @@ SelectorCategoryEntry<dynamic> _category(
 }
 
 void main() {
-  group('SelectorEntriesExtension – insert', () {
+  group('SelectEntriesExtension – insert', () {
     test('inserts entry at index while preserving iteration order', () {
-      final entries = <SelectorEntry<dynamic>>{
+      final entries = <SelectEntry<dynamic>>{
         _text('', 'a', 'A'),
         _text('', 'c', 'C'),
       };
@@ -55,7 +55,7 @@ void main() {
     });
 
     test('insert at start', () {
-      final entries = <SelectorEntry<dynamic>>{
+      final entries = <SelectEntry<dynamic>>{
         _text('', 'b', 'B'),
         _text('', 'c', 'C'),
       };
@@ -66,7 +66,7 @@ void main() {
     });
 
     test('insert at end', () {
-      final entries = <SelectorEntry<dynamic>>{
+      final entries = <SelectEntry<dynamic>>{
         _text('', 'a', 'A'),
         _text('', 'b', 'B'),
       };
@@ -77,9 +77,9 @@ void main() {
     });
   });
 
-  group('SelectorEntriesExtension – flatten', () {
+  group('SelectEntriesExtension – flatten', () {
     test('flatten returns null for empty set', () {
-      final entries = <SelectorEntry<dynamic>>{};
+      final entries = <SelectEntry<dynamic>>{};
       expect(entries.flatten(), isNull);
     });
 
@@ -127,7 +127,7 @@ void main() {
     });
   });
 
-  group('SelectorEntriesExtension – findCategory', () {
+  group('SelectEntriesExtension – findCategory', () {
     test('finds category by id', () {
       final c = _category('c', 'C', children: {_text('c', 'a', 'A')});
 
@@ -142,12 +142,12 @@ void main() {
     });
 
     test('returns null for empty set', () {
-      final entries = <SelectorEntry<dynamic>>{};
+      final entries = <SelectEntry<dynamic>>{};
       expect(entries.findCategory('c'), isNull);
     });
   });
 
-  group('SelectorEntriesExtension – childIdsOf', () {
+  group('SelectEntriesExtension – childIdsOf', () {
     test('returns child ids of a category', () {
       final a = _text('c', 'a', 'A');
       final b = _text('c', 'b', 'B');
@@ -170,9 +170,9 @@ void main() {
     });
   });
 
-  group('SelectorEntriesExtension – childRangesOf', () {
+  group('SelectEntriesExtension – childRangesOf', () {
     test('returns range entries of a category', () {
-      final range = SelectorRangeEntry<int, dynamic>(
+      final range = SelectRangeEntry<int, dynamic>(
         parentId: 'c',
         id: 'r',
         name: 'Range',
@@ -205,7 +205,7 @@ void main() {
     });
   });
 
-  group('SelectorEntriesExtension – cascadingPairsOf', () {
+  group('SelectEntriesExtension – cascadingPairsOf', () {
     test('returns parent-child id pairs for cascading category', () {
       final leaf1 = _text('p1', 'l1', 'L1');
       final leaf2 = _text('p2', 'l2', 'L2');
@@ -243,13 +243,13 @@ void main() {
   });
 
   group(
-      'SelectorEntriesExtension – findChildrenAtLevel / findIdsAtLevel / findExtrasAtLevel',
+      'SelectEntriesExtension – findChildrenAtLevel / findIdsAtLevel / findExtrasAtLevel',
       () {
     test('findChildrenAtLevel delegates to SelectorUtils', () {
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
 
-      final entries = <SelectorEntry<dynamic>>{c};
+      final entries = <SelectEntry<dynamic>>{c};
       expect(entries.findChildrenAtLevel(c, 0), {c});
       expect(entries.findChildrenAtLevel(c, 1).contains(a), isTrue);
     });
@@ -258,13 +258,13 @@ void main() {
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
 
-      final entries = <SelectorEntry<dynamic>>{c};
+      final entries = <SelectEntry<dynamic>>{c};
       expect(entries.findIdsAtLevel(c, 0), {'c'});
       expect(entries.findIdsAtLevel(c, 1), {'a'});
     });
   });
 
-  group('SelectorEntriesExtension – firstSelectedId', () {
+  group('SelectEntriesExtension – firstSelectedId', () {
     test('returns id of first selected entry', () {
       final c = _category('c', 'C', children: {_text('c', 'a', 'A')});
 
@@ -272,17 +272,17 @@ void main() {
     });
 
     test('returns null for empty set', () {
-      final entries = <SelectorEntry<dynamic>>{};
+      final entries = <SelectEntry<dynamic>>{};
       expect(entries.firstSelectedId, isNull);
     });
   });
 
   group('IterableExtension', () {
     test('hasAnyItem returns true when iterable contains any entry', () {
-      final any = SelectorTextEntry<dynamic>.any(parentId: 'p', name: 'Any');
+      final any = SelectTextEntry<dynamic>.any(parentId: 'p', name: 'Any');
       final a = _text('p', 'a', 'A');
 
-      final entries = <SelectorEntry<dynamic>>{any, a};
+      final entries = <SelectEntry<dynamic>>{any, a};
       expect(entries.hasAnyItem, isTrue);
     });
 
@@ -290,62 +290,62 @@ void main() {
       final a = _text('p', 'a', 'A');
       final b = _text('p', 'b', 'B');
 
-      final entries = <SelectorEntry<dynamic>>{a, b};
+      final entries = <SelectEntry<dynamic>>{a, b};
       expect(entries.hasAnyItem, isFalse);
     });
 
     test('hasCustomItem returns true when iterable contains custom range entry',
         () {
-      final custom = SelectorRangeEntry<int, dynamic>.custom(
+      final custom = SelectRangeEntry<int, dynamic>.custom(
         parentId: 'p',
         name: 'Custom',
       );
       final a = _text('p', 'a', 'A');
 
-      final entries = <SelectorEntry<dynamic>>{custom, a};
+      final entries = <SelectEntry<dynamic>>{custom, a};
       expect(entries.hasCustomItem, isTrue);
     });
 
     test('hasCustomItem returns false when no custom entry', () {
       final a = _text('p', 'a', 'A');
 
-      final entries = <SelectorEntry<dynamic>>{a};
+      final entries = <SelectEntry<dynamic>>{a};
       expect(entries.hasCustomItem, isFalse);
     });
 
     test('firstCustomOrNull returns first custom range entry', () {
-      final custom = SelectorRangeEntry<int, dynamic>.custom(
+      final custom = SelectRangeEntry<int, dynamic>.custom(
         parentId: 'p',
         name: 'Custom',
       );
       final a = _text('p', 'a', 'A');
 
-      final entries = <SelectorEntry<dynamic>>{custom, a};
+      final entries = <SelectEntry<dynamic>>{custom, a};
       expect(entries.firstCustomOrNull, equals(custom));
     });
 
     test('firstCustomOrNull returns null when first is not custom', () {
       final a = _text('p', 'a', 'A');
 
-      final entries = <SelectorEntry<dynamic>>{a};
+      final entries = <SelectEntry<dynamic>>{a};
       expect(entries.firstCustomOrNull, isNull);
     });
 
     test('lastCustomOrNull returns last custom range entry', () {
       final a = _text('p', 'a', 'A');
-      final custom = SelectorRangeEntry<int, dynamic>.custom(
+      final custom = SelectRangeEntry<int, dynamic>.custom(
         parentId: 'p',
         name: 'Custom',
       );
 
-      final entries = <SelectorEntry<dynamic>>{a, custom};
+      final entries = <SelectEntry<dynamic>>{a, custom};
       expect(entries.lastCustomOrNull, equals(custom));
     });
 
     test('lastCustomOrNull returns null when last is not custom', () {
       final a = _text('p', 'a', 'A');
 
-      final entries = <SelectorEntry<dynamic>>{a};
+      final entries = <SelectEntry<dynamic>>{a};
       expect(entries.lastCustomOrNull, isNull);
     });
   });
@@ -370,7 +370,7 @@ void main() {
     });
 
     test('testAnyElement returns true for any entry', () {
-      final any = SelectorTextEntry<dynamic>.any(parentId: 'p', name: 'Any');
+      final any = SelectTextEntry<dynamic>.any(parentId: 'p', name: 'Any');
       expect(testAnyElement(any), isTrue);
     });
 
@@ -380,7 +380,7 @@ void main() {
     });
 
     test('testCustomElement returns true for custom range entry', () {
-      final custom = SelectorRangeEntry<int, dynamic>.custom(
+      final custom = SelectRangeEntry<int, dynamic>.custom(
         parentId: 'p',
         name: 'Custom',
       );
@@ -398,7 +398,7 @@ void main() {
     });
 
     test('testNotCustomItem returns false for custom range entry', () {
-      final custom = SelectorRangeEntry<int, dynamic>.custom(
+      final custom = SelectRangeEntry<int, dynamic>.custom(
         parentId: 'p',
         name: 'Custom',
       );
@@ -418,14 +418,14 @@ void main() {
     test(
         'testSameParentAnyOrCustomElement returns true for any with matching parentId',
         () {
-      final any = SelectorTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
+      final any = SelectTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
       expect(testSameParentAnyOrCustomElement(any, 'c'), isTrue);
     });
 
     test(
         'testSameParentAnyOrCustomElement returns true for custom with matching parentId',
         () {
-      final custom = SelectorRangeEntry<int, dynamic>.custom(
+      final custom = SelectRangeEntry<int, dynamic>.custom(
         parentId: 'c',
         name: 'Custom',
       );
@@ -441,7 +441,7 @@ void main() {
 
     test('testSameParentAnyOrCustomElement returns false for wrong parentId',
         () {
-      final any = SelectorTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
+      final any = SelectTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
       expect(testSameParentAnyOrCustomElement(any, 'other'), isFalse);
     });
   });
