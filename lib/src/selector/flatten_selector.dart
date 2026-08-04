@@ -183,7 +183,7 @@ class FlattenSelectorState extends State<FlattenSelector> {
   Element? _findChildElement(RenderObject parent, Key key) {
     Element? target;
     _scrollViewKey.currentContext?.visitChildElements((element) {
-      // This visit traverses direct children of the ListView (i.e., SelectorGridView)
+      // This visit traverses direct children of the ListView (i.e., SelectGridView)
       void visitor(Element e) {
         if (e.widget.key == key) {
           target = e;
@@ -349,7 +349,7 @@ class FlattenSelectorState extends State<FlattenSelector> {
                                     level: 1) ??
                                 {};
                         final isLast = item == widget.entries.last;
-                        return SelectorGridView(
+                        return SelectGridView(
                           key: ValueKey('category_$index'),
                           crossAxisCount: widget.crossAxisCount,
                           childAspectRatio: widget.childAspectRatio,
@@ -374,13 +374,13 @@ class FlattenSelectorState extends State<FlattenSelector> {
           ),
         ),
         if (SelectionMode.multiple == selectorSelectionMode &&
-            !SelectorActionBarVisibility.isHidden(context))
+            !SelectActionBarVisibility.isHidden(context))
           delegate.actionBarBuilder?.call(
                 context,
                 onResetTap: _onResetTap,
                 onApplyTap: _onApplyTap,
               ) ??
-              SelectorActionBar(
+              SelectActionBar(
                 resetText: delegate.resetText,
                 applyText: delegate.applyText,
                 resetFlex: delegate.actionBarTheme?.resetFlex,
@@ -434,7 +434,7 @@ class PlattenSelectorSkeleton extends StatelessWidget {
                   backgroundColor: categoryBackgroundColor,
                 ),
                 Flexible(
-                  child: SelectorGridSkeleton(
+                  child: SelectGridSkeleton(
                     itemCount: 16,
                     padding: const EdgeInsets.all(15),
                     crossAxisCount: crossAxisCount,
@@ -446,7 +446,7 @@ class PlattenSelectorSkeleton extends StatelessWidget {
               ],
             ),
           ),
-          const SelectorActionBarSkeleton(),
+          const SelectActionBarSkeleton(),
         ],
       ),
     );

@@ -205,7 +205,7 @@ class GridSelectorState extends State<GridSelector> {
         :final childAspectRatio,
         :final toText,
       ) =>
-        SelectorGridView(
+        SelectGridView(
           key: ValueKey('category_$index'),
           crossAxisCount: crossAxisCount,
           mainAxisSpacing: mainAxisSpacing,
@@ -221,7 +221,7 @@ class GridSelectorState extends State<GridSelector> {
               _onTerminalItemTap(entry as SelectChildEntry),
           toText: toText,
         ),
-      SelectChipLayout() => SelectorChipBar(
+      SelectChipLayout() => SelectChipBar(
           key: ValueKey('category_$index'),
           category: category,
           entries: entries,
@@ -278,13 +278,13 @@ class GridSelectorState extends State<GridSelector> {
           ),
         ),
         if (SelectionMode.multiple == selectorSelectionMode &&
-            !SelectorActionBarVisibility.isHidden(context))
+            !SelectActionBarVisibility.isHidden(context))
           delegate.actionBarBuilder?.call(
                 context,
                 onResetTap: _onResetTap,
                 onApplyTap: _onApplyTap,
               ) ??
-              SelectorActionBar(
+              SelectActionBar(
                 resetText: delegate.resetText,
                 applyText: delegate.applyText,
                 resetFlex: delegate.actionBarTheme?.resetFlex,
@@ -323,7 +323,7 @@ class GridSelectorSkeleton extends StatelessWidget {
         Flexible(
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-            child: SelectorGridSkeleton(
+            child: SelectGridSkeleton(
               itemCount: itemCount,
               crossAxisCount: crossAxisCount,
               mainAxisSpacing: mainAxisSpacing,
@@ -333,7 +333,7 @@ class GridSelectorSkeleton extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 10),
-        const SelectorActionBarSkeleton(),
+        const SelectActionBarSkeleton(),
       ],
     );
   }

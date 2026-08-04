@@ -403,7 +403,7 @@ class _Thumb extends StatelessWidget {
 
 /// Computes theme-aware default values for [SelectorRangeSlider].
 ///
-/// Mirrors the pattern used by [SelectorGridTile] / [SelectorFieldTile]:
+/// Mirrors the pattern used by [SelectGridTile] / [SelectFieldTile]:
 /// fall back to Material brightness-aware colors when neither the widget
 /// props nor the merged theme provide an explicit value.
 class _SelectorRangeSliderDefaults extends SelectorRangeSliderTheme {

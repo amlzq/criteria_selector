@@ -64,7 +64,7 @@ class MyActionBar extends StatelessWidget {
     return ValueListenableBuilder<String>(
       valueListenable: applyTextVN,
       builder: (context, applyText, _) {
-        return SelectorActionBar(
+        return SelectActionBar(
           applyText: applyText,
           onResetTap: onResetTap,
           onApplyTap: onApplyTap,

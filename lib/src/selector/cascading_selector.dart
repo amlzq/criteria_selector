@@ -689,11 +689,11 @@ class CascadingSelectorState extends State<CascadingSelector> {
                   children: [
                     if (categoryHeader != null &&
                         categoryHeader.children != null)
-                      SelectorChipBar(
+                      SelectChipBar(
                         category: categoryHeader,
                         entries: categoryHeader.children!.toList(),
                         selectedEntries: headerSelected,
-                        variant: SelectorChipVariant.filled,
+                        variant: SelectChipVariant.filled,
                         onChanged: (index, entry) => _onHeaderOrFooterItemTap
                             .call(true, index, entry as SelectChildEntry),
                       ),
@@ -738,11 +738,11 @@ class CascadingSelectorState extends State<CascadingSelector> {
                     ),
                     if (categoryFooter != null &&
                         categoryFooter.children != null)
-                      SelectorChipBar(
+                      SelectChipBar(
                         category: categoryFooter,
                         entries: categoryFooter.children!.toList(),
                         selectedEntries: footerSelected,
-                        variant: SelectorChipVariant.filled,
+                        variant: SelectChipVariant.filled,
                         onChanged: (index, entry) => _onHeaderOrFooterItemTap
                             .call(false, index, entry as SelectChildEntry),
                       ),
@@ -753,13 +753,13 @@ class CascadingSelectorState extends State<CascadingSelector> {
           ),
         ),
         if (SelectionMode.multiple == selectorSelectionMode &&
-            !SelectorActionBarVisibility.isHidden(context))
+            !SelectActionBarVisibility.isHidden(context))
           delegate.actionBarBuilder?.call(
                 context,
                 onResetTap: _onResetTap,
                 onApplyTap: _onApplyTap,
               ) ??
-              SelectorActionBar(
+              SelectActionBar(
                 resetText: delegate.resetText,
                 applyText: delegate.applyText,
                 resetFlex: delegate.actionBarTheme?.resetFlex,
@@ -863,7 +863,7 @@ class CascadingSelectorSkeleton extends StatelessWidget {
             ],
           ),
         ),
-        const SelectorActionBarSkeleton(),
+        const SelectActionBarSkeleton(),
       ],
     );
   }

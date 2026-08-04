@@ -8,16 +8,16 @@ import 'chip_bar_theme.dart';
 import 'constants.dart';
 import 'extensions.dart';
 
-/// Default height for [SelectorChipBar].
-const kSelectorChipBarHeight = 44.0;
+/// Default height for [SelectChipBar].
+const kSelectChipBarHeight = 44.0;
 
 /// A horizontal chip bar for selecting among sibling entries.
 ///
 /// This widget is commonly used as a "quick filter" row (e.g. showing children
 /// of a selected entry). Selection state is provided by [selectedEntries] and user
 /// interactions are reported via [onItemTap].
-class SelectorChipBar extends StatelessWidget {
-  const SelectorChipBar({
+class SelectChipBar extends StatelessWidget {
+  const SelectChipBar({
     super.key,
     this.category,
     required this.entries,
@@ -61,7 +61,7 @@ class SelectorChipBar extends StatelessWidget {
 
   /// The color of the chip bar's background.
   ///
-  /// If null, the value from the surrounding [SelectorChipBarTheme] or the
+  /// If null, the value from the surrounding [SelectChipBarTheme] or the
   /// default is used.
   final Color? backgroundColor;
 
@@ -73,32 +73,32 @@ class SelectorChipBar extends StatelessWidget {
 
   /// The visual style of the chips.
   ///
-  /// See [SelectorChipVariant] for the available styles. Defaults to
-  /// [SelectorChipVariant.filled].
-  final SelectorChipVariant? variant;
+  /// See [SelectChipVariant] for the available styles. Defaults to
+  /// [SelectChipVariant.filled].
+  final SelectChipVariant? variant;
 
   /// The color of an unselected chip.
   ///
-  /// When [variant] is [SelectorChipVariant.filled] this is used as the chip's
+  /// When [variant] is [SelectChipVariant.filled] this is used as the chip's
   /// background color; otherwise it is used as the chip's border color.
   final Color? chipColor;
 
   /// The color of a selected chip.
   ///
-  /// When [variant] is [SelectorChipVariant.filled] this is used as the chip's
+  /// When [variant] is [SelectChipVariant.filled] this is used as the chip's
   /// background color; otherwise it is used as the chip's border and label
   /// color.
   final Color? selectedChipColor;
 
   /// The text style for an unselected chip's [label].
   ///
-  /// If null, the value from the surrounding [SelectorChipBarTheme] or the
+  /// If null, the value from the surrounding [SelectChipBarTheme] or the
   /// default is used.
   final TextStyle? labelStyle;
 
   /// The text style for a selected chip's [label].
   ///
-  /// If null, the value from the surrounding [SelectorChipBarTheme] or the
+  /// If null, the value from the surrounding [SelectChipBarTheme] or the
   /// default is used.
   final TextStyle? selectedLabelStyle;
 
@@ -110,12 +110,12 @@ class SelectorChipBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = SelectorChipBarTheme.of(context);
+    final theme = SelectChipBarTheme.of(context);
 
     final effectiveVariant =
-        variant ?? theme.variant ?? SelectorChipVariant.filled;
+        variant ?? theme.variant ?? SelectChipVariant.filled;
 
-    final defaults = _SelectorChipBarDefaults(context, effectiveVariant);
+    final defaults = _SelectChipBarDefaults(context, effectiveVariant);
 
     final effectiveBackgroundColor =
         backgroundColor ?? theme.backgroundColor ?? defaults.backgroundColor!;
@@ -131,7 +131,7 @@ class SelectorChipBar extends StatelessWidget {
         theme.selectedChipColor ??
         defaults.selectedChipColor!;
 
-    final selectedTextColor = effectiveVariant == SelectorChipVariant.filled
+    final selectedTextColor = effectiveVariant == SelectChipVariant.filled
         ? (ThemeData.estimateBrightnessForColor(effectiveSelectedChipColor) ==
                 Brightness.dark
             ? Colors.white
@@ -168,7 +168,7 @@ class SelectorChipBar extends StatelessWidget {
     ];
 
     return Container(
-      height: isWrapable ? null : kSelectorChipBarHeight,
+      height: isWrapable ? null : kSelectChipBarHeight,
       color: effectiveBackgroundColor,
       padding: effectivePadding,
       child: Row(
@@ -214,7 +214,7 @@ class _Chip extends StatelessWidget {
 
   final bool selected;
 
-  final SelectorChipVariant variant;
+  final SelectChipVariant variant;
 
   final Color color;
   final Color selectedColor;
@@ -238,8 +238,8 @@ class _Chip extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
-          color: variant == SelectorChipVariant.filled ? effectiveColor : null,
-          border: variant == SelectorChipVariant.filled
+          color: variant == SelectChipVariant.filled ? effectiveColor : null,
+          border: variant == SelectChipVariant.filled
               ? null
               : Border.all(color: effectiveColor, width: 1.2),
           borderRadius: BorderRadius.circular(4),
@@ -255,10 +255,10 @@ class _Chip extends StatelessWidget {
   }
 }
 
-class _SelectorChipBarDefaults extends SelectorChipBarTheme {
-  _SelectorChipBarDefaults(
+class _SelectChipBarDefaults extends SelectChipBarTheme {
+  _SelectChipBarDefaults(
     this.context, [
-    SelectorChipVariant? variant,
+    SelectChipVariant? variant,
   ]) : super(variant: variant);
 
   final BuildContext context;
@@ -274,18 +274,18 @@ class _SelectorChipBarDefaults extends SelectorChipBarTheme {
 
   /// Default [chipColor] based on [variant].
   ///
-  /// Mirrors [_SelectorGridTileDefaults.tileColor]: a light tint derived from
+  /// Mirrors [_SelectGridTileDefaults.tileColor]: a light tint derived from
   /// [SelectThemeData.onBackgroundColorHighest] toward white in light theme;
   /// blends surface colors for harmony in dark theme.
   @override
   Color? get chipColor {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     if (isDark) {
-      final blendAmount = variant == SelectorChipVariant.outlined ? 0.2 : 0.35;
+      final blendAmount = variant == SelectChipVariant.outlined ? 0.2 : 0.35;
       return Color.lerp(
           _theme.backgroundColor, _theme.backgroundColorHighest, blendAmount);
     }
-    if (variant == SelectorChipVariant.outlined) {
+    if (variant == SelectChipVariant.outlined) {
       return Color.lerp(_theme.onBackgroundColorHighest, Colors.white, 0.55);
     }
     return Color.lerp(_theme.onBackgroundColorHighest, Colors.white, 0.8);
@@ -293,7 +293,7 @@ class _SelectorChipBarDefaults extends SelectorChipBarTheme {
 
   /// Default [selectedChipColor].
   ///
-  /// Mirrors [_SelectorGridTileDefaults.selectedTileColor]: blends with
+  /// Mirrors [_SelectGridTileDefaults.selectedTileColor]: blends with
   /// background in dark theme for a harmonious look.
   @override
   Color? get selectedChipColor {

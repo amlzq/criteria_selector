@@ -80,11 +80,11 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                     childAspectRatio: 2.5,
                     mainAxisSpacing: 10,
                     crossAxisSpacing: 10,
-                    gridTileTheme: const SelectorGridTileTheme(
-                      variant: SelectorGridTileVariant.outlined,
+                    gridTileTheme: const SelectGridTileTheme(
+                      variant: SelectGridTileVariant.outlined,
                     ),
-                    fieldTileTheme: const SelectorFieldTileTheme(
-                      variant: SelectorFieldTileVariant.outlined,
+                    fieldTileTheme: const SelectFieldTileTheme(
+                      variant: SelectFieldTileVariant.outlined,
                     ),
                   ),
                   title: const Text('Price'),
@@ -139,14 +139,14 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                     selectedEntriesLoader: _filtersRepo.fetchMoreSelectedData,
                     resetEntriesLoader: _filtersRepo.fetchMoreResetData,
                     selectionMode: SelectionMode.multiple,
-                    gridTileTheme: const SelectorGridTileTheme(
-                      variant: SelectorGridTileVariant.outlined,
+                    gridTileTheme: const SelectGridTileTheme(
+                      variant: SelectGridTileVariant.outlined,
                     ),
-                    fieldTileTheme: const SelectorFieldTileTheme(
-                      variant: SelectorFieldTileVariant.outlined,
+                    fieldTileTheme: const SelectFieldTileTheme(
+                      variant: SelectFieldTileVariant.outlined,
                     ),
-                    chipBarTheme: const SelectorChipBarTheme(
-                      variant: SelectorChipVariant.outlined,
+                    chipBarTheme: const SelectChipBarTheme(
+                      variant: SelectChipVariant.outlined,
                     ),
                   ),
                   elevation: 12,
@@ -245,11 +245,11 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                     childAspectRatio: 2.5,
                     mainAxisSpacing: 10,
                     crossAxisSpacing: 10,
-                    gridTileTheme: const SelectorGridTileTheme(
-                      variant: SelectorGridTileVariant.outlined,
+                    gridTileTheme: const SelectGridTileTheme(
+                      variant: SelectGridTileVariant.outlined,
                     ),
-                    fieldTileTheme: const SelectorFieldTileTheme(
-                      variant: SelectorFieldTileVariant.outlined,
+                    fieldTileTheme: const SelectFieldTileTheme(
+                      variant: SelectFieldTileVariant.outlined,
                     ),
                   ),
                   title: const Text('Price'),
@@ -302,14 +302,14 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                     selectedEntriesLoader: _filtersRepo.fetchMoreSelectedData,
                     resetEntriesLoader: _filtersRepo.fetchMoreResetData,
                     selectionMode: SelectionMode.multiple,
-                    gridTileTheme: const SelectorGridTileTheme(
-                      variant: SelectorGridTileVariant.outlined,
+                    gridTileTheme: const SelectGridTileTheme(
+                      variant: SelectGridTileVariant.outlined,
                     ),
-                    fieldTileTheme: const SelectorFieldTileTheme(
-                      variant: SelectorFieldTileVariant.outlined,
+                    fieldTileTheme: const SelectFieldTileTheme(
+                      variant: SelectFieldTileVariant.outlined,
                     ),
-                    chipBarTheme: const SelectorChipBarTheme(
-                      variant: SelectorChipVariant.outlined,
+                    chipBarTheme: const SelectChipBarTheme(
+                      variant: SelectChipVariant.outlined,
                     ),
                   ),
                   title: const Text('More'),

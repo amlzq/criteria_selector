@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 
 import '../select_theme.dart';
 
-/// Visual variant for [SelectorFieldTile].
-enum SelectorFieldTileVariant {
+/// Visual variant for [SelectFieldTile].
+enum SelectFieldTileVariant {
   filled,
 
   outlined,
 }
 
-/// Theme configuration for [SelectorFieldTile].
+/// Theme configuration for [SelectFieldTile].
 @immutable
-class SelectorFieldTileTheme with Diagnosticable {
-  const SelectorFieldTileTheme({
+class SelectFieldTileTheme with Diagnosticable {
+  const SelectFieldTileTheme({
     this.selectedColor,
     this.textColor,
     this.labelStyle,
@@ -23,38 +23,38 @@ class SelectorFieldTileTheme with Diagnosticable {
     this.selectedTileColor,
   });
 
-  /// Overrides the default value of [SelectorFieldTile.selectedColor].
+  /// Overrides the default value of [SelectFieldTile.selectedColor].
   final Color? selectedColor;
 
-  /// Overrides the default value of [SelectorFieldTile.textColor].
+  /// Overrides the default value of [SelectFieldTile.textColor].
   final Color? textColor;
 
-  /// Overrides the default value of [SelectorFieldTile.labelStyle].
+  /// Overrides the default value of [SelectFieldTile.labelStyle].
   final TextStyle? labelStyle;
 
-  /// Overrides the default value of [SelectorFieldTile.sublabelStyle].
+  /// Overrides the default value of [SelectFieldTile.sublabelStyle].
   final TextStyle? sublabelStyle;
 
-  /// Overrides the default value of [SelectorFieldTile.variant].
-  final SelectorFieldTileVariant? variant;
+  /// Overrides the default value of [SelectFieldTile.variant].
+  final SelectFieldTileVariant? variant;
 
-  /// Overrides the default value of [SelectorFieldTile.tileColor].
+  /// Overrides the default value of [SelectFieldTile.tileColor].
   final Color? tileColor;
 
-  /// Overrides the default value of [SelectorFieldTile.selectedTileColor].
+  /// Overrides the default value of [SelectFieldTile.selectedTileColor].
   final Color? selectedTileColor;
 
   /// Returns a copy of this theme with the given fields replaced.
-  SelectorFieldTileTheme copyWith({
+  SelectFieldTileTheme copyWith({
     Color? textColor,
     TextStyle? labelStyle,
     TextStyle? sublabelStyle,
     Color? selectedColor,
-    SelectorFieldTileVariant? variant,
+    SelectFieldTileVariant? variant,
     Color? tileColor,
     Color? selectedTileColor,
   }) {
-    return SelectorFieldTileTheme(
+    return SelectFieldTileTheme(
       textColor: textColor ?? this.textColor,
       labelStyle: labelStyle ?? this.labelStyle,
       sublabelStyle: sublabelStyle ?? this.sublabelStyle,
@@ -65,17 +65,17 @@ class SelectorFieldTileTheme with Diagnosticable {
     );
   }
 
-  static SelectorFieldTileTheme of(BuildContext context) {
+  static SelectFieldTileTheme of(BuildContext context) {
     return SelectTheme.of(context).fieldTileTheme;
   }
 
   /// Linearly interpolates between two field tile themes.
-  static SelectorFieldTileTheme lerp(
-      SelectorFieldTileTheme? a, SelectorFieldTileTheme? b, double t) {
+  static SelectFieldTileTheme lerp(
+      SelectFieldTileTheme? a, SelectFieldTileTheme? b, double t) {
     if (identical(a, b) && a != null) {
       return a;
     }
-    return SelectorFieldTileTheme(
+    return SelectFieldTileTheme(
       selectedColor: Color.lerp(
         a?.selectedColor,
         b?.selectedColor,
@@ -129,7 +129,7 @@ class SelectorFieldTileTheme with Diagnosticable {
     if (other.runtimeType != runtimeType) {
       return false;
     }
-    return other is SelectorFieldTileTheme &&
+    return other is SelectFieldTileTheme &&
         other.textColor == textColor &&
         other.labelStyle == labelStyle &&
         other.sublabelStyle == sublabelStyle &&

@@ -133,7 +133,7 @@ class SelectorListViewState extends State<SelectorListView>
 
     // When the custom range was selected and is now removed (e.g. tapping a
     // preset or clicking reset), clear the input fields so stale values are not
-    // left behind, mirroring [SelectorGridViewState.didUpdateWidget]. We only
+    // left behind, mirroring [SelectGridViewState.didUpdateWidget]. We only
     // react to this transition (not every rebuild) to avoid clobbering text the
     // user is actively typing.
     final oldHadCustom = (oldWidget.selectedEntries ?? {})
@@ -286,7 +286,7 @@ class SelectorListViewState extends State<SelectorListView>
             ),
           // An input item at header
           if (firstCustomEntry != null)
-            SelectorFieldTile(
+            SelectFieldTile(
               firstCustomEntry!,
               padding: const EdgeInsets.only(top: 10.0),
               minController: _minController,
@@ -326,7 +326,7 @@ class SelectorListViewState extends State<SelectorListView>
           ),
           // An input item at footer
           if (lastCustomEntry != null)
-            SelectorFieldTile(
+            SelectFieldTile(
               lastCustomEntry!,
               padding: const EdgeInsets.only(top: 10.0),
               minController: _minController,

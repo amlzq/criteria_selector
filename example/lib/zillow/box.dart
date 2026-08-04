@@ -153,11 +153,11 @@ class _BoxPageState extends State<BoxPage> {
                     childAspectRatio: 3,
                     mainAxisSpacing: 10,
                     crossAxisSpacing: 10,
-                    gridTileTheme: const SelectorGridTileTheme(
-                      variant: SelectorGridTileVariant.outlined,
+                    gridTileTheme: const SelectGridTileTheme(
+                      variant: SelectGridTileVariant.outlined,
                     ),
-                    fieldTileTheme: const SelectorFieldTileTheme(
-                      variant: SelectorFieldTileVariant.outlined,
+                    fieldTileTheme: const SelectFieldTileTheme(
+                      variant: SelectFieldTileVariant.outlined,
                     ),
                     applyText: AppLocalizations.of(context)?.apply ?? '',
                   ),

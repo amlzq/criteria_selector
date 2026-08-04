@@ -474,11 +474,11 @@ class _HousePageState extends State<HousePage> {
                   childAspectRatio: 10,
                   mainAxisSpacing: 10,
                   crossAxisSpacing: 10,
-                  gridTileTheme: const SelectorGridTileTheme(
-                    variant: SelectorGridTileVariant.outlined,
+                  gridTileTheme: const SelectGridTileTheme(
+                    variant: SelectGridTileVariant.outlined,
                   ),
-                  fieldTileTheme: const SelectorFieldTileTheme(
-                    variant: SelectorFieldTileVariant.outlined,
+                  fieldTileTheme: const SelectFieldTileTheme(
+                    variant: SelectFieldTileVariant.outlined,
                   ),
                 ),
                 GridSelectDelegate(
@@ -490,11 +490,11 @@ class _HousePageState extends State<HousePage> {
                   childAspectRatio: 2.5,
                   mainAxisSpacing: 10,
                   crossAxisSpacing: 10,
-                  gridTileTheme: const SelectorGridTileTheme(
-                    variant: SelectorGridTileVariant.outlined,
+                  gridTileTheme: const SelectGridTileTheme(
+                    variant: SelectGridTileVariant.outlined,
                   ),
-                  fieldTileTheme: const SelectorFieldTileTheme(
-                    variant: SelectorFieldTileVariant.outlined,
+                  fieldTileTheme: const SelectFieldTileTheme(
+                    variant: SelectFieldTileVariant.outlined,
                   ),
                 ),
                 ListSelectDelegate(

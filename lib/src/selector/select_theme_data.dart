@@ -29,17 +29,17 @@ class SelectThemeData with Diagnosticable {
     Color? backgroundColorHigh,
     Color? backgroundColorHighest,
     Color? onBackgroundColorHighest,
-    SelectorActionBarTheme? actionBarTheme,
+    SelectActionBarTheme? actionBarTheme,
     SelectorTabBarTheme? tabBarTheme,
     SelectorSideBarTheme? sideBarTheme,
-    SelectorGridTileTheme? gridTileTheme,
+    SelectGridTileTheme? gridTileTheme,
     SelectorListTileTheme? listTileTheme,
-    SelectorFieldTileTheme? fieldTileTheme,
-    SelectorExpansionTileTheme? expansionTileTheme,
+    SelectFieldTileTheme? fieldTileTheme,
+    SelectExpansionTileTheme? expansionTileTheme,
     SelectorRangeSliderTheme? rangeSliderTheme,
     RadioThemeData? radioTheme,
     CheckboxThemeData? checkboxTheme,
-    SelectorChipBarTheme? chipBarThemeData,
+    SelectChipBarTheme? chipBarThemeData,
     SelectPanelTheme? panelTheme,
   }) {
     return SelectThemeData.raw(
@@ -53,18 +53,18 @@ class SelectThemeData with Diagnosticable {
           backgroundColorHighest ?? theme.colorScheme.surfaceContainer,
       onBackgroundColorHighest:
           onBackgroundColorHighest ?? theme.colorScheme.onSurfaceVariant,
-      actionBarTheme: actionBarTheme ?? const SelectorActionBarTheme(),
+      actionBarTheme: actionBarTheme ?? const SelectActionBarTheme(),
       tabBarTheme: tabBarTheme ?? const SelectorTabBarTheme(),
       sideBarTheme: sideBarTheme ?? const SelectorSideBarTheme(),
-      gridTileTheme: gridTileTheme ?? const SelectorGridTileTheme(),
+      gridTileTheme: gridTileTheme ?? const SelectGridTileTheme(),
       listTileTheme: listTileTheme ?? const SelectorListTileTheme(),
-      fieldTileTheme: fieldTileTheme ?? const SelectorFieldTileTheme(),
+      fieldTileTheme: fieldTileTheme ?? const SelectFieldTileTheme(),
       expansionTileTheme:
-          expansionTileTheme ?? const SelectorExpansionTileTheme(),
+          expansionTileTheme ?? const SelectExpansionTileTheme(),
       rangeSliderTheme: rangeSliderTheme ?? const SelectorRangeSliderTheme(),
       radioTheme: radioTheme ?? const RadioThemeData(),
       checkboxTheme: checkboxTheme ?? const CheckboxThemeData(),
-      chipBarThemeData: chipBarThemeData ?? const SelectorChipBarTheme(),
+      chipBarThemeData: chipBarThemeData ?? const SelectChipBarTheme(),
       panelTheme: panelTheme ?? const SelectPanelTheme(),
     );
   }
@@ -117,7 +117,7 @@ class SelectThemeData with Diagnosticable {
   final Color onBackgroundColorHighest;
 
   /// Theme overrides for the action bar widget.
-  final SelectorActionBarTheme actionBarTheme;
+  final SelectActionBarTheme actionBarTheme;
 
   /// Theme overrides for the tab bar widget.
   final SelectorTabBarTheme tabBarTheme;
@@ -126,15 +126,15 @@ class SelectThemeData with Diagnosticable {
   final SelectorSideBarTheme sideBarTheme;
 
   /// Theme overrides for grid tiles.
-  final SelectorGridTileTheme gridTileTheme;
+  final SelectGridTileTheme gridTileTheme;
 
   /// Theme overrides for list tiles.
   final SelectorListTileTheme listTileTheme;
 
   /// Theme overrides for range field tiles.
-  final SelectorFieldTileTheme fieldTileTheme;
+  final SelectFieldTileTheme fieldTileTheme;
 
-  final SelectorExpansionTileTheme expansionTileTheme;
+  final SelectExpansionTileTheme expansionTileTheme;
 
   /// Theme overrides for the range slider widget.
   final SelectorRangeSliderTheme rangeSliderTheme;
@@ -146,7 +146,7 @@ class SelectThemeData with Diagnosticable {
   final CheckboxThemeData checkboxTheme;
 
   /// Theme overrides for the selected chips bar.
-  final SelectorChipBarTheme chipBarThemeData;
+  final SelectChipBarTheme chipBarThemeData;
 
   /// Theme overrides for the panel's elevation, shadow and shape decoration.
   final SelectPanelTheme panelTheme;
@@ -160,17 +160,17 @@ class SelectThemeData with Diagnosticable {
     Color? backgroundColorHigh,
     Color? backgroundColorHighest,
     Color? onBackgroundColorHighest,
-    SelectorActionBarTheme? actionBarTheme,
+    SelectActionBarTheme? actionBarTheme,
     SelectorTabBarTheme? tabBarTheme,
     SelectorSideBarTheme? sideBarTheme,
-    SelectorGridTileTheme? gridTileTheme,
+    SelectGridTileTheme? gridTileTheme,
     SelectorListTileTheme? listTileTheme,
-    SelectorFieldTileTheme? fieldTileTheme,
-    SelectorExpansionTileTheme? expansionTileTheme,
+    SelectFieldTileTheme? fieldTileTheme,
+    SelectExpansionTileTheme? expansionTileTheme,
     SelectorRangeSliderTheme? rangeSliderTheme,
     RadioThemeData? radioTheme,
     CheckboxThemeData? checkboxTheme,
-    SelectorChipBarTheme? chipBarThemeData,
+    SelectChipBarTheme? chipBarThemeData,
     SelectPanelTheme? panelTheme,
   }) {
     return SelectThemeData.raw(
@@ -217,24 +217,24 @@ class SelectThemeData with Diagnosticable {
       onBackgroundColorHighest: Color.lerp(
           a?.onBackgroundColorHighest, b?.onBackgroundColorHighest, t)!,
       actionBarTheme:
-          SelectorActionBarTheme.lerp(a?.actionBarTheme, b?.actionBarTheme, t),
+          SelectActionBarTheme.lerp(a?.actionBarTheme, b?.actionBarTheme, t),
       tabBarTheme: SelectorTabBarTheme.lerp(a?.tabBarTheme, b?.tabBarTheme, t),
       sideBarTheme:
           SelectorSideBarTheme.lerp(a?.sideBarTheme, b?.sideBarTheme, t),
       gridTileTheme:
-          SelectorGridTileTheme.lerp(a?.gridTileTheme, b?.gridTileTheme, t),
+          SelectGridTileTheme.lerp(a?.gridTileTheme, b?.gridTileTheme, t),
       listTileTheme:
           SelectorListTileTheme.lerp(a?.listTileTheme, b?.listTileTheme, t),
       fieldTileTheme:
-          SelectorFieldTileTheme.lerp(a?.fieldTileTheme, b?.fieldTileTheme, t),
-      expansionTileTheme: SelectorExpansionTileTheme.lerp(
+          SelectFieldTileTheme.lerp(a?.fieldTileTheme, b?.fieldTileTheme, t),
+      expansionTileTheme: SelectExpansionTileTheme.lerp(
           a?.expansionTileTheme, b?.expansionTileTheme, t),
       rangeSliderTheme: SelectorRangeSliderTheme.lerp(
           a?.rangeSliderTheme, b?.rangeSliderTheme, t),
       radioTheme: RadioThemeData.lerp(a?.radioTheme, b?.radioTheme, t),
       checkboxTheme:
           CheckboxThemeData.lerp(a?.checkboxTheme, b?.checkboxTheme, t),
-      chipBarThemeData: SelectorChipBarTheme.lerp(
+      chipBarThemeData: SelectChipBarTheme.lerp(
           a?.chipBarThemeData, b?.chipBarThemeData, t),
       panelTheme: SelectPanelTheme.lerp(a?.panelTheme, b?.panelTheme, t),
     );

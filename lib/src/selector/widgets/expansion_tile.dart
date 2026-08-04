@@ -4,10 +4,10 @@ import '../select_theme.dart';
 import '../select_theme_data.dart';
 import 'expansion_tile_theme.dart';
 
-const kSelectorExpansionTileAnimationDuration = Duration(milliseconds: 200);
+const kSelectExpansionTileAnimationDuration = Duration(milliseconds: 200);
 
-class SelectorExpansionTile extends StatefulWidget {
-  const SelectorExpansionTile({
+class SelectExpansionTile extends StatefulWidget {
+  const SelectExpansionTile({
     super.key,
     required this.title,
     this.titleStyle,
@@ -30,13 +30,13 @@ class SelectorExpansionTile extends StatefulWidget {
 
   /// The text style of the [title].
   ///
-  /// If null, [SelectorExpansionTileTheme.titleStyle] is used. If that is also
+  /// If null, [SelectExpansionTileTheme.titleStyle] is used. If that is also
   /// null, the value is [TextTheme.titleLarge].
   final TextStyle? titleStyle;
 
   /// The color used to highlight the tile when expanded.
   ///
-  /// If null, [SelectorExpansionTileTheme.selectedColor] is used. If that is
+  /// If null, [SelectExpansionTileTheme.selectedColor] is used. If that is
   /// also null, the value is [SelectThemeData.selectedColor].
   final Color? selectedColor;
 
@@ -50,31 +50,31 @@ class SelectorExpansionTile extends StatefulWidget {
 
   /// The padding around the header (title and trailing icon).
   ///
-  /// If null, [SelectorExpansionTileTheme.titlePadding] is used. If that is
+  /// If null, [SelectExpansionTileTheme.titlePadding] is used. If that is
   /// also null, the value is [EdgeInsets.zero].
   final EdgeInsetsGeometry? titlePadding;
 
   /// The padding around the [child] content.
   ///
-  /// If null, [SelectorExpansionTileTheme.childPadding] is used. If that is
+  /// If null, [SelectExpansionTileTheme.childPadding] is used. If that is
   /// also null, the value is [EdgeInsets.zero].
   final EdgeInsetsGeometry? childPadding;
 
   /// The duration of the expand and collapse animation.
   ///
-  /// If null, [SelectorExpansionTileTheme.animationDuration] is used. If that
+  /// If null, [SelectExpansionTileTheme.animationDuration] is used. If that
   /// is also null, the default is 200ms.
   final Duration? animationDuration;
 
   /// The animation curve used when the tile expands.
   ///
-  /// If null, [SelectorExpansionTileTheme.expansionCurve] is used. If that is
+  /// If null, [SelectExpansionTileTheme.expansionCurve] is used. If that is
   /// also null, the default is [Curves.easeIn].
   final Curve? expansionCurve;
 
   /// The animation curve used when the tile collapses.
   ///
-  /// If null, [SelectorExpansionTileTheme.collapseCurve] is used. If that is
+  /// If null, [SelectExpansionTileTheme.collapseCurve] is used. If that is
   /// also null, the default is [Curves.easeOut].
   final Curve? collapseCurve;
 
@@ -104,10 +104,10 @@ class SelectorExpansionTile extends StatefulWidget {
   final ValueChanged<bool>? onExpansionChanged;
 
   @override
-  State<SelectorExpansionTile> createState() => _SelectorExpansionTileState();
+  State<SelectExpansionTile> createState() => _SelectExpansionTileState();
 }
 
-class _SelectorExpansionTileState extends State<SelectorExpansionTile>
+class _SelectExpansionTileState extends State<SelectExpansionTile>
     with SingleTickerProviderStateMixin {
   bool _isExpanded = false;
 
@@ -121,7 +121,7 @@ class _SelectorExpansionTileState extends State<SelectorExpansionTile>
 
     _animationController = AnimationController(
       vsync: this,
-      duration: kSelectorExpansionTileAnimationDuration,
+      duration: kSelectExpansionTileAnimationDuration,
     );
     _animationController.addStatusListener(_handleStatusChanged);
     _heightFactor = CurvedAnimation(
@@ -149,11 +149,11 @@ class _SelectorExpansionTileState extends State<SelectorExpansionTile>
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    final theme = SelectorExpansionTileTheme.of(context);
+    final theme = SelectExpansionTileTheme.of(context);
 
     final effectiveDuration = widget.animationDuration ??
         theme.animationDuration ??
-        kSelectorExpansionTileAnimationDuration;
+        kSelectExpansionTileAnimationDuration;
 
     if (_animationController.duration != effectiveDuration) {
       _animationController.duration = effectiveDuration;
@@ -173,7 +173,7 @@ class _SelectorExpansionTileState extends State<SelectorExpansionTile>
   }
 
   @override
-  void didUpdateWidget(covariant SelectorExpansionTile oldWidget) {
+  void didUpdateWidget(covariant SelectExpansionTile oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     if (widget.enabled != oldWidget.enabled && !widget.enabled && _isExpanded) {
@@ -216,11 +216,11 @@ class _SelectorExpansionTileState extends State<SelectorExpansionTile>
   }
 
   Widget _buildChildren(BuildContext context, Widget? child) {
-    final _SelectorExpansionTileDefaults defaults =
-        _SelectorExpansionTileDefaults(context);
+    final _SelectExpansionTileDefaults defaults =
+        _SelectExpansionTileDefaults(context);
 
-    final SelectorExpansionTileTheme theme =
-        SelectorExpansionTileTheme.of(context);
+    final SelectExpansionTileTheme theme =
+        SelectExpansionTileTheme.of(context);
 
     final effectiveTitleStyle =
         (widget.titleStyle ?? theme.titleStyle ?? defaults.titleStyle!);
@@ -279,8 +279,8 @@ class _SelectorExpansionTileState extends State<SelectorExpansionTile>
 
   @override
   Widget build(BuildContext context) {
-    final SelectorExpansionTileTheme theme =
-        SelectorExpansionTileTheme.of(context);
+    final SelectExpansionTileTheme theme =
+        SelectExpansionTileTheme.of(context);
 
     final bool closed = !_isExpanded && _animationController.isDismissed;
     final bool shouldRemoveChildren = closed && !widget.maintainState;
@@ -304,8 +304,8 @@ class _SelectorExpansionTileState extends State<SelectorExpansionTile>
   }
 }
 
-class _SelectorExpansionTileDefaults extends SelectorExpansionTileTheme {
-  _SelectorExpansionTileDefaults(this.context) : super();
+class _SelectExpansionTileDefaults extends SelectExpansionTileTheme {
+  _SelectExpansionTileDefaults(this.context) : super();
 
   final BuildContext context;
   late final SelectThemeData _theme = SelectTheme.of(context);

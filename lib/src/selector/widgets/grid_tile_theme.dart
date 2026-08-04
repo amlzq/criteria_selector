@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 
 import '../select_theme.dart';
 
-/// Visual variant for [SelectorGridTile].
-enum SelectorGridTileVariant {
+/// Visual variant for [SelectGridTile].
+enum SelectGridTileVariant {
   filled,
 
   outlined,
 }
 
-/// Theme configuration for [SelectorGridTile].
+/// Theme configuration for [SelectGridTile].
 @immutable
-class SelectorGridTileTheme with Diagnosticable {
-  const SelectorGridTileTheme({
+class SelectGridTileTheme with Diagnosticable {
+  const SelectGridTileTheme({
     this.selectedColor,
     this.textColor,
     this.labelStyle,
@@ -23,38 +23,38 @@ class SelectorGridTileTheme with Diagnosticable {
     this.selectedTileColor,
   });
 
-  /// Overrides the default value of [SelectorGridTile.selectedColor].
+  /// Overrides the default value of [SelectGridTile.selectedColor].
   final Color? selectedColor;
 
-  /// Overrides the default value of [SelectorGridTile.textColor].
+  /// Overrides the default value of [SelectGridTile.textColor].
   final Color? textColor;
 
-  /// Overrides the default value of [SelectorGridTile.labelStyle].
+  /// Overrides the default value of [SelectGridTile.labelStyle].
   final TextStyle? labelStyle;
 
-  /// Overrides the default value of [SelectorGridTile.sublabelStyle].
+  /// Overrides the default value of [SelectGridTile.sublabelStyle].
   final TextStyle? sublabelStyle;
 
-  /// Overrides the default value of [SelectorGridTile.variant].
-  final SelectorGridTileVariant? variant;
+  /// Overrides the default value of [SelectGridTile.variant].
+  final SelectGridTileVariant? variant;
 
-  /// Overrides the default value of [SelectorGridTile.tileColor].
+  /// Overrides the default value of [SelectGridTile.tileColor].
   final Color? tileColor;
 
-  /// Overrides the default value of [SelectorGridTile.selectedTileColor].
+  /// Overrides the default value of [SelectGridTile.selectedTileColor].
   final Color? selectedTileColor;
 
   /// Returns a copy of this theme with the given fields replaced.
-  SelectorGridTileTheme copyWith({
+  SelectGridTileTheme copyWith({
     Color? selectedColor,
     Color? textColor,
     TextStyle? labelStyle,
     TextStyle? sublabelStyle,
-    SelectorGridTileVariant? variant,
+    SelectGridTileVariant? variant,
     Color? tileColor,
     Color? selectedTileColor,
   }) {
-    return SelectorGridTileTheme(
+    return SelectGridTileTheme(
       selectedColor: selectedColor ?? this.selectedColor,
       textColor: textColor ?? this.textColor,
       labelStyle: labelStyle ?? this.labelStyle,
@@ -65,17 +65,17 @@ class SelectorGridTileTheme with Diagnosticable {
     );
   }
 
-  static SelectorGridTileTheme of(BuildContext context) {
+  static SelectGridTileTheme of(BuildContext context) {
     return SelectTheme.of(context).gridTileTheme;
   }
 
   /// Linearly interpolates between two grid tile themes.
-  static SelectorGridTileTheme lerp(
-      SelectorGridTileTheme? a, SelectorGridTileTheme? b, double t) {
+  static SelectGridTileTheme lerp(
+      SelectGridTileTheme? a, SelectGridTileTheme? b, double t) {
     if (identical(a, b) && a != null) {
       return a;
     }
-    return SelectorGridTileTheme(
+    return SelectGridTileTheme(
       selectedColor: Color.lerp(
         a?.selectedColor,
         b?.selectedColor,
@@ -129,7 +129,7 @@ class SelectorGridTileTheme with Diagnosticable {
     if (other.runtimeType != runtimeType) {
       return false;
     }
-    return other is SelectorGridTileTheme &&
+    return other is SelectGridTileTheme &&
         other.selectedColor == selectedColor &&
         other.textColor == textColor &&
         other.labelStyle == labelStyle &&

@@ -6,7 +6,7 @@ import 'field_tile.dart';
 import 'range_slider.dart';
 
 /// A composite view that renders a [SelectorRangeSlider] above a
-/// [SelectorFieldTile], keeping both in sync with a single source of truth.
+/// [SelectFieldTile], keeping both in sync with a single source of truth.
 ///
 /// This is the canonical render target for
 /// [SelectRangeLayout] — drop the layout on a category that contains
@@ -373,11 +373,11 @@ class _SelectorRangeViewState extends State<SelectorRangeView> {
             onChangeEnd: _onSliderChangeEnd,
           ),
           const SizedBox(height: 12),
-          // Reuse [SelectorFieldTile] for the two text fields. It owns the
+          // Reuse [SelectFieldTile] for the two text fields. It owns the
           // visual treatment; the change/submit callbacks wire the deferred
           // slider sync (see [_commitField]).
           if (entry != null)
-            SelectorFieldTile(
+            SelectFieldTile(
               entry,
               minController: _minController,
               maxController: _maxController,

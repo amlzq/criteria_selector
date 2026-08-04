@@ -8,8 +8,8 @@ import 'grid_tile_theme.dart';
 ///
 /// The tile supports selected/disabled states and can be rendered as filled or
 /// outlined depending on [variant].
-class SelectorGridTile extends StatelessWidget {
-  const SelectorGridTile({
+class SelectGridTile extends StatelessWidget {
+  const SelectGridTile({
     super.key,
     this.leading,
     required this.label,
@@ -45,19 +45,19 @@ class SelectorGridTile extends StatelessWidget {
   /// Defines the text color for the [label], [sublabel], [leading], and [trailing].
   final Color? textColor;
 
-  /// The text style for SelectorGridTile's [label].
+  /// The text style for SelectGridTile's [label].
   final TextStyle? labelStyle;
 
-  /// The text style for SelectorGridTile's [sublabel].
+  /// The text style for SelectGridTile's [sublabel].
   final TextStyle? sublabelStyle;
 
-  /// Defines the background color of `SelectorGridTile` when [selected] is false.
+  /// Defines the background color of `SelectGridTile` when [selected] is false.
   final Color? tileColor;
 
-  /// Defines the background color of `SelectorGridTile` when [selected] is true.
+  /// Defines the background color of `SelectGridTile` when [selected] is true.
   final Color? selectedTileColor;
 
-  final SelectorGridTileVariant? variant;
+  final SelectGridTileVariant? variant;
 
   /// If this tile is also [enabled] then icons and text are rendered with the same color.
   final bool selected;
@@ -72,15 +72,15 @@ class SelectorGridTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = SelectorGridTileTheme.of(context);
+    final theme = SelectGridTileTheme.of(context);
 
     final effectiveSelectedColor = selectedColor ?? theme.selectedColor;
 
     final effectiveVariant =
-        variant ?? theme.variant ?? SelectorGridTileVariant.filled;
+        variant ?? theme.variant ?? SelectGridTileVariant.filled;
 
     final defaults =
-        _SelectorGridTileDefaults(context, enabled, selected, effectiveVariant);
+        _SelectGridTileDefaults(context, enabled, selected, effectiveVariant);
 
     final effectiveTileColor =
         tileColor ?? theme.tileColor ?? defaults.tileColor!;
@@ -90,11 +90,11 @@ class SelectorGridTile extends StatelessWidget {
         defaults.selectedTileColor!;
 
     final tileBackgroundColor =
-        effectiveVariant == SelectorGridTileVariant.filled
+        effectiveVariant == SelectGridTileVariant.filled
             ? (selected ? effectiveSelectedTileColor : effectiveTileColor)
             : Colors.transparent;
 
-    final selectedTextColor = effectiveVariant == SelectorGridTileVariant.filled
+    final selectedTextColor = effectiveVariant == SelectGridTileVariant.filled
         ? (ThemeData.estimateBrightnessForColor(tileBackgroundColor) ==
                 Brightness.dark
             ? Colors.white
@@ -109,8 +109,8 @@ class SelectorGridTile extends StatelessWidget {
 
     // For the outlined variant the border reuses the tile colors: the normal
     // border uses [tileColor] and the selected border uses [selectedTileColor],
-    // keeping the styling consistent with [SelectorFieldTile].
-    final effectiveBorder = effectiveVariant == SelectorGridTileVariant.filled
+    // keeping the styling consistent with [SelectFieldTile].
+    final effectiveBorder = effectiveVariant == SelectGridTileVariant.filled
         ? null
         : Border.all(
             color: selected ? effectiveSelectedTileColor : effectiveTileColor,
@@ -140,12 +140,12 @@ class SelectorGridTile extends StatelessWidget {
   }
 }
 
-class _SelectorGridTileDefaults extends SelectorGridTileTheme {
-  _SelectorGridTileDefaults(
+class _SelectGridTileDefaults extends SelectGridTileTheme {
+  _SelectGridTileDefaults(
     this.context,
     this.isEnabled,
     this.isSelected, [
-    SelectorGridTileVariant? variant,
+    SelectGridTileVariant? variant,
   ]) : super(variant: variant);
 
   final BuildContext context;
@@ -173,11 +173,11 @@ class _SelectorGridTileDefaults extends SelectorGridTileTheme {
     if (isDark) {
       // In dark theme, use a subtle surface elevation for better harmony
       final blendAmount =
-          variant == SelectorGridTileVariant.outlined ? 0.2 : 0.35;
+          variant == SelectGridTileVariant.outlined ? 0.2 : 0.35;
       return Color.lerp(
           _theme.backgroundColor, _theme.backgroundColorHighest, blendAmount);
     }
-    if (variant == SelectorGridTileVariant.outlined) {
+    if (variant == SelectGridTileVariant.outlined) {
       return Color.lerp(_theme.onBackgroundColorHighest, Colors.white, 0.55);
     }
     return Color.lerp(_theme.onBackgroundColorHighest, Colors.white, 0.8);

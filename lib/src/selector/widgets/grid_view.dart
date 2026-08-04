@@ -13,8 +13,8 @@ import 'skeleton_box.dart';
 
 /// A grid view that can include a single input item.
 /// Only used in tabs or flatten; uses AutomaticKeepAliveClientMixin.
-class SelectorGridView extends StatefulWidget {
-  const SelectorGridView({
+class SelectGridView extends StatefulWidget {
+  const SelectGridView({
     super.key,
     required this.crossAxisCount,
     this.mainAxisSpacing = 0.0,
@@ -81,10 +81,10 @@ class SelectorGridView extends StatefulWidget {
   final double childAspectRatio;
 
   /// The visual variant used to render the non-custom grid tiles.
-  final SelectorGridTileVariant? tileVariant;
+  final SelectGridTileVariant? tileVariant;
 
   /// The visual variant used to render the optional range input field.
-  final SelectorFieldTileVariant? fieldVariant;
+  final SelectFieldTileVariant? fieldVariant;
 
   /// Whether to show the [category] name as a header above the grid.
   ///
@@ -95,10 +95,10 @@ class SelectorGridView extends StatefulWidget {
   final String toText;
 
   @override
-  State<SelectorGridView> createState() => SelectorGridViewState();
+  State<SelectGridView> createState() => SelectGridViewState();
 }
 
-class SelectorGridViewState extends State<SelectorGridView>
+class SelectGridViewState extends State<SelectGridView>
     with AutomaticKeepAliveClientMixin {
   SelectRangeEntry? _firstCustomEntry;
   SelectRangeEntry? _lastCustomEntry;
@@ -143,7 +143,7 @@ class SelectorGridViewState extends State<SelectorGridView>
   }
 
   @override
-  void didUpdateWidget(covariant SelectorGridView oldWidget) {
+  void didUpdateWidget(covariant SelectGridView oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     _selectedEntries = widget.selectedEntries ?? {};
@@ -267,7 +267,7 @@ class SelectorGridViewState extends State<SelectorGridView>
             ),
           // An input item at header
           if (_firstCustomEntry != null)
-            SelectorFieldTile(
+            SelectFieldTile(
               _firstCustomEntry!,
               padding: const EdgeInsets.only(bottom: 10.0),
               minController: _minController,
@@ -292,7 +292,7 @@ class SelectorGridViewState extends State<SelectorGridView>
             itemBuilder: (context, index) {
               final entry = _entriesWithoutCustom[index];
               final selected = _selectedEntries.contains(entry);
-              return SelectorGridTile(
+              return SelectGridTile(
                 onTap: () => _onItemTap.call(index, entry),
                 enabled: entry.enabled,
                 label: entry.name ?? '',
@@ -303,7 +303,7 @@ class SelectorGridViewState extends State<SelectorGridView>
           ),
           // An input item at footer
           if (_lastCustomEntry != null)
-            SelectorFieldTile(
+            SelectFieldTile(
               _lastCustomEntry!,
               padding: const EdgeInsets.only(top: 10.0),
               minController: _minController,
@@ -322,9 +322,9 @@ class SelectorGridViewState extends State<SelectorGridView>
   bool get wantKeepAlive => true;
 }
 
-/// Loading skeleton for [SelectorGridView].
-class SelectorGridSkeleton extends StatelessWidget {
-  const SelectorGridSkeleton({
+/// Loading skeleton for [SelectGridView].
+class SelectGridSkeleton extends StatelessWidget {
+  const SelectGridSkeleton({
     super.key,
     required this.itemCount,
     this.padding,

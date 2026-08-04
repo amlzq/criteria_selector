@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 
 import '../select_theme.dart';
 
-/// Theme configuration for [SelectorActionBar].
+/// Theme configuration for [SelectActionBar].
 @immutable
-class SelectorActionBarTheme with Diagnosticable {
-  const SelectorActionBarTheme({
+class SelectActionBarTheme with Diagnosticable {
+  const SelectActionBarTheme({
     this.backgroundColor,
     this.padding,
     this.resetFlex,
@@ -15,26 +15,26 @@ class SelectorActionBarTheme with Diagnosticable {
     this.applyButtonStyle,
   });
 
-  /// Overrides the default value of [SelectorActionBar.selectedColor].
+  /// Overrides the default value of [SelectActionBar.selectedColor].
   final Color? backgroundColor;
 
-  /// Overrides the default value of [SelectorActionBar.padding].
+  /// Overrides the default value of [SelectActionBar.padding].
   final EdgeInsets? padding;
 
-  /// Overrides the default value of [SelectorActionBar.resetFlex].
+  /// Overrides the default value of [SelectActionBar.resetFlex].
   final int? resetFlex;
 
-  /// Overrides the default value of [SelectorActionBar.applyFlex].
+  /// Overrides the default value of [SelectActionBar.applyFlex].
   final int? applyFlex;
 
-  /// Overrides the default value of [SelectorActionBar.resetButtonStyle].
+  /// Overrides the default value of [SelectActionBar.resetButtonStyle].
   final ButtonStyle? resetButtonStyle;
 
-  /// Overrides the default value of [SelectorActionBar.applyButtonStyle].
+  /// Overrides the default value of [SelectActionBar.applyButtonStyle].
   final ButtonStyle? applyButtonStyle;
 
   /// Returns a copy of this theme with the given fields replaced.
-  SelectorActionBarTheme copyWith({
+  SelectActionBarTheme copyWith({
     Color? backgroundColor,
     EdgeInsets? padding,
     int? resetFlex,
@@ -42,7 +42,7 @@ class SelectorActionBarTheme with Diagnosticable {
     ButtonStyle? resetButtonStyle,
     ButtonStyle? applyButtonStyle,
   }) {
-    return SelectorActionBarTheme(
+    return SelectActionBarTheme(
       backgroundColor: backgroundColor ?? this.backgroundColor,
       padding: padding ?? this.padding,
       resetFlex: resetFlex ?? this.resetFlex,
@@ -52,17 +52,17 @@ class SelectorActionBarTheme with Diagnosticable {
     );
   }
 
-  static SelectorActionBarTheme of(BuildContext context) {
+  static SelectActionBarTheme of(BuildContext context) {
     return SelectTheme.of(context).actionBarTheme;
   }
 
   /// Linearly interpolates between two action bar themes.
-  static SelectorActionBarTheme lerp(
-      SelectorActionBarTheme? a, SelectorActionBarTheme? b, double t) {
+  static SelectActionBarTheme lerp(
+      SelectActionBarTheme? a, SelectActionBarTheme? b, double t) {
     if (identical(a, b) && a != null) {
       return a;
     }
-    return SelectorActionBarTheme(
+    return SelectActionBarTheme(
       backgroundColor: Color.lerp(a?.backgroundColor, b?.backgroundColor, t),
       padding: EdgeInsets.lerp(a?.padding, b?.padding, t),
       resetFlex: a?.resetFlex ?? b?.resetFlex ?? 1.toInt(),
@@ -92,7 +92,7 @@ class SelectorActionBarTheme with Diagnosticable {
     if (other.runtimeType != runtimeType) {
       return false;
     }
-    return other is SelectorActionBarTheme &&
+    return other is SelectActionBarTheme &&
         other.backgroundColor == backgroundColor &&
         other.padding == padding &&
         other.resetFlex == resetFlex &&

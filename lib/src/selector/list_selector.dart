@@ -173,7 +173,7 @@ class ListSelectorState extends State<ListSelector> {
                       final entries = category.children?.toList() ?? [];
                       final layout =
                           category.layout ?? const SelectListLayout();
-                      return SelectorExpansionTile(
+                      return SelectExpansionTile(
                         title: category.name ?? '',
                         titlePadding: const EdgeInsets.symmetric(vertical: 10),
                         initiallyExpanded: true,
@@ -195,7 +195,7 @@ class ListSelectorState extends State<ListSelector> {
                             :final childAspectRatio,
                             :final toText,
                           ) =>
-                            SelectorGridView(
+                            SelectGridView(
                               key: ValueKey('category_$index'),
                               crossAxisCount: crossAxisCount,
                               mainAxisSpacing: mainAxisSpacing,
@@ -211,7 +211,7 @@ class ListSelectorState extends State<ListSelector> {
                                   _onTerminalItemTap(entry as SelectChildEntry),
                               toText: toText,
                             ),
-                          SelectChipLayout() => SelectorChipBar(
+                          SelectChipLayout() => SelectChipBar(
                               key: ValueKey('category_$index'),
                               category: category,
                               entries: entries,
@@ -255,13 +255,13 @@ class ListSelectorState extends State<ListSelector> {
                 ),
         ),
         if (SelectionMode.multiple == selectionMode &&
-            !SelectorActionBarVisibility.isHidden(context))
+            !SelectActionBarVisibility.isHidden(context))
           delegate.actionBarBuilder?.call(
                 context,
                 onResetTap: _onResetTap,
                 onApplyTap: _onApplyTap,
               ) ??
-              SelectorActionBar(
+              SelectActionBar(
                 resetText: delegate.resetText,
                 applyText: delegate.applyText,
                 resetFlex: delegate.actionBarTheme?.resetFlex,
@@ -289,7 +289,7 @@ class ListSelectorSkeleton extends StatelessWidget {
       children: [
         const Flexible(child: SelectorListSkeleton(itemCount: 6)),
         if (SelectionMode.multiple == selectionMode)
-          const SelectorActionBarSkeleton(),
+          const SelectActionBarSkeleton(),
       ],
     );
   }

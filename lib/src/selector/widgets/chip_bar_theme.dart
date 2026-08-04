@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 
 import '../select_theme.dart';
 
-/// Visual variant for chips rendered by [SelectorChipBar].
-enum SelectorChipVariant {
+/// Visual variant for chips rendered by [SelectChipBar].
+enum SelectChipVariant {
   filled,
 
   outlined,
 }
 
-/// Theme configuration for [SelectorChipBar].
+/// Theme configuration for [SelectChipBar].
 @immutable
-class SelectorChipBarTheme with Diagnosticable {
-  const SelectorChipBarTheme({
+class SelectChipBarTheme with Diagnosticable {
+  const SelectChipBarTheme({
     this.backgroundColor,
     this.padding,
     this.variant,
@@ -23,38 +23,38 @@ class SelectorChipBarTheme with Diagnosticable {
     this.selectedLabelStyle,
   });
 
-  /// Overrides the default value of [SelectorChipBar.selectedColor].
+  /// Overrides the default value of [SelectChipBar.selectedColor].
   final Color? backgroundColor;
 
-  /// Overrides the default value of [SelectorChipBar.padding].
+  /// Overrides the default value of [SelectChipBar.padding].
   final EdgeInsetsGeometry? padding;
 
-  /// Overrides the default value of [SelectorChipBar.variant].
-  final SelectorChipVariant? variant;
+  /// Overrides the default value of [SelectChipBar.variant].
+  final SelectChipVariant? variant;
 
-  /// Overrides the default value of [SelectorChipBar.chipColor].
+  /// Overrides the default value of [SelectChipBar.chipColor].
   final Color? chipColor;
 
-  /// Overrides the default value of [SelectorChipBar.selectedChipColor].
+  /// Overrides the default value of [SelectChipBar.selectedChipColor].
   final Color? selectedChipColor;
 
-  /// Overrides the default value of [SelectorChipBar.labelStyle].
+  /// Overrides the default value of [SelectChipBar.labelStyle].
   final TextStyle? labelStyle;
 
-  /// Overrides the default value of [SelectorChipBar.selectedLabelStyle].
+  /// Overrides the default value of [SelectChipBar.selectedLabelStyle].
   final TextStyle? selectedLabelStyle;
 
   /// Returns a copy of this theme with the given fields replaced.
-  SelectorChipBarTheme copyWith({
+  SelectChipBarTheme copyWith({
     Color? backgroundColor,
     EdgeInsetsGeometry? padding,
-    SelectorChipVariant? variant,
+    SelectChipVariant? variant,
     Color? chipColor,
     Color? selectedChipColor,
     TextStyle? labelStyle,
     TextStyle? selectedLabelStyle,
   }) {
-    return SelectorChipBarTheme(
+    return SelectChipBarTheme(
       backgroundColor: backgroundColor ?? this.backgroundColor,
       padding: padding ?? this.padding,
       variant: variant ?? this.variant,
@@ -65,17 +65,17 @@ class SelectorChipBarTheme with Diagnosticable {
     );
   }
 
-  static SelectorChipBarTheme of(BuildContext context) {
+  static SelectChipBarTheme of(BuildContext context) {
     return SelectTheme.of(context).chipBarThemeData;
   }
 
   /// Linearly interpolates between two chip bar themes.
-  static SelectorChipBarTheme lerp(
-      SelectorChipBarTheme? a, SelectorChipBarTheme? b, double t) {
+  static SelectChipBarTheme lerp(
+      SelectChipBarTheme? a, SelectChipBarTheme? b, double t) {
     if (identical(a, b) && a != null) {
       return a;
     }
-    return SelectorChipBarTheme(
+    return SelectChipBarTheme(
       backgroundColor: Color.lerp(
         a?.backgroundColor,
         b?.backgroundColor,
@@ -129,7 +129,7 @@ class SelectorChipBarTheme with Diagnosticable {
     if (other.runtimeType != runtimeType) {
       return false;
     }
-    return other is SelectorChipBarTheme &&
+    return other is SelectChipBarTheme &&
         other.backgroundColor == backgroundColor &&
         other.variant == variant &&
         other.padding == padding &&

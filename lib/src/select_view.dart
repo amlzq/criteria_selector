@@ -15,7 +15,7 @@ import 'selector/select_panel.dart';
 /// without extra wiring.
 ///
 /// Inline selectors do not show the apply/reset action bar: [SelectView]
-/// wraps its panel in a [SelectorActionBarVisibility] scope that hides it, so
+/// wraps its panel in a [SelectActionBarVisibility] scope that hides it, so
 /// selections apply immediately through [onChanged]. The action bar is still
 /// shown by the modal hosts ([showSelect] / [showModalBottomSelect]), which
 /// do not provide that scope. The [delegate]'s
@@ -231,7 +231,7 @@ class _SelectViewState extends State<SelectView> {
     // finally the [margin] surrounds everything. The cascading selector lays
     // out its body/skeleton with a Column(min) + Expanded, which requires a
     // bounded height; the constraints guarantee that.
-    Widget current = SelectorActionBarVisibility(
+    Widget current = SelectActionBarVisibility(
       hidden: true,
       child: SelectPanel(
         delegate: widget.delegate,

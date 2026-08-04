@@ -10,8 +10,8 @@ import 'package:flutter/material.dart';
 /// This keeps the action bar's "render or not" decision out of the delegate
 /// (whose [SelectDelegate.actionBarBuilder] only customizes the bar's UI),
 /// avoiding a per-subclass wrapping delegate.
-class SelectorActionBarVisibility extends InheritedWidget {
-  const SelectorActionBarVisibility({
+class SelectActionBarVisibility extends InheritedWidget {
+  const SelectActionBarVisibility({
     super.key,
     this.hidden = false,
     required super.child,
@@ -22,16 +22,16 @@ class SelectorActionBarVisibility extends InheritedWidget {
 
   /// Whether the action bar is hidden for selectors at [context].
   ///
-  /// Defaults to `false` (visible) when no [SelectorActionBarVisibility] is
+  /// Defaults to `false` (visible) when no [SelectActionBarVisibility] is
   /// found above [context], so modal hosts that do not wrap their panel keep
   /// showing the action bar.
   static bool isHidden(BuildContext context) {
-    final scope = context
-        .dependOnInheritedWidgetOfExactType<SelectorActionBarVisibility>();
+    final scope =
+        context.dependOnInheritedWidgetOfExactType<SelectActionBarVisibility>();
     return scope?.hidden ?? false;
   }
 
   @override
-  bool updateShouldNotify(SelectorActionBarVisibility oldWidget) =>
+  bool updateShouldNotify(SelectActionBarVisibility oldWidget) =>
       hidden != oldWidget.hidden;
 }

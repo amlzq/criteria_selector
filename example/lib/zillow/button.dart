@@ -168,11 +168,11 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                 childAspectRatio: 2.5,
                 mainAxisSpacing: 10,
                 crossAxisSpacing: 10,
-                gridTileTheme: const SelectorGridTileTheme(
-                  variant: SelectorGridTileVariant.outlined,
+                gridTileTheme: const SelectGridTileTheme(
+                  variant: SelectGridTileVariant.outlined,
                 ),
-                fieldTileTheme: const SelectorFieldTileTheme(
-                  variant: SelectorFieldTileVariant.outlined,
+                fieldTileTheme: const SelectFieldTileTheme(
+                  variant: SelectFieldTileVariant.outlined,
                 ),
                 applyText: AppLocalizations.of(context)?.apply ?? '',
               ),
@@ -237,14 +237,14 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                 selectedEntriesLoader: _filtersRepo.fetchMoreSelectedData,
                 resetEntriesLoader: _filtersRepo.fetchMoreResetData,
                 selectionMode: SelectionMode.multiple,
-                gridTileTheme: const SelectorGridTileTheme(
-                  variant: SelectorGridTileVariant.outlined,
+                gridTileTheme: const SelectGridTileTheme(
+                  variant: SelectGridTileVariant.outlined,
                 ),
-                fieldTileTheme: const SelectorFieldTileTheme(
-                  variant: SelectorFieldTileVariant.outlined,
+                fieldTileTheme: const SelectFieldTileTheme(
+                  variant: SelectFieldTileVariant.outlined,
                 ),
-                chipBarTheme: const SelectorChipBarTheme(
-                  variant: SelectorChipVariant.outlined,
+                chipBarTheme: const SelectChipBarTheme(
+                  variant: SelectChipVariant.outlined,
                 ),
               ),
               onChanged: (selected) {

@@ -9,9 +9,9 @@ import 'skeleton_box.dart';
 /// Action bar for selector panels.
 ///
 /// This widget typically renders "Reset" and "Apply" actions and can be styled
-/// via [SelectorActionBarTheme] or per-instance overrides.
-class SelectorActionBar extends StatelessWidget {
-  const SelectorActionBar({
+/// via [SelectActionBarTheme] or per-instance overrides.
+class SelectActionBar extends StatelessWidget {
+  const SelectActionBar({
     super.key,
     this.backgroundColor,
     this.padding,
@@ -27,7 +27,7 @@ class SelectorActionBar extends StatelessWidget {
 
   /// The color of the action bar's background.
   ///
-  /// If null, the value from the surrounding [SelectorActionBarTheme] or the
+  /// If null, the value from the surrounding [SelectActionBarTheme] or the
   /// default is used.
   final Color? backgroundColor;
 
@@ -49,13 +49,13 @@ class SelectorActionBar extends StatelessWidget {
 
   /// The visual style of the reset button.
   ///
-  /// If null, the value from the surrounding [SelectorActionBarTheme] or the
+  /// If null, the value from the surrounding [SelectActionBarTheme] or the
   /// default is used.
   final ButtonStyle? resetButtonStyle;
 
   /// The visual style of the apply button.
   ///
-  /// If null, the value from the surrounding [SelectorActionBarTheme] or the
+  /// If null, the value from the surrounding [SelectActionBarTheme] or the
   /// default is used.
   final ButtonStyle? applyButtonStyle;
 
@@ -81,8 +81,8 @@ class SelectorActionBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final SelectorActionBarTheme defaults = _SelectorActionBarDefaults(context);
-    final theme = SelectorActionBarTheme.of(context);
+    final SelectActionBarTheme defaults = _SelectActionBarDefaults(context);
+    final theme = SelectActionBarTheme.of(context);
 
     final effectiveBackgroundColor =
         backgroundColor ?? theme.backgroundColor ?? defaults.backgroundColor!;
@@ -135,9 +135,9 @@ class SelectorActionBar extends StatelessWidget {
   }
 }
 
-/// Loading skeleton for [SelectorActionBar].
-class SelectorActionBarSkeleton extends StatelessWidget {
-  const SelectorActionBarSkeleton({super.key});
+/// Loading skeleton for [SelectActionBar].
+class SelectActionBarSkeleton extends StatelessWidget {
+  const SelectActionBarSkeleton({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -168,8 +168,8 @@ class SelectorActionBarSkeleton extends StatelessWidget {
   }
 }
 
-class _SelectorActionBarDefaults extends SelectorActionBarTheme {
-  _SelectorActionBarDefaults(this.context) : super();
+class _SelectActionBarDefaults extends SelectActionBarTheme {
+  _SelectActionBarDefaults(this.context) : super();
 
   final BuildContext context;
   late final SelectThemeData _theme = SelectTheme.of(context);

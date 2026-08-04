@@ -7,13 +7,13 @@ import '../zillow/house_filters_repository.dart' as zillow;
 import 'playground_l10n.dart';
 import 'playground_params.dart';
 
-SelectorGridTileVariant _gridVariant(TileVariant v) => v == TileVariant.outlined
-    ? SelectorGridTileVariant.outlined
-    : SelectorGridTileVariant.filled;
+SelectGridTileVariant _gridVariant(TileVariant v) => v == TileVariant.outlined
+    ? SelectGridTileVariant.outlined
+    : SelectGridTileVariant.filled;
 
-SelectorChipVariant _chipVariant(TileVariant v) => v == TileVariant.outlined
-    ? SelectorChipVariant.outlined
-    : SelectorChipVariant.filled;
+SelectChipVariant _chipVariant(TileVariant v) => v == TileVariant.outlined
+    ? SelectChipVariant.outlined
+    : SelectChipVariant.filled;
 
 Widget _radioBuilder(BuildContext context, bool selected) =>
     MyRadio(value: selected);
@@ -167,7 +167,7 @@ SelectDelegate buildDelegate(
 
 SelectDelegate _createDelegate(PlaygroundParams p, PlaygroundDataSource data) {
   final chipBarTheme =
-      SelectorChipBarTheme(variant: _chipVariant(p.tileVariant));
+      SelectChipBarTheme(variant: _chipVariant(p.tileVariant));
   switch (p.delegate) {
     case Delegate.cascading:
       return CascadingSelectDelegate(
@@ -193,7 +193,7 @@ SelectDelegate _createDelegate(PlaygroundParams p, PlaygroundDataSource data) {
         crossAxisSpacing: p.spacing,
         mainAxisSpacing: p.spacing,
         gridTileTheme:
-            SelectorGridTileTheme(variant: _gridVariant(p.tileVariant)),
+            SelectGridTileTheme(variant: _gridVariant(p.tileVariant)),
         chipBarTheme: chipBarTheme,
       );
     case Delegate.flatten:
@@ -207,7 +207,7 @@ SelectDelegate _createDelegate(PlaygroundParams p, PlaygroundDataSource data) {
         crossAxisSpacing: p.spacing,
         mainAxisSpacing: p.spacing,
         gridTileTheme:
-            SelectorGridTileTheme(variant: _gridVariant(p.tileVariant)),
+            SelectGridTileTheme(variant: _gridVariant(p.tileVariant)),
         chipBarTheme: chipBarTheme,
         sideBarTheme: const SelectorSideBarTheme(width: 110),
       );

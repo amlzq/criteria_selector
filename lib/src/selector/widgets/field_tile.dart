@@ -9,8 +9,8 @@ import 'field_tile_theme.dart';
 /// A range input tile for a [SelectRangeEntry].
 ///
 /// This widget renders two numeric text fields for min/max input.
-class SelectorFieldTile extends StatelessWidget {
-  const SelectorFieldTile(
+class SelectFieldTile extends StatelessWidget {
+  const SelectFieldTile(
     this.entry, {
     super.key,
     this.padding,
@@ -63,21 +63,21 @@ class SelectorFieldTile extends StatelessWidget {
 
   /// The color used to highlight the tile when a field is focused or has input.
   ///
-  /// If null, [SelectorFieldTileTheme.selectedColor] is used. If that is also
+  /// If null, [SelectFieldTileTheme.selectedColor] is used. If that is also
   /// null, the value is [SelectThemeData.selectedColor].
   final Color? selectedColor;
 
-  /// Defines the background color of `SelectorFieldTile` when not focused.
+  /// Defines the background color of `SelectFieldTile` when not focused.
   final Color? tileColor;
 
-  /// Defines the background color of `SelectorFieldTile` when focused.
+  /// Defines the background color of `SelectFieldTile` when focused.
   final Color? selectedTileColor;
 
   /// The visual variant of this tile.
   ///
-  /// When null, [SelectorFieldTileTheme.variant] is used. Defaults to
-  /// [SelectorFieldTileVariant.filled], matching [SelectorGridTile].
-  final SelectorFieldTileVariant? variant;
+  /// When null, [SelectFieldTileTheme.variant] is used. Defaults to
+  /// [SelectFieldTileVariant.filled], matching [SelectGridTile].
+  final SelectFieldTileVariant? variant;
 
   /// The text rendered between the two fields (e.g. "-", "to", "and").
   ///
@@ -107,7 +107,7 @@ class SelectorFieldTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final theme = SelectorFieldTileTheme.of(context);
+    // final theme = SelectFieldTileTheme.of(context);
     return TextFieldTapRegion(
       child: Padding(
         padding: padding ?? EdgeInsets.zero,
@@ -167,7 +167,7 @@ class _TextField extends StatelessWidget {
 
   final Color? tileColor;
   final Color? selectedTileColor;
-  final SelectorFieldTileVariant? variant;
+  final SelectFieldTileVariant? variant;
   final bool allowDecimal;
   final ValueChanged<String>? onChanged;
   final ValueChanged<String>? onSubmitted;
@@ -186,12 +186,12 @@ class _TextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = SelectorFieldTileTheme.of(context);
+    final theme = SelectFieldTileTheme.of(context);
 
     final effectiveVariant =
-        variant ?? theme.variant ?? SelectorFieldTileVariant.filled;
+        variant ?? theme.variant ?? SelectFieldTileVariant.filled;
 
-    final defaults = _SelectorFieldTileDefaults(context, effectiveVariant);
+    final defaults = _SelectFieldTileDefaults(context, effectiveVariant);
 
     final effectiveTileColor =
         tileColor ?? theme.tileColor ?? defaults.tileColor!;
@@ -203,9 +203,9 @@ class _TextField extends StatelessWidget {
     final selected = (focusNode?.hasFocus ?? false) ||
         (controller?.text.isNotEmpty ?? false);
 
-    final isFilled = effectiveVariant == SelectorFieldTileVariant.filled;
+    final isFilled = effectiveVariant == SelectFieldTileVariant.filled;
 
-    // Unified tile styling matching [SelectorGridTile]:
+    // Unified tile styling matching [SelectGridTile]:
     // - filled:   tileColor / selectedTileColor as background, no border
     // - outlined: transparent background, tileColor / selectedTileColor as border
     final tileBackgroundColor = isFilled
@@ -238,7 +238,7 @@ class _TextField extends StatelessWidget {
         style: const TextStyle(fontSize: 13),
         onChanged: onChanged,
         onSubmitted: onSubmitted,
-        // [SelectorFieldTile] wraps the whole row in a [TextFieldTapRegion], so
+        // [SelectFieldTile] wraps the whole row in a [TextFieldTapRegion], so
         // taps on the sibling field / separator are treated as inside and
         // do not trigger this. Only genuine outside taps (grid cells, scrim)
         // unfocus and dismiss the keyboard.
@@ -295,10 +295,10 @@ class _TextField extends StatelessWidget {
   }
 }
 
-class _SelectorFieldTileDefaults extends SelectorFieldTileTheme {
-  _SelectorFieldTileDefaults(
+class _SelectFieldTileDefaults extends SelectFieldTileTheme {
+  _SelectFieldTileDefaults(
     this.context, [
-    SelectorFieldTileVariant? variant,
+    SelectFieldTileVariant? variant,
   ]) : super(variant: variant);
 
   final BuildContext context;
@@ -320,7 +320,7 @@ class _SelectorFieldTileDefaults extends SelectorFieldTileTheme {
 
   /// Default [tileColor] based on [variant].
   ///
-  /// Mirrors [_SelectorGridTileDefaults.tileColor]: a light tint derived from
+  /// Mirrors [_SelectGridTileDefaults.tileColor]: a light tint derived from
   /// [SelectThemeData.onBackgroundColorHighest] toward white in light theme;
   /// blends surface colors for harmony in dark theme.
   @override
@@ -328,11 +328,11 @@ class _SelectorFieldTileDefaults extends SelectorFieldTileTheme {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     if (isDark) {
       final blendAmount =
-          variant == SelectorFieldTileVariant.outlined ? 0.2 : 0.35;
+          variant == SelectFieldTileVariant.outlined ? 0.2 : 0.35;
       return Color.lerp(
           _theme.backgroundColor, _theme.backgroundColorHighest, blendAmount);
     }
-    if (variant == SelectorFieldTileVariant.outlined) {
+    if (variant == SelectFieldTileVariant.outlined) {
       return Color.lerp(_theme.onBackgroundColorHighest, Colors.white, 0.55);
     }
     return Color.lerp(_theme.onBackgroundColorHighest, Colors.white, 0.8);
@@ -340,7 +340,7 @@ class _SelectorFieldTileDefaults extends SelectorFieldTileTheme {
 
   /// Default [selectedTileColor].
   ///
-  /// Mirrors [_SelectorGridTileDefaults.selectedTileColor]: blends with
+  /// Mirrors [_SelectGridTileDefaults.selectedTileColor]: blends with
   /// background in dark theme for a harmonious look.
   @override
   Color? get selectedTileColor {

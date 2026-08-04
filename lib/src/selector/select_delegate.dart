@@ -13,7 +13,7 @@ import 'widgets/widgets.dart';
 ///
 /// Implementations should trigger [onResetTap] and [onApplyTap] from UI controls
 /// (e.g. buttons).
-typedef SelectorActionBarBuilder = Widget Function(
+typedef SelectActionBarBuilder = Widget Function(
   BuildContext context, {
   required VoidCallback onResetTap,
   required VoidCallback onApplyTap,
@@ -97,7 +97,7 @@ abstract class SelectDelegate {
   SelectEntries? get resetData => _resetData ??= resetEntriesLoader?.call();
 
   /// Optional builder to customize the action bar UI.
-  final SelectorActionBarBuilder? actionBarBuilder;
+  final SelectActionBarBuilder? actionBarBuilder;
 
   /// The background color used for selected entries.
   final Color? selectedColor;
@@ -125,7 +125,7 @@ abstract class SelectDelegate {
   final String? applyText;
 
   /// Theme overrides for the action bar widget.
-  final SelectorActionBarTheme? actionBarTheme;
+  final SelectActionBarTheme? actionBarTheme;
 
   /// Theme overrides for the tab bar (horizontal category bar).
   final SelectorTabBarTheme? tabBarTheme;
@@ -134,19 +134,19 @@ abstract class SelectDelegate {
   final SelectorSideBarTheme? sideBarTheme;
 
   /// Theme overrides for grid tiles.
-  final SelectorGridTileTheme? gridTileTheme;
+  final SelectGridTileTheme? gridTileTheme;
 
   /// Theme overrides for list tiles.
   final SelectorListTileTheme? listTileTheme;
 
   /// Theme overrides for range field tiles.
-  final SelectorFieldTileTheme? fieldTileTheme;
+  final SelectFieldTileTheme? fieldTileTheme;
 
   /// Theme overrides for expansion tiles.
-  final SelectorExpansionTileTheme? expansionTileTheme;
+  final SelectExpansionTileTheme? expansionTileTheme;
 
   /// Theme overrides for the selected chips bar.
-  final SelectorChipBarTheme? chipBarTheme;
+  final SelectChipBarTheme? chipBarTheme;
 
   /// Theme overrides for the panel's elevation, shadow and shape decoration.
   ///

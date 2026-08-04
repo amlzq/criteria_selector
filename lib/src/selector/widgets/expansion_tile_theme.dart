@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import '../select_theme.dart';
 
 @immutable
-class SelectorExpansionTileTheme with Diagnosticable {
-  const SelectorExpansionTileTheme({
+class SelectExpansionTileTheme with Diagnosticable {
+  const SelectExpansionTileTheme({
     this.titleStyle,
     this.titlePadding,
     this.selectedColor,
@@ -15,28 +15,28 @@ class SelectorExpansionTileTheme with Diagnosticable {
     this.collapseCurve,
   });
 
-  /// Overrides the default value of [SelectorExpansionTile.titleStyle].
+  /// Overrides the default value of [SelectExpansionTile.titleStyle].
   final TextStyle? titleStyle;
 
-  /// Overrides the default value of [SelectorExpansionTile.selectedColor].
+  /// Overrides the default value of [SelectExpansionTile.selectedColor].
   final EdgeInsetsGeometry? titlePadding;
 
-  /// Overrides the default value of [SelectorExpansionTile.selectedColor].
+  /// Overrides the default value of [SelectExpansionTile.selectedColor].
   final Color? selectedColor;
 
-  /// Overrides the default value of [SelectorExpansionTile.childPadding].
+  /// Overrides the default value of [SelectExpansionTile.childPadding].
   final EdgeInsetsGeometry? childPadding;
 
-  /// Overrides the default value of [SelectorExpansionTile.animationDuration].
+  /// Overrides the default value of [SelectExpansionTile.animationDuration].
   final Duration? animationDuration;
 
-  /// Overrides the default value of [SelectorExpansionTile.expansionCurve].
+  /// Overrides the default value of [SelectExpansionTile.expansionCurve].
   final Curve? expansionCurve;
 
-  /// Overrides the default value of [SelectorExpansionTile.collapseCurve].
+  /// Overrides the default value of [SelectExpansionTile.collapseCurve].
   final Curve? collapseCurve;
 
-  SelectorExpansionTileTheme copyWith({
+  SelectExpansionTileTheme copyWith({
     TextStyle? titleStyle,
     EdgeInsetsGeometry? titlePadding,
     Color? selectedColor,
@@ -45,7 +45,7 @@ class SelectorExpansionTileTheme with Diagnosticable {
     Curve? expansionCurve,
     Curve? collapseCurve,
   }) {
-    return SelectorExpansionTileTheme(
+    return SelectExpansionTileTheme(
       titleStyle: titleStyle ?? this.titleStyle,
       titlePadding: titlePadding ?? this.titlePadding,
       selectedColor: selectedColor ?? this.selectedColor,
@@ -56,16 +56,16 @@ class SelectorExpansionTileTheme with Diagnosticable {
     );
   }
 
-  static SelectorExpansionTileTheme of(BuildContext context) {
+  static SelectExpansionTileTheme of(BuildContext context) {
     return SelectTheme.of(context).expansionTileTheme;
   }
 
-  static SelectorExpansionTileTheme lerp(
-      SelectorExpansionTileTheme? a, SelectorExpansionTileTheme? b, double t) {
+  static SelectExpansionTileTheme lerp(
+      SelectExpansionTileTheme? a, SelectExpansionTileTheme? b, double t) {
     if (identical(a, b) && a != null) {
       return a;
     }
-    return SelectorExpansionTileTheme(
+    return SelectExpansionTileTheme(
       titleStyle: TextStyle.lerp(
         a?.titleStyle,
         b?.titleStyle,
@@ -111,7 +111,7 @@ class SelectorExpansionTileTheme with Diagnosticable {
     if (other.runtimeType != runtimeType) {
       return false;
     }
-    return other is SelectorExpansionTileTheme &&
+    return other is SelectExpansionTileTheme &&
         other.titleStyle == titleStyle &&
         other.titlePadding == titlePadding &&
         other.selectedColor == selectedColor &&

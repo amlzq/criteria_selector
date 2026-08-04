@@ -437,6 +437,62 @@ MaterialApp(
 );
 ```
 
+### `SelectorActionBar` / `SelectorChipBar` / `SelectorExpansionTile` / `SelectorFieldTile` / `SelectorGridTile` / `SelectorGridView` renamed to `Select*`
+
+The widget, theme, and related types used to render the panel's content have been
+renamed to drop the redundant `Selector` prefix. The old names are kept as
+deprecated type aliases (e.g. `typedef SelectorActionBar = SelectActionBar;`) for
+backward compatibility and **will be removed in a future minor version**. Since
+the aliases are exact `typedef`s, this is a pure rename — no behavior changes.
+
+| Old name | New name |
+| --- | --- |
+| `SelectorActionBar` | `SelectActionBar` |
+| `SelectorActionBarTheme` | `SelectActionBarTheme` |
+| `SelectorActionBarSkeleton` | `SelectActionBarSkeleton` |
+| `SelectorActionBarBuilder` | `SelectActionBarBuilder` |
+| `SelectorChipBar` | `SelectChipBar` |
+| `SelectorChipBarTheme` | `SelectChipBarTheme` |
+| `SelectorChipVariant` | `SelectChipVariant` |
+| `SelectorExpansionTile` | `SelectExpansionTile` |
+| `SelectorExpansionTileTheme` | `SelectExpansionTileTheme` |
+| `SelectorFieldTile` | `SelectFieldTile` |
+| `SelectorFieldTileTheme` | `SelectFieldTileTheme` |
+| `SelectorFieldTileVariant` | `SelectFieldTileVariant` |
+| `SelectorGridTile` | `SelectGridTile` |
+| `SelectorGridTileTheme` | `SelectGridTileTheme` |
+| `SelectorGridTileVariant` | `SelectGridTileVariant` |
+| `SelectorGridView` | `SelectGridView` |
+| `SelectorGridViewState` | `SelectGridViewState` |
+| `SelectorGridSkeleton` | `SelectGridSkeleton` |
+
+`SelectorActionBarVisibility` is package-internal (not re-exported from the
+public barrel) and is renamed cleanly to `SelectActionBarVisibility` without a
+deprecated alias. The internal constants `kSelectorChipBarHeight` and
+`kSelectorExpansionTileAnimationDuration` were renamed to `kSelectChipBarHeight`
+and `kSelectExpansionTileAnimationDuration`. The public export is updated, so no
+import change is required when using the package barrel.
+
+Migration: replace each old name with its new counterpart at every call site.
+
+```dart
+// Before
+SelectorGridView(
+  crossAxisCount: 2,
+  gridTileTheme: const SelectorGridTileTheme(
+    variant: SelectorGridTileVariant.outlined,
+  ),
+);
+
+// After
+SelectGridView(
+  crossAxisCount: 2,
+  gridTileTheme: const SelectGridTileTheme(
+    variant: SelectGridTileVariant.outlined,
+  ),
+);
+```
+
 ## MIGRATE TO 0.4.0
 
 ### Single `layout` replaces `listConfig` / `gridConfig` / `chipConfig`
