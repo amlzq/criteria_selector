@@ -133,7 +133,7 @@ class HouseFiltersRepository {
 
   SelectEntries? fetchPriceRangeResetData() => _priceRangeReset;
 
-  /// A price category rendered with [SelectorRangeLayout]: a single custom
+  /// A price category rendered with [SelectRangeLayout]: a single custom
   /// [SelectRangeEntry] shown as a price-range slider above two synced
   /// text fields.
   Future<SelectEntries> fetchPriceRangeData() async {
@@ -143,7 +143,7 @@ class HouseFiltersRepository {
       id: 'list_price',
       name: 'Price',
       selectionMode: SelectionMode.single,
-      layout: const SelectorRangeLayout(toText: 'to'),
+      layout: const SelectRangeLayout(toText: 'to'),
       children: {
         SelectIntEntry.custom(
           parentId: 'list_price',
@@ -230,11 +230,11 @@ class HouseFiltersRepository {
     final more = moreFromJson(await loadJsonData('more.json'));
     debugPrint('more length: ${more.length}');
 
-    SelectorGridLayout? gridLayout(String categoryId) {
+    SelectGridLayout? gridLayout(String categoryId) {
       if (categoryId == 'home_type' ||
           categoryId == 'lists_details' ||
           categoryId == 'commute') {
-        return const SelectorGridLayout(
+        return const SelectGridLayout(
           crossAxisCount: 2,
           childAspectRatio: 5,
           crossAxisSpacing: 10,
@@ -244,7 +244,7 @@ class HouseFiltersRepository {
       if (categoryId == 'square_feet' ||
           categoryId == 'lot_size' ||
           categoryId == 'home_features') {
-        return const SelectorGridLayout(
+        return const SelectGridLayout(
           crossAxisCount: 3,
           childAspectRatio: 3,
           crossAxisSpacing: 10,
@@ -255,9 +255,9 @@ class HouseFiltersRepository {
       }
     }
 
-    SelectorChipLayout? chipLayout(String categoryId) {
+    SelectChipLayout? chipLayout(String categoryId) {
       if (categoryId == 'expanded_search') {
-        return const SelectorChipLayout();
+        return const SelectChipLayout();
       }
       return null;
     }

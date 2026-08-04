@@ -2,6 +2,44 @@
 
 ## Next
 
+### `Selector*Layout` renamed to `Select*Layout`
+
+The sealed layout descriptor and its subclasses have been renamed to drop the
+redundant `Selector` prefix. The old names are kept as deprecated type aliases
+(e.g. `typedef SelectorLayout = SelectLayout;`) for backward compatibility and
+**will be removed in a future minor version**. Since the aliases are exact
+`typedef`s, this is a pure rename — no behavior changes.
+
+| Old name | New name |
+| --- | --- |
+| `SelectorLayout` | `SelectLayout` |
+| `SelectorListLayout` | `SelectListLayout` |
+| `SelectorGridLayout` | `SelectGridLayout` |
+| `SelectorChipLayout` | `SelectChipLayout` |
+| `SelectorRangeLayout` | `SelectRangeLayout` |
+
+The source file was renamed along the way (`lib/src/selector/selector_layout.dart`
+→ `lib/src/selector/select_layout.dart`). The public export is updated, so no
+import change is required when using the package barrel.
+
+Migration: replace each old name with its new counterpart at every call site.
+
+```dart
+// Before
+SelectCategoryEntry(
+  id: 'home_type',
+  name: 'Home type',
+  layout: const SelectorGridLayout(crossAxisCount: 2),
+);
+
+// After
+SelectCategoryEntry(
+  id: 'home_type',
+  name: 'Home type',
+  layout: const SelectGridLayout(crossAxisCount: 2),
+);
+```
+
 ### `SelectorDelegate` renamed to `SelectDelegate`
 
 The selector configuration types have been renamed to drop the redundant

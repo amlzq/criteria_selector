@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 
 import 'action_bar_visibility.dart';
 import 'constants.dart';
-import 'selector_controller.dart';
 import 'select_delegate.dart';
 import 'select_entry.dart';
-import 'selector_layout.dart';
+import 'select_layout.dart';
+import 'selector_controller.dart';
 import 'widgets/widgets.dart';
 
 /// Vertical layout: category tabs on top and a grid of items below.
@@ -178,7 +178,7 @@ class GridSelectorState extends State<GridSelector> {
     final selectedEntries =
         controller?.selectedEntriesForParent(category.id, level: 1) ?? {};
     final layout = category.layout ??
-        SelectorGridLayout(
+        SelectGridLayout(
           crossAxisCount: delegate.crossAxisCount,
           childAspectRatio: delegate.childAspectRatio,
           mainAxisSpacing: delegate.mainAxisSpacing,
@@ -186,7 +186,7 @@ class GridSelectorState extends State<GridSelector> {
         );
 
     return switch (layout) {
-      SelectorListLayout(:final toText) => SelectorListView(
+      SelectListLayout(:final toText) => SelectorListView(
           key: ValueKey('category_$index'),
           category: category,
           showTitle: false,
@@ -198,7 +198,7 @@ class GridSelectorState extends State<GridSelector> {
           radioBuilder: delegate.radioBuilder,
           checkboxBuilder: delegate.checkboxBuilder,
         ),
-      SelectorGridLayout(
+      SelectGridLayout(
         :final crossAxisCount,
         :final mainAxisSpacing,
         :final crossAxisSpacing,
@@ -221,7 +221,7 @@ class GridSelectorState extends State<GridSelector> {
               _onTerminalItemTap(entry as SelectChildEntry),
           toText: toText,
         ),
-      SelectorChipLayout() => SelectorChipBar(
+      SelectChipLayout() => SelectorChipBar(
           key: ValueKey('category_$index'),
           category: category,
           entries: entries,
@@ -235,10 +235,9 @@ class GridSelectorState extends State<GridSelector> {
           selectedChipColor: delegate.chipBarTheme?.selectedChipColor,
           labelStyle: delegate.chipBarTheme?.labelStyle,
           selectedLabelStyle: delegate.chipBarTheme?.selectedLabelStyle,
-          onChanged: (_, item) =>
-              _onTerminalItemTap(item as SelectChildEntry),
+          onChanged: (_, item) => _onTerminalItemTap(item as SelectChildEntry),
         ),
-      SelectorRangeLayout(:final toText) => SelectorRangeView(
+      SelectRangeLayout(:final toText) => SelectorRangeView(
           key: ValueKey('category_$index'),
           category: category,
           showTitle: false,

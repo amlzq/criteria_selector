@@ -7,15 +7,15 @@ library;
 
 import 'package:flutter/foundation.dart';
 
-import 'selector/selector_layout.dart';
+import 'selector/select_layout.dart';
 
 /// Deprecated layout configuration for the children of a [SelectCategoryEntry].
 ///
-/// Use [SelectorLayout] / [SelectorListLayout] via
+/// Use [SelectLayout] / [SelectListLayout] via
 /// [SelectCategoryEntry.layout] instead. This class is kept only for
 /// backward compatibility and will be removed in a future minor version.
 @Deprecated(
-  'Use SelectorLayout / SelectorListLayout via '
+  'Use SelectLayout / SelectListLayout via '
   'SelectCategoryEntry.layout instead. '
   'This class will be removed in a future minor version.',
 )
@@ -26,11 +26,11 @@ class SelectorListConfig {
 
 /// Deprecated layout configuration for the children of a [SelectCategoryEntry].
 ///
-/// Use [SelectorLayout] / [SelectorGridLayout] via
+/// Use [SelectLayout] / [SelectGridLayout] via
 /// [SelectCategoryEntry.layout] instead. This class is kept only for
 /// backward compatibility and will be removed in a future minor version.
 @Deprecated(
-  'Use SelectorLayout / SelectorGridLayout via '
+  'Use SelectLayout / SelectGridLayout via '
   'SelectCategoryEntry.layout instead. '
   'This class will be removed in a future minor version.',
 )
@@ -58,11 +58,11 @@ class SelectorGridConfig {
 
 /// Deprecated layout configuration for the children of a [SelectCategoryEntry].
 ///
-/// Use [SelectorLayout] / [SelectorChipLayout] via
+/// Use [SelectLayout] / [SelectChipLayout] via
 /// [SelectCategoryEntry.layout] instead. This class is kept only for
 /// backward compatibility and will be removed in a future minor version.
 @Deprecated(
-  'Use SelectorLayout / SelectorChipLayout via '
+  'Use SelectLayout / SelectChipLayout via '
   'SelectCategoryEntry.layout instead. '
   'This class will be removed in a future minor version.',
 )
@@ -70,3 +70,42 @@ class SelectorGridConfig {
 class SelectorChipConfig {
   const SelectorChipConfig();
 }
+
+/// Deprecated alias for [SelectLayout].
+///
+/// The `Selector`-prefixed layout names were renamed to drop the redundant
+/// `Selector` prefix. This alias is kept for backward compatibility and will be
+/// removed in a future minor version.
+@Deprecated(
+  'Use SelectLayout instead. This alias will be removed in a future minor '
+  'version.',
+)
+typedef SelectorLayout = SelectLayout;
+
+/// Deprecated alias for [SelectListLayout].
+@Deprecated(
+  'Use SelectListLayout instead. This alias will be removed in a future minor '
+  'version.',
+)
+typedef SelectorListLayout = SelectListLayout;
+
+/// Deprecated alias for [SelectGridLayout].
+@Deprecated(
+  'Use SelectGridLayout instead. This alias will be removed in a future minor '
+  'version.',
+)
+typedef SelectorGridLayout = SelectGridLayout;
+
+/// Deprecated alias for [SelectChipLayout].
+@Deprecated(
+  'Use SelectChipLayout instead. This alias will be removed in a future minor '
+  'version.',
+)
+typedef SelectorChipLayout = SelectChipLayout;
+
+/// Deprecated alias for [SelectRangeLayout].
+@Deprecated(
+  'Use SelectRangeLayout instead. This alias will be removed in a future minor '
+  'version.',
+)
+typedef SelectorRangeLayout = SelectRangeLayout;

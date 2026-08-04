@@ -9,7 +9,7 @@ import 'range_slider.dart';
 /// [SelectorFieldTile], keeping both in sync with a single source of truth.
 ///
 /// This is the canonical render target for
-/// [SelectorRangeLayout] — drop the layout on a category that contains
+/// [SelectRangeLayout] — drop the layout on a category that contains
 /// a custom [SelectRangeEntry] and you get a "price-range" style control
 /// out of the box:
 ///

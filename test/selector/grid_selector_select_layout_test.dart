@@ -18,7 +18,7 @@ SelectCategoryEntry<dynamic> _category({
   required String id,
   required String name,
   required Set<SelectEntry<dynamic>> children,
-  SelectorLayout? layout,
+  SelectLayout? layout,
   SelectionMode selectionMode = SelectionMode.single,
 }) {
   return SelectCategoryEntry<dynamic>(
@@ -64,8 +64,8 @@ Widget _buildGridSelector(
 }
 
 void main() {
-  group('GridSelector Layout Consumption', () {
-    testWidgets('renders default SelectorListLayout when layout is null',
+  group('GridSelector SelectLayout Consumption', () {
+    testWidgets('renders default SelectListLayout when layout is null',
         (tester) async {
       final children = {
         _child(parentId: 'c', id: 'a', name: 'Option A'),
@@ -80,12 +80,12 @@ void main() {
       await tester.pumpWidget(_buildGridSelector([category]));
       await tester.pumpAndSettle();
 
-      // Default layout (null) falls back to SelectorListLayout
+      // Default layout (null) falls back to SelectListLayout
       expect(find.text('Option A'), findsOneWidget);
       expect(find.text('Option B'), findsOneWidget);
     });
 
-    testWidgets('renders SelectorListLayout as list view', (tester) async {
+    testWidgets('renders SelectListLayout as list view', (tester) async {
       final children = {
         _child(parentId: 'c', id: 'a', name: 'List Item A'),
         _child(parentId: 'c', id: 'b', name: 'List Item B'),
@@ -94,7 +94,7 @@ void main() {
         id: 'c',
         name: 'List Category',
         children: children,
-        layout: const SelectorListLayout(),
+        layout: const SelectListLayout(),
       );
 
       await tester.pumpWidget(_buildGridSelector([category]));
@@ -105,7 +105,7 @@ void main() {
       expect(find.text('List Item B'), findsOneWidget);
     });
 
-    testWidgets('renders SelectorGridLayout as grid view', (tester) async {
+    testWidgets('renders SelectGridLayout as grid view', (tester) async {
       final children = {
         _child(parentId: 'c', id: 'a', name: 'Grid Item A'),
         _child(parentId: 'c', id: 'b', name: 'Grid Item B'),
@@ -114,7 +114,7 @@ void main() {
         id: 'c',
         name: 'Grid Category',
         children: children,
-        layout: const SelectorGridLayout(crossAxisCount: 2),
+        layout: const SelectGridLayout(crossAxisCount: 2),
       );
 
       await tester.pumpWidget(_buildGridSelector([category]));
@@ -125,7 +125,7 @@ void main() {
       expect(find.text('Grid Item B'), findsOneWidget);
     });
 
-    testWidgets('renders SelectorChipLayout as chip bar', (tester) async {
+    testWidgets('renders SelectChipLayout as chip bar', (tester) async {
       final children = {
         _child(parentId: 'c', id: 'a', name: 'Chip A'),
         _child(parentId: 'c', id: 'b', name: 'Chip B'),
@@ -134,7 +134,7 @@ void main() {
         id: 'c',
         name: 'Chip Category',
         children: children,
-        layout: const SelectorChipLayout(),
+        layout: const SelectChipLayout(),
       );
 
       await tester.pumpWidget(_buildGridSelector([category]));
@@ -145,7 +145,7 @@ void main() {
       expect(find.text('Chip B'), findsOneWidget);
     });
 
-    testWidgets('renders SelectorRangeLayout as range view', (tester) async {
+    testWidgets('renders SelectRangeLayout as range view', (tester) async {
       final children = <SelectEntry<dynamic>>{
         SelectRangeEntry.custom(
           parentId: 'c',
@@ -158,7 +158,7 @@ void main() {
         id: 'c',
         name: 'Range Category',
         children: children,
-        layout: const SelectorRangeLayout(),
+        layout: const SelectRangeLayout(),
       );
 
       await tester.pumpWidget(_buildGridSelector([category]));
@@ -182,13 +182,13 @@ void main() {
         id: 'grid',
         name: 'Grid Tab',
         children: gridChildren,
-        layout: const SelectorGridLayout(crossAxisCount: 2),
+        layout: const SelectGridLayout(crossAxisCount: 2),
       );
       final chipCategory = _category(
         id: 'chip',
         name: 'Chip Tab',
         children: chipChildren,
-        layout: const SelectorChipLayout(),
+        layout: const SelectChipLayout(),
       );
 
       await tester.pumpWidget(
@@ -225,7 +225,7 @@ void main() {
         id: 'c',
         name: 'Grid Category',
         children: children,
-        layout: const SelectorGridLayout(
+        layout: const SelectGridLayout(
           crossAxisCount: 5,
           childAspectRatio: 2.0,
         ),

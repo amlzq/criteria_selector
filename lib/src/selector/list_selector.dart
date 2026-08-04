@@ -6,7 +6,7 @@ import 'constants.dart';
 import 'selector_controller.dart';
 import 'select_delegate.dart';
 import 'select_entry.dart';
-import 'selector_layout.dart';
+import 'select_layout.dart';
 import 'widgets/widgets.dart';
 
 /// Standard list view
@@ -172,23 +172,23 @@ class ListSelectorState extends State<ListSelector> {
                           controller?.selectedEntriesAtLevel(1) ?? {};
                       final entries = category.children?.toList() ?? [];
                       final layout =
-                          category.layout ?? const SelectorListLayout();
+                          category.layout ?? const SelectListLayout();
                       return SelectorExpansionTile(
                         title: category.name ?? '',
                         titlePadding: const EdgeInsets.symmetric(vertical: 10),
                         initiallyExpanded: true,
                         child: switch (layout) {
-                          SelectorListLayout(:final toText) => SelectorListView(
+                          SelectListLayout(:final toText) => SelectorListView(
                               key: ValueKey('category_$index'),
                               category: category,
                               showTitle: false,
                               entries: entries,
                               selectedEntries: selectedEntries,
-                              onChanged: (_, entry) => _onTerminalItemTap(
-                                  entry as SelectChildEntry),
+                              onChanged: (_, entry) =>
+                                  _onTerminalItemTap(entry as SelectChildEntry),
                               toText: toText,
                             ),
-                          SelectorGridLayout(
+                          SelectGridLayout(
                             :final crossAxisCount,
                             :final mainAxisSpacing,
                             :final crossAxisSpacing,
@@ -207,11 +207,11 @@ class ListSelectorState extends State<ListSelector> {
                               showTitle: false,
                               entries: entries,
                               selectedEntries: selectedEntries,
-                              onChanged: (_, entry) => _onTerminalItemTap(
-                                  entry as SelectChildEntry),
+                              onChanged: (_, entry) =>
+                                  _onTerminalItemTap(entry as SelectChildEntry),
                               toText: toText,
                             ),
-                          SelectorChipLayout() => SelectorChipBar(
+                          SelectChipLayout() => SelectorChipBar(
                               key: ValueKey('category_$index'),
                               category: category,
                               entries: entries,
@@ -227,19 +227,18 @@ class ListSelectorState extends State<ListSelector> {
                               labelStyle: chipBarTheme?.labelStyle,
                               selectedLabelStyle:
                                   chipBarTheme?.selectedLabelStyle,
-                              onChanged: (_, item) => _onTerminalItemTap(
-                                  item as SelectChildEntry),
+                              onChanged: (_, item) =>
+                                  _onTerminalItemTap(item as SelectChildEntry),
                             ),
-                          SelectorRangeLayout(:final toText) =>
-                            SelectorRangeView(
+                          SelectRangeLayout(:final toText) => SelectorRangeView(
                               key: ValueKey('category_$index'),
                               category: category,
                               showTitle: false,
                               toText: toText,
                               entries: entries,
                               selectedEntries: selectedEntries,
-                              onChanged: (_, entry) => _onTerminalItemTap(
-                                  entry as SelectChildEntry),
+                              onChanged: (_, entry) =>
+                                  _onTerminalItemTap(entry as SelectChildEntry),
                             ),
                         },
                       );

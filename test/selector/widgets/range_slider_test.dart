@@ -339,12 +339,12 @@ void main() {
     });
   });
 
-  group('SelectorRangeLayout', () {
+  group('SelectRangeLayout', () {
     test('implements == and hashCode based on fields', () {
-      const a = SelectorRangeLayout();
-      const b = SelectorRangeLayout(toText: 'and');
-      const c = SelectorRangeLayout(toText: 'or');
-      expect(a, equals(const SelectorRangeLayout()));
+      const a = SelectRangeLayout();
+      const b = SelectRangeLayout(toText: 'and');
+      const c = SelectRangeLayout(toText: 'or');
+      expect(a, equals(const SelectRangeLayout()));
       expect(a.hashCode, b.hashCode == a.hashCode ? a.hashCode : a.hashCode);
       expect(a, isNot(equals(b)));
       expect(a, isNot(equals(c)));
@@ -365,7 +365,7 @@ void main() {
             max: 1000,
           )
         },
-        layout: const SelectorRangeLayout(),
+        layout: const SelectRangeLayout(),
       );
 
       await tester.pumpWidget(
@@ -375,7 +375,7 @@ void main() {
               category: category,
               entries: category.children!.toList(),
               selectedEntries: const <SelectEntry>{},
-              toText: const SelectorRangeLayout().toText,
+              toText: const SelectRangeLayout().toText,
               showTitle: true,
               onChanged: (_, __) {},
             ),
@@ -398,7 +398,7 @@ void main() {
             max: 1000,
           )
         },
-        layout: const SelectorRangeLayout(),
+        layout: const SelectRangeLayout(),
       );
 
       await tester.pumpWidget(
@@ -408,7 +408,7 @@ void main() {
               category: category,
               entries: category.children!.toList(),
               selectedEntries: const <SelectEntry>{},
-              toText: const SelectorRangeLayout().toText,
+              toText: const SelectRangeLayout().toText,
               showTitle: false,
               onChanged: (_, __) {},
             ),
@@ -432,7 +432,7 @@ void main() {
         name: 'Price',
         selectionMode: SelectionMode.single,
         children: {customEntry},
-        layout: const SelectorRangeLayout(),
+        layout: const SelectRangeLayout(),
       );
 
       await tester.pumpWidget(
@@ -442,7 +442,7 @@ void main() {
               category: category,
               entries: category.children!.toList(),
               selectedEntries: const <SelectEntry>{},
-              toText: const SelectorRangeLayout().toText,
+              toText: const SelectRangeLayout().toText,
               onChanged: (_, __) {},
             ),
           ),
@@ -484,7 +484,7 @@ void main() {
         name: 'Price',
         selectionMode: SelectionMode.single,
         children: {customEntry},
-        layout: const SelectorRangeLayout(),
+        layout: const SelectRangeLayout(),
       );
       await tester.pumpWidget(
         MaterialApp(
@@ -493,7 +493,7 @@ void main() {
               category: category,
               entries: category.children!.toList(),
               selectedEntries: const <SelectEntry>{},
-              toText: const SelectorRangeLayout().toText,
+              toText: const SelectRangeLayout().toText,
               onChanged: (_, __) {},
             ),
           ),
@@ -519,7 +519,7 @@ void main() {
         name: 'Price',
         selectionMode: SelectionMode.single,
         children: {customEntry},
-        layout: const SelectorRangeLayout(),
+        layout: const SelectRangeLayout(),
       );
 
       await tester.pumpWidget(
@@ -532,7 +532,7 @@ void main() {
                   category: category,
                   entries: category.children!.toList(),
                   selectedEntries: const <SelectEntry>{},
-                  toText: const SelectorRangeLayout().toText,
+                  toText: const SelectRangeLayout().toText,
                   onChanged: (index, entry) {
                     lastCategory = (entry as SelectRangeEntry).parentId;
                     lastMin = entry.min?.toString();
@@ -585,13 +585,13 @@ void main() {
         name: 'Price',
         selectionMode: SelectionMode.single,
         children: {customEntry},
-        layout: const SelectorRangeLayout(),
+        layout: const SelectRangeLayout(),
       );
       final base = SelectorRangeView(
         category: category,
         entries: category.children!.toList(),
         selectedEntries: const <SelectEntry>{},
-        toText: const SelectorRangeLayout().toText,
+        toText: const SelectRangeLayout().toText,
         onChanged: (_, __) {},
       );
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: base)));
@@ -621,7 +621,7 @@ void main() {
             max: 1000,
           ),
         },
-        toText: const SelectorRangeLayout().toText,
+        toText: const SelectRangeLayout().toText,
         onChanged: (_, __) {},
       );
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: rebuilt)));
@@ -642,7 +642,7 @@ void main() {
         name: 'Price',
         selectionMode: SelectionMode.single,
         children: {customEntry},
-        layout: const SelectorRangeLayout(),
+        layout: const SelectRangeLayout(),
       );
       String? lastMin;
       await tester.pumpWidget(
@@ -652,7 +652,7 @@ void main() {
               category: category,
               entries: category.children!.toList(),
               selectedEntries: const <SelectEntry>{},
-              toText: const SelectorRangeLayout().toText,
+              toText: const SelectRangeLayout().toText,
               onChanged: (index, entry) {
                 lastMin = (entry as SelectRangeEntry).min?.toString();
               },
@@ -701,7 +701,7 @@ void main() {
         name: 'Price',
         selectionMode: SelectionMode.single,
         children: {customEntry},
-        layout: const SelectorRangeLayout(),
+        layout: const SelectRangeLayout(),
       );
       await tester.pumpWidget(
         MaterialApp(
@@ -710,7 +710,7 @@ void main() {
               category: category,
               entries: category.children!.toList(),
               selectedEntries: const <SelectEntry>{},
-              toText: const SelectorRangeLayout().toText,
+              toText: const SelectRangeLayout().toText,
               onChanged: (_, __) {},
             ),
           ),
@@ -761,7 +761,7 @@ void main() {
         name: 'Price',
         selectionMode: SelectionMode.single,
         children: {customEntry},
-        layout: const SelectorRangeLayout(),
+        layout: const SelectRangeLayout(),
       );
       await tester.pumpWidget(
         MaterialApp(
@@ -770,7 +770,7 @@ void main() {
               category: category,
               entries: category.children!.toList(),
               selectedEntries: const <SelectEntry>{},
-              toText: const SelectorRangeLayout().toText,
+              toText: const SelectRangeLayout().toText,
               onChanged: (_, __) {},
             ),
           ),

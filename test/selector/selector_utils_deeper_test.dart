@@ -112,9 +112,8 @@ void main() {
       );
 
       final clonedC = cloned.single as SelectCategoryEntry<dynamic>;
-      final clonedCustom = clonedC.children!
-          .whereType<SelectRangeEntry<int, dynamic>>()
-          .single;
+      final clonedCustom =
+          clonedC.children!.whereType<SelectRangeEntry<int, dynamic>>().single;
       expect(clonedCustom.isCustom, isTrue);
       // cloneTree uses original children matched by == (id/parentId/name),
       // so values come from the original entry, not the selected one
@@ -179,8 +178,7 @@ void main() {
       );
 
       final clonedRoot = cloned.single as SelectCategoryEntry<dynamic>;
-      final clonedC1 =
-          clonedRoot.children!.single as SelectTextEntry<dynamic>;
+      final clonedC1 = clonedRoot.children!.single as SelectTextEntry<dynamic>;
       // g1 should be cloned without its children (shallow)
       final clonedG1 = clonedC1.children!.single;
       expect(clonedG1.id, 'g1');
@@ -404,7 +402,7 @@ void main() {
         headerSelectionMode: SelectionMode.multiple,
         footerSelectionMode: SelectionMode.multiple,
         selectionMode: SelectionMode.multiple,
-        layout: const SelectorChipLayout(),
+        layout: const SelectChipLayout(),
       );
 
       final cloned = SelectorUtils.deepCloneEntries({c});
@@ -413,7 +411,7 @@ void main() {
       expect(clonedC.selectionMode, SelectionMode.multiple);
       expect(clonedC.headerSelectionMode, SelectionMode.multiple);
       expect(clonedC.footerSelectionMode, SelectionMode.multiple);
-      expect(clonedC.layout, const SelectorChipLayout());
+      expect(clonedC.layout, const SelectChipLayout());
       expect(clonedC.header, isNotNull);
       expect(clonedC.footer, isNotNull);
       expect(clonedC.header!.children!.length, 1);

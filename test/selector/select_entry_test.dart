@@ -24,7 +24,7 @@ SelectCategoryEntry<dynamic> _category(
   SelectEntry<dynamic>? footer,
   SelectionMode footerSelectionMode = SelectionMode.single,
   SelectionMode selectionMode = SelectionMode.single,
-  SelectorLayout? layout,
+  SelectLayout? layout,
 }) {
   return SelectCategoryEntry<dynamic>(
     id: id,
@@ -449,9 +449,9 @@ void main() {
 
     test('== and hashCode: different layout makes categories unequal', () {
       final a = _category('c', 'C',
-          children: {_text('c', 'a', 'A')}, layout: const SelectorListLayout());
+          children: {_text('c', 'a', 'A')}, layout: const SelectListLayout());
       final b = _category('c', 'C',
-          children: {_text('c', 'a', 'A')}, layout: const SelectorChipLayout());
+          children: {_text('c', 'a', 'A')}, layout: const SelectChipLayout());
 
       expect(a, isNot(equals(b)));
     });
@@ -521,7 +521,7 @@ void main() {
     test('copyWith with layout', () {
       final c = _category('c', 'C', children: {_text('c', 'a', 'A')});
 
-      final gridLayout = const SelectorGridLayout(crossAxisCount: 3);
+      final gridLayout = const SelectGridLayout(crossAxisCount: 3);
       final copied = c.copyWith(layout: gridLayout);
 
       expect(copied.layout, equals(gridLayout));

@@ -4,20 +4,20 @@ import 'package:flutter/foundation.dart';
 ///
 /// This replaces the previously separate, mutually-exclusive `listConfig`,
 /// `gridConfig` and `chipConfig` fields on [SelectCategoryEntry] with a single
-/// `layout` property. Use a [SelectorListLayout] for a vertical list,
-/// [SelectorGridLayout] for a grid, or [SelectorChipLayout] for a wrap of chips.
+/// `layout` property. Use a [SelectListLayout] for a vertical list,
+/// [SelectGridLayout] for a grid, or [SelectChipLayout] for a wrap of chips.
 ///
 /// Because the class is `sealed`, the compiler can exhaustively check `switch`
-/// statements over [SelectorLayout], so adding a new layout later is a
+/// statements over [SelectLayout], so adding a new layout later is a
 /// compile-time-safe change.
 @immutable
-sealed class SelectorLayout {
-  const SelectorLayout();
+sealed class SelectLayout {
+  const SelectLayout();
 }
 
 /// Vertical list layout for the children of a [SelectCategoryEntry].
-class SelectorListLayout extends SelectorLayout {
-  const SelectorListLayout({
+class SelectListLayout extends SelectLayout {
+  const SelectListLayout({
     this.toText = '-',
   });
 
@@ -27,15 +27,15 @@ class SelectorListLayout extends SelectorLayout {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is SelectorListLayout && toText == other.toText;
+      other is SelectListLayout && toText == other.toText;
 
   @override
   int get hashCode => toText.hashCode;
 }
 
 /// Grid layout for the children of a [SelectCategoryEntry].
-class SelectorGridLayout extends SelectorLayout {
-  const SelectorGridLayout({
+class SelectGridLayout extends SelectLayout {
+  const SelectGridLayout({
     required this.crossAxisCount,
     this.mainAxisSpacing = 0.0,
     this.crossAxisSpacing = 0.0,
@@ -61,7 +61,7 @@ class SelectorGridLayout extends SelectorLayout {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is SelectorGridLayout &&
+      other is SelectGridLayout &&
           crossAxisCount == other.crossAxisCount &&
           mainAxisSpacing == other.mainAxisSpacing &&
           crossAxisSpacing == other.crossAxisSpacing &&
@@ -74,11 +74,11 @@ class SelectorGridLayout extends SelectorLayout {
 }
 
 /// Wrap of chips layout for the children of a [SelectCategoryEntry].
-class SelectorChipLayout extends SelectorLayout {
-  const SelectorChipLayout();
+class SelectChipLayout extends SelectLayout {
+  const SelectChipLayout();
 
   @override
-  bool operator ==(Object other) => other is SelectorChipLayout;
+  bool operator ==(Object other) => other is SelectChipLayout;
 
   @override
   int get hashCode => runtimeType.hashCode;
@@ -93,8 +93,8 @@ class SelectorChipLayout extends SelectorLayout {
 /// The category is expected to expose exactly one
 /// [SelectRangeEntry.firstCustomOrNull]; if none is found, the view falls
 /// back to a degenerate 0..1 range.
-class SelectorRangeLayout extends SelectorLayout {
-  const SelectorRangeLayout({
+class SelectRangeLayout extends SelectLayout {
+  const SelectRangeLayout({
     this.toText = '-',
   });
 
@@ -104,7 +104,7 @@ class SelectorRangeLayout extends SelectorLayout {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is SelectorRangeLayout && toText == other.toText;
+      other is SelectRangeLayout && toText == other.toText;
 
   @override
   int get hashCode => toText.hashCode;

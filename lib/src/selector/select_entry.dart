@@ -1,6 +1,6 @@
 import '../deprecated.dart';
 import 'constants.dart';
-import 'selector_layout.dart';
+import 'select_layout.dart';
 import 'selector_utils.dart';
 
 /// A set of selected [SelectEntry] values.
@@ -399,20 +399,20 @@ class SelectCategoryEntry<E> extends SelectEntry<E> {
     this.headerSelectionMode = SelectionMode.single,
     this.footer,
     this.footerSelectionMode = SelectionMode.single,
-    SelectorLayout? layout,
+    SelectLayout? layout,
     @Deprecated(
       'Use layout instead. When set, it is mapped to a '
-      'SelectorListLayout. It will be removed in a future minor version.',
+      'SelectListLayout. It will be removed in a future minor version.',
     )
     SelectorListConfig? listConfig,
     @Deprecated(
       'Use layout instead. When set, it is mapped to a '
-      'SelectorGridLayout. It will be removed in a future minor version.',
+      'SelectGridLayout. It will be removed in a future minor version.',
     )
     SelectorGridConfig? gridConfig,
     @Deprecated(
       'Use layout instead. When set, it is mapped to a '
-      'SelectorChipLayout. It will be removed in a future minor version.',
+      'SelectChipLayout. It will be removed in a future minor version.',
     )
     SelectorChipConfig? chipConfig,
     required super.id,
@@ -428,16 +428,16 @@ class SelectCategoryEntry<E> extends SelectEntry<E> {
         ),
         layout = layout ??
             (listConfig != null
-                ? const SelectorListLayout()
+                ? const SelectListLayout()
                 : gridConfig != null
-                    ? SelectorGridLayout(
+                    ? SelectGridLayout(
                         crossAxisCount: gridConfig.crossAxisCount,
                         mainAxisSpacing: gridConfig.mainAxisSpacing,
                         crossAxisSpacing: gridConfig.crossAxisSpacing,
                         childAspectRatio: gridConfig.childAspectRatio,
                       )
                     : chipConfig != null
-                        ? const SelectorChipLayout()
+                        ? const SelectChipLayout()
                         : null);
 
   /// The selection mode applied to this category's children.
@@ -463,26 +463,26 @@ class SelectCategoryEntry<E> extends SelectEntry<E> {
 
   /// The layout used to render this category's children.
   ///
-  /// When `null`, a default [SelectorListLayout] is used at render time.
-  final SelectorLayout? layout;
+  /// When `null`, a default [SelectListLayout] is used at render time.
+  final SelectLayout? layout;
 
   /// Use [layout] instead.
   @Deprecated(
     'Use layout instead. Returns a SelectorListConfig when '
-    'layout is a SelectorListLayout. It will be removed in a future '
+    'layout is a SelectListLayout. It will be removed in a future '
     'minor version.',
   )
   SelectorListConfig? get listConfig =>
-      layout is SelectorListLayout ? const SelectorListConfig() : null;
+      layout is SelectListLayout ? const SelectorListConfig() : null;
 
   /// Use [layout] instead.
   @Deprecated(
     'Use layout instead. Returns a SelectorGridConfig mirroring the '
-    'current SelectorGridLayout. It will be removed in a future minor version.',
+    'current SelectGridLayout. It will be removed in a future minor version.',
   )
   SelectorGridConfig? get gridConfig {
     final layout = this.layout;
-    return layout is SelectorGridLayout
+    return layout is SelectGridLayout
         ? SelectorGridConfig(
             crossAxisCount: layout.crossAxisCount,
             mainAxisSpacing: layout.mainAxisSpacing,
@@ -495,11 +495,11 @@ class SelectCategoryEntry<E> extends SelectEntry<E> {
   /// Use [layout] instead.
   @Deprecated(
     'Use layout instead. Returns a SelectorChipConfig when '
-    'layout is a SelectorChipLayout. It will be removed in a future '
+    'layout is a SelectChipLayout. It will be removed in a future '
     'minor version.',
   )
   SelectorChipConfig? get chipConfig =>
-      layout is SelectorChipLayout ? const SelectorChipConfig() : null;
+      layout is SelectChipLayout ? const SelectorChipConfig() : null;
 
   SelectCategoryEntry<E> copyWith({
     String? id,
@@ -512,35 +512,35 @@ class SelectCategoryEntry<E> extends SelectEntry<E> {
     SelectionMode? headerSelectionMode,
     SelectEntry<E>? footer,
     SelectionMode? footerSelectionMode,
-    SelectorLayout? layout,
+    SelectLayout? layout,
     @Deprecated(
       'Use layout instead. When set, it is mapped to a '
-      'SelectorListLayout. It will be removed in a future minor version.',
+      'SelectListLayout. It will be removed in a future minor version.',
     )
     SelectorListConfig? listConfig,
     @Deprecated(
       'Use layout instead. When set, it is mapped to a '
-      'SelectorGridLayout. It will be removed in a future minor version.',
+      'SelectGridLayout. It will be removed in a future minor version.',
     )
     SelectorGridConfig? gridConfig,
     @Deprecated(
       'Use layout instead. When set, it is mapped to a '
-      'SelectorChipLayout. It will be removed in a future minor version.',
+      'SelectChipLayout. It will be removed in a future minor version.',
     )
     SelectorChipConfig? chipConfig,
   }) {
-    final SelectorLayout? resolvedLayout = layout ??
+    final SelectLayout? resolvedLayout = layout ??
         (listConfig != null
-            ? const SelectorListLayout()
+            ? const SelectListLayout()
             : gridConfig != null
-                ? SelectorGridLayout(
+                ? SelectGridLayout(
                     crossAxisCount: gridConfig.crossAxisCount,
                     mainAxisSpacing: gridConfig.mainAxisSpacing,
                     crossAxisSpacing: gridConfig.crossAxisSpacing,
                     childAspectRatio: gridConfig.childAspectRatio,
                   )
                 : chipConfig != null
-                    ? const SelectorChipLayout()
+                    ? const SelectChipLayout()
                     : this.layout);
     return SelectCategoryEntry<E>(
       id: id ?? this.id,
