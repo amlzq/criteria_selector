@@ -5,7 +5,7 @@ import 'package:collection/collection.dart';
 import 'select_entry.dart';
 
 /// Utility methods for working with [SelectEntry] trees and selections.
-class SelectorUtils {
+class SelectUtils {
   /// Returns the entries at the given tree [level] starting from [entry].
   ///
   /// - If [level] is 0, returns a set containing [entry].

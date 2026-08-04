@@ -4,7 +4,7 @@ import 'selector/select_controller.dart';
 import 'selector/select_delegate.dart';
 import 'selector/select_entry.dart';
 import 'select_label_state.dart';
-import 'selector/selector_utils.dart';
+import 'selector/select_utils.dart';
 
 /// Tab label data for [PopupSelectBar].
 ///
@@ -486,7 +486,7 @@ class PopupSelectController extends ChangeNotifier {
     }
     final customLabel = labelState.resolvedLabelLoader?.call(selected);
     labelState.resultLabel =
-        customLabel ?? SelectorUtils.getResultLabel(selected, multipleText);
+        customLabel ?? SelectUtils.getResultLabel(selected, multipleText);
     notifyListeners();
   }
 
@@ -546,7 +546,7 @@ class PopupSelectController extends ChangeNotifier {
     }
     final customLabel = tabData.resolvedLabelLoader?.call(selected);
     tabData.resultLabel =
-        customLabel ?? SelectorUtils.getResultLabel(selected, multipleText);
+        customLabel ?? SelectUtils.getResultLabel(selected, multipleText);
     notifyListeners();
     return true;
   }

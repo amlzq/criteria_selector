@@ -1,6 +1,6 @@
 import 'package:criteria_selector/src/selector/constants.dart';
 import 'package:criteria_selector/src/selector/select_entry.dart';
-import 'package:criteria_selector/src/selector/selector_utils.dart';
+import 'package:criteria_selector/src/selector/select_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 SelectTextEntry<dynamic> _text(
@@ -50,19 +50,19 @@ SelectCategoryEntry<dynamic> _category(
 }
 
 void main() {
-  group('SelectorUtils.find*AtLevel', () {
+  group('SelectUtils.find*AtLevel', () {
     test('findChildrenAtLevel/findIdsAtLevel/findExtrasAtLevel work for leafs',
         () {
       final root = _text('', 'root', 'Root');
 
-      expect(SelectorUtils.findChildrenAtLevel(root, 0), {root});
-      expect(SelectorUtils.findChildrenAtLevel(root, 1), isEmpty);
+      expect(SelectUtils.findChildrenAtLevel(root, 0), {root});
+      expect(SelectUtils.findChildrenAtLevel(root, 1), isEmpty);
 
-      expect(SelectorUtils.findIdsAtLevel(root, 0), {'root'});
-      expect(SelectorUtils.findIdsAtLevel(root, 1), isEmpty);
+      expect(SelectUtils.findIdsAtLevel(root, 0), {'root'});
+      expect(SelectUtils.findIdsAtLevel(root, 1), isEmpty);
 
-      expect(SelectorUtils.findExtrasAtLevel<dynamic>(root, 0), [null]);
-      expect(SelectorUtils.findExtrasAtLevel<dynamic>(root, 1), isEmpty);
+      expect(SelectUtils.findExtrasAtLevel<dynamic>(root, 0), [null]);
+      expect(SelectUtils.findExtrasAtLevel<dynamic>(root, 1), isEmpty);
     });
 
     test('find*AtLevel traverses correctly', () {
@@ -93,34 +93,34 @@ void main() {
       );
       final root = _category('root', 'Root', children: {a, b});
 
-      expect(SelectorUtils.findIdsAtLevel(root, 1), {'a', 'b'});
-      expect(SelectorUtils.findIdsAtLevel(root, 2), {'a1', 'a2'});
-      expect(SelectorUtils.findChildrenAtLevel(root, 2), containsAll({a1, a2}));
+      expect(SelectUtils.findIdsAtLevel(root, 1), {'a', 'b'});
+      expect(SelectUtils.findIdsAtLevel(root, 2), {'a1', 'a2'});
+      expect(SelectUtils.findChildrenAtLevel(root, 2), containsAll({a1, a2}));
       expect(
-        SelectorUtils.findExtrasAtLevel<String>(root, 2),
+        SelectUtils.findExtrasAtLevel<String>(root, 2),
         containsAll(<String>['ea1', 'ea2']),
       );
     });
   });
 
-  group('SelectorUtils.flattenTree/treeDepth', () {
+  group('SelectUtils.flattenTree/treeDepth', () {
     test('flattenTree returns per-level sets in BFS order', () {
       final c1 = _text('r', 'c1', 'C1');
       final c2 = _text('r', 'c2', 'C2', children: {_text('c2', 'g1', 'G1')});
       final root = _category('r', 'R', children: {c1, c2});
 
-      final levels = SelectorUtils.flattenTree(root);
+      final levels = SelectUtils.flattenTree(root);
       expect(levels.length, 3);
       expect(levels[0], {root});
       expect(levels[1], containsAll({c1, c2}));
       expect(levels[2].map((e) => e.id).toSet(), {'g1'});
 
-      expect(SelectorUtils().treeDepth(root), 3);
-      expect(SelectorUtils().treeDepth(null), 1);
+      expect(SelectUtils().treeDepth(root), 3);
+      expect(SelectUtils().treeDepth(null), 1);
     });
   });
 
-  group('SelectorUtils.removeAnyEntries/deepCloneEntries', () {
+  group('SelectUtils.removeAnyEntries/deepCloneEntries', () {
     test('removeAnyEntries removes "any" at all levels without cloning', () {
       final any = SelectChildEntry<dynamic>.any(parentId: 'r', name: 'Any');
       final leafAny =
@@ -129,7 +129,7 @@ void main() {
       final root = _category('r', 'R', children: {any, a});
 
       final entries = <SelectEntry<dynamic>>{root};
-      SelectorUtils.removeAnyEntries(entries);
+      SelectUtils.removeAnyEntries(entries);
 
       final rootAfter = entries.single as SelectCategoryEntry<dynamic>;
       expect(rootAfter.children!.any((e) => e is SelectChildEntry && e.isAny),
@@ -147,12 +147,11 @@ void main() {
       final leaf = _text('r', 'a', 'A', children: {_text('a', 'x', 'X')});
       final root = _category('r', 'R', children: {any, leaf});
 
-      final clonedAll = SelectorUtils.deepCloneEntries({root});
+      final clonedAll = SelectUtils.deepCloneEntries({root});
       expect(clonedAll.length, 1);
       expect(identical(clonedAll.single, root), isFalse);
 
-      final clonedSkipAny =
-          SelectorUtils.deepCloneEntries({root}, skipAny: true);
+      final clonedSkipAny = SelectUtils.deepCloneEntries({root}, skipAny: true);
       final clonedRoot = clonedSkipAny.single as SelectCategoryEntry<dynamic>;
       expect(
         clonedRoot.children!.any((e) => e is SelectChildEntry && e.isAny),
@@ -171,7 +170,7 @@ void main() {
     });
   });
 
-  group('SelectorUtils.clippingTree/cloneTree', () {
+  group('SelectUtils.clippingTree/cloneTree', () {
     test('clippingTree prunes unselected nodes and header/footer children', () {
       final c1 = _text('r', 'c1', 'C1', children: {_text('c1', 'c1a', 'C1A')});
       final c2 = _text('r', 'c2', 'C2', children: {_text('c2', 'c2a', 'C2A')});
@@ -194,7 +193,7 @@ void main() {
 
       final entries = <SelectEntry<dynamic>>{root};
 
-      SelectorUtils.clippingTree(
+      SelectUtils.clippingTree(
         entries,
         [
           <SelectEntry<dynamic>>{_category('r', 'R', children: {})},
@@ -222,7 +221,7 @@ void main() {
       final c2 = _text('r', 'c2', 'C2');
       final root = _category('r', 'R', children: {c1, c2});
 
-      final cloned = SelectorUtils.cloneTree(
+      final cloned = SelectUtils.cloneTree(
         {root},
         [
           <SelectEntry<dynamic>>{_category('r', 'R', children: {})},
@@ -233,8 +232,7 @@ void main() {
 
       final clonedRoot = cloned.single as SelectCategoryEntry<dynamic>;
       expect(clonedRoot.children!.map((e) => e.id).toSet(), {'c1'});
-      final clonedC1 =
-          clonedRoot.children!.single as SelectTextEntry<dynamic>;
+      final clonedC1 = clonedRoot.children!.single as SelectTextEntry<dynamic>;
       expect(clonedC1.children!.map((e) => e.id).toSet(), {'g2'});
       expect(identical(clonedRoot, root), isFalse);
     });
@@ -246,7 +244,7 @@ void main() {
       final c1 = _text('r', 'c1', 'C1', children: {g1});
       final root = _category('r', 'R', children: {c1});
 
-      final cloned = SelectorUtils.cloneTree(
+      final cloned = SelectUtils.cloneTree(
         {root},
         [
           <SelectEntry<dynamic>>{_category('r', 'R', children: {})},
@@ -256,19 +254,18 @@ void main() {
       );
 
       final clonedRoot = cloned.single as SelectCategoryEntry<dynamic>;
-      final clonedC1 =
-          clonedRoot.children!.single as SelectTextEntry<dynamic>;
+      final clonedC1 = clonedRoot.children!.single as SelectTextEntry<dynamic>;
       expect(clonedC1.children, isNull);
     });
   });
 
-  group('SelectorUtils.getResultLabel', () {
+  group('SelectUtils.getResultLabel', () {
     test('returns leaf name for a single path', () {
       final leaf = _text('c', 'l', 'Leaf');
       final child = _text('r', 'c', 'Child', children: {leaf});
       final root = _category('r', 'Root', children: {child});
 
-      expect(SelectorUtils.getResultLabel({root}, 'Leaf'), 'Leaf');
+      expect(SelectUtils.getResultLabel({root}, 'Leaf'), 'Leaf');
     });
 
     test('returns parent name for "any" leaf (except when parent is category)',
@@ -277,7 +274,7 @@ void main() {
       final child = _text('r', 'c', 'Child', children: {any});
       final root = _category('r', 'Root', children: {child});
 
-      expect(SelectorUtils.getResultLabel({root}, 'Child'), 'Child');
+      expect(SelectUtils.getResultLabel({root}, 'Child'), 'Child');
     });
 
     test('returns Multiple when multiple valid labels exist', () {
@@ -285,11 +282,11 @@ void main() {
       final p2 = _text('r', 'p2', 'P2', children: {_text('p2', 'l2', 'L2')});
       final root = _category('r', 'Root', children: {p1, p2});
 
-      expect(SelectorUtils.getResultLabel({root}, 'Multiple'), 'Multiple');
+      expect(SelectUtils.getResultLabel({root}, 'Multiple'), 'Multiple');
     });
   });
 
-  group('SelectorUtils.restorePreviousSelected', () {
+  group('SelectUtils.restorePreviousSelected', () {
     test('matches by id and restores custom range values', () {
       final customInItems = _customRange('r', name: 'Custom', min: 0, max: 0);
       final items = <SelectEntry<dynamic>>{customInItems}.toList();
@@ -297,7 +294,7 @@ void main() {
       final previousCustom =
           _customRange('r', name: 'Custom', min: 10, max: 20);
       final restored =
-          SelectorUtils.restorePreviousSelected(items, {previousCustom});
+          SelectUtils.restorePreviousSelected(items, {previousCustom});
 
       expect(restored.length, 1);
       final selected = restored[0].single as SelectRangeEntry<int, dynamic>;

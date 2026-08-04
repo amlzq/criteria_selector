@@ -1,5 +1,5 @@
 import 'package:criteria_selector/criteria_selector.dart';
-import 'package:criteria_selector/src/selector/selector_utils.dart';
+import 'package:criteria_selector/src/selector/select_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 SelectTextEntry<dynamic> _text(
@@ -39,7 +39,7 @@ SelectCategoryEntry<dynamic> _category(
 }
 
 void main() {
-  group('SelectorUtils – cloneTree (multi-category scenarios)', () {
+  group('SelectUtils – cloneTree (multi-category scenarios)', () {
     test('cloneTree does not leak children from one category into another', () {
       // Two categories that both have a "custom" entry.
       // Without the parentId filtering fix, the selected "custom" from c1
@@ -57,7 +57,7 @@ void main() {
       final c1 = _category('c1', 'C1', children: {custom1, a1});
       final c2 = _category('c2', 'C2', children: {custom2, a2});
 
-      final cloned = SelectorUtils.cloneTree(
+      final cloned = SelectUtils.cloneTree(
         {c1, c2},
         [
           <SelectEntry<dynamic>>{c1, c2},
@@ -103,7 +103,7 @@ void main() {
         max: 100,
       );
 
-      final cloned = SelectorUtils.cloneTree(
+      final cloned = SelectUtils.cloneTree(
         {c},
         [
           <SelectEntry<dynamic>>{c},
@@ -125,7 +125,7 @@ void main() {
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
 
-      final cloned = SelectorUtils.cloneTree(
+      final cloned = SelectUtils.cloneTree(
         {c},
         [
           <SelectEntry<dynamic>>{}, // empty root selection
@@ -146,7 +146,7 @@ void main() {
         header: header,
       );
 
-      final cloned = SelectorUtils.cloneTree(
+      final cloned = SelectUtils.cloneTree(
         {c},
         [
           <SelectEntry<dynamic>>{c},
@@ -167,7 +167,7 @@ void main() {
       final c1 = _text('r', 'c1', 'C1', children: {g1});
       final root = _category('r', 'R', children: {c1});
 
-      final cloned = SelectorUtils.cloneTree(
+      final cloned = SelectUtils.cloneTree(
         {root},
         [
           <SelectEntry<dynamic>>{root},
@@ -186,7 +186,7 @@ void main() {
     });
   });
 
-  group('SelectorUtils – clippingTree (multi-category scenarios)', () {
+  group('SelectUtils – clippingTree (multi-category scenarios)', () {
     test('clippingTree does not leak sibling category children', () {
       final a1 = _text('c1', 'a1', 'A1');
       final a2 = _text('c2', 'a2', 'A2');
@@ -195,7 +195,7 @@ void main() {
 
       final entries = <SelectEntry<dynamic>>{c1, c2};
 
-      SelectorUtils.clippingTree(
+      SelectUtils.clippingTree(
         entries,
         [
           <SelectEntry<dynamic>>{c1, c2},
@@ -213,11 +213,11 @@ void main() {
 
     test('clippingTree handles null entries', () {
       // Should not throw
-      SelectorUtils.clippingTree(null, [], 0);
+      SelectUtils.clippingTree(null, [], 0);
     });
 
     test('clippingTree handles empty entries', () {
-      SelectorUtils.clippingTree(<SelectEntry<dynamic>>{}, [], 0);
+      SelectUtils.clippingTree(<SelectEntry<dynamic>>{}, [], 0);
       // Should not throw
     });
 
@@ -226,13 +226,13 @@ void main() {
       final c = _category('c', 'C', children: {a});
       final entries = <SelectEntry<dynamic>>{c};
 
-      SelectorUtils.clippingTree(entries, [], 0);
+      SelectUtils.clippingTree(entries, [], 0);
       // Entries should be unchanged
       expect(entries.single.children!.map((e) => e.id).toSet(), {'a'});
     });
   });
 
-  group('SelectorUtils – restorePreviousSelected (deeper)', () {
+  group('SelectUtils – restorePreviousSelected (deeper)', () {
     test('restores multi-level cascading selections', () {
       final leaf = _text('p', 'l', 'L');
       final parent = _text('c', 'p', 'P', children: {leaf});
@@ -253,7 +253,7 @@ void main() {
       );
 
       final restored =
-          SelectorUtils.restorePreviousSelected(items, {selectedCategory});
+          SelectUtils.restorePreviousSelected(items, {selectedCategory});
 
       expect(restored.length, 3);
       expect(restored[0].map((e) => e.id).toSet(), {'c'});
@@ -271,7 +271,7 @@ void main() {
       final items = <SelectEntry<dynamic>>{customInItems}.toList();
 
       // Restore with an empty selection — custom should be cleared
-      SelectorUtils.restorePreviousSelected(items, {});
+      SelectUtils.restorePreviousSelected(items, {});
 
       // The unrestored custom entry should have its values cleared
       expect(customInItems.min, isNull);
@@ -279,7 +279,7 @@ void main() {
     });
 
     test('handles null items gracefully', () {
-      final restored = SelectorUtils.restorePreviousSelected(null, null);
+      final restored = SelectUtils.restorePreviousSelected(null, null);
       expect(restored, isEmpty);
     });
 
@@ -287,21 +287,21 @@ void main() {
       final a = _text('c', 'a', 'A');
       final items = <SelectEntry<dynamic>>{a}.toList();
 
-      final restored = SelectorUtils.restorePreviousSelected(items, {});
+      final restored = SelectUtils.restorePreviousSelected(items, {});
       expect(restored, isEmpty);
     });
   });
 
-  group('SelectorUtils – getResultLabel (deeper)', () {
+  group('SelectUtils – getResultLabel (deeper)', () {
     test('returns null for null entries', () {
-      expect(SelectorUtils.getResultLabel(null, 'Multiple'), isNull);
+      expect(SelectUtils.getResultLabel(null, 'Multiple'), isNull);
     });
 
     test('returns first label for single selection', () {
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
 
-      expect(SelectorUtils.getResultLabel({c}, 'Multiple'), 'A');
+      expect(SelectUtils.getResultLabel({c}, 'Multiple'), 'A');
     });
 
     test('returns multipleText when two labels found', () {
@@ -309,7 +309,7 @@ void main() {
       final b = _text('c', 'b', 'B');
       final c = _category('c', 'C', children: {a, b});
 
-      expect(SelectorUtils.getResultLabel({c}, 'Multi'), 'Multi');
+      expect(SelectUtils.getResultLabel({c}, 'Multi'), 'Multi');
     });
 
     test('ignores "any" leaf whose parent is the category', () {
@@ -317,7 +317,7 @@ void main() {
       final c = _category('c', 'C', children: {any});
 
       // Any under category directly is ignored
-      expect(SelectorUtils.getResultLabel({c}, 'Multiple'), isNull);
+      expect(SelectUtils.getResultLabel({c}, 'Multiple'), isNull);
     });
 
     test('uses parent name for "any" leaf with non-category parent', () {
@@ -325,7 +325,7 @@ void main() {
       final p = _text('c', 'p', 'Parent', children: {any});
       final c = _category('c', 'C', children: {p});
 
-      expect(SelectorUtils.getResultLabel({c}, 'Multiple'), 'Parent');
+      expect(SelectUtils.getResultLabel({c}, 'Multiple'), 'Parent');
     });
 
     test('returns null when no valid label found', () {
@@ -333,13 +333,13 @@ void main() {
       final c = _category('c', 'C', children: {emptyChildren});
 
       // Empty children with no name — should return null
-      final label = SelectorUtils.getResultLabel({c}, 'Multiple');
+      final label = SelectUtils.getResultLabel({c}, 'Multiple');
       // e has name 'E' so it should be found
       expect(label, isNotNull);
     });
   });
 
-  group('SelectorUtils – deepCloneEntries with all entry types', () {
+  group('SelectUtils – deepCloneEntries with all entry types', () {
     test('clones SelectTextEntry', () {
       final entry = SelectTextEntry<dynamic>(
         parentId: 'p',
@@ -350,7 +350,7 @@ void main() {
         immediate: true,
       );
 
-      final cloned = SelectorUtils.deepCloneEntries({entry});
+      final cloned = SelectUtils.deepCloneEntries({entry});
       expect(cloned.length, 1);
       expect(identical(cloned.single, entry), isFalse);
       final clonedEntry = cloned.single as SelectTextEntry<dynamic>;
@@ -376,7 +376,7 @@ void main() {
         extra: 'extra_data',
       );
 
-      final cloned = SelectorUtils.deepCloneEntries({entry});
+      final cloned = SelectUtils.deepCloneEntries({entry});
       expect(cloned.length, 1);
       final clonedEntry = cloned.single as SelectRangeEntry<int, dynamic>;
       expect(clonedEntry.min, 0);
@@ -405,7 +405,7 @@ void main() {
         layout: const SelectChipLayout(),
       );
 
-      final cloned = SelectorUtils.deepCloneEntries({c});
+      final cloned = SelectUtils.deepCloneEntries({c});
       expect(cloned.length, 1);
       final clonedC = cloned.single as SelectCategoryEntry<dynamic>;
       expect(clonedC.selectionMode, SelectionMode.multiple);
@@ -423,7 +423,7 @@ void main() {
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {any, a});
 
-      final cloned = SelectorUtils.deepCloneEntries({c}, skipAny: true);
+      final cloned = SelectUtils.deepCloneEntries({c}, skipAny: true);
       final clonedC = cloned.single as SelectCategoryEntry<dynamic>;
       final childIds = clonedC.children!.map((e) => e.id).toSet();
       expect(childIds, {'a'});
@@ -431,14 +431,14 @@ void main() {
     });
   });
 
-  group('SelectorUtils – treeDepth', () {
+  group('SelectUtils – treeDepth', () {
     test('returns 1 for null root', () {
-      expect(SelectorUtils().treeDepth(null), 1);
+      expect(SelectUtils().treeDepth(null), 1);
     });
 
     test('returns 1 for leaf node', () {
       final leaf = _text('', 'l', 'L');
-      expect(SelectorUtils().treeDepth(leaf), 1);
+      expect(SelectUtils().treeDepth(leaf), 1);
     });
 
     test('returns correct depth for multi-level tree', () {
@@ -447,7 +447,7 @@ void main() {
       final p = _text('c', 'p', 'P', children: {g});
       final c = _category('c', 'C', children: {p});
 
-      expect(SelectorUtils().treeDepth(c), 4);
+      expect(SelectUtils().treeDepth(c), 4);
     });
   });
 }

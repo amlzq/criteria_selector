@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 
 import '../constants.dart';
 import '../select_entry.dart';
-import '../selector_utils.dart';
+import '../select_utils.dart';
 import 'state_snapshot.dart';
 
 class StateTree {
@@ -125,7 +125,7 @@ class StateTree {
   }
 
   SelectEntries buildChangedEntries() {
-    return SelectorUtils.cloneTree(
+    return SelectUtils.cloneTree(
       _entries,
       _selectedEntriesPerLevel,
       deepCloneSelectedSubtree: false,
@@ -135,7 +135,7 @@ class StateTree {
   }
 
   SelectEntries buildAppliedEntries() {
-    return SelectorUtils.cloneTree(
+    return SelectUtils.cloneTree(
       _entries,
       _selectedEntriesPerLevel,
       selectedHeaderEntries: _selectedHeaderEntries,
@@ -208,7 +208,7 @@ class StateTree {
     clearSelections();
     if (selected?.isNotEmpty == true) {
       _selectedEntriesPerLevel.addAll(
-        SelectorUtils.restorePreviousSelected(_entries, selected),
+        SelectUtils.restorePreviousSelected(_entries, selected),
       );
       _restoreHeaderFooterSelected(_entries, selected!);
       return;

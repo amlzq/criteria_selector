@@ -1,7 +1,7 @@
 import '../deprecated.dart';
 import 'constants.dart';
 import 'select_layout.dart';
-import 'selector_utils.dart';
+import 'select_utils.dart';
 
 /// A set of selected [SelectEntry] values.
 typedef SelectEntries<E> = Set<SelectEntry<E>>;
@@ -112,20 +112,20 @@ extension SelectEntriesExtension on SelectEntries {
   /// A level of `0` returns [entry] itself; level `1` returns its direct
   /// children; deeper levels walk further down the tree.
   Set<SelectEntry> findChildrenAtLevel(SelectEntry entry, int level) =>
-      SelectorUtils.findChildrenAtLevel(entry, level);
+      SelectUtils.findChildrenAtLevel(entry, level);
 
   /// Returns the ids of the children of [entry] located at the given tree [level].
   ///
   /// See [findChildrenAtLevel] for the level semantics.
   Set<String> findIdsAtLevel(SelectEntry entry, int level) =>
-      SelectorUtils.findIdsAtLevel(entry, level);
+      SelectUtils.findIdsAtLevel(entry, level);
 
   /// Returns the extra ids of the children of [entry] located at the given tree
   /// [level].
   ///
   /// See [findChildrenAtLevel] for the level semantics.
   List<String> findExtrasAtLevel(SelectEntry entry, int level) =>
-      SelectorUtils.findExtrasAtLevel(entry, level);
+      SelectUtils.findExtrasAtLevel(entry, level);
 
   /// Returns the id of the first selected entry, or `null` when nothing is
   /// selected. Convenience accessor for single-selection tabs such as sort

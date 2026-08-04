@@ -1,5 +1,5 @@
 import 'package:criteria_selector/criteria_selector.dart';
-import 'package:criteria_selector/src/selector/selector_utils.dart';
+import 'package:criteria_selector/src/selector/select_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -46,7 +46,7 @@ void main() {
         divisions: 20,
       );
       final cloned =
-          SelectorUtils.deepCloneEntries({entry}).single as SelectIntEntry;
+          SelectUtils.deepCloneEntries({entry}).single as SelectIntEntry;
       expect(cloned.divisions, 20);
     });
 
@@ -63,7 +63,7 @@ void main() {
         children: {entry},
         selectionMode: SelectionMode.single,
       );
-      final cloned = SelectorUtils.cloneTree(
+      final cloned = SelectUtils.cloneTree(
         {category},
         [
           {category},

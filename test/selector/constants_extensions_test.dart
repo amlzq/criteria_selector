@@ -245,7 +245,7 @@ void main() {
   group(
       'SelectEntriesExtension – findChildrenAtLevel / findIdsAtLevel / findExtrasAtLevel',
       () {
-    test('findChildrenAtLevel delegates to SelectorUtils', () {
+    test('findChildrenAtLevel delegates to SelectUtils', () {
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
 
@@ -254,7 +254,7 @@ void main() {
       expect(entries.findChildrenAtLevel(c, 1).contains(a), isTrue);
     });
 
-    test('findIdsAtLevel delegates to SelectorUtils', () {
+    test('findIdsAtLevel delegates to SelectUtils', () {
       final a = _text('c', 'a', 'A');
       final c = _category('c', 'C', children: {a});
 
