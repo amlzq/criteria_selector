@@ -166,8 +166,7 @@ SelectDelegate buildDelegate(
 }
 
 SelectDelegate _createDelegate(PlaygroundParams p, PlaygroundDataSource data) {
-  final chipBarTheme =
-      SelectChipBarTheme(variant: _chipVariant(p.tileVariant));
+  final chipBarTheme = SelectChipBarTheme(variant: _chipVariant(p.tileVariant));
   switch (p.delegate) {
     case Delegate.cascading:
       return CascadingSelectDelegate(
@@ -295,11 +294,35 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
   void _onChanged(Object? value) => setState(() => _lastChanged = value);
   void _onApplied(Object? value) => setState(() => _lastApplied = value);
 
+  /// Localized label of a delegate family, used as the [PopupSelectButton]
+  /// trigger label so it follows the currently selected [Delegate].
+  String _delegateLabel(Delegate delegate) {
+    switch (delegate) {
+      case Delegate.cascading:
+        return widget.l10n.layoutCascading;
+      case Delegate.grid:
+        return widget.l10n.layoutGrid;
+      case Delegate.flatten:
+        return widget.l10n.layoutFlatten;
+      case Delegate.list:
+        return widget.l10n.layoutList;
+    }
+  }
+
   /// Builds a selector delegate for one tab of the dropdown bar, using the
   /// current playground params but a fixed delegate family so each tab shows a
   /// distinct selector (cascading / grid / flatten / list).
+  ///
+  /// Each tab applies the per-delegate default Columns / Aspect Ratio (see
+  /// [defaultCrossAxisCountByDelegate] / [defaultChildAspectRatioByDelegate])
+  /// so the bar always renders with the defaults for that family instead of
+  /// reusing the global (controls-panel) values.
   SelectDelegate _tabDelegate(Delegate delegate) {
-    final tabParams = widget.params.copyWith(delegate: delegate);
+    final tabParams = widget.params.copyWith(
+      delegate: delegate,
+      crossAxisCount: defaultCrossAxisCountByDelegate[delegate],
+      childAspectRatio: defaultChildAspectRatioByDelegate[delegate],
+    );
     return buildDelegate(
       tabParams,
       widget.data,
@@ -394,7 +417,10 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
                 child: Center(
                   child: PopupSelectButton(
                     selectDelegate: widget.delegate,
-                    label: l10n.filterLabel,
+                    // Follow the delegate selected in the controls panel so the
+                    // trigger always shows which family the popup uses
+                    // (Cascading / Grid / Flatten / List).
+                    label: _delegateLabel(p.delegate),
                     onChanged: (selected) => _onChanged(selected),
                     onApplied: (selected) => _onApplied(selected),
                   ),
