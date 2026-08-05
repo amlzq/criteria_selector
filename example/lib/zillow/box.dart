@@ -153,34 +153,10 @@ class _BoxPageState extends State<BoxPage> {
                     childAspectRatio: 3,
                     mainAxisSpacing: 10,
                     crossAxisSpacing: 10,
-                    gridTileTheme: const SelectGridTileTheme(
-                      variant: SelectGridTileVariant.outlined,
-                    ),
                     fieldTileTheme: const SelectFieldTileTheme(
                       variant: SelectFieldTileVariant.outlined,
                     ),
                     applyText: AppLocalizations.of(context)?.apply ?? '',
-                  ),
-                  onChanged: (selected) {
-                    largePrint('onChangeTap: $selected');
-                    _handlePriceChange(selected);
-                    showSelectResult(context, selected);
-                  },
-                ),
-                const SizedBox(height: 24),
-                const Text(
-                  'Price (Range Slider)',
-                  style: TextStyle(fontSize: 20),
-                ),
-                SelectView(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  delegate: ListSelectDelegate(
-                    entriesLoader: _filtersRepo.fetchPriceRangeData,
-                    selectedEntriesLoader:
-                        _filtersRepo.fetchPriceRangeSelectedData,
-                    resetEntriesLoader: _filtersRepo.fetchPriceRangeResetData,
-                    selectionMode: SelectionMode.multiple,
                   ),
                   onChanged: (selected) {
                     largePrint('onChangeTap: $selected');

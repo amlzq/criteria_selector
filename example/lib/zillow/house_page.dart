@@ -476,9 +476,6 @@ class _HousePageState extends State<HousePage> {
                   childAspectRatio: 10,
                   mainAxisSpacing: 10,
                   crossAxisSpacing: 10,
-                  gridTileTheme: const SelectGridTileTheme(
-                    variant: SelectGridTileVariant.outlined,
-                  ),
                   fieldTileTheme: const SelectFieldTileTheme(
                     variant: SelectFieldTileVariant.outlined,
                   ),

@@ -273,8 +273,7 @@ void main() {
         ),
       );
       final sliderLeft = tester.getTopLeft(find.byType(SelectRangeSlider)).dx;
-      final sliderRight =
-          tester.getTopRight(find.byType(SelectRangeSlider)).dx;
+      final sliderRight = tester.getTopRight(find.byType(SelectRangeSlider)).dx;
       final thumbs = tester
           .widgetList<AnimatedScale>(
             find.byWidgetPredicate((w) => w is AnimatedScale),
@@ -359,11 +358,14 @@ void main() {
         name: 'Price range',
         selectionMode: SelectionMode.single,
         children: {
-          SelectIntEntry<dynamic>.custom(
+          SelectIntEntry<dynamic>(
             parentId: 'price',
+            id: 'range',
+            name: '',
             min: 0,
             max: 1000,
-          )
+          ),
+          SelectIntEntry<dynamic>.custom(parentId: 'price'),
         },
         layout: const SelectRangeLayout(),
       );
@@ -392,11 +394,14 @@ void main() {
         name: 'Price range',
         selectionMode: SelectionMode.single,
         children: {
-          SelectIntEntry<dynamic>.custom(
+          SelectIntEntry<dynamic>(
             parentId: 'price',
+            id: 'range',
+            name: '',
             min: 0,
             max: 1000,
-          )
+          ),
+          SelectIntEntry<dynamic>.custom(parentId: 'price'),
         },
         layout: const SelectRangeLayout(),
       );
@@ -420,10 +425,15 @@ void main() {
     });
 
     testWidgets('keeps slider and field values in sync', (tester) async {
-      final customEntry = SelectIntEntry<dynamic>.custom(
+      final rangeEntry = SelectIntEntry<dynamic>(
         parentId: 'price',
+        id: 'range',
+        name: '',
         min: 0,
         max: 1000,
+      );
+      final customEntry = SelectIntEntry<dynamic>.custom(
+        parentId: 'price',
         minHintText: 'No min',
         maxHintText: 'No max',
       );
@@ -431,7 +441,7 @@ void main() {
         id: 'price',
         name: 'Price',
         selectionMode: SelectionMode.single,
-        children: {customEntry},
+        children: {rangeEntry, customEntry},
         layout: const SelectRangeLayout(),
       );
 
@@ -470,12 +480,17 @@ void main() {
       expect(tester.widget<TextField>(minField).controller!.text, '250');
     });
 
-    testWidgets('shows the extreme min/max labels under the slider',
+    testWidgets('shows the min/max labels parsed from the range entry name',
         (tester) async {
+      final rangeEntry = SelectIntEntry<dynamic>(
+        parentId: 'price',
+        id: 'range',
+        name: r'$0-$10M+',
+        min: 0,
+        max: 10000000,
+      );
       final customEntry = SelectIntEntry<dynamic>.custom(
         parentId: 'price',
-        min: 0,
-        max: 1000,
         minHintText: 'No min',
         maxHintText: 'No max',
       );
@@ -483,7 +498,7 @@ void main() {
         id: 'price',
         name: 'Price',
         selectionMode: SelectionMode.single,
-        children: {customEntry},
+        children: {rangeEntry, customEntry},
         layout: const SelectRangeLayout(),
       );
       await tester.pumpWidget(
@@ -499,26 +514,86 @@ void main() {
           ),
         ),
       );
-      // The slider's bottom corners should display the range extremes.
-      expect(find.text('0'), findsOneWidget);
-      expect(find.text('1000'), findsOneWidget);
+      // The slider's bottom corners should display the two segments of the
+      // entry's name split on '-', not the raw numeric bounds.
+      expect(find.text(r'$0'), findsOneWidget);
+      expect(find.text(r'$10M+'), findsOneWidget);
+    });
+
+    testWidgets('restores the last range from selectedEntries', (tester) async {
+      final rangeEntry = SelectIntEntry<dynamic>(
+        parentId: 'price',
+        id: 'range',
+        name: '',
+        min: 0,
+        max: 1000,
+      );
+      final customEntry = SelectIntEntry<dynamic>.custom(
+        parentId: 'price',
+        minHintText: 'No min',
+        maxHintText: 'No max',
+      );
+      final category = SelectCategoryEntry<dynamic>(
+        id: 'price',
+        name: 'Price',
+        selectionMode: SelectionMode.single,
+        children: {rangeEntry, customEntry},
+        layout: const SelectRangeLayout(),
+      );
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SelectRangeView(
+              category: category,
+              entries: category.children!.toList(),
+              selectedEntries: {
+                // The custom entry carries the previously saved range.
+                SelectIntEntry<dynamic>.custom(
+                  parentId: 'price',
+                  min: 250,
+                  max: 750,
+                ),
+              },
+              toText: const SelectRangeLayout().toText,
+              onChanged: (_, __) {},
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // The slider should reopen at the restored values, not the full bounds.
+      expect(
+        tester.widget<SelectRangeSlider>(find.byType(SelectRangeSlider)).values,
+        const RangeValues(250, 750),
+      );
+      // The text fields mirror the restored range.
+      final fields = find.byType(TextField);
+      expect(tester.widget<TextField>(fields.first).controller!.text, '250');
+      expect(tester.widget<TextField>(fields.last).controller!.text, '750');
     });
 
     testWidgets('emits focusListener on slider release', (tester) async {
       String? lastCategory;
       String? lastMin;
       String? lastMax;
-      final customEntry = SelectIntEntry<dynamic>.custom(
+      final rangeEntry = SelectIntEntry<dynamic>(
         parentId: 'price',
+        id: 'range',
+        name: '',
         min: 0,
         max: 100,
         divisions: 10,
+      );
+      final customEntry = SelectIntEntry<dynamic>.custom(
+        parentId: 'price',
       );
       final category = SelectCategoryEntry<dynamic>(
         id: 'price',
         name: 'Price',
         selectionMode: SelectionMode.single,
-        children: {customEntry},
+        children: {rangeEntry, customEntry},
         layout: const SelectRangeLayout(),
       );
 
@@ -573,10 +648,15 @@ void main() {
 
     testWidgets('keeps field text after a parent rebuild (didUpdateWidget)',
         (tester) async {
-      final customEntry = SelectIntEntry<dynamic>.custom(
+      final rangeEntry = SelectIntEntry<dynamic>(
         parentId: 'price',
+        id: 'range',
+        name: '',
         min: 0,
         max: 1000,
+      );
+      final customEntry = SelectIntEntry<dynamic>.custom(
+        parentId: 'price',
         minHintText: 'No min',
         maxHintText: 'No max',
       );
@@ -584,7 +664,7 @@ void main() {
         id: 'price',
         name: 'Price',
         selectionMode: SelectionMode.single,
-        children: {customEntry},
+        children: {rangeEntry, customEntry},
         layout: const SelectRangeLayout(),
       );
       final base = SelectRangeView(
@@ -630,10 +710,15 @@ void main() {
     });
 
     testWidgets('snaps to whole numbers for an int entry', (tester) async {
-      final customEntry = SelectIntEntry<dynamic>.custom(
+      final rangeEntry = SelectIntEntry<dynamic>(
         parentId: 'price',
+        id: 'range',
+        name: '',
         min: 0,
         max: 1000,
+      );
+      final customEntry = SelectIntEntry<dynamic>.custom(
+        parentId: 'price',
         minHintText: 'No min',
         maxHintText: 'No max',
       );
@@ -641,7 +726,7 @@ void main() {
         id: 'price',
         name: 'Price',
         selectionMode: SelectionMode.single,
-        children: {customEntry},
+        children: {rangeEntry, customEntry},
         layout: const SelectRangeLayout(),
       );
       String? lastMin;
@@ -689,10 +774,15 @@ void main() {
 
     testWidgets('does not move the slider until a field is committed',
         (tester) async {
-      final customEntry = SelectIntEntry<dynamic>.custom(
+      final rangeEntry = SelectIntEntry<dynamic>(
         parentId: 'price',
+        id: 'range',
+        name: '',
         min: 0,
         max: 1000,
+      );
+      final customEntry = SelectIntEntry<dynamic>.custom(
+        parentId: 'price',
         minHintText: 'No min',
         maxHintText: 'No max',
       );
@@ -700,7 +790,7 @@ void main() {
         id: 'price',
         name: 'Price',
         selectionMode: SelectionMode.single,
-        children: {customEntry},
+        children: {rangeEntry, customEntry},
         layout: const SelectRangeLayout(),
       );
       await tester.pumpWidget(
@@ -719,9 +809,7 @@ void main() {
       final minField = find.byType(TextField).first;
       // Initial slider range is the full bounds.
       expect(
-        tester
-            .widget<SelectRangeSlider>(find.byType(SelectRangeSlider))
-            .values,
+        tester.widget<SelectRangeSlider>(find.byType(SelectRangeSlider)).values,
         const RangeValues(0, 1000),
       );
 
@@ -730,9 +818,7 @@ void main() {
       await tester.pumpAndSettle();
       // The slider must not have moved while typing.
       expect(
-        tester
-            .widget<SelectRangeSlider>(find.byType(SelectRangeSlider))
-            .values,
+        tester.widget<SelectRangeSlider>(find.byType(SelectRangeSlider)).values,
         const RangeValues(0, 1000),
       );
 
@@ -740,19 +826,22 @@ void main() {
       await tester.testTextInput.receiveAction(TextInputAction.done);
       await tester.pumpAndSettle();
       expect(
-        tester
-            .widget<SelectRangeSlider>(find.byType(SelectRangeSlider))
-            .values,
+        tester.widget<SelectRangeSlider>(find.byType(SelectRangeSlider)).values,
         const RangeValues(250, 1000),
       );
     });
 
     testWidgets('swaps bounds when the max field is typed below the min field',
         (tester) async {
-      final customEntry = SelectIntEntry<dynamic>.custom(
+      final rangeEntry = SelectIntEntry<dynamic>(
         parentId: 'price',
+        id: 'range',
+        name: '',
         min: 0,
         max: 1000,
+      );
+      final customEntry = SelectIntEntry<dynamic>.custom(
+        parentId: 'price',
         minHintText: 'No min',
         maxHintText: 'No max',
       );
@@ -760,7 +849,7 @@ void main() {
         id: 'price',
         name: 'Price',
         selectionMode: SelectionMode.single,
-        children: {customEntry},
+        children: {rangeEntry, customEntry},
         layout: const SelectRangeLayout(),
       );
       await tester.pumpWidget(
@@ -790,9 +879,7 @@ void main() {
 
       // The typed max (50) is below the min (100) => the bounds auto-swap.
       expect(
-        tester
-            .widget<SelectRangeSlider>(find.byType(SelectRangeSlider))
-            .values,
+        tester.widget<SelectRangeSlider>(find.byType(SelectRangeSlider)).values,
         const RangeValues(50, 100),
       );
       expect(tester.widget<TextField>(minField).controller!.text, '50');

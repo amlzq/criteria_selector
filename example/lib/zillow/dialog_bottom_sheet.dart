@@ -80,9 +80,6 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                     childAspectRatio: 2.5,
                     mainAxisSpacing: 10,
                     crossAxisSpacing: 10,
-                    gridTileTheme: const SelectGridTileTheme(
-                      variant: SelectGridTileVariant.outlined,
-                    ),
                     fieldTileTheme: const SelectFieldTileTheme(
                       variant: SelectFieldTileVariant.outlined,
                     ),

@@ -96,6 +96,13 @@ class _SelectRangeViewState extends State<SelectRangeView> {
   num? _initialMin;
   num? _initialMax;
 
+  // Display labels for the slider's bottom corners. When the range entry
+  // carries a `name` of the form "minText-maxText" (e.g. "$1,500-$10M+"),
+  // the two segments become [SelectRangeSlider.minLabel] / [maxLabel].
+  // Otherwise they fall back to the numeric extremes.
+  String? _minLabel;
+  String? _maxLabel;
+
   /// Whether the underlying entry is integral (both bounds are `int`, e.g.
   /// a [SelectIntEntry]). When true, slider/field values are snapped to
   /// whole numbers and never exposed as floating-point text.
@@ -117,10 +124,14 @@ class _SelectRangeViewState extends State<SelectRangeView> {
     _minFocusNode.addListener(_onMinFocusChanged);
     _maxFocusNode.addListener(_onMaxFocusChanged);
     _loadEntry();
-    _currentRange = RangeValues(
-      _toDouble(_initialMin) ?? _min,
-      _toDouble(_initialMax) ?? _max,
-    );
+    // Restore the previously selected range from [selectedEntries] when the
+    // custom entry carries a saved min/max; otherwise start at the full
+    // slider bounds.
+    _currentRange = _restoreFromSelected() ??
+        RangeValues(
+          _toDouble(_initialMin) ?? _min,
+          _toDouble(_initialMax) ?? _max,
+        );
     _initialized = true;
     _syncControllersFromRange(force: true);
   }
@@ -136,14 +147,24 @@ class _SelectRangeViewState extends State<SelectRangeView> {
     // and re-invokes this method. The bounds never change in response to
     // user input, so there is nothing to reconcile here.
     //
-    // We only react to an explicit reset: when the custom range was selected
-    // and is now gone, restore the fields to their empty (extreme)
-    // placeholders.
+    // We only react to two explicit transitions:
+    //   * selection first becomes available (data loaded after the first
+    //     build) — restore the last-selected range onto the slider/fields;
+    //   * the custom range is deselected — clear the fields back to their
+    //     empty (extreme) placeholders.
+    // During ordinary edits both old and new carry a custom entry, so neither
+    // branch runs and the user's in-progress input is never clobbered.
     final oldHadCustom = (oldWidget.selectedEntries ?? const <SelectEntry>{})
         .any((e) => e is SelectRangeEntry && e.isCustom);
     final newHasCustom = (widget.selectedEntries ?? const <SelectEntry>{})
         .any((e) => e is SelectRangeEntry && e.isCustom);
-    if (oldHadCustom && !newHasCustom) {
+    if (!oldHadCustom && newHasCustom) {
+      final restored = _restoreFromSelected();
+      if (restored != null) {
+        _currentRange = restored;
+        _syncControllersFromRange(force: true);
+      }
+    } else if (oldHadCustom && !newHasCustom) {
       _currentRange = RangeValues(_min, _max);
       _minController.clear();
       _maxController.clear();
@@ -162,30 +183,91 @@ class _SelectRangeViewState extends State<SelectRangeView> {
   }
 
   void _loadEntry() {
-    final entry = _findEntry();
-    if (entry == null) {
-      // No custom entry — fall back to a degenerate 0..1 range so the
-      // slider still renders safely.
+    // The slider bounds come from the range entry (the non-custom
+    // [SelectRangeEntry] in the category's children), while the field tile
+    // and the emitted value come from the custom entry. If no range entry is
+    // found, fall back to a degenerate 0..1 range so the slider still renders
+    // safely.
+    final rangeEntry = _findRangeEntry();
+    if (rangeEntry == null) {
       _min = 0;
       _max = 1;
       _divisions = null;
       _initialMin = null;
       _initialMax = null;
+      _minLabel = null;
+      _maxLabel = null;
       return;
     }
     // Read N values as num.
-    _min = _toDouble(entry.min) ?? 0;
-    _max = _toDouble(entry.max) ?? (_min + 1);
+    _min = _toDouble(rangeEntry.min) ?? 0;
+    _max = _toDouble(rangeEntry.max) ?? (_min + 1);
     if (_max <= _min) _max = _min + 1;
-    _divisions = entry.divisions;
-    _initialMin = entry.min;
-    _initialMax = entry.max;
+    _divisions = rangeEntry.divisions;
+    _initialMin = rangeEntry.min;
+    _initialMax = rangeEntry.max;
     // Treat the range as integral when both bounds are integers (e.g. a
     // SelectIntEntry); the slider then snaps the displayed/returned value
     // to whole numbers instead of exposing floating-point text.
-    _isInt = entry.min is int && entry.max is int;
+    _isInt = rangeEntry.min is int && rangeEntry.max is int;
+    // Parse the entry's display label (e.g. "$1,500-$10M+") into the two
+    // segments used by the slider's bottom corners. If the name does not
+    // contain a '-' separator, the labels stay null and the numeric bounds
+    // are shown instead.
+    final name = rangeEntry.name;
+    if (name != null) {
+      final dash = name.indexOf('-');
+      if (dash > 0 && dash < name.length - 1) {
+        _minLabel = name.substring(0, dash).trim();
+        _maxLabel = name.substring(dash + 1).trim();
+      } else {
+        _minLabel = null;
+        _maxLabel = null;
+      }
+    } else {
+      _minLabel = null;
+      _maxLabel = null;
+    }
   }
 
+  /// Restores the last-selected range from the custom entry carried in
+  /// [selectedEntries].
+  ///
+  /// When the user previously set a range and that selection is still present,
+  /// the slider and text fields should reopen at those values instead of
+  /// starting from the full bounds. Returns `null` when no custom entry with a
+  /// saved value is found, letting the caller fall back to the extremes.
+  ///
+  /// A `null` bound on the custom entry means that end was left at its extreme,
+  /// so it is projected back to the corresponding slider bound here.
+  RangeValues? _restoreFromSelected() {
+    for (final e in widget.selectedEntries ?? const <SelectEntry>{}) {
+      if (e is SelectRangeEntry && e.isCustom) {
+        final start = (_toDouble(e.min) ?? _min).clamp(_min, _max).toDouble();
+        final end = (_toDouble(e.max) ?? _max).clamp(_min, _max).toDouble();
+        return RangeValues(start, end);
+      }
+    }
+    return null;
+  }
+
+  /// Locates the range entry that defines the slider bounds: a
+  /// [SelectRangeEntry] in the category's children that is **not** custom.
+  ///
+  /// In the canonical `SelectRangeLayout` arrangement each category owns two
+  /// entries — a range entry (bounds for the slider) and a custom entry
+  /// (user input, rendered as the field tile). We prefer the category's
+  /// non-custom range entry and fall back to scanning [entries].
+  SelectRangeEntry? _findRangeEntry() {
+    final children = widget.category?.children ?? widget.entries;
+    for (final e in children) {
+      if (e is SelectRangeEntry && !e.isCustom) return e;
+    }
+    return null;
+  }
+
+  /// Locates the custom entry that owns the field-tile display and is the
+  /// sole target of [onChanged].
   SelectRangeEntry? _findEntry() {
     final fromCategory = widget.category?.firstCustomOrNull;
     if (fromCategory != null) return fromCategory;
@@ -285,6 +367,7 @@ class _SelectRangeViewState extends State<SelectRangeView> {
     final atMax = range.end >= _max - _epsilon;
     entry.min = atMin ? null : _toEntryValue(range.start);
     entry.max = atMax ? null : _toEntryValue(range.end);
+    entry.name = '${entry.min}-${entry.max}';
     final index = widget.entries.indexOf(entry);
     widget.onChanged.call(index < 0 ? 0 : index, entry);
   }
@@ -366,9 +449,11 @@ class _SelectRangeViewState extends State<SelectRangeView> {
             max: _max,
             values: _currentRange,
             divisions: _divisions,
-            // Show the range extremes at the bottom corners of the slider.
-            minLabel: _formatBound(_min),
-            maxLabel: _formatBound(_max),
+            // Show the parsed display labels at the bottom corners of the
+            // slider (e.g. "$1,500" / "$10M+"). When the entry name does not
+            // provide them, fall back to the numeric extremes.
+            minLabel: _minLabel ?? _formatBound(_min),
+            maxLabel: _maxLabel ?? _formatBound(_max),
             onChanged: _onSliderChanged,
             onChangeEnd: _onSliderChangeEnd,
           ),

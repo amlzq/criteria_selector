@@ -98,64 +98,25 @@ class HouseFiltersRepository {
                       name: l1.name,
                       min: l1.min,
                       max: l1.max,
+                      divisions: l1.divisions,
                     ))
                 .toSet(),
             selectionMode: SelectionMode.multiple,
+            layout: const SelectRangeLayout(toText: 'to'),
           ),
         )
         .toSet();
 
-    // Insert some special entries
+    // Add some special entries
     for (SelectEntry category in entries) {
-      // Insert the "Any" entry
-      category.children?.insert(
-          0,
-          SelectIntEntry.any(
-              parentId: category.id, name: anyEntryText, immediate: false));
-      // Insert the "Custom" entry
-      category.children?.insert(
-          0,
-          SelectIntEntry.custom(
-              parentId: category.id,
-              minHintText: noMinHintText,
-              maxHintText: noMaxHintText));
+      // Add the "Custom" entry
+      category.children?.add(SelectIntEntry.custom(
+          parentId: category.id,
+          minHintText: noMinHintText,
+          maxHintText: noMaxHintText));
     }
 
     debugPrint('prices length: ${entries.length}');
-    return Future.value(entries);
-  }
-
-  SelectEntries? priceRangeResult;
-
-  SelectEntries? fetchPriceRangeSelectedData() => priceRangeResult;
-
-  final _priceRangeReset = <SelectCategoryEntry>{};
-
-  SelectEntries? fetchPriceRangeResetData() => _priceRangeReset;
-
-  /// A price category rendered with [SelectRangeLayout]: a single custom
-  /// [SelectRangeEntry] shown as a price-range slider above two synced
-  /// text fields.
-  Future<SelectEntries> fetchPriceRangeData() async {
-    // simulate network delay
-    await Future.delayed(const Duration(milliseconds: 250));
-    final category = SelectCategoryEntry(
-      id: 'list_price',
-      name: 'Price',
-      selectionMode: SelectionMode.single,
-      layout: const SelectRangeLayout(toText: 'to'),
-      children: {
-        SelectIntEntry.custom(
-          parentId: 'list_price',
-          min: 0,
-          max: 2000000,
-          divisions: 80,
-          minHintText: noMinHintText,
-          maxHintText: noMaxHintText,
-        ),
-      },
-    );
-    final SelectEntries entries = {category};
     return Future.value(entries);
   }
 
@@ -402,14 +363,16 @@ class PriceItem {
   String? name;
   int? min;
   int? max;
+  int? divisions;
 
-  PriceItem({this.id, this.name, this.min, this.max});
+  PriceItem({this.id, this.name, this.min, this.max, this.divisions});
 
   PriceItem.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     min = json['min'];
     max = json['max'];
+    divisions = json['divisions'];
   }
 
   Map<String, dynamic> toJson() {
@@ -418,6 +381,7 @@ class PriceItem {
     data['name'] = name;
     data['min'] = min;
     data['max'] = max;
+    data['divisions'] = divisions;
     return data;
   }
 }
