@@ -84,6 +84,22 @@ class SelectChipLayout extends SelectLayout {
   int get hashCode => runtimeType.hashCode;
 }
 
+/// Counter (spin-box) layout for the children of a [SelectCategoryEntry].
+///
+/// Use this layout to render a single-valued "stepper": a `-` button on the
+/// left, the current value in the middle and a `+` button on the right. The
+/// user steps through the category's child entries (e.g. "Any", "1", "1+",
+/// "2", "2+", ...). At the two extremes the corresponding button is disabled.
+class SelectCounterLayout extends SelectLayout {
+  const SelectCounterLayout();
+
+  @override
+  bool operator ==(Object other) => other is SelectCounterLayout;
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+}
+
 /// Range-slider layout for the children of a [SelectCategoryEntry].
 ///
 /// Use this layout when a category owns a single custom [SelectRangeEntry]

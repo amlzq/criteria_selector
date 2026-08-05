@@ -240,6 +240,15 @@ class ListSelectState extends State<ListSelect> {
                               onChanged: (_, entry) =>
                                   _onTerminalItemTap(entry as SelectChildEntry),
                             ),
+                          SelectCounterLayout() => SelectCounter(
+                              key: ValueKey('category_$index'),
+                              category: category,
+                              showTitle: false,
+                              entries: entries,
+                              selectedEntries: selectedEntries,
+                              onChanged: (_, entry) =>
+                                  _onTerminalItemTap(entry as SelectChildEntry),
+                            ),
                         },
                       );
                     }),

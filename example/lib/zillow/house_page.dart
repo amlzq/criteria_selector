@@ -456,6 +456,7 @@ class _HousePageState extends State<HousePage> {
                 ),
               ],
               selectDelegates: [
+                // Neighborhood filter
                 CascadingSelectDelegate(
                   entriesLoader: _filtersRepo.fetchNeighborhoodData,
                   selectedEntriesLoader:
@@ -465,6 +466,7 @@ class _HousePageState extends State<HousePage> {
                   sideBarTheme: const SelectSideBarTheme(width: 150),
                   isScrollable: true,
                 ),
+                // Price filter
                 GridSelectDelegate(
                   entriesLoader: _filtersRepo.fetchPriceData,
                   selectedEntriesLoader: _filtersRepo.fetchPriceSelectedData,
@@ -481,6 +483,7 @@ class _HousePageState extends State<HousePage> {
                     variant: SelectFieldTileVariant.outlined,
                   ),
                 ),
+                // Rooms filter
                 GridSelectDelegate(
                   entriesLoader: _filtersRepo.fetchRoomsData,
                   selectedEntriesLoader: _filtersRepo.fetchRoomsSelectedData,
@@ -497,6 +500,7 @@ class _HousePageState extends State<HousePage> {
                     variant: SelectFieldTileVariant.outlined,
                   ),
                 ),
+                // More filter
                 ListSelectDelegate(
                   entriesLoader: _filtersRepo.fetchMoreData,
                   selectedEntriesLoader: _filtersRepo.fetchMoreSelectedData,
@@ -505,6 +509,7 @@ class _HousePageState extends State<HousePage> {
                   resetText: AppLocalizations.of(context)?.reset ?? '',
                   applyText: AppLocalizations.of(context)?.apply ?? '',
                 ),
+                // Sort filter
                 ListSelectDelegate(
                   entriesLoader: _filtersRepo.fetchSortData,
                   selectedEntriesLoader: _filtersRepo.fetchSortSelectedData,

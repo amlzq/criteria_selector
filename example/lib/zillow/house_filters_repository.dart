@@ -198,6 +198,7 @@ class HouseFiltersRepository {
                     ))
                 .toSet(),
             selectionMode: SelectionMode.single,
+            layout: const SelectCounterLayout(),
           ),
         )
         .toSet();
@@ -219,8 +220,7 @@ class HouseFiltersRepository {
 
   final moreIniteialSelected = <SelectCategoryEntry>{};
 
-  SelectEntries? fetchMoreSelectedData() =>
-      moreResult ?? moreIniteialSelected;
+  SelectEntries? fetchMoreSelectedData() => moreResult ?? moreIniteialSelected;
 
   SelectEntries? fetchMoreResetData() => moreIniteialSelected;
 
@@ -301,8 +301,7 @@ class HouseFiltersRepository {
     SelectTextEntry.id(id: 'comprehensive_sort')
   };
 
-  SelectEntries? fetchSortSelectedData() =>
-      sortResult ?? sortIniteialSelected;
+  SelectEntries? fetchSortSelectedData() => sortResult ?? sortIniteialSelected;
 
   SelectEntries? fetchSortResetData() => sortIniteialSelected;
 

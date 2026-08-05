@@ -3,6 +3,7 @@ export 'action_bar_theme.dart';
 export 'chip_bar.dart';
 export 'chip_bar_theme.dart';
 export 'constants.dart';
+export 'counter.dart';
 export 'expansion_tile.dart';
 export 'expansion_tile_theme.dart';
 export 'field_tile.dart';
