@@ -234,7 +234,7 @@ class _RentPageState extends State<RentPage> {
               // indicator: Icon(Icons.arrow_upward, size: 16),
               // unselectedIndicator: Icon(Icons.arrow_downward, size: 16),
               // overlayStyle: SelectOverlayStyle(
-              //   backgroundColor: Colors.orange.withOpacity(0.54),
+              //   barrierColor: Colors.orange.withOpacity(0.54),
               // ),
               tabs: [
                 PopupTab(

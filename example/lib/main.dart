@@ -91,7 +91,8 @@ class _MyAppState extends State<MyApp> {
                 extensions: <ThemeExtension<dynamic>>[
                   PopupSelectBarTheme(
                     overlayStyle: const SelectOverlayStyle(
-                        barrierColor: Colors.black54),
+                      barrierColor: Colors.black54,
+                    ),
                     selectTheme: SelectThemeData(baseTheme),
                   ),
                 ],

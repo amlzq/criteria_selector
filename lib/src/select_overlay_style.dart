@@ -5,9 +5,6 @@ import 'package:flutter/material.dart';
 class SelectOverlayStyle {
   const SelectOverlayStyle({
     this.maxHeightFactor,
-    @Deprecated(
-        'Use [barrierColor] instead; this always controlled the scrim color.')
-    this.backgroundColor,
     this.minWidth,
     this.maxWidth,
     this.barrierColor,
@@ -18,12 +15,6 @@ class SelectOverlayStyle {
   /// Note: this only affects scrollable selector content with unconstrained height. For constrained content, height is determined by Wrap.
   /// Default value is [kSelectOverlayMaxHeightFactor].
   final double? maxHeightFactor;
-
-  /// @deprecated This has always controlled the scrim (backdrop) color, not the
-  /// panel background. Use [barrierColor] instead.
-  @Deprecated(
-      'Use [barrierColor] instead; this always controlled the scrim color.')
-  final Color? backgroundColor;
 
   /// Minimum width of the overlay content (e.g. to keep it at least as wide as
   /// the trigger button). When null, no minimum width is enforced.
@@ -50,7 +41,6 @@ class SelectOverlayStyle {
 
   SelectOverlayStyle copyWith({
     double? maxHeightFactor,
-    Color? backgroundColor,
     double? minWidth,
     double? maxWidth,
     Color? barrierColor,
@@ -58,8 +48,6 @@ class SelectOverlayStyle {
   }) {
     return SelectOverlayStyle(
       maxHeightFactor: maxHeightFactor ?? this.maxHeightFactor,
-      // ignore: deprecated_member_use_from_same_package
-      backgroundColor: backgroundColor ?? this.backgroundColor,
       minWidth: minWidth ?? this.minWidth,
       maxWidth: maxWidth ?? this.maxWidth,
       barrierColor: barrierColor ?? this.barrierColor,
@@ -70,8 +58,6 @@ class SelectOverlayStyle {
   @override
   int get hashCode => Object.hash(
         maxHeightFactor,
-        // ignore: deprecated_member_use_from_same_package
-        backgroundColor,
         minWidth,
         maxWidth,
         barrierColor,
@@ -88,8 +74,6 @@ class SelectOverlayStyle {
     }
     return other is SelectOverlayStyle &&
         other.maxHeightFactor == maxHeightFactor &&
-        // ignore: deprecated_member_use_from_same_package
-        other.backgroundColor == backgroundColor &&
         other.minWidth == minWidth &&
         other.maxWidth == maxWidth &&
         other.barrierColor == barrierColor &&

@@ -112,10 +112,8 @@ class SelectOverlay extends StatelessWidget {
 
     final maxHeightFactor = style?.maxHeightFactor ?? defaults.maxHeightFactor!;
 
-    final effectiveBarrierColor = style?.barrierColor ??
-        // ignore: deprecated_member_use_from_same_package
-        style?.backgroundColor ??
-        defaults.barrierColor!;
+    final effectiveBarrierColor =
+        style?.barrierColor ?? defaults.barrierColor!;
     final intercept = style?.barrierIntercept ?? true;
 
     final effectiveAnimation = animation ?? const AlwaysStoppedAnimation(1.0);

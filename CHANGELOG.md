@@ -1,5 +1,7 @@
 ## Next
 
+* **BREAKING** remove the deprecated `SelectOverlayStyle.backgroundColor` constructor / `copyWith` parameter and getter (introduced in 0.5.0). Use `barrierColor` to set the scrim (backdrop) color instead; this field always controlled the scrim color, not the panel background. The `barrierColor` / `barrierIntercept` / `minWidth` / `maxWidth` behavior is unchanged.
+
 * **BREAKING** remove the deprecated `listConfig` / `gridConfig` / `chipConfig` fields and constructor / `copyWith` parameters on `SelectCategoryEntry` and the deprecated `SelectorListConfig` / `SelectorGridConfig` / `SelectorChipConfig` classes (introduced in 0.4.0). Use the single `SelectCategoryEntry.layout` property of the sealed `SelectLayout` type (`SelectListLayout` / `SelectGridLayout` / `SelectChipLayout`) instead; see [Migration guide](https://github.com/amlzq/criteria_selector/blob/main/MIGRATION.md#migrate-to-040).
 
 * **BREAKING** remove the deprecated `SelectBox.onChangeTap` argument and `onChangeTap` getter (introduced in 0.4.0). Use `onChanged` on `SelectView` instead; see [Migration guide](https://github.com/amlzq/criteria_selector/blob/main/MIGRATION.md#migrate-to-040).
