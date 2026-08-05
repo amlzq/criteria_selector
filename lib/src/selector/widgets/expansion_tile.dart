@@ -219,8 +219,7 @@ class _SelectExpansionTileState extends State<SelectExpansionTile>
     final _SelectExpansionTileDefaults defaults =
         _SelectExpansionTileDefaults(context);
 
-    final SelectExpansionTileTheme theme =
-        SelectExpansionTileTheme.of(context);
+    final SelectExpansionTileTheme theme = SelectExpansionTileTheme.of(context);
 
     final effectiveTitleStyle =
         (widget.titleStyle ?? theme.titleStyle ?? defaults.titleStyle!);
@@ -279,8 +278,7 @@ class _SelectExpansionTileState extends State<SelectExpansionTile>
 
   @override
   Widget build(BuildContext context) {
-    final SelectExpansionTileTheme theme =
-        SelectExpansionTileTheme.of(context);
+    final SelectExpansionTileTheme theme = SelectExpansionTileTheme.of(context);
 
     final bool closed = !_isExpanded && _animationController.isDismissed;
     final bool shouldRemoveChildren = closed && !widget.maintainState;
@@ -312,7 +310,7 @@ class _SelectExpansionTileDefaults extends SelectExpansionTileTheme {
   late final TextTheme _textTheme = Theme.of(context).textTheme;
 
   @override
-  TextStyle? get titleStyle => _textTheme.titleLarge;
+  TextStyle? get titleStyle => _textTheme.titleSmall;
 
   @override
   Color? get selectedColor => _theme.selectedColor;

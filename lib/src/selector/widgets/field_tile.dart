@@ -218,6 +218,23 @@ class _TextField extends StatelessWidget {
     final effectiveBorder =
         isFilled ? null : Border.all(color: borderColor, width: 1.2);
 
+    // Text colour, mirroring [SelectGridTile]: when a filled tile is
+    // selected its background becomes [selectedTileColor], so the text is
+    // flipped to white when that background reads as dark — otherwise it
+    // keeps the theme's selected colour. Outlined tiles draw text directly on
+    // the page, so they always use the regular text colour.
+    final effectiveTextColor = theme.textColor ?? defaults.textColor!;
+    final effectiveSelectedColor =
+        theme.selectedColor ?? defaults.selectedColor!;
+    final selectedTextColor = isFilled
+        // `tileBackgroundColor` is non-null exactly when `isFilled` is true.
+        ? (ThemeData.estimateBrightnessForColor(tileBackgroundColor!) ==
+                Brightness.dark
+            ? Colors.white
+            : effectiveSelectedColor)
+        : effectiveSelectedColor;
+    final effectiveColor = selected ? selectedTextColor : effectiveTextColor;
+
     return Container(
       height: 34,
       alignment: Alignment.center,
@@ -235,7 +252,7 @@ class _TextField extends StatelessWidget {
         inputFormatters:
             allowDecimal ? null : [FilteringTextInputFormatter.digitsOnly],
         textAlign: TextAlign.center,
-        style: const TextStyle(fontSize: 13),
+        style: TextStyle(fontSize: 13, color: effectiveColor),
         onChanged: onChanged,
         onSubmitted: onSubmitted,
         // [SelectFieldTile] wraps the whole row in a [TextFieldTapRegion], so
@@ -247,7 +264,7 @@ class _TextField extends StatelessWidget {
         },
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: const TextStyle(fontSize: 13),
+          hintStyle: TextStyle(fontSize: 13, color: effectiveColor),
           border: InputBorder.none,
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
