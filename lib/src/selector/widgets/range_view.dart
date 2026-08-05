@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../select_entry.dart';
 import 'constants.dart';
 import 'field_tile.dart';
+import 'field_tile_theme.dart';
 import 'range_slider.dart';
 
 /// A composite view that renders a [SelectRangeSlider] above a
@@ -32,6 +33,7 @@ class SelectRangeView extends StatefulWidget {
     this.padding,
     this.showTitle = true,
     this.toText = '-',
+    this.fieldVariant,
   });
 
   /// Whether to show the category's name as a title above the slider.
@@ -77,6 +79,12 @@ class SelectRangeView extends StatefulWidget {
 
   /// Text rendered between the two text fields (default: `'-'`).
   final String toText;
+
+  /// The visual variant applied to the two [SelectFieldTile]s below the
+  /// slider. When `null` (the default), each field tile uses the variant
+  /// resolved from the selector's theme (see
+  /// [FieldTileThemeResolver]).
+  final SelectFieldTileVariant? fieldVariant;
 
   @override
   State<SelectRangeView> createState() => _SelectRangeViewState();
@@ -469,6 +477,7 @@ class _SelectRangeViewState extends State<SelectRangeView> {
               minFocusNode: _minFocusNode,
               maxFocusNode: _maxFocusNode,
               separator: widget.toText,
+              variant: widget.fieldVariant,
               // The range view accepts fractional input while typing and
               // rounds/snaps on commit (see [_commitField]).
               allowDecimal: true,

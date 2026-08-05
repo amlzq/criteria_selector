@@ -237,6 +237,7 @@ class ListSelectState extends State<ListSelect> {
                               toText: toText,
                               entries: entries,
                               selectedEntries: selectedEntries,
+                              fieldVariant: delegate.fieldTileTheme?.variant,
                               onChanged: (_, entry) =>
                                   _onTerminalItemTap(entry as SelectChildEntry),
                             ),

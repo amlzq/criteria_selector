@@ -249,6 +249,7 @@ class GridSelectState extends State<GridSelect> {
           toText: toText,
           entries: entries,
           selectedEntries: selectedEntries,
+          fieldVariant: delegate.fieldTileTheme?.variant,
           onChanged: (_, entry) =>
               _onTerminalItemTap(entry as SelectChildEntry),
         ),
