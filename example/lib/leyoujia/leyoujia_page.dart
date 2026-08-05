@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../generated/l10n/app_localizations.dart';
 import '../theme_mode.dart';
-import 'box.dart';
 import 'button.dart';
 import 'buy_page.dart';
 import 'dialog_bottom_sheet.dart';
 import 'map_page.dart';
 import 'rent_page.dart';
 import 'sell_page.dart';
+import 'view.dart';
 
 class LeyoujiaPage extends StatelessWidget {
   const LeyoujiaPage({super.key});
@@ -38,7 +38,7 @@ class LeyoujiaPage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const BoxPage()),
+                  MaterialPageRoute(builder: (context) => const ViewPage()),
                 );
               },
               child: const Text('Box'),

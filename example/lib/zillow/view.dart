@@ -9,14 +9,14 @@ import 'house_filters_repository.dart';
 import 'house_repository.dart';
 import 'utils.dart';
 
-class BoxPage extends StatefulWidget {
-  const BoxPage({super.key});
+class ViewPage extends StatefulWidget {
+  const ViewPage({super.key});
 
   @override
-  State<BoxPage> createState() => _BoxPageState();
+  State<ViewPage> createState() => _ViewPageState();
 }
 
-class _BoxPageState extends State<BoxPage> {
+class _ViewPageState extends State<ViewPage> {
   late final HouseFiltersRepository _filtersRepo;
   HouseFilter? _filter;
 
@@ -26,37 +26,17 @@ class _BoxPageState extends State<BoxPage> {
     _filtersRepo = HouseFiltersRepository();
   }
 
-  void _handleRegionChange(SelectEntries result) async {
+  void _handleNeighborhoodChange(SelectEntries result) async {
     final l10n = AppLocalizations.of(context);
     _filter ??= HouseFilter(cityId: userCityId);
-    // 区域
-    _filtersRepo.regionResult = result;
-    final category = result.firstOrNull;
-    if (category == null) return null;
-    if (category.id == 'region') {
-      // 行政区
-      _filter?.district = result
-          .cascadingPairsOf('region')
-          .map((p) => {
-                "district_id": p.id,
-                "subdistrict_id": p.childIds,
-              })
-          .toList(growable: false);
-    } else if (category.id == 'metro') {
-      // 地铁
-      _filter?.metro = result
-          .cascadingPairsOf('metro')
-          .map((p) => {
-                "line_id": p.id,
-                "station_id": p.childIds,
-              })
-          .toList(growable: false);
-    } else if (category.id == 'nearby') {
-      // 附近
-      final nearbyRadiusMeters = result.firstSelectedId;
-      _filter?.nearbyRadiusMeters = nearbyRadiusMeters;
-      _filter?.userLatLon = userLatLon;
-    }
+    _filtersRepo.neighborhoodResult = result;
+    _filter?.neighborhood = result
+        .cascadingPairsOf('neighborhood')
+        .map((p) => {
+              "region_id": p.id,
+              "neighborhood_id": p.childIds,
+            })
+        .toList(growable: false);
 
     if (_filter == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -68,25 +48,21 @@ class _BoxPageState extends State<BoxPage> {
 
   void _handlePriceChange(SelectEntries result) async {
     _filter ??= HouseFilter(cityId: userCityId);
-    // 价格筛选
-    _filtersRepo.buyPriceResult = result;
+    _filtersRepo.priceResult = result;
     final category = result.firstOrNull;
     if (category == null) return null;
-    if (category.id == 'total') {
-      // 总价
-      _filter?.totalPrice = result
-          .childRangesOf('total')
+    if (category.id == 'list_price') {
+      _filter?.listPrice = result
+          .childRangesOf('list_price')
           .map((e) => {
                 "id": e.id,
                 "min": e.min,
                 "max": e.max,
               })
           .toList(growable: false);
-    }
-    if (category.id == 'unit') {
-      // 单价
-      _filter?.unitPrice = result
-          .childRangesOf('unit')
+    } else if (category.id == 'monthly_price') {
+      _filter?.monthlyPayment = result
+          .childRangesOf('monthly_price')
           .map((e) => {
                 "id": e.id,
                 "min": e.min,
@@ -96,27 +72,28 @@ class _BoxPageState extends State<BoxPage> {
     }
   }
 
-  void _handleFloorPlanChange(SelectEntries result) async {
+  void _handleRoomsChange(SelectEntries result) async {
     _filter ??= HouseFilter(cityId: userCityId);
-    // 户型筛选
-    _filtersRepo.floorPlanBuyResult = result;
-    _filter?.livingRoom = result.childIdsOf('living_room');
-    _filter?.bathroom = result.childIdsOf('bathroom');
-    _filter?.balcony = result.childIdsOf('balcony');
-    _filter?.area = result
-        .childRangesOf('area')
-        .map((e) => {
-              "id": e.id,
-              "min": e.min,
-              "max": e.max,
-            })
-        .toList(growable: false);
+    _filtersRepo.roomsResult = result;
+    _filter?.bedrooms = result.childIdsOf('bedrooms');
+    _filter?.bathrooms = result.childIdsOf('bathrooms');
+  }
+
+  void _handleMoreChange(SelectEntries result) async {
+    _filter ??= HouseFilter(cityId: userCityId);
+    _filtersRepo.moreResult = result;
+    _filter?.homeType = result.childIdsOf('home_type');
+    _filter?.listsDetails = result.childIdsOf('lists_details');
+    _filter?.squareFeet = result.childIdsOf('square_feet');
+    _filter?.lotSize = result.childIdsOf('lot_size');
+    _filter?.homeFeatures = result.childIdsOf('home_features');
+    _filter?.commute = result.childIdsOf('commute');
+    _filter?.expandedSearch = result.childIdsOf('expanded_search');
   }
 
   void _handleSortChange(SelectEntries result) async {
-    _filter = HouseFilter(cityId: userCityId);
-    // 排序筛选
-    _filtersRepo.sortBuyResult = result;
+    _filter ??= HouseFilter(cityId: userCityId);
+    _filtersRepo.sortResult = result;
     _filter?.sort = result.firstSelectedId;
   }
 
@@ -133,17 +110,20 @@ class _BoxPageState extends State<BoxPage> {
               children: [
                 Container(),
                 const Text(
-                  '选择区域',
+                  'Neighborhood',
                   style: TextStyle(fontSize: 20),
                 ),
                 SelectView(
                   margin:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   delegate: CascadingSelectDelegate(
-                    entriesLoader: _filtersRepo.fetchRegionData,
-                    selectedEntriesLoader: _filtersRepo.fetchRegionSelectedData,
-                    resetEntriesLoader: _filtersRepo.fetchRegionResetData,
-                    selectionMode: SelectionMode.single,
+                    entriesLoader: _filtersRepo.fetchNeighborhoodData,
+                    selectedEntriesLoader:
+                        _filtersRepo.fetchNeighborhoodSelectedData,
+                    resetEntriesLoader: _filtersRepo.fetchNeighborhoodResetData,
+                    selectionMode: SelectionMode.multiple,
+                    sideBarTheme: const SelectSideBarTheme(width: 150),
+                    isScrollable: true,
                     radioBuilder: (context, selected) {
                       return MyRadio(value: selected);
                     },
@@ -153,31 +133,26 @@ class _BoxPageState extends State<BoxPage> {
                   ),
                   onChanged: (selected) {
                     largePrint('onChangeTap: $selected');
-                    _handleRegionChange(selected);
+                    _handleNeighborhoodChange(selected);
                     showSelectResult(context, selected);
                   },
                 ),
                 const SizedBox(height: 24),
                 const Text(
-                  '选择价格',
+                  'Price',
                   style: TextStyle(fontSize: 20),
                 ),
                 SelectView(
                   margin:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   delegate: GridSelectDelegate(
-                    entriesLoader: _filtersRepo.fetchBuyPriceData,
-                    selectedEntriesLoader:
-                        _filtersRepo.fetchBuyPriceSelectedData,
-                    resetEntriesLoader: _filtersRepo.fetchBuyPriceResetData,
+                    entriesLoader: _filtersRepo.fetchPriceData,
+                    selectedEntriesLoader: _filtersRepo.fetchPriceSelectedData,
                     selectionMode: SelectionMode.multiple,
-                    crossAxisCount: 4,
-                    childAspectRatio: 2.5,
+                    crossAxisCount: 3,
+                    childAspectRatio: 3,
                     mainAxisSpacing: 10,
                     crossAxisSpacing: 10,
-                    gridTileTheme: const SelectGridTileTheme(
-                      variant: SelectGridTileVariant.outlined,
-                    ),
                     fieldTileTheme: const SelectFieldTileTheme(
                       variant: SelectFieldTileVariant.outlined,
                     ),
@@ -191,43 +166,62 @@ class _BoxPageState extends State<BoxPage> {
                 ),
                 const SizedBox(height: 24),
                 const Text(
-                  '选择户型',
+                  'Rooms',
                   style: TextStyle(fontSize: 20),
                 ),
                 SelectView(
                   margin:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   delegate: FlattenSelectDelegate(
-                    entriesLoader: _filtersRepo.fetchFloorPlanBuyData,
-                    selectedEntriesLoader:
-                        _filtersRepo.fetchFloorPlanBuySelectedData,
-                    resetEntriesLoader: _filtersRepo.fetchFloorPlanBuyResetData,
+                    entriesLoader: _filtersRepo.fetchRoomsData,
+                    selectedEntriesLoader: _filtersRepo.fetchRoomsSelectedData,
                     selectionMode: SelectionMode.multiple,
-                    crossAxisCount: 3,
-                    childAspectRatio: 2.5,
+                    crossAxisCount: 2,
+                    childAspectRatio: 3,
                     crossAxisSpacing: 8,
                     mainAxisSpacing: 8,
-                    sideBarTheme: const SelectSideBarTheme(width: 98),
+                    sideBarTheme: const SelectSideBarTheme(width: 110),
                   ),
                   onChanged: (selected) {
                     largePrint('onChangeTap: $selected');
-                    _handleFloorPlanChange(selected);
+                    _handleRoomsChange(selected);
                     showSelectResult(context, selected);
                   },
                 ),
                 const SizedBox(height: 24),
                 const Text(
-                  '选择排序',
+                  'More',
                   style: TextStyle(fontSize: 20),
                 ),
                 SelectView(
                   margin:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   delegate: ListSelectDelegate(
-                    entriesLoader: _filtersRepo.fetchSortBuyData,
-                    selectedEntriesLoader:
-                        _filtersRepo.fetchSortBuySelectedData,
-                    resetEntriesLoader: _filtersRepo.fetchSortBuyResetData,
+                    entriesLoader: _filtersRepo.fetchMoreData,
+                    selectedEntriesLoader: _filtersRepo.fetchMoreSelectedData,
+                    resetEntriesLoader: _filtersRepo.fetchMoreResetData,
+                    selectionMode: SelectionMode.multiple,
+                    resetText: AppLocalizations.of(context)?.reset ?? '',
+                    applyText: AppLocalizations.of(context)?.apply ?? '',
+                  ),
+                  onChanged: (selected) {
+                    largePrint('onChangeTap: $selected');
+                    _handleMoreChange(selected);
+                    showSelectResult(context, selected);
+                  },
+                ),
+                const SizedBox(height: 24),
+                const Text(
+                  'Sort',
+                  style: TextStyle(fontSize: 20),
+                ),
+                SelectView(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  delegate: ListSelectDelegate(
+                    entriesLoader: _filtersRepo.fetchSortData,
+                    selectedEntriesLoader: _filtersRepo.fetchSortSelectedData,
+                    resetEntriesLoader: _filtersRepo.fetchSortResetData,
                     selectionMode: SelectionMode.single,
                     radioBuilder: (context, selected) {
                       return MyRadio(value: selected);
@@ -239,6 +233,7 @@ class _BoxPageState extends State<BoxPage> {
                     showSelectResult(context, selected);
                   },
                 ),
+                const SizedBox(height: 250),
               ],
             ),
           ),

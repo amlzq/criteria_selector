@@ -157,7 +157,8 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
               debugPrint('onReset');
             },
           ),
-          Center(
+          Align(
+            alignment: Alignment.centerRight,
             child: PopupSelectButton.elevated(
               label: 'Price',
               selectDelegate: GridSelectDelegate(
@@ -192,7 +193,7 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
             ),
           ),
           Align(
-            alignment: Alignment.bottomRight,
+            alignment: Alignment.center,
             child: PopupSelectButton.outlined(
               label: 'Rooms',
               selectDelegate: FlattenSelectDelegate(
@@ -227,34 +228,63 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
               },
             ),
           ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 50),
+              child: PopupSelectButton(
+                label: 'More',
+                icon: const Icon(Icons.filter_alt_outlined),
+                selectDelegate: ListSelectDelegate(
+                  entriesLoader: _filtersRepo.fetchMoreData,
+                  selectedEntriesLoader: _filtersRepo.fetchMoreSelectedData,
+                  resetEntriesLoader: _filtersRepo.fetchMoreResetData,
+                  selectionMode: SelectionMode.multiple,
+                  gridTileTheme: const SelectGridTileTheme(
+                    variant: SelectGridTileVariant.outlined,
+                  ),
+                  fieldTileTheme: const SelectFieldTileTheme(
+                    variant: SelectFieldTileVariant.outlined,
+                  ),
+                  chipBarTheme: const SelectChipBarTheme(
+                    variant: SelectChipVariant.outlined,
+                  ),
+                ),
+                onChanged: (selected) {
+                  largePrint('onChanged: $selected');
+                  _handleSelectorChange('more', selected);
+                  showSelectResult(context, selected);
+                },
+                onApplied: (selected) {
+                  largePrint('onApplied: $selected');
+                  _handleSelectorApply('more', selected);
+                  showSelectResult(context, selected);
+                },
+                onReset: () {
+                  debugPrint('onReset');
+                },
+              ),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.only(left: 50),
             child: PopupSelectButton(
-              label: 'More',
+              label: 'Sort',
               icon: const Icon(Icons.filter_alt_outlined),
               selectDelegate: ListSelectDelegate(
-                entriesLoader: _filtersRepo.fetchMoreData,
-                selectedEntriesLoader: _filtersRepo.fetchMoreSelectedData,
-                resetEntriesLoader: _filtersRepo.fetchMoreResetData,
-                selectionMode: SelectionMode.multiple,
-                gridTileTheme: const SelectGridTileTheme(
-                  variant: SelectGridTileVariant.outlined,
-                ),
-                fieldTileTheme: const SelectFieldTileTheme(
-                  variant: SelectFieldTileVariant.outlined,
-                ),
-                chipBarTheme: const SelectChipBarTheme(
-                  variant: SelectChipVariant.outlined,
-                ),
+                entriesLoader: _filtersRepo.fetchSortData,
+                selectedEntriesLoader: _filtersRepo.fetchSortSelectedData,
+                resetEntriesLoader: _filtersRepo.fetchSortResetData,
+                selectionMode: SelectionMode.single,
               ),
               onChanged: (selected) {
                 largePrint('onChanged: $selected');
-                _handleSelectorChange('more', selected);
+                _handleSelectorChange('sort', selected);
                 showSelectResult(context, selected);
               },
               onApplied: (selected) {
                 largePrint('onApplied: $selected');
-                _handleSelectorApply('more', selected);
+                _handleSelectorApply('sort', selected);
                 showSelectResult(context, selected);
               },
               onReset: () {

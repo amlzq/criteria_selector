@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../generated/l10n/app_localizations.dart';
 import '../theme_mode.dart';
-import 'box.dart';
 import 'button.dart';
 import 'dialog_bottom_sheet.dart';
 import 'house_page.dart';
+import 'view.dart';
 
 class ZillowPage extends StatelessWidget {
   const ZillowPage({super.key});
@@ -45,7 +45,7 @@ class ZillowPage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const BoxPage()),
+                  MaterialPageRoute(builder: (context) => const ViewPage()),
                 );
               },
               child: const Text('Box'),
