@@ -64,6 +64,52 @@ class StateTree {
         initializeAnyIfEmpty: initializeAnyIfEmpty);
   }
 
+  /// Resets the selection of a single [category] without touching the other
+  /// categories in the tree.
+  ///
+  /// Used by tabbed selectors (e.g. [GridSelect]) where tapping "Reset" should
+  /// clear only the currently focused category's selection while leaving the
+  /// remaining tabs untouched.
+  ///
+  /// The category's selected children are removed, its header/footer
+  /// selections are dropped, and it is removed from the root selection. When
+  /// [initializeAnyIfEmpty] is true and the category owns an "Any" child, that
+  /// child is restored as the default selection (matching the behaviour of
+  /// [reset] for the whole tree).
+  void resetCategory(
+    SelectCategoryEntry category, {
+    required bool initializeAnyIfEmpty,
+  }) {
+    // Drop the category from the root selection (level 0).
+    _selectedEntriesPerLevel.elementAtOrNull(0)?.remove(category);
+
+    // Clear the category's selected children at level 1.
+    final level1 = _selectedEntriesPerLevel.elementAtOrNull(1);
+    if (level1 != null) {
+      level1.removeWhere(
+        (e) => e is SelectChildEntry && e.parentId == category.id,
+      );
+    }
+
+    // Clear this category's header / footer selections.
+    _selectedHeaderEntries.remove(category.id);
+    _selectedFooterEntries.remove(category.id);
+
+    if (!initializeAnyIfEmpty) return;
+
+    // Restore the default "Any" selection for this category, mirroring
+    // [_initializeAnySelection].
+    final anyItem = category.children?.singleWhereOrNull(testAnyElement);
+    if (anyItem == null) return;
+    ensureLevels(2);
+    final selectedChildren = _selectedEntriesPerLevel[1];
+    selectedChildren.removeWhere(
+      (e) => e is SelectChildEntry && e.parentId == category.id,
+    );
+    selectedChildren.add(anyItem);
+    _selectedEntriesPerLevel[0].add(category);
+  }
+
   SelectEntries selectedEntriesAtLevel(int level) {
     return _selectedEntriesPerLevel.elementAtOrNull(level) ?? {};
   }

@@ -161,7 +161,12 @@ class GridSelectState extends State<GridSelect> {
   }
 
   void _onResetTap() {
-    controller?.resetState(initializeAnyIfEmpty: true);
+    // Reset only the currently focused category (tab) rather than every
+    // category, so selections in the other tabs are preserved.
+    controller?.resetCategoryState(
+      _tempSelectedCategory,
+      initializeAnyIfEmpty: true,
+    );
     setState(() {});
     controller?.reset();
   }

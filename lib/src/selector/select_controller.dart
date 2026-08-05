@@ -208,6 +208,20 @@ class SelectController extends ChangeNotifier {
     _notifyListenersIfAlive();
   }
 
+  /// Resets the selection of a single [category], leaving all other
+  /// categories' selections untouched.
+  ///
+  /// This is the per-tab counterpart of [resetState] and is used by tabbed
+  /// selectors (e.g. [GridSelect]) where "Reset" should clear only the
+  /// currently focused category.
+  void resetCategoryState(
+    SelectCategoryEntry category, {
+    required bool initializeAnyIfEmpty,
+  }) {
+    tree.resetCategory(category, initializeAnyIfEmpty: initializeAnyIfEmpty);
+    _notifyListenersIfAlive();
+  }
+
   void trimSelectionLevels(int count) {
     tree.trimLevels(count);
     tree.trimTrailingEmptyLevels();

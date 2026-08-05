@@ -504,6 +504,52 @@ void main() {
       expect(tree.selectedEntriesAtLevel(1).contains(b), isTrue);
       expect(tree.selectedEntriesAtLevel(1).contains(a), isFalse);
     });
+
+    test('resetCategory resets only the target category, keeping others', () {
+      final tree = StateTree();
+      final a1 = _text('c1', 'a1', 'A1');
+      final b1 = _text('c1', 'b1', 'B1');
+      final a2 = _text('c2', 'a2', 'A2');
+      final c1 = _category('c1', 'C1', children: {a1, b1});
+      final c2 = _category('c2', 'C2', children: {a2});
+      tree.bind([c1, c2], initializeAnyIfEmpty: false);
+
+      // Simulate: C1 has {a1, b1} selected, C2 has {a2} selected.
+      tree.mutableSelectedEntriesAtLevel(0).addAll({c1, c2});
+      tree.mutableSelectedEntriesAtLevel(1).addAll({a1, b1, a2});
+
+      // Reset only C1.
+      tree.resetCategory(c1, initializeAnyIfEmpty: false);
+
+      // C1's children are cleared and C1 is removed from root selection.
+      expect(tree.selectedEntriesAtLevel(1).contains(a1), isFalse);
+      expect(tree.selectedEntriesAtLevel(1).contains(b1), isFalse);
+      expect(tree.selectedEntriesAtLevel(0).contains(c1), isFalse);
+
+      // C2's selection is preserved.
+      expect(tree.selectedEntriesAtLevel(1).contains(a2), isTrue);
+      expect(tree.selectedEntriesAtLevel(0).contains(c2), isTrue);
+    });
+
+    test('resetCategory restores the Any child when initializeAnyIfEmpty is true',
+        () {
+      final tree = StateTree();
+      final any = SelectTextEntry<dynamic>.any(parentId: 'c', name: 'Any');
+      final a = _text('c', 'a', 'A');
+      final c = _category('c', 'C', children: {any, a});
+      tree.bind([c], initializeAnyIfEmpty: false);
+
+      // Select the concrete child.
+      tree.mutableSelectedEntriesAtLevel(0).add(c);
+      tree.mutableSelectedEntriesAtLevel(1).add(a);
+
+      tree.resetCategory(c, initializeAnyIfEmpty: true);
+
+      // The concrete child is replaced by the Any entry as the default.
+      expect(tree.selectedEntriesAtLevel(1).contains(a), isFalse);
+      expect(tree.selectedEntriesAtLevel(1).contains(any), isTrue);
+      expect(tree.selectedEntriesAtLevel(0).contains(c), isTrue);
+    });
   });
 
   group('StateTree – _restoreHeaderFooterSelected', () {
