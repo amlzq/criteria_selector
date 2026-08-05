@@ -1,5 +1,7 @@
 # Migration Guide
 
+## Next
+
 ## MIGRATE TO 0.5.0
 
 ### `SelectorListTile` / `SelectorListView` / `SelectorRange*` / `SelectorSideBar` / `SelectorTabBar` / `SelectorActionBar` / `SelectorChipBar` / `SelectorExpansionTile` / `SelectorFieldTile` / `SelectorGridTile` / `SelectorGridView` renamed to `Select*`
@@ -554,11 +556,11 @@ over `layout` is exhaustively checked by the compiler (the base class is
 `sealed`). When `layout` is `null`, a default `SelectorListLayout` is
 used at render time.
 
-The old fields are **deprecated but still available** as getters and constructor
-parameters. They are mapped to the new layouts with the priority
-`listConfig` > `gridConfig` > `chipConfig`, so existing code keeps compiling and
-behaving the same. The deprecated members will be removed in a future major
-version.
+The old fields were **removed** in the release after they were deprecated. Use
+the single `layout` property instead; the `listConfig` / `gridConfig` /
+`chipConfig` getters and constructor / `copyWith` parameters, along with the
+`SelectorListConfig` / `SelectorGridConfig` / `SelectorChipConfig` classes, are
+no longer available.
 
 **Before → After**
 
@@ -599,11 +601,9 @@ SelectorCategoryEntry(
 
 **Description**
 `SelectorBox` exposes its selection callback under the new name `onChanged`.
-The previous `onChangeTap` argument and the `onChangeTap` getter are now
-deprecated but still supported for backward compatibility, and will be removed
-in a future minor version. Passing both `onChanged` and `onChangeTap` triggers
-an assertion, so migrate existing call sites to `onChanged` to clear the
-deprecation warning.
+The previous `onChangeTap` argument and the `onChangeTap` getter were
+**removed** in the release after they were deprecated. Migrate existing call
+sites to `onChanged`.
 
 **Before → After**
 

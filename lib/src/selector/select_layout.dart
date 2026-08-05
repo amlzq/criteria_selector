@@ -2,10 +2,9 @@ import 'package:flutter/foundation.dart';
 
 /// Sealed layout descriptor for the children of a [SelectCategoryEntry].
 ///
-/// This replaces the previously separate, mutually-exclusive `listConfig`,
-/// `gridConfig` and `chipConfig` fields on [SelectCategoryEntry] with a single
-/// `layout` property. Use a [SelectListLayout] for a vertical list,
-/// [SelectGridLayout] for a grid, or [SelectChipLayout] for a wrap of chips.
+/// Select the layout of a category's children via a single `layout` property.
+/// Use a [SelectListLayout] for a vertical list, [SelectGridLayout] for a
+/// grid, or [SelectChipLayout] for a wrap of chips.
 ///
 /// Because the class is `sealed`, the compiler can exhaustively check `switch`
 /// statements over [SelectLayout], so adding a new layout later is a

@@ -57,14 +57,8 @@ class SelectView extends StatefulWidget {
     double? height,
     BoxConstraints? constraints,
     this.margin,
-    SelectCallback? onChanged,
-    @Deprecated(
-        'Use onChanged instead. This parameter will be removed in a future minor version.')
-    SelectCallback? onChangeTap,
+    this.onChanged,
   })  : assert(maxHeightFactor > 0 && maxHeightFactor <= 1),
-        assert(onChanged == null || onChangeTap == null,
-            'Use onChanged only; onChangeTap is deprecated.'),
-        onChanged = onChanged ?? onChangeTap,
         assert(margin == null || margin.isNonNegative),
         assert(padding == null || padding.isNonNegative),
         assert(decoration == null || decoration.debugAssertIsValid()),
@@ -90,14 +84,6 @@ class SelectView extends StatefulWidget {
 
   /// Fired when the selection changes.
   final SelectCallback? onChanged;
-
-  /// Fired when the selection changes.
-  ///
-  /// @Deprecated Use [onChanged] instead. This getter is retained only for
-  /// backward compatibility and will be removed in a future minor version.
-  @Deprecated(
-      'Use onChanged instead. This getter will be removed in a future minor version.')
-  SelectCallback? get onChangeTap => onChanged;
 
   /// Caps the selector's height to this fraction of the screen height when it
   /// is embedded in an unbounded context (e.g. a [Column] with

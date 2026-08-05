@@ -5,8 +5,6 @@
 /// its replacement and will be removed in a future minor version.
 library;
 
-import 'package:flutter/foundation.dart';
-
 import 'i18n/select_localizations.dart';
 import 'i18n/select_localizations_delegate.dart';
 import 'select_label_state.dart';
@@ -14,68 +12,6 @@ import 'select_overlay_style.dart';
 import 'selector/select_delegate.dart';
 import 'selector/select_layout.dart';
 import 'selector/widgets/widgets.dart';
-
-/// Deprecated layout configuration for the children of a [SelectCategoryEntry].
-///
-/// Use [SelectLayout] / [SelectListLayout] via
-/// [SelectCategoryEntry.layout] instead. This class is kept only for
-/// backward compatibility and will be removed in a future minor version.
-@Deprecated(
-  'Use SelectLayout / SelectListLayout via '
-  'SelectCategoryEntry.layout instead. '
-  'This class will be removed in a future minor version.',
-)
-@immutable
-class SelectorListConfig {
-  const SelectorListConfig();
-}
-
-/// Deprecated layout configuration for the children of a [SelectCategoryEntry].
-///
-/// Use [SelectLayout] / [SelectGridLayout] via
-/// [SelectCategoryEntry.layout] instead. This class is kept only for
-/// backward compatibility and will be removed in a future minor version.
-@Deprecated(
-  'Use SelectLayout / SelectGridLayout via '
-  'SelectCategoryEntry.layout instead. '
-  'This class will be removed in a future minor version.',
-)
-@immutable
-class SelectorGridConfig {
-  const SelectorGridConfig({
-    required this.crossAxisCount,
-    this.mainAxisSpacing = 0.0,
-    this.crossAxisSpacing = 0.0,
-    this.childAspectRatio = 1.0,
-  });
-
-  /// The number of children in the cross axis.
-  final int crossAxisCount;
-
-  /// The spacing between children in the main axis.
-  final double mainAxisSpacing;
-
-  /// The spacing between children in the cross axis.
-  final double crossAxisSpacing;
-
-  /// The ratio of the cross-axis to the main-axis extent of each child.
-  final double childAspectRatio;
-}
-
-/// Deprecated layout configuration for the children of a [SelectCategoryEntry].
-///
-/// Use [SelectLayout] / [SelectChipLayout] via
-/// [SelectCategoryEntry.layout] instead. This class is kept only for
-/// backward compatibility and will be removed in a future minor version.
-@Deprecated(
-  'Use SelectLayout / SelectChipLayout via '
-  'SelectCategoryEntry.layout instead. '
-  'This class will be removed in a future minor version.',
-)
-@immutable
-class SelectorChipConfig {
-  const SelectorChipConfig();
-}
 
 /// Deprecated alias for [SelectLayout].
 ///
