@@ -1,4 +1,4 @@
-## Next
+## 0.6.0
 
 * **BUGFIX** fix `SelectRangeView` to honor the two-entry arrangement produced by `fetchPriceData`-style delegates: the range entry drives the slider and the custom entry drives the field display, with values written to the custom entry and `onChanged` only returning that custom entry.
 
