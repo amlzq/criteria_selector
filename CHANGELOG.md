@@ -1,5 +1,17 @@
 ## Next
 
+* **BUGFIX** fix `SelectRangeView` to honor the two-entry arrangement produced by `fetchPriceData`-style delegates: the range entry drives the slider and the custom entry drives the field display, with values written to the custom entry and `onChanged` only returning that custom entry.
+
+* **BUGFIX** `SelectRangeView` now restores the previously selected range from `selectedEntries` instead of always starting at the full extremes, also once a selection first becomes available after an initial empty build.
+
+* **BUGFIX** in `GridSelect`, tapping the reset button now resets only the currently focused category via the new `SelectController.resetCategoryState` / `StateTree.resetCategory` API, instead of resetting every category.
+
+* **FEATURE** add `SelectRangeView.fieldVariant` (`SelectFieldTileVariant?`), applied to the two `SelectFieldTile`s below the slider.
+
+* **IMPROVEMENT** `SelectFieldTile` now mirrors `SelectGridTile` by deriving the text color from the background brightness for selected filled tiles.
+
+* **FEATURE** add `SelectCounterLayout` as a new `SelectLayout` sealed subclass and the `SelectCounter` widget (`lib/src/selector/widgets/counter.dart`). `ListSelector` and `GridSelector` now route such categories to a single-valued stepper with `-` / value / `+` buttons, rendered in Material 3 filled style and disabled at the two extremes.
+
 * **BREAKING** remove the deprecated `SelectOverlayStyle.backgroundColor` constructor / `copyWith` parameter and getter (introduced in 0.5.0). Use `barrierColor` to set the scrim (backdrop) color instead; this field always controlled the scrim color, not the panel background. The `barrierColor` / `barrierIntercept` / `minWidth` / `maxWidth` behavior is unchanged.
 
 * **BREAKING** remove the deprecated `listConfig` / `gridConfig` / `chipConfig` fields and constructor / `copyWith` parameters on `SelectCategoryEntry` and the deprecated `SelectorListConfig` / `SelectorGridConfig` / `SelectorChipConfig` classes (introduced in 0.4.0). Use the single `SelectCategoryEntry.layout` property of the sealed `SelectLayout` type (`SelectListLayout` / `SelectGridLayout` / `SelectChipLayout`) instead; see [Migration guide](https://github.com/amlzq/criteria_selector/blob/main/MIGRATION.md#migrate-to-040).

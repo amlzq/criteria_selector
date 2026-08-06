@@ -1,7 +1,5 @@
 # Migration Guide
 
-## Next
-
 ## MIGRATE TO 0.5.0
 
 ### `SelectorListTile` / `SelectorListView` / `SelectorRange*` / `SelectorSideBar` / `SelectorTabBar` / `SelectorActionBar` / `SelectorChipBar` / `SelectorExpansionTile` / `SelectorFieldTile` / `SelectorGridTile` / `SelectorGridView` renamed to `Select*`
