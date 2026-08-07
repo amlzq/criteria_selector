@@ -41,7 +41,7 @@ const Map<Delegate, double> defaultChildAspectRatioByDelegate =
     <Delegate, double>{
   Delegate.cascading: 2.5,
   Delegate.grid: 2.5,
-  Delegate.flatten: 2.8,
+  Delegate.flatten: 3.0,
   Delegate.list: 2.5,
 };
 

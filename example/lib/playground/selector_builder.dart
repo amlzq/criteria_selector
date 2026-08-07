@@ -18,6 +18,34 @@ SelectChipVariant _chipVariant(TileVariant v) => v == TileVariant.outlined
 Widget _radioBuilder(BuildContext context, bool selected) =>
     MyRadio(value: selected);
 
+/// Zillow's flatten sample ([HouseFiltersRepository.fetchMoreData]) assigns a
+/// fixed [SelectGridLayout] (with its own column count / aspect ratio) to every
+/// category. That makes the playground's Columns / Aspect Ratio controls have no
+/// effect for the Flatten delegate, because [FlattenSelect] honors each
+/// category's layout over the delegate's `crossAxisCount` / `childAspectRatio`.
+///
+/// Strip those per-category layouts so the grid falls back to the delegate's
+/// `crossAxisCount` / `childAspectRatio` — i.e. the values driven by the
+/// controls panel. Other delegate families (and Leyoujia's flatten sample, which
+/// already ships layout-less categories) are unaffected.
+Future<SelectEntries> _flattenEntriesWithoutFixedLayout(
+  Future<SelectEntries> Function() loader,
+) async {
+  final entries = await loader();
+  return entries.map((entry) {
+    if (entry is SelectCategoryEntry) {
+      return SelectCategoryEntry(
+        id: entry.id,
+        name: entry.name,
+        children: entry.children,
+        selectionMode: entry.selectionMode,
+      );
+    }
+    return entry;
+  }).toSet();
+}
+
+
 Widget _checkboxBuilder(BuildContext context, bool selected) =>
     MyCheckbox(value: selected);
 
@@ -66,7 +94,7 @@ class PlaygroundDataSource {
         reset: repo.fetchRoomsResetData,
       ),
       flatten: DelegateLoaders(
-        entries: repo.fetchMoreData,
+        entries: () => _flattenEntriesWithoutFixedLayout(repo.fetchMoreData),
         selected: repo.fetchMoreSelectedData,
         reset: repo.fetchMoreResetData,
       ),
@@ -294,19 +322,49 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
   void _onChanged(Object? value) => setState(() => _lastChanged = value);
   void _onApplied(Object? value) => setState(() => _lastApplied = value);
 
-  /// Localized label of a delegate family, used as the [PopupSelectButton]
-  /// trigger label so it follows the currently selected [Delegate].
-  String _delegateLabel(Delegate delegate) {
-    switch (delegate) {
-      case Delegate.cascading:
-        return widget.l10n.layoutCascading;
-      case Delegate.grid:
-        return widget.l10n.layoutGrid;
-      case Delegate.flatten:
-        return widget.l10n.layoutFlatten;
-      case Delegate.list:
-        return widget.l10n.layoutList;
-    }
+  /// Builds the 4 per-delegate-family open buttons (Cascading / Grid / Flatten
+  /// / List). Each opens the current entry point's selector ([showSelect] or
+  /// [showModalBottomSelect]) with the matching delegate family, so users can
+  /// exercise every delegate from a single Dialog / Bottom Sheet screen.
+  ///
+  /// [open] is invoked with the resolved delegate and must return the selector
+  /// result future; it should call [showSelect] for the Dialog entry point or
+  /// [showModalBottomSelect] for the Bottom Sheet entry point.
+  Widget _familyOpenButtons(
+    BuildContext context,
+    Future<Object?> Function(BuildContext, SelectDelegate, Widget title) open,
+  ) {
+    final l10n = widget.l10n;
+    final entries = <(Delegate, String, String)>[
+      (Delegate.cascading, l10n.openCascadingSelect, l10n.titleCascadingSelect),
+      (Delegate.grid, l10n.openGridSelect, l10n.titleGridSelect),
+      (Delegate.flatten, l10n.openFlattenSelect, l10n.titleFlattenSelect),
+      (Delegate.list, l10n.openListSelect, l10n.titleListSelect),
+    ];
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: entries.map((e) {
+          final title = Text(e.$3);
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: FilledButton(
+              onPressed: () async {
+                final result = await open(
+                  context,
+                  _tabDelegate(e.$1),
+                  title,
+                );
+                _onApplied(result);
+              },
+              child: Text(e.$2),
+            ),
+          );
+        }).toList(),
+      ),
+    );
   }
 
   /// Builds a selector delegate for one tab of the dropdown bar, using the
@@ -350,17 +408,18 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
             children: <Widget>[
               Expanded(
                 child: SelectView(
-                  // The view owns a [SelectController] that is created once from
-                  // the delegate and NOT re-created on delegate changes. Key it by
-                  // the params that must reset that controller (language / delegate
-                  // / selection mode / tile variant). Columns / aspect ratio /
-                  // spacing are deliberately excluded: those now live in the
-                  // delegate cache key, so changing them yields a *new* delegate
-                  // object while the view stays mounted — `widget.delegate` updates
-                  // live and [SelectPanel] rebuilds with the new grid, and the
-                  // view keeps its in-progress selection instead of losing it.
+                  // Key the view by every param that affects its rendered output.
+                  // Columns / aspect ratio / spacing MUST be included: changing
+                  // them yields a new delegate object, but the Flatten delegate's
+                  // [FlattenSelect] is a stateful widget and its [ListView] children
+                  // (each [SelectGridView] has [AutomaticKeepAliveClientMixin]) can
+                  // cache the old layout when only the delegate object changes live.
+                  // Re-keying the view forces a clean rebuild so Columns / Aspect
+                  // Ratio actually take effect. The in-progress selection is not
+                  // lost: [buildDelegate] restores it from [selectionCache].
                   key: ValueKey(
-                    '${l10n.language}|${p.delegate}|${p.selectionMode}|'
+                    '${l10n.language}|${p.delegate}|${p.crossAxisCount}|'
+                    '${p.childAspectRatio}|${p.spacing}|${p.selectionMode}|'
                     '${p.tileVariant}',
                   ),
                   delegate: widget.delegate,
@@ -414,15 +473,55 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
           body: Column(
             children: <Widget>[
               Expanded(
-                child: Center(
-                  child: PopupSelectButton(
-                    selectDelegate: widget.delegate,
-                    // Follow the delegate selected in the controls panel so the
-                    // trigger always shows which family the popup uses
-                    // (Cascading / Grid / Flatten / List).
-                    label: _delegateLabel(p.delegate),
-                    onChanged: (selected) => _onChanged(selected),
-                    onApplied: (selected) => _onApplied(selected),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      // cascadingSelect: elevated style, aligned to the left.
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: PopupSelectButton.elevated(
+                          selectDelegate: _tabDelegate(Delegate.cascading),
+                          label: l10n.titleCascadingSelect,
+                          onChanged: (selected) => _onChanged(selected),
+                          onApplied: (selected) => _onApplied(selected),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      // gridSelect: filled style (default), centered.
+                      Align(
+                        alignment: Alignment.center,
+                        child: PopupSelectButton(
+                          selectDelegate: _tabDelegate(Delegate.grid),
+                          label: l10n.titleGridSelect,
+                          onChanged: (selected) => _onChanged(selected),
+                          onApplied: (selected) => _onApplied(selected),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      // flattenSelect: outlined style, aligned to the right.
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: PopupSelectButton.outlined(
+                          selectDelegate: _tabDelegate(Delegate.flatten),
+                          label: l10n.titleFlattenSelect,
+                          onChanged: (selected) => _onChanged(selected),
+                          onApplied: (selected) => _onApplied(selected),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      // listSelect: elevated style, offset 100px from the left edge.
+                      Padding(
+                        padding: const EdgeInsets.only(left: 100),
+                        child: PopupSelectButton.elevated(
+                          selectDelegate: _tabDelegate(Delegate.list),
+                          label: l10n.titleListSelect,
+                          onChanged: (selected) => _onChanged(selected),
+                          onApplied: (selected) => _onApplied(selected),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -438,16 +537,14 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
               Expanded(
                 child: Center(
                   child: Builder(
-                    builder: (ctx) => FilledButton(
-                      onPressed: () async {
-                        final result = await showSelect(
-                          context: ctx,
-                          delegate: widget.delegate,
-                          useRootNavigator: false,
-                        );
-                        _onApplied(result);
-                      },
-                      child: Text(l10n.openSelect),
+                    builder: (ctx) => _familyOpenButtons(
+                      ctx,
+                      (c, delegate, title) => showSelect(
+                        context: c,
+                        delegate: delegate,
+                        title: title,
+                        useRootNavigator: false,
+                      ),
                     ),
                   ),
                 ),
@@ -464,15 +561,13 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
               Expanded(
                 child: Center(
                   child: Builder(
-                    builder: (ctx) => FilledButton(
-                      onPressed: () async {
-                        final result = await showModalBottomSelect(
-                          context: ctx,
-                          delegate: widget.delegate,
-                        );
-                        _onApplied(result);
-                      },
-                      child: Text(l10n.openSelect),
+                    builder: (ctx) => _familyOpenButtons(
+                      ctx,
+                      (c, delegate, title) => showModalBottomSelect(
+                        context: c,
+                        delegate: delegate,
+                        title: title,
+                      ),
                     ),
                   ),
                 ),

@@ -21,152 +21,157 @@ class ControlsPanel extends StatelessWidget {
   bool get _gridRelevant =>
       params.delegate == Delegate.grid || params.delegate == Delegate.flatten;
 
-  // The popup bar demo owns 4 fixed tabs (one per delegate family), so the
-  // global Delegate selector no longer affects it and is disabled for that
-  // entry point.
-  bool get _delegateEnabled => params.entryPoint != EntryPoint.popupBar;
+  // The Delegate selector only controls the SelectView demo. The other entry
+  // points own their own per-delegate samples (popupBar/popupButton/dialog/
+  // bottomSheet each expose the 4 delegate families directly), so the global
+  // Delegate control is shown only for EntryPoint.view.
+  bool get _delegateVisible => params.entryPoint == EntryPoint.view;
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
-      children: <Widget>[
-        _SectionTitle(l10n.entryPoint),
-        _EnumDropdown<EntryPoint>(
-          value: params.entryPoint,
-          items: const {
-            EntryPoint.view: 'SelectView',
-            EntryPoint.popupBar: 'PopupSelectBar',
-            EntryPoint.popupButton: 'PopupSelectButton',
-            EntryPoint.dialog: 'showSelect',
-            EntryPoint.bottomSheet: 'showModalBottomSelect',
-          },
-          onChanged: (v) => onChanged(params.copyWith(entryPoint: v)),
-        ),
-        const SizedBox(height: 16),
-        _SectionTitle(l10n.delegate, enabled: _delegateEnabled),
-        _EnumDropdown<Delegate>(
-          value: params.delegate,
-          enabled: _delegateEnabled,
-          items: {
-            Delegate.cascading: l10n.layoutCascading,
-            Delegate.grid: l10n.layoutGrid,
-            Delegate.flatten: l10n.layoutFlatten,
-            Delegate.list: l10n.layoutList,
-          },
-          onChanged: (v) => onChanged(params.copyWith(
-            delegate: v,
-            crossAxisCount: defaultCrossAxisCountByDelegate[v],
-            childAspectRatio: defaultChildAspectRatioByDelegate[v],
-          )),
-        ),
-        const SizedBox(height: 16),
-        _SectionTitle(l10n.selectionMode),
-        SegmentedButton<SelectionMode>(
-          selected: {params.selectionMode},
-          onSelectionChanged: (set) =>
-              onChanged(params.copyWith(selectionMode: set.first)),
-          segments: <ButtonSegment<SelectionMode>>[
-            ButtonSegment(
-                value: SelectionMode.single, label: Text(l10n.single)),
-            ButtonSegment(
-                value: SelectionMode.multiple, label: Text(l10n.multiple)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          _SectionTitle(l10n.entryPoint),
+          _EnumDropdown<EntryPoint>(
+            value: params.entryPoint,
+            items: const {
+              EntryPoint.view: 'SelectView',
+              EntryPoint.popupBar: 'PopupSelectBar',
+              EntryPoint.popupButton: 'PopupSelectButton',
+              EntryPoint.dialog: 'showSelect',
+              EntryPoint.bottomSheet: 'showModalBottomSelect',
+            },
+            onChanged: (v) => onChanged(params.copyWith(entryPoint: v)),
+          ),
+          const SizedBox(height: 16),
+          if (_delegateVisible) ...<Widget>[
+            _SectionTitle(l10n.delegate),
+            _EnumDropdown<Delegate>(
+              value: params.delegate,
+              items: {
+                Delegate.cascading: l10n.layoutCascading,
+                Delegate.grid: l10n.layoutGrid,
+                Delegate.flatten: l10n.layoutFlatten,
+                Delegate.list: l10n.layoutList,
+              },
+              onChanged: (v) => onChanged(params.copyWith(
+                delegate: v,
+                crossAxisCount: defaultCrossAxisCountByDelegate[v],
+                childAspectRatio: defaultChildAspectRatioByDelegate[v],
+              )),
+            ),
+            const SizedBox(height: 16),
           ],
-        ),
-        const SizedBox(height: 16),
-        _SectionTitle(l10n.tileVariant),
-        SegmentedButton<TileVariant>(
-          selected: {params.tileVariant},
-          onSelectionChanged: (set) =>
-              onChanged(params.copyWith(tileVariant: set.first)),
-          segments: <ButtonSegment<TileVariant>>[
-            ButtonSegment(value: TileVariant.filled, label: Text(l10n.filled)),
-            ButtonSegment(
-                value: TileVariant.outlined, label: Text(l10n.outlined)),
-          ],
-        ),
-        const SizedBox(height: 16),
-        _SectionTitle(l10n.columns(params.crossAxisCount)),
-        Slider(
-          value: params.crossAxisCount.toDouble(),
-          min: 2,
-          max: 6,
-          divisions: 4,
-          label: '${params.crossAxisCount}',
-          onChanged: _gridRelevant
-              ? (v) => onChanged(params.copyWith(crossAxisCount: v.round()))
-              : null,
-        ),
-        _SectionTitle(
-            l10n.aspectRatio(params.childAspectRatio.toStringAsFixed(1))),
-        Slider(
-          value: params.childAspectRatio,
-          min: 1.0,
-          max: 4.0,
-          divisions: 30,
-          label: params.childAspectRatio.toStringAsFixed(1),
-          onChanged: _gridRelevant
-              ? (v) => onChanged(params.copyWith(childAspectRatio: v))
-              : null,
-        ),
-        _SectionTitle(l10n.spacing(params.spacing.round())),
-        Slider(
-          value: params.spacing,
-          min: 0,
-          max: 16,
-          divisions: 16,
-          label: params.spacing.round().toString(),
-          onChanged: _gridRelevant
-              ? (v) => onChanged(params.copyWith(spacing: v))
-              : null,
-        ),
-        const SizedBox(height: 16),
-        _SectionTitle(l10n.brightness),
-        SegmentedButton<Brightness?>(
-          selected: {params.brightness},
-          onSelectionChanged: (set) {
-            final brightness = set.first;
-            onChanged(params.copyWith(
-              brightness: brightness,
-              clearBrightness: brightness == null,
-            ));
-          },
-          segments: <ButtonSegment<Brightness?>>[
-            ButtonSegment(value: null, label: Text(l10n.follow)),
-            ButtonSegment(value: Brightness.light, label: Text(l10n.light)),
-            ButtonSegment(value: Brightness.dark, label: Text(l10n.dark)),
-          ],
-        ),
-        const SizedBox(height: 8),
-        _SectionTitle(l10n.seedColor),
-        Wrap(
-          spacing: 10,
-          runSpacing: 10,
-          children: <Widget>[
-            for (final color in seedColorPresets)
-              _ColorSwatch(
-                color: color,
-                selected: color.toARGB32 == params.seedColor.toARGB32,
-                onTap: () => onChanged(params.copyWith(seedColor: color)),
-              ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        SwitchListTile(
-          title: Text(l10n.material3),
-          value: params.useMaterial3,
-          onChanged: (v) => onChanged(params.copyWith(useMaterial3: v)),
-          contentPadding: EdgeInsets.zero,
-        ),
-      ],
+          _SectionTitle(l10n.selectionMode),
+          SegmentedButton<SelectionMode>(
+            selected: {params.selectionMode},
+            onSelectionChanged: (set) =>
+                onChanged(params.copyWith(selectionMode: set.first)),
+            segments: <ButtonSegment<SelectionMode>>[
+              ButtonSegment(
+                  value: SelectionMode.single, label: Text(l10n.single)),
+              ButtonSegment(
+                  value: SelectionMode.multiple, label: Text(l10n.multiple)),
+            ],
+          ),
+          const SizedBox(height: 16),
+          _SectionTitle(l10n.tileVariant),
+          SegmentedButton<TileVariant>(
+            selected: {params.tileVariant},
+            onSelectionChanged: (set) =>
+                onChanged(params.copyWith(tileVariant: set.first)),
+            segments: <ButtonSegment<TileVariant>>[
+              ButtonSegment(
+                  value: TileVariant.filled, label: Text(l10n.filled)),
+              ButtonSegment(
+                  value: TileVariant.outlined, label: Text(l10n.outlined)),
+            ],
+          ),
+          const SizedBox(height: 16),
+          _SectionTitle(l10n.columns(params.crossAxisCount)),
+          Slider(
+            value: params.crossAxisCount.toDouble(),
+            min: 2,
+            max: 6,
+            divisions: 4,
+            label: '${params.crossAxisCount}',
+            onChanged: _gridRelevant
+                ? (v) => onChanged(params.copyWith(crossAxisCount: v.round()))
+                : null,
+          ),
+          _SectionTitle(
+              l10n.aspectRatio(params.childAspectRatio.toStringAsFixed(1))),
+          Slider(
+            value: params.childAspectRatio,
+            min: 1.0,
+            max: 4.0,
+            divisions: 30,
+            label: params.childAspectRatio.toStringAsFixed(1),
+            onChanged: _gridRelevant
+                ? (v) => onChanged(params.copyWith(childAspectRatio: v))
+                : null,
+          ),
+          _SectionTitle(l10n.spacing(params.spacing.round())),
+          Slider(
+            value: params.spacing,
+            min: 0,
+            max: 16,
+            divisions: 16,
+            label: params.spacing.round().toString(),
+            onChanged: _gridRelevant
+                ? (v) => onChanged(params.copyWith(spacing: v))
+                : null,
+          ),
+          const SizedBox(height: 16),
+          _SectionTitle(l10n.brightness),
+          SegmentedButton<Brightness?>(
+            selected: {params.brightness},
+            onSelectionChanged: (set) {
+              final brightness = set.first;
+              onChanged(params.copyWith(
+                brightness: brightness,
+                clearBrightness: brightness == null,
+              ));
+            },
+            segments: <ButtonSegment<Brightness?>>[
+              ButtonSegment(value: null, label: Text(l10n.follow)),
+              ButtonSegment(value: Brightness.light, label: Text(l10n.light)),
+              ButtonSegment(value: Brightness.dark, label: Text(l10n.dark)),
+            ],
+          ),
+          const SizedBox(height: 8),
+          _SectionTitle(l10n.seedColor),
+          Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: <Widget>[
+              for (final color in seedColorPresets)
+                _ColorSwatch(
+                  color: color,
+                  selected: color.toARGB32 == params.seedColor.toARGB32,
+                  onTap: () => onChanged(params.copyWith(seedColor: color)),
+                ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          SwitchListTile(
+            title: Text(l10n.material3),
+            value: params.useMaterial3,
+            onChanged: (v) => onChanged(params.copyWith(useMaterial3: v)),
+            contentPadding: EdgeInsets.zero,
+          ),
+        ],
+      ),
     );
   }
 }
 
 class _SectionTitle extends StatelessWidget {
   final String text;
-  final bool enabled;
-  const _SectionTitle(this.text, {this.enabled = true});
+  const _SectionTitle(this.text);
 
   @override
   Widget build(BuildContext context) {
@@ -176,7 +181,7 @@ class _SectionTitle extends StatelessWidget {
       child: Text(
         text,
         style: Theme.of(context).textTheme.labelMedium?.copyWith(
-              color: enabled ? scheme.primary : scheme.onSurfaceVariant,
+              color: scheme.primary,
               fontWeight: FontWeight.w600,
             ),
       ),

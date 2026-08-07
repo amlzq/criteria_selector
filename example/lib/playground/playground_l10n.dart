@@ -91,6 +91,19 @@ class PlaygroundL10n {
   String get tapBarHint => _t('Tap the bar to open the select', '点击筛选栏打开选择器');
   String get openSelect => _t('Open Select', '打开选择器');
 
+  // Per-delegate open buttons (Dialog / Bottom Sheet entry points).
+  String get openCascadingSelect => _t('Open Cascading Select', '打开联动选择器');
+  String get openGridSelect => _t('Open Grid Select', '打开网格选择器');
+  String get openFlattenSelect => _t('Open Flatten Select', '打开平铺选择器');
+  String get openListSelect => _t('Open List Select', '打开列表选择器');
+
+  // Per-delegate titles for the Dialog / Bottom Sheet selectors.
+  String get titleCascadingSelect =>
+      _t('Cascading Select', '联动选择器');
+  String get titleGridSelect => _t('Grid Select', '网格选择器');
+  String get titleFlattenSelect => _t('Flatten Select', '平铺选择器');
+  String get titleListSelect => _t('List Select', '列表选择器');
+
   // Callback result panel.
   String get resultPanelTitle => _t('Callback results', '回调结果');
   String get onChangedLabel => 'onChanged';
