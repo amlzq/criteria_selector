@@ -298,7 +298,7 @@ class _SellPageState extends State<SellPage> {
           // ChoseChips
           // _controller.select();
           // _controller.showSelect();
-          // _controller.hideSelector();
+          // _controller.hideSelect();
           Expanded(
             child: StreamBuilder<List<House>>(
               stream: _repo.housesStream,

@@ -96,7 +96,7 @@ class PopupSelectBar extends StatefulWidget implements PreferredSizeWidget {
   /// [selectDelegates].
   final List<PopupTab> tabs;
 
-  /// Selector configuration for each tab.
+  /// Select configuration for each tab.
   final List<SelectDelegate> selectDelegates;
 
   /// The height of the [PopupSelectBar] itself.
@@ -224,7 +224,7 @@ class _PopupSelectBarState extends State<PopupSelectBar>
 
   // late List<SelectController> _selectControllers;
 
-  bool _debugHasScheduledValidSelectorCountCheck = false;
+  bool _debugHasScheduledValidSelectCountCheck = false;
 
   @override
   void initState() {
@@ -243,7 +243,7 @@ class _PopupSelectBarState extends State<PopupSelectBar>
       _removeChangeListener?.call();
       _removeApplyListener?.call();
       _removeResetListener?.call();
-      controller.hideSelector(immediate: true);
+      controller.hideSelect(immediate: true);
       controller.detachTickerProvider();
       if (widget.controller == null) {
         controller.dispose();
@@ -300,7 +300,7 @@ class _PopupSelectBarState extends State<PopupSelectBar>
     // Tapping a collapsed tab (or switching to a different one) will show the
     // overlay; tapping the already-expanded tab will hide it. Resolve the
     // intent before toggling so the matching pre-hook can run first.
-    final willShow = !_controller!.isSelectorShowing ||
+    final willShow = !_controller!.isSelectShowing ||
         _controller!.currentIndex != tabData.index;
 
     final proceed = willShow
@@ -311,9 +311,9 @@ class _PopupSelectBarState extends State<PopupSelectBar>
     final selector = widget.selectDelegates.elementAt(tabData.index);
     _controller!.previousSelectDelegate = selector;
 
-    _controller!.toggleSelector(index: tabData.index);
+    _controller!.toggleSelect(index: tabData.index);
 
-    if (_controller!.isSelectorShowing) {
+    if (_controller!.isSelectShowing) {
       widget.onSelectShowed?.call(tabData);
     } else {
       widget.onSelectHidden?.call(tabData);
@@ -323,8 +323,8 @@ class _PopupSelectBarState extends State<PopupSelectBar>
 
     // _controller.toggle(barHeight, tabData);
 
-    // return widget.onSelectorDone != null
-    //     ? () => widget.onSelectorDone!(index)
+    // return widget.onSelectDone != null
+    //     ? () => widget.onSelectDone!(index)
     //     : () {};
   }
 
@@ -335,12 +335,12 @@ class _PopupSelectBarState extends State<PopupSelectBar>
   //   return widget.height ?? inheritedTheme?.height ?? defaults.height!;
   // }
 
-  bool _debugScheduleCheckHasValidSelectorCount() {
-    if (_debugHasScheduledValidSelectorCountCheck) {
+  bool _debugScheduleCheckHasValidSelectCount() {
+    if (_debugHasScheduledValidSelectCountCheck) {
       return true;
     }
     WidgetsBinding.instance.addPostFrameCallback((Duration duration) {
-      _debugHasScheduledValidSelectorCountCheck = false;
+      _debugHasScheduledValidSelectCountCheck = false;
       if (!mounted) {
         return;
       }
@@ -353,14 +353,14 @@ class _PopupSelectBarState extends State<PopupSelectBar>
         }
         return true;
       }());
-    }, debugLabel: 'PopupSelectBar.validSelectorCountCheck');
-    _debugHasScheduledValidSelectorCountCheck = true;
+    }, debugLabel: 'PopupSelectBar.validSelectCountCheck');
+    _debugHasScheduledValidSelectCountCheck = true;
     return true;
   }
 
   @override
   Widget build(BuildContext context) {
-    assert(_debugScheduleCheckHasValidSelectorCount());
+    assert(_debugScheduleCheckHasValidSelectCount());
 
     final PopupSelectBarTheme defaults = _PopupSelectBarDefaults(context);
     final PopupSelectBarTheme? theme = PopupSelectBarTheme.maybeOf(context);
@@ -400,7 +400,7 @@ class _PopupSelectBarState extends State<PopupSelectBar>
                     indicator: widget.indicator,
                     unselectedIndicator: widget.unselectedIndicator,
                     child: _PopupSelectTabStyle(
-                      isSelected: (_controller?.isSelectorShowing == true &&
+                      isSelected: (_controller?.isSelectShowing == true &&
                               _controller!.currentIndex == i) ||
                           _controller?.labelStateMap[i]?.isResulted == true,
                       labelColor: widget.labelColor,
@@ -575,7 +575,7 @@ class PopupTab extends StatelessWidget {
     final PopupSelectController controller = PopupSelectController.of(context);
     final _PopupSelectTabInfo info = _PopupSelectTabInfo.of(context);
     final unselected = controller.currentIndex != info.index;
-    final isSelectorShowing = controller.isSelectorShowing;
+    final isSelectShowing = controller.isSelectShowing;
 
     PopupTabData? tabData = controller.labelStateMap.containsKey(info.index)
         ? controller.labelStateMap[info.index] as PopupTabData?
@@ -611,7 +611,7 @@ class PopupTab extends StatelessWidget {
                   theme,
                   defaults,
                   unselected,
-                  isSelectorShowing,
+                  isSelectShowing,
                 ),
               ],
             ),
@@ -625,7 +625,7 @@ class PopupTab extends StatelessWidget {
     PopupSelectBarTheme? theme,
     PopupSelectBarTheme defaults,
     bool unselected,
-    bool isSelectorShowing,
+    bool isSelectShowing,
   ) {
     final effectiveIndicator =
         info.indicator ?? theme?.indicator ?? defaults.indicator!;
@@ -653,7 +653,7 @@ class PopupTab extends StatelessWidget {
     }
 
     // Both indicators provided: switch statically based on the expanded state.
-    return isSelectorShowing ? effectiveIndicator : effectiveUnselected;
+    return isSelectShowing ? effectiveIndicator : effectiveUnselected;
   }
 }
 

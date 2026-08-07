@@ -117,7 +117,7 @@ class SelectOverlayHost extends StatelessWidget {
                 direction: direction,
                 style: resolvedStyle,
                 animation: controller.overlayAnimation,
-                onOverlayTap: () => controller.hideSelector(),
+                onOverlayTap: () => controller.hideSelect(),
                 child: SelectPanel(
                   controller: controller.selectController,
                   delegate: controller.previousSelectDelegate!,

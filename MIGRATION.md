@@ -62,6 +62,38 @@ PopupSelectButton(
 );
 ```
 
+### `PopupSelectController` lifecycle members renamed to `*Select*`
+
+The selector overlay visibility members on [`PopupSelectController`] have been
+renamed to drop the redundant `Selector` wording for consistency with the
+surrounding `Select*` / `PopupSelect*` naming:
+
+| Old member | New member |
+| --- | --- |
+| `PopupSelectController.hideSelector(...)` | `PopupSelectController.hideSelect(...)` |
+| `PopupSelectController.toggleSelector(...)` | `PopupSelectController.toggleSelect(...)` |
+| `PopupSelectController.isSelectorShowing` | `PopupSelectController.isSelectShowing` |
+
+The old names are kept as deprecated methods / getters that delegate to the new
+names for backward compatibility and **will be removed in a future minor
+version**. No behavior changes.
+
+Migration: replace each old name with its new counterpart at every call site.
+
+```dart
+// Before
+controller.toggleSelector(index: 0);
+if (controller.isSelectorShowing) {
+  controller.hideSelector();
+}
+
+// After
+controller.toggleSelect(index: 0);
+if (controller.isSelectShowing) {
+  controller.hideSelect();
+}
+```
+
 ## MIGRATE TO 0.5.0
 
 ### `SelectorListTile` / `SelectorListView` / `SelectorRange*` / `SelectorSideBar` / `SelectorTabBar` / `SelectorActionBar` / `SelectorChipBar` / `SelectorExpansionTile` / `SelectorFieldTile` / `SelectorGridTile` / `SelectorGridView` renamed to `Select*`

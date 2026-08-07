@@ -32,7 +32,7 @@ void main() {
         ),
       );
 
-      expect(controller.isSelectorShowing, isFalse);
+      expect(controller.isSelectShowing, isFalse);
       expect(find.byIcon(Icons.arrow_drop_down), findsOneWidget);
       expect(find.byIcon(Icons.arrow_drop_up), findsNothing);
 
@@ -40,7 +40,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(showed, isTrue);
-      expect(controller.isSelectorShowing, isTrue);
+      expect(controller.isSelectShowing, isTrue);
       // The default indicator (Icons.arrow_drop_down) rotates 180° to point up
       // while expanded; the icon data is unchanged, so assert on the rotation
       // rather than on a swapped Icons.arrow_drop_up widget.
@@ -59,7 +59,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(hidden, isTrue);
-      expect(controller.isSelectorShowing, isFalse);
+      expect(controller.isSelectShowing, isFalse);
       expect(find.byIcon(Icons.arrow_drop_down), findsOneWidget);
       final collapsedRotation = tester.widget<RotationTransition>(
         find.descendant(
@@ -101,13 +101,13 @@ void main() {
       await tester.tap(find.text('Sort'));
       await tester.pumpAndSettle();
 
-      expect(controller.isSelectorShowing, isTrue);
+      expect(controller.isSelectShowing, isTrue);
       expect(find.text('A'), findsOneWidget);
 
       await tester.tap(find.text('A'));
       await tester.pumpAndSettle();
 
-      expect(controller.isSelectorShowing, isFalse);
+      expect(controller.isSelectShowing, isFalse);
       expect(find.text('Sort'), findsNothing);
       expect(find.text('A'), findsOneWidget);
 
@@ -148,12 +148,12 @@ void main() {
       await tester.tap(find.text('Price'));
       await tester.pumpAndSettle();
 
-      expect(controller.isSelectorShowing, isTrue);
+      expect(controller.isSelectShowing, isTrue);
 
       await tester.tap(find.text('A'));
       await tester.pumpAndSettle();
 
-      expect(controller.isSelectorShowing, isFalse);
+      expect(controller.isSelectShowing, isFalse);
       expect(find.text('Custom'), findsOneWidget);
       expect(find.text('Price'), findsNothing);
       expect(applied, isNotNull);
@@ -194,21 +194,21 @@ void main() {
       await tester.tap(find.text('Multi'));
       await tester.pumpAndSettle();
 
-      expect(controller.isSelectorShowing, isTrue);
+      expect(controller.isSelectShowing, isTrue);
       expect(find.text('Reset'), findsOneWidget);
       expect(find.text('Apply'), findsOneWidget);
 
       await tester.tap(find.text('A'));
       await tester.pumpAndSettle();
 
-      expect(controller.isSelectorShowing, isTrue);
+      expect(controller.isSelectShowing, isTrue);
       expect(changed, isNotNull);
       expect(changed!.selected.any((e) => e.id == 'a'), isTrue);
 
       await tester.tap(find.text('Reset'));
       await tester.pumpAndSettle();
 
-      expect(controller.isSelectorShowing, isTrue);
+      expect(controller.isSelectShowing, isTrue);
       expect(resetCalled, isTrue);
     });
   });

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../selector/select_controller.dart';
 import 'select_entry.dart';
 
 /// Callback invoked with the currently selected entries.
@@ -17,19 +16,6 @@ enum SelectionMode {
   single,
   multiple,
 }
-
-/// Default horizontal padding for selector labels.
-const EdgeInsets kSelectorLabelPadding = EdgeInsets.symmetric(horizontal: 16.0);
-
-/// Default width for the category tile column.
-const kSelectorCategoryTileWidth = 80.0;
-
-/// Builds a selector widget from async data and its controller.
-typedef SelectorBuilder = Widget Function(
-  BuildContext context,
-  Future<SelectEntries>? asyncData,
-  SelectController selectController,
-);
 
 /// Builds a skeleton widget while selector data is loading.
 typedef SkeletonBuilder = Widget Function(BuildContext context);

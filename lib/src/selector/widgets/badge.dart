@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class SelectorBadge extends StatelessWidget {
-  const SelectorBadge({super.key, this.color});
+class SelectBadge extends StatelessWidget {
+  const SelectBadge({super.key, this.color});
 
   final Color? color;
 

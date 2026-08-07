@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'select_label_state.dart';
 import 'selector/select_controller.dart';
 import 'selector/select_delegate.dart';
 import 'selector/select_entry.dart';
-import 'select_label_state.dart';
 import 'selector/select_utils.dart';
 
 /// Tab label data for [PopupSelectBar].
@@ -163,7 +163,7 @@ class PopupSelectController extends ChangeNotifier {
 
   /// The [SelectController] for the currently active selector panel, if any.
   ///
-  /// Created when a selector is shown (see [_showSelector]) and disposed when
+  /// Created when a selector is shown (see [_showSelect]) and disposed when
   /// the overlay is hidden. Exposed so that [PopupSelectBar] can pass it to
   /// [SelectPanel] via its `controller` parameter.
   SelectController? get selectController => _selectController;
@@ -264,7 +264,7 @@ class PopupSelectController extends ChangeNotifier {
 
   @override
   void dispose() {
-    hideSelector(immediate: true);
+    hideSelect(immediate: true);
     _isDisposed = true;
     detachTickerProvider();
     labelStateMap.clear();
@@ -291,19 +291,30 @@ class PopupSelectController extends ChangeNotifier {
   ///
   /// If [index] differs from [currentIndex], the overlay is shown and
   /// [currentIndex] is updated.
-  void toggleSelector({int? index}) {
+  void toggleSelect({int? index}) {
     if (_isDisposed) return;
     if (currentIndex != index || !_isExpanded) {
-      _showSelector(index);
+      _showSelect(index);
       return;
     }
-    hideSelector();
+    hideSelect();
   }
 
-  bool get isSelectorShowing => _isExpanded;
+  /// @nodoc
+  @Deprecated(
+      'Use toggleSelect instead. This will be removed in a future minor version.')
+  void toggleSelector({int? index}) => toggleSelect(index: index);
+
+  /// Whether the selector overlay is currently showing.
+  bool get isSelectShowing => _isExpanded;
+
+  /// @nodoc
+  @Deprecated(
+      'Use isSelectShowing instead. This will be removed in a future minor version.')
+  bool get isSelectorShowing => isSelectShowing;
 
   /// Hides the selector overlay if it is showing.
-  void hideSelector({bool immediate = false}) {
+  void hideSelect({bool immediate = false}) {
     if (_isDisposed) {
       if (immediate) {
         _overlayAnimCtrl?.value = 0.0;
@@ -353,7 +364,13 @@ class PopupSelectController extends ChangeNotifier {
     });
   }
 
-  void _showSelector(int? index) {
+  /// @nodoc
+  @Deprecated(
+      'Use hideSelect instead. This will be removed in a future minor version.')
+  void hideSelector({bool immediate = false}) =>
+      hideSelect(immediate: immediate);
+
+  void _showSelect(int? index) {
     if (_isDisposed) return;
     if (index == null) return;
 
@@ -431,7 +448,7 @@ class PopupSelectController extends ChangeNotifier {
     if (_isDisposed) return;
     final labelState = labelStateMap[currentIndex];
     if (labelState == null) return;
-    hideSelector();
+    hideSelect();
     // Persist the applied selection back onto the delegate so that reopening
     // the selector (PopupSelectBar / PopupSelectButton / showSelect
     // / showModalBottomSelect) reconstructs its SelectController with
@@ -536,7 +553,7 @@ class PopupSelectController extends ChangeNotifier {
     if (ctx.invalidCustomHit) return false;
 
     selector.selectedData = selected;
-    _showSelector(tabIndex);
+    _showSelect(tabIndex);
     handleChange(selected);
     return true;
   }

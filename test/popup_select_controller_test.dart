@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 /// its public API (rather than via simulated taps). The real [PopupSelectBar]
 /// widget is mounted only to wire up the ticker provider, tab data and selector
 /// delegates the controller depends on; assertions then call
-/// `controller.toggleSelector` / `controller.hideSelector` directly.
+/// `controller.toggleSelect` / `controller.hideSelect` directly.
 void main() {
   group('PopupSelectController', () {
     Future<void> pumpBar(
@@ -29,7 +29,7 @@ void main() {
       );
     }
 
-    testWidgets('toggleSelector opens the requested panel', (tester) async {
+    testWidgets('toggleSelect opens the requested panel', (tester) async {
       final controller = PopupSelectController();
       await pumpBar(
         tester,
@@ -49,10 +49,10 @@ void main() {
         ],
       );
 
-      controller.toggleSelector(index: 0);
+      controller.toggleSelect(index: 0);
       await tester.pumpAndSettle();
 
-      expect(controller.isSelectorShowing, isTrue);
+      expect(controller.isSelectShowing, isTrue);
       expect(controller.currentIndex, 0);
       // The panel binds to tab 0's delegate and renders its entries.
       expect(find.text('A0'), findsOneWidget);
@@ -60,7 +60,7 @@ void main() {
     });
 
     testWidgets(
-        'toggleSelector switches to another open panel without closing the '
+        'toggleSelect switches to another open panel without closing the '
         'overlay and renders the new panel content', (tester) async {
       final controller = PopupSelectController();
       await pumpBar(
@@ -82,24 +82,24 @@ void main() {
       );
 
       // Open panel 0 first.
-      controller.toggleSelector(index: 0);
+      controller.toggleSelect(index: 0);
       await tester.pumpAndSettle();
       expect(controller.currentIndex, 0);
       expect(find.text('A0'), findsOneWidget);
 
       // While panel 0 is open, switch to panel 1 programmatically.
-      controller.toggleSelector(index: 1);
+      controller.toggleSelect(index: 1);
       await tester.pumpAndSettle();
 
       // The overlay must stay open (no collapse/reopen) and show panel 1.
-      expect(controller.isSelectorShowing, isTrue);
+      expect(controller.isSelectShowing, isTrue);
       expect(controller.currentIndex, 1);
       expect(find.text('A1'), findsOneWidget);
       // The previous panel's content is gone.
       expect(find.text('A0'), findsNothing);
     });
 
-    testWidgets('toggleSelector on the already-open panel closes it',
+    testWidgets('toggleSelect on the already-open panel closes it',
         (tester) async {
       final controller = PopupSelectController();
       await pumpBar(
@@ -120,19 +120,19 @@ void main() {
         ],
       );
 
-      controller.toggleSelector(index: 1);
+      controller.toggleSelect(index: 1);
       await tester.pumpAndSettle();
-      expect(controller.isSelectorShowing, isTrue);
+      expect(controller.isSelectShowing, isTrue);
       expect(controller.currentIndex, 1);
 
       // Tapping the same (open) index toggles it closed.
-      controller.toggleSelector(index: 1);
+      controller.toggleSelect(index: 1);
       await tester.pumpAndSettle();
 
-      expect(controller.isSelectorShowing, isFalse);
+      expect(controller.isSelectShowing, isFalse);
     });
 
-    testWidgets('hideSelector closes an open overlay', (tester) async {
+    testWidgets('hideSelect closes an open overlay', (tester) async {
       final controller = PopupSelectController();
       await pumpBar(
         tester,
@@ -147,17 +147,17 @@ void main() {
         ],
       );
 
-      controller.toggleSelector(index: 0);
+      controller.toggleSelect(index: 0);
       await tester.pumpAndSettle();
-      expect(controller.isSelectorShowing, isTrue);
+      expect(controller.isSelectShowing, isTrue);
 
-      controller.hideSelector();
+      controller.hideSelect();
       await tester.pumpAndSettle();
 
-      expect(controller.isSelectorShowing, isFalse);
+      expect(controller.isSelectShowing, isFalse);
     });
 
-    testWidgets('toggleSelector is a no-op for an out-of-range index',
+    testWidgets('toggleSelect is a no-op for an out-of-range index',
         (tester) async {
       final controller = PopupSelectController();
       await pumpBar(
@@ -174,10 +174,10 @@ void main() {
       );
 
       // Index 5 is not registered; the controller must not open or throw.
-      controller.toggleSelector(index: 5);
+      controller.toggleSelect(index: 5);
       await tester.pumpAndSettle();
 
-      expect(controller.isSelectorShowing, isFalse);
+      expect(controller.isSelectShowing, isFalse);
       expect(controller.currentIndex, isNull);
     });
   });

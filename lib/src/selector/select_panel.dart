@@ -10,7 +10,7 @@ import 'select_theme_data.dart';
 /// A widget that renders a [SelectDelegate] and manages its selection state.
 ///
 /// The panel loads [SelectDelegate.data] and displays the selector body once the data
-/// is available, or a skeleton while it is loading. Selector widgets rendered by
+/// is available, or a skeleton while it is loading. Select widgets rendered by
 /// the panel are styled according to [selectTheme].
 ///
 /// The selection state is driven by a [SelectController]. If [controller] is

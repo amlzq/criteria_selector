@@ -258,7 +258,10 @@ class CascadingSelectDelegate extends SelectDelegate {
   @override
   Widget buildSkeleton(BuildContext context) {
     return skeletonBuilder?.call(context) ??
-        CascadingSelectSkeleton(backgroundColor: backgroundColor);
+        CascadingSelectSkeleton(
+          sideBarWidth: sideBarTheme?.width,
+          backgroundColor: backgroundColor,
+        );
   }
 }
 

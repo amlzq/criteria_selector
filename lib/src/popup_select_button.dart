@@ -177,7 +177,7 @@ class PopupSelectButton extends StatefulWidget {
         assert(onSelectWillHide == null || onSelectorWillHide == null,
             'Either provide onSelectWillHide or onSelectorWillHide, not both.');
 
-  /// Selector configuration for the single trigger.
+  /// Select configuration for the single trigger.
   final SelectDelegate? selectDelegate;
 
   /// Visual style of the trigger button.
@@ -310,7 +310,7 @@ class _PopupSelectButtonState extends State<PopupSelectButton>
     _removeChangeListener?.call();
     _removeApplyListener?.call();
     _removeResetListener?.call();
-    _controller.hideSelector(immediate: true);
+    _controller.hideSelect(immediate: true);
     _controller.detachTickerProvider();
     _controller.dispose();
     super.dispose();
@@ -329,14 +329,14 @@ class _PopupSelectButtonState extends State<PopupSelectButton>
   void _handleWidgetReset() => widget.onReset?.call();
 
   Future<void> _handleTap() async {
-    final willShow = !_controller.isSelectorShowing;
+    final willShow = !_controller.isSelectShowing;
     bool proceed = willShow
         ? await widget.onSelectWillShow?.call() ?? true
         : await widget.onSelectWillHide?.call() ?? true;
     if (!proceed) return;
     _controller.previousSelectDelegate = widget.selectDelegate!;
-    _controller.toggleSelector(index: 0);
-    if (_controller.isSelectorShowing) {
+    _controller.toggleSelect(index: 0);
+    if (_controller.isSelectShowing) {
       widget.onSelectShowed?.call();
     } else {
       widget.onSelectHidden?.call();

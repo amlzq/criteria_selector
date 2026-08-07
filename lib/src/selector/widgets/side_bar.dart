@@ -9,6 +9,9 @@ import 'list_tile.dart';
 import 'side_bar_theme.dart';
 import 'skeleton_view.dart';
 
+/// Default width for the SelectSideBar.
+const kSelectSideBarWidth = 80.0;
+
 class SelectSideBar extends StatelessWidget {
   const SelectSideBar({
     super.key,
@@ -125,7 +128,7 @@ class SelectSideBar extends StatelessWidget {
         labelStyle: effectiveLabelStyle,
         selectedColor: effectiveSelectedColor,
         selectedTileColor: effectiveSelectedTileColor,
-        leading: SelectorBadge(
+        leading: SelectBadge(
             color: entry.hasChildren && selected
                 ? selectedColor
                 : Colors.transparent),
@@ -254,7 +257,7 @@ class _SelectSideBarDefaults extends SelectSideBarTheme {
   Color? get backgroundColor => _theme.backgroundColor;
 
   @override
-  double? get width => 80;
+  double? get width => kSelectSideBarWidth;
 
   @override
   EdgeInsetsGeometry? get padding => EdgeInsets.zero;

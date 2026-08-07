@@ -261,7 +261,7 @@ class SelectController extends ChangeNotifier {
     if (entry is! SelectChildEntry) return false;
 
     final path = tree.findPath(id, parentId: parentId);
-    final selectorMode = _effectiveSelectorSelectionMode();
+    final selectorMode = _effectiveSelectionMode();
 
     if (path == null || path.isEmpty) {
       if (tree.entries.isEmpty || tree.entries.first is SelectCategoryEntry) {
@@ -344,7 +344,7 @@ class SelectController extends ChangeNotifier {
     final entry = tree.findEntry(id, parentId: parentId);
     if (entry == null || entry is! SelectChildEntry) return false;
 
-    final selectorMode = _effectiveSelectorSelectionMode();
+    final selectorMode = _effectiveSelectionMode();
     final path = tree.findPath(id, parentId: parentId);
 
     if (path == null || path.isEmpty) {
@@ -425,7 +425,7 @@ class SelectController extends ChangeNotifier {
     return true;
   }
 
-  SelectionMode _effectiveSelectorSelectionMode() {
+  SelectionMode _effectiveSelectionMode() {
     if (selectionMode == SelectionMode.multiple) return SelectionMode.multiple;
     for (final entry in tree.entries) {
       if (entry is SelectCategoryEntry &&

@@ -41,8 +41,8 @@ Future<SelectEntries?> showSelect({
   RouteSettings? routeSettings,
   Offset? anchorPoint,
 }) {
-  final route = _SelectorDialogRoute<SelectEntries?>(
-    pageBuilder: (innerContext) => _SelectorDialog(
+  final route = _SelectDialogRoute<SelectEntries?>(
+    pageBuilder: (innerContext) => _SelectDialog(
       delegate: delegate,
       title: title,
       elevation: elevation,
@@ -67,8 +67,8 @@ Future<SelectEntries?> showSelect({
 ///
 /// Mirrors the structure of Flutter's `_TimePickerDialogRoute`: it builds the
 /// page via [pageBuilder] and applies a fade + scale transition.
-class _SelectorDialogRoute<T> extends RawDialogRoute<T> {
-  _SelectorDialogRoute({
+class _SelectDialogRoute<T> extends RawDialogRoute<T> {
+  _SelectDialogRoute({
     required WidgetBuilder pageBuilder,
     super.barrierDismissible = true,
     required Color barrierColor,
@@ -103,12 +103,12 @@ class _SelectorDialogRoute<T> extends RawDialogRoute<T> {
         );
 }
 
-/// The dialog body rendered by [_SelectorDialogRoute].
+/// The dialog body rendered by [_SelectDialogRoute].
 ///
 /// Wraps a [SelectPanel] and closes the route (returning the selection) when
 /// the panel fires its apply callback.
-class _SelectorDialog extends StatefulWidget {
-  const _SelectorDialog({
+class _SelectDialog extends StatefulWidget {
+  const _SelectDialog({
     required this.delegate,
     this.title,
     this.elevation,
@@ -123,10 +123,10 @@ class _SelectorDialog extends StatefulWidget {
   final Clip? clipBehavior;
 
   @override
-  State<_SelectorDialog> createState() => _SelectorDialogState();
+  State<_SelectDialog> createState() => _SelectDialogState();
 }
 
-class _SelectorDialogState extends State<_SelectorDialog> {
+class _SelectDialogState extends State<_SelectDialog> {
   // Guards against double-pop if both an apply callback and a barrier dismiss
   // race (e.g. on some platforms).
   bool _popped = false;
@@ -164,8 +164,7 @@ class _SelectorDialogState extends State<_SelectorDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            if (widget.title != null)
-              _SelectorDialogHeader(title: widget.title!),
+            if (widget.title != null) _SelectDialogHeader(title: widget.title!),
             // `loose` lets the panel take only as much height as it needs when
             // content is small, but never exceed the free space (0.7 screen
             // height minus the header) when content is large, so the selector
@@ -181,9 +180,9 @@ class _SelectorDialogState extends State<_SelectorDialog> {
   }
 }
 
-/// Optional header shown above the selector panel inside [_SelectorDialog].
-class _SelectorDialogHeader extends StatelessWidget {
-  const _SelectorDialogHeader({required this.title});
+/// Optional header shown above the selector panel inside [_SelectDialog].
+class _SelectDialogHeader extends StatelessWidget {
+  const _SelectDialogHeader({required this.title});
 
   final Widget title;
 

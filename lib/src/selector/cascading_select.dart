@@ -793,14 +793,17 @@ class CascadingSelectSkeleton extends StatelessWidget {
   const CascadingSelectSkeleton({
     super.key,
     this.backgroundColor,
+    this.sideBarWidth,
   });
 
   final Color? backgroundColor;
+  final double? sideBarWidth;
 
   @override
   Widget build(BuildContext context) {
     final effectiveBackgroundColor =
         backgroundColor ?? SelectTheme.of(context).backgroundColor;
+    final effectiveSideBarWidth = sideBarWidth ?? kSelectSideBarWidth;
     final random = Random();
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -810,7 +813,7 @@ class CascadingSelectSkeleton extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                width: kSelectorCategoryTileWidth,
+                width: effectiveSideBarWidth,
                 color: effectiveBackgroundColor,
                 child: SkeletonView(
                   child: ListView.separated(
@@ -848,7 +851,7 @@ class CascadingSelectSkeleton extends StatelessWidget {
                       itemBuilder: (context, index) {
                         return SkeletonTile(
                           random: random,
-                          widthUsed: kSelectorCategoryTileWidth + 30,
+                          widthUsed: effectiveSideBarWidth + 30,
                           height: kSelectListTileHeight,
                           borderRadius: BorderRadius.circular(4),
                         );

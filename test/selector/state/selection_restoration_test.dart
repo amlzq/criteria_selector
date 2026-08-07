@@ -61,7 +61,7 @@ void main() {
       // `handleApply`, which writes the selection back to `selectedData`).
       await tester.tap(find.widgetWithText(PopupTab, 'Filter'));
       await tester.pumpAndSettle();
-      expect(controller.isSelectorShowing, isTrue);
+      expect(controller.isSelectShowing, isTrue);
       await tester.tap(find.text('A'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Apply'));
@@ -77,7 +77,7 @@ void main() {
       await tester.tap(find.widgetWithText(PopupTab, 'A'));
       await tester.pumpAndSettle();
 
-      expect(controller.isSelectorShowing, isTrue);
+      expect(controller.isSelectShowing, isTrue);
       expect(controller.selectController, isNotNull);
       expect(
           controller.selectController!.previousSelected!
