@@ -8,7 +8,6 @@ class _TestDelegate extends SelectDelegate {
   _TestDelegate({
     required this.bodyBuilder,
     super.entriesLoader,
-    super.selectedEntriesLoader,
   });
 
   final Widget Function(

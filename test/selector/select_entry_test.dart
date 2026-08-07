@@ -521,7 +521,7 @@ void main() {
     test('copyWith with layout', () {
       final c = _category('c', 'C', children: {_text('c', 'a', 'A')});
 
-      final gridLayout = const SelectGridLayout(crossAxisCount: 3);
+      const gridLayout = SelectGridLayout(crossAxisCount: 3);
       final copied = c.copyWith(layout: gridLayout);
 
       expect(copied.layout, equals(gridLayout));

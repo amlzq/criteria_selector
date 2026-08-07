@@ -257,14 +257,14 @@ void main() {
         (tester) async {
       const radius = 10.0;
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
             body: SizedBox(
               width: 300,
               child: SelectRangeSlider(
                 min: 0,
                 max: 100,
-                values: const RangeValues(0, 100),
+                values: RangeValues(0, 100),
                 thumbRadius: radius,
                 onChanged: _noop,
               ),
@@ -290,14 +290,14 @@ void main() {
     testWidgets('enlarges the pressed thumb by 1.25x while dragging',
         (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
             body: SizedBox(
               width: 300,
               child: SelectRangeSlider(
                 min: 0,
                 max: 100,
-                values: const RangeValues(20, 80),
+                values: RangeValues(20, 80),
                 divisions: 10,
                 onChanged: _noop,
               ),
@@ -305,7 +305,7 @@ void main() {
           ),
         ),
       );
-      final scalesOf = () => tester
+      List<double> scalesOf() => tester
           .widgetList<AnimatedScale>(
             find.byWidgetPredicate((w) => w is AnimatedScale),
           )

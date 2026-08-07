@@ -130,7 +130,12 @@ void main() {
         find.byWidgetPredicate((w) => w is Material && w.elevation > 0),
         findsNothing,
       );
-      expect(find.byType(ColoredBox), findsOneWidget);
+      // The Scaffold also contributes a transparent ColoredBox, so filter for
+      // the panel's own (opaque) ColoredBox background specifically.
+      final panelColoredBox = find.byWidgetPredicate(
+        (w) => w is ColoredBox && w.color.a == 1.0,
+      );
+      expect(panelColoredBox, findsOneWidget);
     });
 
     testWidgets('delegate.panelTheme is applied without a selectTheme',
