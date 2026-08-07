@@ -1,3 +1,7 @@
+## Next
+
+* **FEATURE** `FlattenSelect` now consumes `SelectCategoryEntry.layout` via an exhaustive `switch (layout)`, matching the behavior already present in `ListSelect` / `GridSelect`. Each category's right-side content renders as a `SelectListView`, `SelectGridView`, `SelectChipBar`, `SelectRangeView`, or `SelectCounter` depending on its layout, with the grid/list/counter/range layout-specific parameters (`crossAxisCount`, spacing, `childAspectRatio`, `toText`, etc.) and the delegate theme overrides (grid/field/chip) honored. When `layout` is null, it falls back to the grid using the widget's own `crossAxisCount` / `mainAxisSpacing` / `crossAxisSpacing` / `childAspectRatio`, so existing default behavior is unchanged.
+
 ## 0.6.0
 
 * **BUGFIX** fix `SelectRangeView` to honor the two-entry arrangement produced by `fetchPriceData`-style delegates: the range entry drives the slider and the custom entry drives the field display, with values written to the custom entry and `onChanged` only returning that custom entry.

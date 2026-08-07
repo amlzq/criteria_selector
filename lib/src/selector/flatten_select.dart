@@ -6,6 +6,7 @@ import 'constants.dart';
 import 'select_controller.dart';
 import 'select_delegate.dart';
 import 'select_entry.dart';
+import 'select_layout.dart';
 import 'select_theme.dart';
 import 'widgets/widgets.dart';
 
@@ -286,6 +287,109 @@ class FlattenSelectState extends State<FlattenSelect> {
     controller?.applyFromState();
   }
 
+  /// Builds the right-side content for a single category by exhaustively
+  /// consuming [SelectCategoryEntry.layout], mirroring [ListSelect] and
+  /// [GridSelect]. When a category has no layout, it falls back to the grid
+  /// using this widget's own cross-axis parameters, so the default behaviour
+  /// is unchanged.
+  Widget _buildCategoryView(
+    SelectCategoryEntry category, {
+    required int index,
+    required bool isLast,
+  }) {
+    final entries = category.children?.toList() ?? [];
+    final selectedEntries =
+        controller?.selectedEntriesForParent(category.id, level: 1) ?? {};
+    final layout = category.layout ??
+        SelectGridLayout(
+          crossAxisCount: widget.crossAxisCount,
+          mainAxisSpacing: widget.mainAxisSpacing,
+          crossAxisSpacing: widget.crossAxisSpacing,
+          childAspectRatio: widget.childAspectRatio,
+        );
+
+    final view = switch (layout) {
+      SelectListLayout(:final toText) => SelectListView(
+          key: ValueKey('category_$index'),
+          category: category,
+          showTitle: false,
+          entries: entries,
+          selectedEntries: selectedEntries,
+          onChanged: (_, entry) =>
+              _onTerminalItemTap(entry as SelectChildEntry),
+          toText: toText,
+        ),
+      SelectGridLayout(
+        :final crossAxisCount,
+        :final mainAxisSpacing,
+        :final crossAxisSpacing,
+        :final childAspectRatio,
+        :final toText,
+      ) =>
+        SelectGridView(
+          key: ValueKey('category_$index'),
+          crossAxisCount: crossAxisCount,
+          mainAxisSpacing: mainAxisSpacing,
+          crossAxisSpacing: crossAxisSpacing,
+          childAspectRatio: childAspectRatio,
+          tileVariant: delegate.gridTileTheme?.variant,
+          fieldVariant: delegate.fieldTileTheme?.variant,
+          category: category,
+          showTitle: false,
+          entries: entries,
+          selectedEntries: selectedEntries,
+          onChanged: (_, entry) =>
+              _onTerminalItemTap(entry as SelectChildEntry),
+          toText: toText,
+        ),
+      SelectChipLayout() => SelectChipBar(
+          key: ValueKey('category_$index'),
+          category: category,
+          entries: entries,
+          selectedEntries: selectedEntries,
+          showTitle: false,
+          isWrapable: true,
+          backgroundColor: delegate.chipBarTheme?.backgroundColor,
+          padding: delegate.chipBarTheme?.padding,
+          variant: delegate.chipBarTheme?.variant,
+          chipColor: delegate.chipBarTheme?.chipColor,
+          selectedChipColor: delegate.chipBarTheme?.selectedChipColor,
+          labelStyle: delegate.chipBarTheme?.labelStyle,
+          selectedLabelStyle: delegate.chipBarTheme?.selectedLabelStyle,
+          onChanged: (_, item) => _onTerminalItemTap(item as SelectChildEntry),
+        ),
+      SelectRangeLayout(:final toText) => SelectRangeView(
+          key: ValueKey('category_$index'),
+          category: category,
+          showTitle: false,
+          toText: toText,
+          entries: entries,
+          selectedEntries: selectedEntries,
+          fieldVariant: delegate.fieldTileTheme?.variant,
+          onChanged: (_, entry) =>
+              _onTerminalItemTap(entry as SelectChildEntry),
+        ),
+      SelectCounterLayout() => SelectCounter(
+          key: ValueKey('category_$index'),
+          category: category,
+          showTitle: false,
+          entries: entries,
+          selectedEntries: selectedEntries,
+          onChanged: (_, entry) =>
+              _onTerminalItemTap(entry as SelectChildEntry),
+        ),
+    };
+
+    // The outer ListView handles vertical scrolling; the inner view must not
+    // add another vertical scrollable in the same axis. Every branch above
+    // either is non-scrollable (chip/range/counter) or self-sizes its internal
+    // scroll view (list/grid), so nesting is safe.
+    return Padding(
+      padding: EdgeInsets.only(top: 18, bottom: isLast ? 18 : 0),
+      child: view,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = SelectTheme.of(context);
@@ -343,27 +447,11 @@ class FlattenSelectState extends State<FlattenSelect> {
                       children: widget.entries.mapIndexed((index, item) {
                         final category =
                             widget.entries[index] as SelectCategoryEntry;
-                        final entries = category.children?.toList() ?? [];
-                        final selectedEntries =
-                            controller?.selectedEntriesForParent(category.id,
-                                    level: 1) ??
-                                {};
                         final isLast = item == widget.entries.last;
-                        return SelectGridView(
-                          key: ValueKey('category_$index'),
-                          crossAxisCount: widget.crossAxisCount,
-                          childAspectRatio: widget.childAspectRatio,
-                          mainAxisSpacing: widget.mainAxisSpacing,
-                          crossAxisSpacing: widget.crossAxisSpacing,
-                          tileVariant: delegate.gridTileTheme?.variant,
-                          fieldVariant: delegate.fieldTileTheme?.variant,
-                          category: category,
-                          entries: entries,
-                          selectedEntries: selectedEntries,
-                          onChanged: (_, entry) =>
-                              _onTerminalItemTap(entry as SelectChildEntry),
-                          padding:
-                              EdgeInsets.only(top: 18, bottom: isLast ? 18 : 0),
+                        return _buildCategoryView(
+                          category,
+                          index: index,
+                          isLast: isLast,
                         );
                       }).toList(),
                     ),

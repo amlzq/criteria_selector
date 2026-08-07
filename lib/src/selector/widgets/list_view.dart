@@ -298,7 +298,7 @@ class SelectListViewState extends State<SelectListView>
           // List of items
           ListView.separated(
             shrinkWrap: true,
-            physics: const ClampingScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             padding: EdgeInsets.zero,
             itemCount: entriesWithoutCustom.length,
             itemBuilder: (context, index) {
