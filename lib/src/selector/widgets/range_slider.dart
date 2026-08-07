@@ -391,7 +391,7 @@ class _Thumb extends StatelessWidget {
         border: Border.all(color: border, width: highlighted ? 2.0 : 1.5),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withValues(alpha: 0.08),
             blurRadius: 2,
             offset: const Offset(0, 1),
           ),
@@ -416,7 +416,7 @@ class _SelectRangeSliderDefaults extends SelectRangeSliderTheme {
 
   @override
   TextStyle? get endLabelStyle => _textTheme.bodyMedium?.copyWith(
-        color: _theme.onBackgroundColorHighest.withOpacity(0.7),
+        color: _theme.onBackgroundColorHighest.withValues(alpha: 0.7),
       );
 
   @override

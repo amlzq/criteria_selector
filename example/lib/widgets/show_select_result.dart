@@ -29,7 +29,9 @@ void showSelectResult(
   _latestResult = result;
   _debounceTimer?.cancel();
   _debounceTimer = Timer(debounceInterval, () {
-    _showSnackBar(context, _latestResult!);
+    if (context.mounted) {
+      _showSnackBar(context, _latestResult!);
+    }
   });
 }
 
@@ -42,26 +44,28 @@ void _showSnackBar(BuildContext context, SelectEntries result) {
       action: SnackBarAction(
         label: l10n?.view ?? '',
         onPressed: () {
-          showModalBottomSheet<void>(
-            context: context,
-            isScrollControlled: true,
-            builder: (context) {
-              return SafeArea(
-                child: FractionallySizedBox(
-                  widthFactor: 1,
-                  heightFactor: 0.8,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: SingleChildScrollView(
-                      child: SelectableText(
-                        l10n?.selectResult('$result') ?? '$result',
+          if (context.mounted) {
+            showModalBottomSheet<void>(
+              context: context,
+              isScrollControlled: true,
+              builder: (context) {
+                return SafeArea(
+                  child: FractionallySizedBox(
+                    widthFactor: 1,
+                    heightFactor: 0.8,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: SingleChildScrollView(
+                        child: SelectableText(
+                          l10n?.selectResult('$result') ?? '$result',
+                        ),
                       ),
                     ),
                   ),
-                ),
-              );
-            },
-          );
+                );
+              },
+            );
+          }
         },
       ),
     ),

@@ -503,8 +503,8 @@ class _ResultPanel extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final background = isDark
-        ? Colors.white.withOpacity(0.08)
-        : Colors.black.withOpacity(0.05);
+        ? Colors.white.withValues(alpha: 0.08)
+        : Colors.black.withValues(alpha: 0.05);
     final labelStyle = theme.textTheme.labelSmall?.copyWith(
       fontWeight: FontWeight.w600,
     );

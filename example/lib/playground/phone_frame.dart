@@ -51,7 +51,7 @@ class PhoneFrame extends StatelessWidget {
         borderRadius: BorderRadius.circular(46),
         boxShadow: <BoxShadow>[
           BoxShadow(
-            color: Colors.black.withOpacity(0.28),
+            color: Colors.black.withValues(alpha: 0.28),
             blurRadius: 40,
             offset: const Offset(0, 20),
           ),
@@ -134,7 +134,7 @@ class _HomeIndicator extends StatelessWidget {
           width: 120,
           height: 5,
           decoration: BoxDecoration(
-            color: fg.withOpacity(0.45),
+            color: fg.withValues(alpha: 0.45),
             borderRadius: BorderRadius.circular(3),
           ),
         ),

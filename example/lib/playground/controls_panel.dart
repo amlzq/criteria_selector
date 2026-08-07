@@ -146,7 +146,7 @@ class ControlsPanel extends StatelessWidget {
             for (final color in seedColorPresets)
               _ColorSwatch(
                 color: color,
-                selected: color.value == params.seedColor.value,
+                selected: color.toARGB32 == params.seedColor.toARGB32,
                 onTap: () => onChanged(params.copyWith(seedColor: color)),
               ),
           ],
@@ -200,7 +200,7 @@ class _EnumDropdown<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<T>(
-      value: value,
+      initialValue: value,
       isExpanded: true,
       items: <DropdownMenuItem<T>>[
         for (final entry in items.entries)

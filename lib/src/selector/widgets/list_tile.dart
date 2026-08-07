@@ -177,10 +177,10 @@ class _SelectListTileDefaults extends SelectListTileTheme {
         var groupValue = 2;
         if (selected) groupValue = value;
         return IgnorePointer(
-          child: Radio<int>(
+          child: RadioGroup<int>(
             groupValue: groupValue,
-            value: value,
-            onChanged: (int? newValue) {},
+            onChanged: (int? value) {},
+            child: const Radio<int>(value: value),
           ),
         );
       };

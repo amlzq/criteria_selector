@@ -400,7 +400,8 @@ class _PopupSelectButtonState extends State<PopupSelectButton>
     final iconColor = resolved.iconColor ?? foregroundColor;
     final padding = resolved.padding ??
         const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0);
-    final splash = resolved.overlayColor ?? foregroundColor.withOpacity(0.12);
+    final splash =
+        resolved.overlayColor ?? foregroundColor.withValues(alpha: 0.12);
 
     final icon = widget.icon ?? const Icon(Icons.arrow_drop_down, size: 20);
 
@@ -445,7 +446,7 @@ class _PopupSelectButtonState extends State<PopupSelectButton>
       child: InkWell(
         onTap: _handleTap,
         splashColor: splash,
-        highlightColor: splash.withOpacity(0.5),
+        highlightColor: splash.withValues(alpha: 0.5),
         borderRadius: inkBorderRadius,
         child: Padding(
           padding: padding,
@@ -529,7 +530,7 @@ class _PopupSelectButtonDefaults extends PopupSelectButtonTheme {
       const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0);
 
   @override
-  Color? get overlayColor => foregroundColor?.withOpacity(0.12);
+  Color? get overlayColor => foregroundColor?.withValues(alpha: 0.12);
 }
 
 /// Deprecated alias for [PopupSelectButton].
