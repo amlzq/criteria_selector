@@ -39,7 +39,7 @@ class _HousePageState extends State<HousePage> {
   Timer? _moreApplyTextDebounce;
   int _moreApplyTextRequestId = 0;
 
-  /// Identifies the filter bar content so [onSelectorWillShow] can measure its
+  /// Identifies the filter bar content so [onSelectWillShow] can measure its
   /// current on-screen position and scroll it to a pinned (sticky) position.
   final GlobalKey _filterHeaderKey = GlobalKey();
 
@@ -514,7 +514,7 @@ class _HousePageState extends State<HousePage> {
                   selectionMode: SelectionMode.single,
                 ),
               ],
-              onSelectorWillShow: (PopupTabData tabData) async {
+              onSelectWillShow: (PopupTabData tabData) async {
                 // Programmatic sticky: scroll exactly enough so the filter bar
                 // (SliverPersistentHeader) pins just below the collapsed app
                 // bar, then let the overlay anchor to that final layout.
@@ -538,14 +538,14 @@ class _HousePageState extends State<HousePage> {
                 }
                 return true;
               },
-              onSelectorShowed: (PopupTabData tabData) {
+              onSelectShowed: (PopupTabData tabData) {
                 debugPrint('onShowed: ${tabData.label}');
               },
-              onSelectorWillHide: (PopupTabData tabData) {
+              onSelectWillHide: (PopupTabData tabData) {
                 debugPrint('onWillHide: ${tabData.label}');
                 return true;
               },
-              onSelectorHidden: (PopupTabData tabData) {
+              onSelectHidden: (PopupTabData tabData) {
                 debugPrint('onHidden: ${tabData.label}');
               },
               onChanged: (tabData, selected) {

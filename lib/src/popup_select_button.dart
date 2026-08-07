@@ -55,17 +55,39 @@ class PopupSelectButton extends StatefulWidget {
     this.child,
     this.icon,
     this.overlayStyle,
-    this.onSelectorShowed,
-    this.onSelectorHidden,
-    this.onSelectorWillShow,
-    this.onSelectorWillHide,
+    VoidCallback? onSelectShowed,
+    VoidCallback? onSelectHidden,
+    PopupSelectButtonWillToggleCallback? onSelectWillShow,
+    PopupSelectButtonWillToggleCallback? onSelectWillHide,
     this.onChanged,
     this.onApplied,
     this.onReset,
     this.labelLoader,
     this.direction = PopupSelectDirection.below,
-  })  : assert(label == null || child == null,
-            'Provide either label or child, not both.');
+    @Deprecated(
+        'Use onSelectShowed instead. This will be removed in a future minor version.')
+    VoidCallback? onSelectorShowed,
+    @Deprecated(
+        'Use onSelectHidden instead. This will be removed in a future minor version.')
+    VoidCallback? onSelectorHidden,
+    @Deprecated(
+        'Use onSelectWillShow instead. This will be removed in a future minor version.')
+    PopupSelectButtonWillToggleCallback? onSelectorWillShow,
+    @Deprecated(
+        'Use onSelectWillHide instead. This will be removed in a future minor version.')
+    PopupSelectButtonWillToggleCallback? onSelectorWillHide,
+  })  : onSelectShowed = onSelectShowed ?? onSelectorShowed,
+        onSelectHidden = onSelectHidden ?? onSelectorHidden,
+        onSelectWillShow = onSelectWillShow ?? onSelectorWillShow,
+        onSelectWillHide = onSelectWillHide ?? onSelectorWillHide,
+        assert(onSelectShowed == null || onSelectorShowed == null,
+            'Either provide onSelectShowed or onSelectorShowed, not both.'),
+        assert(onSelectHidden == null || onSelectorHidden == null,
+            'Either provide onSelectHidden or onSelectorHidden, not both.'),
+        assert(onSelectWillShow == null || onSelectorWillShow == null,
+            'Either provide onSelectWillShow or onSelectorWillShow, not both.'),
+        assert(onSelectWillHide == null || onSelectorWillHide == null,
+            'Either provide onSelectWillHide or onSelectorWillHide, not both.');
 
   /// Creates an elevated button. The [variant] is fixed to
   /// [PopupSelectButtonVariant.elevated].
@@ -76,18 +98,40 @@ class PopupSelectButton extends StatefulWidget {
     this.child,
     this.icon,
     this.overlayStyle,
-    this.onSelectorShowed,
-    this.onSelectorHidden,
-    this.onSelectorWillShow,
-    this.onSelectorWillHide,
+    VoidCallback? onSelectShowed,
+    VoidCallback? onSelectHidden,
+    PopupSelectButtonWillToggleCallback? onSelectWillShow,
+    PopupSelectButtonWillToggleCallback? onSelectWillHide,
     this.onChanged,
     this.onApplied,
     this.onReset,
     this.labelLoader,
     this.direction = PopupSelectDirection.below,
+    @Deprecated(
+        'Use onSelectShowed instead. This will be removed in a future minor version.')
+    VoidCallback? onSelectorShowed,
+    @Deprecated(
+        'Use onSelectHidden instead. This will be removed in a future minor version.')
+    VoidCallback? onSelectorHidden,
+    @Deprecated(
+        'Use onSelectWillShow instead. This will be removed in a future minor version.')
+    PopupSelectButtonWillToggleCallback? onSelectorWillShow,
+    @Deprecated(
+        'Use onSelectWillHide instead. This will be removed in a future minor version.')
+    PopupSelectButtonWillToggleCallback? onSelectorWillHide,
   })  : variant = PopupSelectButtonVariant.elevated,
-        assert(label == null || child == null,
-            'Provide either label or child, not both.');
+        onSelectShowed = onSelectShowed ?? onSelectorShowed,
+        onSelectHidden = onSelectHidden ?? onSelectorHidden,
+        onSelectWillShow = onSelectWillShow ?? onSelectorWillShow,
+        onSelectWillHide = onSelectWillHide ?? onSelectorWillHide,
+        assert(onSelectShowed == null || onSelectorShowed == null,
+            'Either provide onSelectShowed or onSelectorShowed, not both.'),
+        assert(onSelectHidden == null || onSelectorHidden == null,
+            'Either provide onSelectHidden or onSelectorHidden, not both.'),
+        assert(onSelectWillShow == null || onSelectorWillShow == null,
+            'Either provide onSelectWillShow or onSelectorWillShow, not both.'),
+        assert(onSelectWillHide == null || onSelectorWillHide == null,
+            'Either provide onSelectWillHide or onSelectorWillHide, not both.');
 
   /// Creates an outlined button. The [variant] is fixed to
   /// [PopupSelectButtonVariant.outlined].
@@ -98,18 +142,40 @@ class PopupSelectButton extends StatefulWidget {
     this.child,
     this.icon,
     this.overlayStyle,
-    this.onSelectorShowed,
-    this.onSelectorHidden,
-    this.onSelectorWillShow,
-    this.onSelectorWillHide,
+    VoidCallback? onSelectShowed,
+    VoidCallback? onSelectHidden,
+    PopupSelectButtonWillToggleCallback? onSelectWillShow,
+    PopupSelectButtonWillToggleCallback? onSelectWillHide,
     this.onChanged,
     this.onApplied,
     this.onReset,
     this.labelLoader,
     this.direction = PopupSelectDirection.below,
+    @Deprecated(
+        'Use onSelectShowed instead. This will be removed in a future minor version.')
+    VoidCallback? onSelectorShowed,
+    @Deprecated(
+        'Use onSelectHidden instead. This will be removed in a future minor version.')
+    VoidCallback? onSelectorHidden,
+    @Deprecated(
+        'Use onSelectWillShow instead. This will be removed in a future minor version.')
+    PopupSelectButtonWillToggleCallback? onSelectorWillShow,
+    @Deprecated(
+        'Use onSelectWillHide instead. This will be removed in a future minor version.')
+    PopupSelectButtonWillToggleCallback? onSelectorWillHide,
   })  : variant = PopupSelectButtonVariant.outlined,
-        assert(label == null || child == null,
-            'Provide either label or child, not both.');
+        onSelectShowed = onSelectShowed ?? onSelectorShowed,
+        onSelectHidden = onSelectHidden ?? onSelectorHidden,
+        onSelectWillShow = onSelectWillShow ?? onSelectorWillShow,
+        onSelectWillHide = onSelectWillHide ?? onSelectorWillHide,
+        assert(onSelectShowed == null || onSelectorShowed == null,
+            'Either provide onSelectShowed or onSelectorShowed, not both.'),
+        assert(onSelectHidden == null || onSelectorHidden == null,
+            'Either provide onSelectHidden or onSelectorHidden, not both.'),
+        assert(onSelectWillShow == null || onSelectorWillShow == null,
+            'Either provide onSelectWillShow or onSelectorWillShow, not both.'),
+        assert(onSelectWillHide == null || onSelectorWillHide == null,
+            'Either provide onSelectWillHide or onSelectorWillHide, not both.');
 
   /// Selector configuration for the single trigger.
   final SelectDelegate? selectDelegate;
@@ -132,19 +198,41 @@ class PopupSelectButton extends StatefulWidget {
   final SelectOverlayStyle? overlayStyle;
 
   /// Fired when the selector overlay is shown.
-  final VoidCallback? onSelectorShowed;
+  final VoidCallback? onSelectShowed;
 
   /// Fired when the selector overlay is hidden.
-  final VoidCallback? onSelectorHidden;
+  final VoidCallback? onSelectHidden;
 
   /// Invoked just before the overlay is shown. The returned [Future] (if any)
   /// is awaited before the overlay appears, e.g. to scroll a header into place.
   /// Returning `false` cancels the show, leaving the overlay hidden.
-  final PopupSelectButtonWillToggleCallback? onSelectorWillShow;
+  final PopupSelectButtonWillToggleCallback? onSelectWillShow;
 
   /// Invoked just before the overlay is hidden. Returning `false` cancels the
   /// hide, leaving the overlay visible.
-  final PopupSelectButtonWillToggleCallback? onSelectorWillHide;
+  final PopupSelectButtonWillToggleCallback? onSelectWillHide;
+
+  /// @nodoc
+  @Deprecated(
+      'Use onSelectShowed instead. This will be removed in a future minor version.')
+  VoidCallback? get onSelectorShowed => onSelectShowed;
+
+  /// @nodoc
+  @Deprecated(
+      'Use onSelectHidden instead. This will be removed in a future minor version.')
+  VoidCallback? get onSelectorHidden => onSelectHidden;
+
+  /// @nodoc
+  @Deprecated(
+      'Use onSelectWillShow instead. This will be removed in a future minor version.')
+  PopupSelectButtonWillToggleCallback? get onSelectorWillShow =>
+      onSelectWillShow;
+
+  /// @nodoc
+  @Deprecated(
+      'Use onSelectWillHide instead. This will be removed in a future minor version.')
+  PopupSelectButtonWillToggleCallback? get onSelectorWillHide =>
+      onSelectWillHide;
 
   /// Fired whenever a selector reports a selection change.
   final PopupSelectButtonResultCallback? onChanged;
@@ -243,15 +331,15 @@ class _PopupSelectButtonState extends State<PopupSelectButton>
   Future<void> _handleTap() async {
     final willShow = !_controller.isSelectorShowing;
     bool proceed = willShow
-        ? await widget.onSelectorWillShow?.call() ?? true
-        : await widget.onSelectorWillHide?.call() ?? true;
+        ? await widget.onSelectWillShow?.call() ?? true
+        : await widget.onSelectWillHide?.call() ?? true;
     if (!proceed) return;
     _controller.previousSelectDelegate = widget.selectDelegate!;
     _controller.toggleSelector(index: 0);
     if (_controller.isSelectorShowing) {
-      widget.onSelectorShowed?.call();
+      widget.onSelectShowed?.call();
     } else {
-      widget.onSelectorHidden?.call();
+      widget.onSelectHidden?.call();
     }
   }
 

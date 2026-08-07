@@ -300,7 +300,7 @@ class _BuyPageState extends State<BuyPage> {
   final ScrollController _scrollController = ScrollController();
   final ValueNotifier<double> _scrollOffsetVN = ValueNotifier<double>(0);
 
-  /// Identifies the filter bar content so [onSelectorWillShow] can measure its
+  /// Identifies the filter bar content so [onSelectWillShow] can measure its
   /// current on-screen position and scroll it to a pinned (sticky) position.
   final GlobalKey _filterHeaderKey = GlobalKey();
 
@@ -569,7 +569,7 @@ class _BuyPageState extends State<BuyPage> {
                   },
                 ),
               ],
-              onSelectorWillShow: (PopupTabData tabData) async {
+              onSelectWillShow: (PopupTabData tabData) async {
                 // Programmatic sticky: scroll exactly enough so the filter bar
                 // (SliverPersistentHeader) pins just below the collapsed app
                 // bar, then let the overlay anchor to that final layout.
@@ -593,14 +593,14 @@ class _BuyPageState extends State<BuyPage> {
                 }
                 return true;
               },
-              onSelectorShowed: (PopupTabData tabData) {
+              onSelectShowed: (PopupTabData tabData) {
                 largePrint('onShowed: ${tabData.label}');
               },
-              onSelectorWillHide: (PopupTabData tabData) {
+              onSelectWillHide: (PopupTabData tabData) {
                 largePrint('onWillHide: ${tabData.label}');
                 return true;
               },
-              onSelectorHidden: (PopupTabData tabData) {
+              onSelectHidden: (PopupTabData tabData) {
                 largePrint('onHidden: ${tabData.label}');
               },
               onChanged: (tabData, selected) {

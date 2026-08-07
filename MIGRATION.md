@@ -2,6 +2,66 @@
 
 ## Next
 
+### Selector lifecycle callbacks renamed to `onSelect*` on `PopupSelectBar` / `PopupSelectButton`
+
+The selector lifecycle callbacks on [`PopupSelectBar`] and [`PopupSelectButton`]
+have been renamed from `onSelector*` to `onSelect*` for consistency with the
+surrounding `Select*` / `PopupSelect*` naming:
+
+| Old name | New name |
+| --- | --- |
+| `PopupSelectBar.onSelectorShowed` | `PopupSelectBar.onSelectShowed` |
+| `PopupSelectBar.onSelectorHidden` | `PopupSelectBar.onSelectHidden` |
+| `PopupSelectBar.onSelectorWillShow` | `PopupSelectBar.onSelectWillShow` |
+| `PopupSelectBar.onSelectorWillHide` | `PopupSelectBar.onSelectWillHide` |
+| `PopupSelectButton.onSelectorShowed` | `PopupSelectButton.onSelectShowed` |
+| `PopupSelectButton.onSelectorHidden` | `PopupSelectButton.onSelectHidden` |
+| `PopupSelectButton.onSelectorWillShow` | `PopupSelectButton.onSelectWillShow` |
+| `PopupSelectButton.onSelectorWillHide` | `PopupSelectButton.onSelectWillHide` |
+
+The old names are kept as deprecated constructor parameters and getters that
+delegate to the new names for backward compatibility and **will be removed in a
+future minor version**. Passing both the old and the new callback at the same
+call site triggers an `assert`. No behavior changes.
+
+Migration: replace each old name with its new counterpart at every call site.
+
+```dart
+// Before
+PopupSelectBar(
+  onSelectorWillShow: (tabData) async { ... },
+  onSelectorShowed: (tabData) { ... },
+  onSelectorWillHide: (tabData) async { ... },
+  onSelectorHidden: (tabData) { ... },
+);
+
+// After
+PopupSelectBar(
+  onSelectWillShow: (tabData) async { ... },
+  onSelectShowed: (tabData) { ... },
+  onSelectWillHide: (tabData) async { ... },
+  onSelectHidden: (tabData) { ... },
+);
+```
+
+```dart
+// Before
+PopupSelectButton(
+  onSelectorWillShow: () async { ... },
+  onSelectorShowed: () { ... },
+  onSelectorWillHide: () async { ... },
+  onSelectorHidden: () { ... },
+);
+
+// After
+PopupSelectButton(
+  onSelectWillShow: () async { ... },
+  onSelectShowed: () { ... },
+  onSelectWillHide: () async { ... },
+  onSelectHidden: () { ... },
+);
+```
+
 ## MIGRATE TO 0.5.0
 
 ### `SelectorListTile` / `SelectorListView` / `SelectorRange*` / `SelectorSideBar` / `SelectorTabBar` / `SelectorActionBar` / `SelectorChipBar` / `SelectorExpansionTile` / `SelectorFieldTile` / `SelectorGridTile` / `SelectorGridView` renamed to `Select*`

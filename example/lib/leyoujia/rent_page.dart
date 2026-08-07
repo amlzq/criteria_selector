@@ -321,10 +321,10 @@ class _RentPageState extends State<RentPage> {
                   },
                 ),
               ],
-              onSelectorShowed: (PopupTabData tabData) {
+              onSelectShowed: (PopupTabData tabData) {
                 largePrint('onShowed: ${tabData.label}');
               },
-              onSelectorHidden: (PopupTabData tabData) {
+              onSelectHidden: (PopupTabData tabData) {
                 largePrint('onHidden: ${tabData.label}');
               },
               onChanged: (tabData, selected) {
