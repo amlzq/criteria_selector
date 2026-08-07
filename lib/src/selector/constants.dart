@@ -81,14 +81,3 @@ extension IterableExtension<SelectEntry> on Iterable<SelectEntry> {
     return null;
   }
 }
-
-/// Deprecated alias for [SelectCallback].
-///
-/// The `Selector`-prefixed name was renamed to drop the redundant `Selector`
-/// prefix. This alias is kept for backward compatibility and will be removed in
-/// a future minor version.
-@Deprecated(
-  'Use SelectCallback instead. This alias will be removed in a future minor '
-  'version.',
-)
-typedef SelectorCallback = SelectCallback;

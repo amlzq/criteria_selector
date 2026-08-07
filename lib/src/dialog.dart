@@ -63,41 +63,6 @@ Future<SelectEntries?> showSelect({
       .push<SelectEntries?>(route);
 }
 
-/// Shows a selector in a modal dialog.
-///
-/// @deprecated Use [showSelect] instead. This backward-compatible alias will be
-/// removed in a future minor version.
-@Deprecated(
-    'Use showSelect instead. This will be removed in a future minor version.')
-Future<SelectEntries?> showSelector({
-  required BuildContext context,
-  required SelectDelegate delegate,
-  bool barrierDismissible = true,
-  bool useRootNavigator = true,
-  Widget? title,
-  double? elevation,
-  ShapeBorder? shape,
-  Clip? clipBehavior,
-  TransitionBuilder? builder,
-  Color? barrierColor,
-  RouteSettings? routeSettings,
-  Offset? anchorPoint,
-}) =>
-    showSelect(
-      context: context,
-      delegate: delegate,
-      barrierDismissible: barrierDismissible,
-      useRootNavigator: useRootNavigator,
-      title: title,
-      elevation: elevation,
-      shape: shape,
-      clipBehavior: clipBehavior,
-      builder: builder,
-      barrierColor: barrierColor,
-      routeSettings: routeSettings,
-      anchorPoint: anchorPoint,
-    );
-
 /// Modal route used by [showSelect].
 ///
 /// Mirrors the structure of Flutter's `_TimePickerDialogRoute`: it builds the

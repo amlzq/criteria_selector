@@ -5,7 +5,6 @@
 library criteria_selector;
 
 export 'src/bottom_sheet.dart';
-export 'src/deprecated.dart';
 export 'src/dialog.dart';
 export 'src/i18n/select_localizations.dart';
 export 'src/i18n/select_localizations_delegate.dart';

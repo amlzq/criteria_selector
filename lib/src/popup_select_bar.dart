@@ -29,47 +29,6 @@ typedef PopupSelectBarToggleCallback = void Function(PopupTabData tabData);
 typedef PopupSelectBarResultCallback = void Function(
     PopupTabData tabData, SelectEntries selected);
 
-/// Deprecated alias for [kPopupSelectBarHeight].
-///
-/// Use [kPopupSelectBarHeight] instead. This alias is kept only for backward
-/// compatibility and will be removed in a future minor version.
-@Deprecated(
-  'Use kPopupSelectBarHeight instead. '
-  'This alias will be removed in a future minor version.',
-)
-const kDropdownSelectorBarHeight = kPopupSelectBarHeight;
-
-/// Deprecated alias for [PopupSelectBarWillToggleCallback].
-///
-/// Use [PopupSelectBarWillToggleCallback] instead. This alias is kept only for
-/// backward compatibility and will be removed in a future minor version.
-@Deprecated(
-  'Use PopupSelectBarWillToggleCallback instead. '
-  'This alias will be removed in a future minor version.',
-)
-typedef DropdownSelectorBarWillToggleCallback
-    = PopupSelectBarWillToggleCallback;
-
-/// Deprecated alias for [PopupSelectBarToggleCallback].
-///
-/// Use [PopupSelectBarToggleCallback] instead. This alias is kept only for
-/// backward compatibility and will be removed in a future minor version.
-@Deprecated(
-  'Use PopupSelectBarToggleCallback instead. '
-  'This alias will be removed in a future minor version.',
-)
-typedef DropdownSelectorBarToggleCallback = PopupSelectBarToggleCallback;
-
-/// Deprecated alias for [PopupSelectBarResultCallback].
-///
-/// Use [PopupSelectBarResultCallback] instead. This alias is kept only for backward
-/// compatibility and will be removed in a future minor version.
-@Deprecated(
-  'Use PopupSelectBarResultCallback instead. '
-  'This alias will be removed in a future minor version.',
-)
-typedef DropdownSelectorBarCallback = PopupSelectBarResultCallback;
-
 /// A tab bar that shows an overlay selector panel when a tab is tapped.
 ///
 /// Provide:
@@ -82,12 +41,7 @@ class PopupSelectBar extends StatefulWidget implements PreferredSizeWidget {
   const PopupSelectBar({
     super.key,
     required this.tabs,
-    List<SelectDelegate>? selectDelegates,
-    @Deprecated(
-      'Use selectDelegates instead. This parameter will be removed in a '
-      'future minor version.',
-    )
-    List<SelectDelegate>? selectorDelegates,
+    this.selectDelegates = const [],
     this.height,
     this.isScrollable = false,
     this.backgroundColor,
@@ -108,25 +62,9 @@ class PopupSelectBar extends StatefulWidget implements PreferredSizeWidget {
     this.onReset,
     this.controller,
     this.initialIndex,
-    SelectThemeData? selectTheme,
-    @Deprecated(
-      'Use selectTheme instead. This parameter will be removed in a future '
-      'minor version.',
-    )
-    SelectThemeData? selectorTheme,
+    this.selectTheme,
     this.direction = PopupSelectDirection.below,
-  })  : assert(
-          selectDelegates == null || selectorDelegates == null,
-          'Provide either selectDelegates or the deprecated '
-          'selectorDelegates, but not both.',
-        ),
-        assert(
-          selectTheme == null || selectorTheme == null,
-          'Provide either selectTheme or the deprecated selectorTheme, '
-          'but not both.',
-        ),
-        selectDelegates = selectorDelegates ?? selectDelegates ?? const [],
-        selectTheme = selectorTheme ?? selectTheme;
+  });
 
   /// The set of tabs to display in the bar.
   ///
@@ -137,16 +75,6 @@ class PopupSelectBar extends StatefulWidget implements PreferredSizeWidget {
 
   /// Selector configuration for each tab.
   final List<SelectDelegate> selectDelegates;
-
-  /// Deprecated alias for [selectDelegates].
-  ///
-  /// Use [selectDelegates] instead. This getter is kept only for backward
-  /// compatibility and will be removed in a future minor version.
-  @Deprecated(
-    'Use selectDelegates instead. This getter will be removed in a future '
-    'minor version.',
-  )
-  List<SelectDelegate> get selectorDelegates => selectDelegates;
 
   /// The height of the [PopupSelectBar] itself.
   ///
@@ -214,16 +142,6 @@ class PopupSelectBar extends StatefulWidget implements PreferredSizeWidget {
 
   /// Theme overrides applied to selector widgets inside the overlay.
   final SelectThemeData? selectTheme;
-
-  /// Deprecated alias for [selectTheme].
-  ///
-  /// Use [selectTheme] instead. This getter is kept only for backward
-  /// compatibility and will be removed in a future minor version.
-  @Deprecated(
-    'Use selectTheme instead. This getter will be removed in a future '
-    'minor version.',
-  )
-  SelectThemeData? get selectorTheme => selectTheme;
 
   /// Vertical placement of the selector panel relative to the bar.
   ///
@@ -766,23 +684,3 @@ class _PopupSelectBarDefaults extends PopupSelectBarTheme {
   //   });
   // }
 }
-
-/// Deprecated alias for [PopupSelectBar].
-///
-/// Use [PopupSelectBar] instead. This alias is kept only for backward
-/// compatibility and will be removed in a future minor version.
-@Deprecated(
-  'Use PopupSelectBar instead. '
-  'This alias will be removed in a future minor version.',
-)
-typedef DropdownSelectorBar = PopupSelectBar;
-
-/// Deprecated alias for [PopupTab].
-///
-/// Use [PopupTab] instead. This alias is kept only for backward
-/// compatibility and will be removed in a future minor version.
-@Deprecated(
-  'Use PopupTab instead. '
-  'This alias will be removed in a future minor version.',
-)
-typedef DropdownTab = PopupTab;

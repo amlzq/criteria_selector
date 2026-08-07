@@ -87,52 +87,6 @@ Future<SelectEntries?> showModalBottomSelect({
   );
 }
 
-/// Shows a selector in a modal bottom sheet built with Flutter's
-/// [showModalBottomSheet].
-///
-/// @deprecated Use [showModalBottomSelect] instead. This backward-compatible
-/// alias will be removed in a future minor version.
-@Deprecated(
-    'Use showModalBottomSelect instead. This will be removed in a future minor version.')
-Future<SelectEntries?> showModalBottomSelector({
-  required BuildContext context,
-  required SelectDelegate delegate,
-  bool isScrollControlled = false,
-  bool useRootNavigator = false,
-  bool isDismissible = true,
-  bool useSafeArea = false,
-  Widget? title,
-  Color? backgroundColor,
-  double? elevation,
-  ShapeBorder? shape,
-  Clip? clipBehavior,
-  BoxConstraints? constraints,
-  Color? barrierColor,
-  bool enableDrag = true,
-  bool? showDragHandle,
-  RouteSettings? routeSettings,
-  Offset? anchorPoint,
-}) =>
-    showModalBottomSelect(
-      context: context,
-      delegate: delegate,
-      isScrollControlled: isScrollControlled,
-      useRootNavigator: useRootNavigator,
-      isDismissible: isDismissible,
-      useSafeArea: useSafeArea,
-      title: title,
-      backgroundColor: backgroundColor,
-      elevation: elevation,
-      shape: shape,
-      clipBehavior: clipBehavior,
-      constraints: constraints,
-      barrierColor: barrierColor,
-      enableDrag: enableDrag,
-      showDragHandle: showDragHandle,
-      routeSettings: routeSettings,
-      anchorPoint: anchorPoint,
-    );
-
 /// The bottom-sheet body rendered by [showModalBottomSheet].
 ///
 /// Wraps a [SelectPanel] and closes the sheet (returning the selection) when

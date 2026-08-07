@@ -44,8 +44,7 @@ void main() {
       expect(a.hashCode, equals(b.hashCode));
     });
 
-    test('== and hashCode: different crossAxisCount makes layouts unequal',
-        () {
+    test('== and hashCode: different crossAxisCount makes layouts unequal', () {
       const a = SelectGridLayout(crossAxisCount: 2);
       const b = SelectGridLayout(crossAxisCount: 3);
       expect(a, isNot(equals(b)));
@@ -95,42 +94,6 @@ void main() {
 
     test('toText defaults to "-"', () {
       expect(const SelectRangeLayout().toText, '-');
-    });
-  });
-
-  group('Deprecated Selector*Layout aliases', () {
-    test('SelectorLayout alias is SelectLayout', () {
-      // ignore: deprecated_member_use, deprecated_member_use_from_same_package
-      SelectorLayout layout = const SelectListLayout();
-      expect(layout, isA<SelectLayout>());
-    });
-
-    test('SelectorListLayout alias behaves like SelectListLayout', () {
-      // ignore: deprecated_member_use, deprecated_member_use_from_same_package
-      const SelectorListLayout layout = SelectorListLayout();
-      expect(layout, isA<SelectListLayout>());
-      expect(const SelectListLayout(), equals(layout));
-    });
-
-    test('SelectorGridLayout alias behaves like SelectGridLayout', () {
-      // ignore: deprecated_member_use, deprecated_member_use_from_same_package
-      const layout = SelectorGridLayout(crossAxisCount: 2);
-      expect(layout, isA<SelectGridLayout>());
-      expect(const SelectGridLayout(crossAxisCount: 2), equals(layout));
-    });
-
-    test('SelectorChipLayout alias behaves like SelectChipLayout', () {
-      // ignore: deprecated_member_use, deprecated_member_use_from_same_package
-      const SelectorChipLayout layout = SelectorChipLayout();
-      expect(layout, isA<SelectChipLayout>());
-      expect(const SelectChipLayout(), equals(layout));
-    });
-
-    test('SelectorRangeLayout alias behaves like SelectRangeLayout', () {
-      // ignore: deprecated_member_use, deprecated_member_use_from_same_package
-      const SelectorRangeLayout layout = SelectorRangeLayout(toText: 'to');
-      expect(layout, isA<SelectRangeLayout>());
-      expect(const SelectRangeLayout(toText: 'to'), equals(layout));
     });
   });
 }

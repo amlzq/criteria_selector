@@ -2,11 +2,8 @@ import 'package:criteria_selector/criteria_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-// Tests that the deprecated `SelectorLocalizationsDelegate` alias resolves to
-// `SelectLocalizationsDelegate` and that the delegate loads the expected
+// Tests that the `SelectLocalizationsDelegate` loads the expected
 // localization object.
-//
-// ignore_for_file: deprecated_member_use, deprecated_member_use_from_same_package
 
 void main() {
   const delegate = SelectLocalizationsDelegate();
@@ -46,13 +43,5 @@ void main() {
       );
     });
 
-    test(
-        'deprecated SelectorLocalizationsDelegate alias resolves to '
-        'SelectLocalizationsDelegate', () {
-      const SelectLocalizationsDelegate newName = SelectLocalizationsDelegate();
-      const SelectorLocalizationsDelegate oldName =
-          SelectorLocalizationsDelegate();
-      expect(oldName, same(newName));
-    });
   });
 }

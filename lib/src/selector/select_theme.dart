@@ -71,14 +71,3 @@ class SelectTheme extends InheritedTheme {
     return SelectTheme(data: data, child: child);
   }
 }
-
-/// Deprecated alias for [SelectTheme].
-///
-/// The `Selector`-prefixed name was renamed to drop the redundant `Selector`
-/// prefix. This alias is kept for backward compatibility and will be removed in
-/// a future minor version.
-@Deprecated(
-  'Use SelectTheme instead. This alias will be removed in a future minor '
-  'version.',
-)
-typedef SelectorTheme = SelectTheme;

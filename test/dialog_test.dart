@@ -71,32 +71,5 @@ void main() {
       final SelectEntries? result = await future;
       expect(result, selection);
     });
-
-    testWidgets('deprecated showSelector alias behaves identically',
-        (WidgetTester tester) async {
-      final navigatorKey = GlobalKey<NavigatorState>();
-      await tester.pumpWidget(
-        MaterialApp(
-          navigatorKey: navigatorKey,
-          home: const Scaffold(body: Placeholder()),
-        ),
-      );
-
-      // ignore: deprecated_member_use
-      final future = showSelector(
-        context: navigatorKey.currentContext!,
-        delegate: _DialogTestDelegate(),
-      );
-
-      await tester.pumpAndSettle();
-
-      expect(find.byType(SelectPanel), findsOneWidget);
-
-      // ignore: deprecated_member_use
-      Navigator.of(navigatorKey.currentContext!, rootNavigator: true).pop(null);
-
-      final SelectEntries? result = await future;
-      expect(result, isNull);
-    });
   });
 }

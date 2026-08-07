@@ -234,8 +234,8 @@ class SelectThemeData with Diagnosticable {
       radioTheme: RadioThemeData.lerp(a?.radioTheme, b?.radioTheme, t),
       checkboxTheme:
           CheckboxThemeData.lerp(a?.checkboxTheme, b?.checkboxTheme, t),
-      chipBarThemeData: SelectChipBarTheme.lerp(
-          a?.chipBarThemeData, b?.chipBarThemeData, t),
+      chipBarThemeData:
+          SelectChipBarTheme.lerp(a?.chipBarThemeData, b?.chipBarThemeData, t),
       panelTheme: SelectPanelTheme.lerp(a?.panelTheme, b?.panelTheme, t),
     );
   }
@@ -293,14 +293,3 @@ class SelectThemeData with Diagnosticable {
         other.panelTheme == panelTheme;
   }
 }
-
-/// Deprecated alias for [SelectThemeData].
-///
-/// The `Selector`-prefixed name was renamed to drop the redundant `Selector`
-/// prefix. This alias is kept for backward compatibility and will be removed in
-/// a future minor version.
-@Deprecated(
-  'Use SelectThemeData instead. This alias will be removed in a future minor '
-  'version.',
-)
-typedef SelectorThemeData = SelectThemeData;

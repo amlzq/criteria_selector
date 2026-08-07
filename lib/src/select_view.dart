@@ -249,14 +249,3 @@ class _SelectViewState extends State<SelectView> {
     return current;
   }
 }
-
-/// The deprecated alias for [SelectView].
-///
-/// `SelectorBox` is the former name of [SelectView]. It is kept as a type alias
-/// solely for backward compatibility and **will be removed in a future minor
-/// version**. Migrate all call sites to [SelectView] to clear the deprecation
-/// warning — `SelectorBox` is the exact same type as [SelectView], so this is a
-/// pure rename.
-@Deprecated(
-    'Use SelectView instead. This alias will be removed in a future minor version.')
-typedef SelectorBox = SelectView;

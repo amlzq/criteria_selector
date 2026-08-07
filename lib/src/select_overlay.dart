@@ -24,16 +24,6 @@ enum PopupSelectDirection {
   adaptive,
 }
 
-/// Deprecated alias for [PopupSelectDirection].
-///
-/// Use [PopupSelectDirection] instead. This alias is kept only for backward
-/// compatibility and will be removed in a future minor version.
-@Deprecated(
-  'Use PopupSelectDirection instead. '
-  'This alias will be removed in a future minor version.',
-)
-typedef DropdownSelectorDirection = PopupSelectDirection;
-
 /// Overlay container that hosts an arbitrary [child] widget (typically a
 /// [SelectPanel]).
 ///

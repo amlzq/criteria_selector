@@ -157,33 +157,4 @@ void main() {
       expect(hasCap, isTrue);
     });
   });
-
-  group('SelectorBox (deprecated alias)', () {
-    testWidgets('is the same type as SelectView and renders identically',
-        (tester) async {
-      // The deprecated alias must behave exactly like SelectView so existing
-      // code keeps compiling and working until it is removed in a future minor
-      // version.
-      expect(SelectorBox, SelectView);
-
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: SelectorBox(
-              delegate: _TestDelegate(
-                entriesLoader: () async => <SelectEntry<dynamic>>{
-                  SelectTextEntry<dynamic>.name(id: 'a', name: 'A'),
-                },
-                bodyBuilder: (context, entries, _) =>
-                    Text('entries:${entries.length}'),
-              ),
-            ),
-          ),
-        ),
-      );
-
-      await tester.pumpAndSettle();
-      expect(find.text('entries:1'), findsOneWidget);
-    });
-  });
 }

@@ -35,7 +35,7 @@ class PopupTabData extends SelectLabelState {
 ///
 /// Suitable for [PopupSelectButton], which has no tab concept, as well as
 /// multi-tab [PopupSelectBar].
-typedef SelectorLabelChangeCallback = void Function(
+typedef PopupSelectLabelChangeCallback = void Function(
     SelectLabelState labelState, SelectEntries selected);
 
 /// Controller for [PopupSelectBar] and its selector overlay.
@@ -48,34 +48,34 @@ class PopupSelectController extends ChangeNotifier {
   static const Duration _kOverlayAnimationDuration =
       Duration(milliseconds: 240);
 
-  final List<SelectorLabelChangeCallback> _changeListeners = [];
-  final List<SelectorLabelChangeCallback> _applyListeners = [];
+  final List<PopupSelectLabelChangeCallback> _changeListeners = [];
+  final List<PopupSelectLabelChangeCallback> _applyListeners = [];
   final List<VoidCallback> _resetListeners = [];
 
   /// Registers a listener to be called when a selector reports a selection
   /// change.
   ///
   /// Returns a [VoidCallback] that unregisters the listener when called.
-  VoidCallback addChangeListener(SelectorLabelChangeCallback listener) {
+  VoidCallback addChangeListener(PopupSelectLabelChangeCallback listener) {
     _changeListeners.add(listener);
     return () => removeChangeListener(listener);
   }
 
   /// Unregisters a previously registered change listener.
-  void removeChangeListener(SelectorLabelChangeCallback listener) {
+  void removeChangeListener(PopupSelectLabelChangeCallback listener) {
     _changeListeners.remove(listener);
   }
 
   /// Registers a listener to be called when a selector is applied.
   ///
   /// Returns a [VoidCallback] that unregisters the listener when called.
-  VoidCallback addApplyListener(SelectorLabelChangeCallback listener) {
+  VoidCallback addApplyListener(PopupSelectLabelChangeCallback listener) {
     _applyListeners.add(listener);
     return () => removeApplyListener(listener);
   }
 
   /// Unregisters a previously registered apply listener.
-  void removeApplyListener(SelectorLabelChangeCallback listener) {
+  void removeApplyListener(PopupSelectLabelChangeCallback listener) {
     _applyListeners.remove(listener);
   }
 
@@ -161,27 +161,6 @@ class PopupSelectController extends ChangeNotifier {
   set previousSelectDelegate(SelectDelegate? value) =>
       _previousSelectDelegate = value;
 
-  /// Deprecated alias for [previousSelectDelegate].
-  ///
-  /// Use [previousSelectDelegate] instead. This getter is kept only for
-  /// backward compatibility and will be removed in a future minor version.
-  @Deprecated(
-    'Use previousSelectDelegate instead. This getter will be removed in a '
-    'future minor version.',
-  )
-  SelectDelegate? get previousSelectorDelegate => _previousSelectDelegate;
-
-  /// Deprecated alias for [previousSelectDelegate].
-  ///
-  /// Use [previousSelectDelegate] instead. This setter is kept only for
-  /// backward compatibility and will be removed in a future minor version.
-  @Deprecated(
-    'Use previousSelectDelegate instead. This setter will be removed in a '
-    'future minor version.',
-  )
-  set previousSelectorDelegate(SelectDelegate? value) =>
-      _previousSelectDelegate = value;
-
   /// The [SelectController] for the currently active selector panel, if any.
   ///
   /// Created when a selector is shown (see [_showSelector]) and disposed when
@@ -189,16 +168,6 @@ class PopupSelectController extends ChangeNotifier {
   /// [SelectPanel] via its `controller` parameter.
   SelectController? get selectController => _selectController;
   SelectController? _selectController;
-
-  /// Deprecated alias for [selectController].
-  ///
-  /// Use [selectController] instead. This getter is kept only for backward
-  /// compatibility and will be removed in a future minor version.
-  @Deprecated(
-    'Use selectController instead. This getter will be removed in a future '
-    'minor version.',
-  )
-  SelectController? get selectorController => _selectController;
 
   /// Localized "Multiple" text used when building apply result labels.
   ///
@@ -234,17 +203,6 @@ class PopupSelectController extends ChangeNotifier {
       }
     }
   }
-
-  /// Deprecated alias for [attachSelectDelegates].
-  ///
-  /// Use [attachSelectDelegates] instead. This method is kept only for
-  /// backward compatibility and will be removed in a future minor version.
-  @Deprecated(
-    'Use attachSelectDelegates instead. This method will be removed in a '
-    'future minor version.',
-  )
-  void attachSelectorDelegates(List<SelectDelegate> selectDelegates) =>
-      attachSelectDelegates(selectDelegates);
 
   SelectDelegate? _selectDelegateAt(int tabIndex) {
     final selectDelegates = _selectDelegates;
@@ -764,33 +722,3 @@ class PopupSelectControllerProvider extends StatelessWidget {
     return _PopupSelectControllerScope(controller: controller, child: child);
   }
 }
-
-/// Deprecated alias for [PopupSelectController].
-///
-/// Use [PopupSelectController] instead. This alias is kept only for backward
-/// compatibility and will be removed in a future minor version.
-@Deprecated(
-  'Use PopupSelectController instead. '
-  'This alias will be removed in a future minor version.',
-)
-typedef DropdownSelectController = PopupSelectController;
-
-/// Deprecated alias for [PopupTabData].
-///
-/// Use [PopupTabData] instead. This alias is kept only for backward
-/// compatibility and will be removed in a future minor version.
-@Deprecated(
-  'Use PopupTabData instead. '
-  'This alias will be removed in a future minor version.',
-)
-typedef DropdownTabData = PopupTabData;
-
-/// Deprecated alias for [PopupSelectControllerProvider].
-///
-/// Use [PopupSelectControllerProvider] instead. This alias is kept only for
-/// backward compatibility and will be removed in a future minor version.
-@Deprecated(
-  'Use PopupSelectControllerProvider instead. '
-  'This alias will be removed in a future minor version.',
-)
-typedef DropdownSelectControllerProvider = PopupSelectControllerProvider;

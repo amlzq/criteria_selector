@@ -19,18 +19,8 @@ class PopupSelectBarTheme extends ThemeExtension<PopupSelectBarTheme> {
     this.indicator,
     this.unselectedIndicator,
     this.overlayStyle,
-    SelectThemeData? selectTheme,
-    @Deprecated(
-      'Use selectTheme instead. This parameter will be removed in a future '
-      'minor version.',
-    )
-    SelectThemeData? selectorTheme,
-  })  : assert(
-          selectTheme == null || selectorTheme == null,
-          'Provide either selectTheme or the deprecated selectorTheme, '
-          'but not both.',
-        ),
-        selectTheme = selectorTheme ?? selectTheme;
+    this.selectTheme,
+  });
 
   /// Overrides the default value of [PopupSelectBar.height].
   final double? height;
@@ -61,16 +51,6 @@ class PopupSelectBarTheme extends ThemeExtension<PopupSelectBarTheme> {
 
   /// Default theme overrides applied to selector widgets inside the overlay.
   final SelectThemeData? selectTheme;
-
-  /// Deprecated alias for [selectTheme].
-  ///
-  /// Use [selectTheme] instead. This getter is kept only for backward
-  /// compatibility and will be removed in a future minor version.
-  @Deprecated(
-    'Use selectTheme instead. This getter will be removed in a future '
-    'minor version.',
-  )
-  SelectThemeData? get selectorTheme => selectTheme;
 
   @override
   PopupSelectBarTheme copyWith({
@@ -165,13 +145,3 @@ class PopupSelectBarTheme extends ThemeExtension<PopupSelectBarTheme> {
     );
   }
 }
-
-/// Deprecated alias for [PopupSelectBarTheme].
-///
-/// Use [PopupSelectBarTheme] instead. This alias is kept only for backward
-/// compatibility and will be removed in a future minor version.
-@Deprecated(
-  'Use PopupSelectBarTheme instead. '
-  'This alias will be removed in a future minor version.',
-)
-typedef DropdownSelectorBarTheme = PopupSelectBarTheme;

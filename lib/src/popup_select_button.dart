@@ -33,47 +33,6 @@ typedef PopupSelectButtonWillToggleCallback = FutureOr<bool> Function();
 /// Default height used when the button size cannot be measured yet.
 const kPopupSelectButtonHeight = 40.0;
 
-/// Deprecated alias for [PopupSelectButtonVariant].
-///
-/// Use [PopupSelectButtonVariant] instead. This alias is kept only for
-/// backward compatibility and will be removed in a future minor version.
-@Deprecated(
-  'Use PopupSelectButtonVariant instead. '
-  'This alias will be removed in a future minor version.',
-)
-typedef DropdownSelectorButtonVariant = PopupSelectButtonVariant;
-
-/// Deprecated alias for [PopupSelectButtonResultCallback].
-///
-/// Use [PopupSelectButtonResultCallback] instead. This alias is kept only for
-/// backward compatibility and will be removed in a future minor version.
-@Deprecated(
-  'Use PopupSelectButtonResultCallback instead. '
-  'This alias will be removed in a future minor version.',
-)
-typedef DropdownSelectorButtonResultCallback = PopupSelectButtonResultCallback;
-
-/// Deprecated alias for [PopupSelectButtonWillToggleCallback].
-///
-/// Use [PopupSelectButtonWillToggleCallback] instead. This alias is kept only
-/// for backward compatibility and will be removed in a future minor version.
-@Deprecated(
-  'Use PopupSelectButtonWillToggleCallback instead. '
-  'This alias will be removed in a future minor version.',
-)
-typedef DropdownSelectorButtonWillToggleCallback
-    = PopupSelectButtonWillToggleCallback;
-
-/// Deprecated alias for [kPopupSelectButtonHeight].
-///
-/// Use [kPopupSelectButtonHeight] instead. This alias is kept only for backward
-/// compatibility and will be removed in a future minor version.
-@Deprecated(
-  'Use kPopupSelectButtonHeight instead. '
-  'This alias will be removed in a future minor version.',
-)
-const kDropdownSelectorButtonHeight = kPopupSelectButtonHeight;
-
 /// A single-button alternative to [PopupSelectBar].
 ///
 /// Where [PopupSelectBar] renders a horizontal row of tabs, this widget
@@ -90,12 +49,7 @@ class PopupSelectButton extends StatefulWidget {
   /// Creates a filled button (the default variant).
   const PopupSelectButton({
     super.key,
-    SelectDelegate? selectDelegate,
-    @Deprecated(
-      'Use selectDelegate instead. This parameter will be removed in a '
-      'future minor version.',
-    )
-    SelectDelegate? selectorDelegate,
+    this.selectDelegate,
     this.variant = PopupSelectButtonVariant.filled,
     this.label,
     this.child,
@@ -110,25 +64,14 @@ class PopupSelectButton extends StatefulWidget {
     this.onReset,
     this.labelLoader,
     this.direction = PopupSelectDirection.below,
-  })  : assert(
-          selectDelegate == null || selectorDelegate == null,
-          'Provide either selectDelegate or the deprecated selectorDelegate, '
-          'but not both.',
-        ),
-        assert(label == null || child == null,
-            'Provide either label or child, not both.'),
-        selectDelegate = selectorDelegate ?? selectDelegate;
+  })  : assert(label == null || child == null,
+            'Provide either label or child, not both.');
 
   /// Creates an elevated button. The [variant] is fixed to
   /// [PopupSelectButtonVariant.elevated].
   const PopupSelectButton.elevated({
     super.key,
-    SelectDelegate? selectDelegate,
-    @Deprecated(
-      'Use selectDelegate instead. This parameter will be removed in a '
-      'future minor version.',
-    )
-    SelectDelegate? selectorDelegate,
+    this.selectDelegate,
     this.label,
     this.child,
     this.icon,
@@ -142,26 +85,15 @@ class PopupSelectButton extends StatefulWidget {
     this.onReset,
     this.labelLoader,
     this.direction = PopupSelectDirection.below,
-  })  : assert(
-          selectDelegate == null || selectorDelegate == null,
-          'Provide either selectDelegate or the deprecated selectorDelegate, '
-          'but not both.',
-        ),
-        variant = PopupSelectButtonVariant.elevated,
+  })  : variant = PopupSelectButtonVariant.elevated,
         assert(label == null || child == null,
-            'Provide either label or child, not both.'),
-        selectDelegate = selectorDelegate ?? selectDelegate;
+            'Provide either label or child, not both.');
 
   /// Creates an outlined button. The [variant] is fixed to
   /// [PopupSelectButtonVariant.outlined].
   const PopupSelectButton.outlined({
     super.key,
-    SelectDelegate? selectDelegate,
-    @Deprecated(
-      'Use selectDelegate instead. This parameter will be removed in a '
-      'future minor version.',
-    )
-    SelectDelegate? selectorDelegate,
+    this.selectDelegate,
     this.label,
     this.child,
     this.icon,
@@ -175,31 +107,12 @@ class PopupSelectButton extends StatefulWidget {
     this.onReset,
     this.labelLoader,
     this.direction = PopupSelectDirection.below,
-  })  : assert(
-          selectDelegate == null || selectorDelegate == null,
-          'Provide either selectDelegate or the deprecated selectorDelegate, '
-          'but not both.',
-        ),
-        variant = PopupSelectButtonVariant.outlined,
+  })  : variant = PopupSelectButtonVariant.outlined,
         assert(label == null || child == null,
-            'Provide either label or child, not both.'),
-        selectDelegate = selectorDelegate ?? selectDelegate;
+            'Provide either label or child, not both.');
 
   /// Selector configuration for the single trigger.
-  ///
-  /// If the deprecated `selectorDelegate` parameter was supplied instead, this
-  /// resolves to that value.
   final SelectDelegate? selectDelegate;
-
-  /// Deprecated alias for [selectDelegate].
-  ///
-  /// Use [selectDelegate] instead. This getter is kept only for backward
-  /// compatibility and will be removed in a future minor version.
-  @Deprecated(
-    'Use selectDelegate instead. This getter will be removed in a future '
-    'minor version.',
-  )
-  SelectDelegate? get selectorDelegate => selectDelegate;
 
   /// Visual style of the trigger button.
   final PopupSelectButtonVariant variant;
@@ -532,13 +445,3 @@ class _PopupSelectButtonDefaults extends PopupSelectButtonTheme {
   @override
   Color? get overlayColor => foregroundColor?.withValues(alpha: 0.12);
 }
-
-/// Deprecated alias for [PopupSelectButton].
-///
-/// Use [PopupSelectButton] instead. This alias is kept only for backward
-/// compatibility and will be removed in a future minor version.
-@Deprecated(
-  'Use PopupSelectButton instead. '
-  'This alias will be removed in a future minor version.',
-)
-typedef DropdownSelectorButton = PopupSelectButton;

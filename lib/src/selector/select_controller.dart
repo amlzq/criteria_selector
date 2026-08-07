@@ -572,25 +572,3 @@ class SelectControllerProvider extends StatelessWidget {
     );
   }
 }
-
-/// Deprecated alias for [SelectController].
-///
-/// The `Selector`-prefixed name was renamed to drop the redundant `Selector`
-/// prefix. This alias is kept for backward compatibility and will be removed in
-/// a future minor version.
-@Deprecated(
-  'Use SelectController instead. This alias will be removed in a future minor '
-  'version.',
-)
-typedef SelectorController = SelectController;
-
-/// Deprecated alias for [SelectControllerProvider].
-///
-/// The `Selector`-prefixed name was renamed to drop the redundant `Selector`
-/// prefix. This alias is kept for backward compatibility and will be removed in
-/// a future minor version.
-@Deprecated(
-  'Use SelectControllerProvider instead. This alias will be removed in a '
-  'future minor version.',
-)
-typedef SelectorControllerProvider = SelectControllerProvider;

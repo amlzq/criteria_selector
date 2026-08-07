@@ -23,18 +23,8 @@ class PopupSelectButtonTheme extends ThemeExtension<PopupSelectButtonTheme> {
     this.padding,
     this.elevation,
     this.overlayStyle,
-    SelectThemeData? selectTheme,
-    @Deprecated(
-      'Use selectTheme instead. This parameter will be removed in a future '
-      'minor version.',
-    )
-    SelectThemeData? selectorTheme,
-  })  : assert(
-          selectTheme == null || selectorTheme == null,
-          'Provide either selectTheme or the deprecated selectorTheme, '
-          'but not both.',
-        ),
-        selectTheme = selectorTheme ?? selectTheme;
+    this.selectTheme,
+  });
 
   /// Overrides the default value of the button background color.
   final Color? backgroundColor;
@@ -74,16 +64,6 @@ class PopupSelectButtonTheme extends ThemeExtension<PopupSelectButtonTheme> {
 
   /// Default theme overrides applied to selector widgets inside the overlay.
   final SelectThemeData? selectTheme;
-
-  /// Deprecated alias for [selectTheme].
-  ///
-  /// Use [selectTheme] instead. This getter is kept only for backward
-  /// compatibility and will be removed in a future minor version.
-  @Deprecated(
-    'Use selectTheme instead. This getter will be removed in a future '
-    'minor version.',
-  )
-  SelectThemeData? get selectorTheme => selectTheme;
 
   @override
   PopupSelectButtonTheme copyWith({
@@ -195,13 +175,3 @@ class PopupSelectButtonTheme extends ThemeExtension<PopupSelectButtonTheme> {
     );
   }
 }
-
-/// Deprecated alias for [PopupSelectButtonTheme].
-///
-/// Use [PopupSelectButtonTheme] instead. This alias is kept only for backward
-/// compatibility and will be removed in a future minor version.
-@Deprecated(
-  'Use PopupSelectButtonTheme instead. '
-  'This alias will be removed in a future minor version.',
-)
-typedef DropdownSelectorButtonTheme = PopupSelectButtonTheme;

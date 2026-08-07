@@ -2,23 +2,8 @@ import 'package:criteria_selector/criteria_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-// Tests that the deprecated `SelectorLocalizations` alias resolves to
-// `SelectLocalizations`.
-//
-// ignore_for_file: deprecated_member_use, deprecated_member_use_from_same_package
-
 void main() {
   group('SelectLocalizations', () {
-    test(
-        'deprecated SelectorLocalizations alias resolves to SelectLocalizations',
-        () {
-      SelectLocalizations selected = SelectLocalizations(const Locale('en'));
-      expect(selected, isA<SelectLocalizations>());
-
-      SelectorLocalizations oldName = SelectLocalizations(const Locale('en'));
-      expect(oldName, isA<SelectLocalizations>());
-    });
-
     test('falls back to English when the language is unsupported', () {
       final localizations = SelectLocalizations(const Locale('xx'));
       expect(localizations.apply, 'Apply');
