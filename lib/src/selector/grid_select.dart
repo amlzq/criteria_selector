@@ -13,7 +13,7 @@ import 'widgets/widgets.dart';
 /// Two-dimensional structured data.
 ///
 /// Behavior notes:
-/// - This selector is fixed to a two-level structure: category -> children.
+/// - This select is fixed to a two-level structure: category -> children.
 /// - If a category contains an "Any" child entry, it may be selected by default.
 /// - If a category contains a custom range entry ([SelectRangeEntry.custom]),
 ///   two numeric fields are shown for min/max input.
@@ -105,7 +105,7 @@ class GridSelectState extends State<GridSelect> {
 
   /// Selection Mode for delegate.
   /// It is jointly determined by the category selection mode and the sub-item selection mode.
-  SelectionMode? get selectorSelectionMode {
+  SelectionMode? get selectSelectionMode {
     if (SelectionMode.multiple == categorySelectionMode) {
       return SelectionMode.multiple;
     }
@@ -141,7 +141,7 @@ class GridSelectState extends State<GridSelect> {
     } else {
       controller?.toggleFlatEntry(
         entry,
-        selectionMode: selectorSelectionMode ?? SelectionMode.single,
+        selectionMode: selectSelectionMode ?? SelectionMode.single,
         isCategoryTree: true,
         category: category,
       );
@@ -151,7 +151,7 @@ class GridSelectState extends State<GridSelect> {
   }
 
   void _setStateOrImmediateApply(SelectChildEntry entry) {
-    if (SelectionMode.single == selectorSelectionMode || entry.immediate) {
+    if (SelectionMode.single == selectSelectionMode || entry.immediate) {
       // No need to tap "Apply"; return result immediately
       _onApplyTap();
     } else {
@@ -292,7 +292,7 @@ class GridSelectState extends State<GridSelect> {
             ),
           ),
         ),
-        if (SelectionMode.multiple == selectorSelectionMode &&
+        if (SelectionMode.multiple == selectSelectionMode &&
             !SelectActionBarVisibility.isHidden(context))
           delegate.actionBarBuilder?.call(
                 context,

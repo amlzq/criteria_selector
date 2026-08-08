@@ -37,12 +37,12 @@ const kPopupSelectButtonHeight = 40.0;
 ///
 /// Where [PopupSelectBar] renders a horizontal row of tabs, this widget
 /// exposes a single trigger styled like a Material button (one of
-/// [PopupSelectButtonVariant]) that opens the selector overlay on tap,
+/// [PopupSelectButtonVariant]) that opens the select overlay on tap,
 /// similar to [PopupMenuButton]. The interaction (overlay positioning,
 /// animation, dismissal on outside tap, auto-close on apply) is driven by the
 /// same [PopupSelectController] machinery as [PopupSelectBar].
 ///
-/// Provide a [selectDelegate] to define the selector content, and a [label]
+/// Provide a [selectDelegate] to define the select content, and a [label]
 /// or [child] for the trigger. The trailing [icon] rotates while the overlay is
 /// open. After an apply, the button label is updated with the resulting label.
 class PopupSelectButton extends StatefulWidget {
@@ -197,10 +197,10 @@ class PopupSelectButton extends StatefulWidget {
   /// Overrides the default value of [SelectOverlayStyle].
   final SelectOverlayStyle? overlayStyle;
 
-  /// Fired when the selector overlay is shown.
+  /// Fired when the select overlay is shown.
   final VoidCallback? onSelectShowed;
 
-  /// Fired when the selector overlay is hidden.
+  /// Fired when the select overlay is hidden.
   final VoidCallback? onSelectHidden;
 
   /// Invoked just before the overlay is shown. The returned [Future] (if any)
@@ -234,10 +234,10 @@ class PopupSelectButton extends StatefulWidget {
   PopupSelectButtonWillToggleCallback? get onSelectorWillHide =>
       onSelectWillHide;
 
-  /// Fired whenever a selector reports a selection change.
+  /// Fired whenever a select reports a selection change.
   final PopupSelectButtonResultCallback? onChanged;
 
-  /// Fired when a selector is applied.
+  /// Fired when a select is applied.
   final PopupSelectButtonResultCallback? onApplied;
 
   /// Fired when reset is triggered.
@@ -252,7 +252,7 @@ class PopupSelectButton extends StatefulWidget {
   /// the displayed text.
   final SelectLabelLoader? labelLoader;
 
-  /// Vertical placement of the selector panel relative to the trigger.
+  /// Vertical placement of the select panel relative to the trigger.
   ///
   /// Defaults to [PopupSelectDirection.below], which always shows the
   /// panel under the trigger. Use [PopupSelectDirection.adaptive] to let

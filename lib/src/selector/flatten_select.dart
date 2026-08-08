@@ -15,7 +15,7 @@ import 'widgets/widgets.dart';
 /// Two-dimensional structured data.
 ///
 /// Behavior notes:
-/// - This selector is fixed to a two-level structure: category -> children.
+/// - This select is fixed to a two-level structure: category -> children.
 /// - Child selection mode is determined per category by [SelectCategoryEntry.selectionMode].
 /// - The right-side content is scroll-synced with the left category list.
 /// - Custom range entries ([SelectRangeEntry.custom]) are rendered as an input
@@ -102,7 +102,7 @@ class FlattenSelectState extends State<FlattenSelect> {
 
   /// Selection Mode for delegate.
   /// It is jointly determined by the category selection mode and the sub-item selection mode.
-  SelectionMode? get selectorSelectionMode {
+  SelectionMode? get selectSelectionMode {
     if (SelectionMode.multiple == categorySelectionMode) {
       return SelectionMode.multiple;
     }
@@ -148,7 +148,7 @@ class FlattenSelectState extends State<FlattenSelect> {
     // Each child is given a ValueKey('category_$index') so we can find it.
     for (int i = 0; i < widget.entries.length; i++) {
       // Key point: find the child's RenderObject directly from the current context.
-      // This has overhead for huge lists, but is efficient and robust for a category selector (limited size).
+      // This has overhead for huge lists, but is efficient and robust for a category select (limited size).
       final childKey = ValueKey('category_$i');
 
       // Note: due to ListView caching, off-screen children may not be found via context.
@@ -257,7 +257,7 @@ class FlattenSelectState extends State<FlattenSelect> {
     } else {
       controller?.toggleFlatEntry(
         item,
-        selectionMode: selectorSelectionMode ?? SelectionMode.single,
+        selectionMode: selectSelectionMode ?? SelectionMode.single,
         isCategoryTree: true,
         category: category,
       );
@@ -267,7 +267,7 @@ class FlattenSelectState extends State<FlattenSelect> {
   }
 
   void _setStateOrImmediateApply(SelectChildEntry item) {
-    if (SelectionMode.single == selectorSelectionMode || item.immediate) {
+    if (SelectionMode.single == selectSelectionMode || item.immediate) {
       // No need to tap "Apply"; return result immediately
       _onApplyTap();
     } else {
@@ -461,7 +461,7 @@ class FlattenSelectState extends State<FlattenSelect> {
             ],
           ),
         ),
-        if (SelectionMode.multiple == selectorSelectionMode &&
+        if (SelectionMode.multiple == selectSelectionMode &&
             !SelectActionBarVisibility.isHidden(context))
           delegate.actionBarBuilder?.call(
                 context,

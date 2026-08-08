@@ -502,7 +502,7 @@ extension SelectCategoryEntryExtension on SelectCategoryEntry {
   }
 }
 
-/// Base class for all selector entries.
+/// Base class for all select entries.
 ///
 /// Entries form a tree: [SelectCategoryEntry] is typically the root and
 /// [SelectChildEntry] represents non-root nodes.

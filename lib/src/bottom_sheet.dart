@@ -4,7 +4,7 @@ import 'selector/select_delegate.dart';
 import 'selector/select_entry.dart';
 import 'selector/select_panel.dart';
 
-/// Shows a selector in a modal bottom sheet built with Flutter's
+/// Shows a select in a modal bottom sheet built with Flutter's
 /// [showModalBottomSheet].
 ///
 /// Returns the selected [SelectEntries] when the user applies the selection,
@@ -12,7 +12,7 @@ import 'selector/select_panel.dart';
 /// when [isDismissible] is `true`, dragging it down, or via the system back
 /// gesture).
 ///
-/// The concrete selector type (Cascading, List, Grid or Flatten) is determined
+/// The concrete select type (Cascading, List, Grid or Flatten) is determined
 /// entirely by the concrete [SelectDelegate] passed via [delegate]. Any
 /// [SelectDelegate] subclass works, so no separate functions are required.
 ///
@@ -22,7 +22,7 @@ import 'selector/select_panel.dart';
 /// - In multi-selection mode, the action bar's "Apply" button must be tapped
 ///   to confirm; "Reset" only clears the current selection without closing.
 ///
-/// The optional [title] is rendered above the selector panel.
+/// The optional [title] is rendered above the select panel.
 ///
 /// Most of the remaining parameters ([backgroundColor], [elevation], [shape],
 /// [clipBehavior], [constraints], [barrierColor], [isScrollControlled],
@@ -31,7 +31,7 @@ import 'selector/select_panel.dart';
 /// [showModalBottomSheet].
 ///
 /// [isScrollControlled] defaults to `true` so the sheet can size to its
-/// content. Because the selector body is shrink-wrapped (it has no outer
+/// content. Because the select body is shrink-wrapped (it has no outer
 /// scroll), a default max height of 90% of the screen is applied automatically
 /// and the body scrolls internally, unless [constraints] is provided.
 ///
@@ -57,7 +57,7 @@ Future<SelectEntries?> showModalBottomSelect({
   Offset? anchorPoint,
 }) {
   // With [isScrollControlled] true Flutter does not cap the sheet height, but
-  // the selector body is shrink-wrapped and has no outer scroll. Without a max
+  // the select body is shrink-wrapped and has no outer scroll. Without a max
   // height tall content would overflow off-screen and hide the action bar, so
   // apply a sensible default unless the caller overrides [constraints].
   final effectiveConstraints = constraints ??
@@ -121,7 +121,7 @@ class _ModalBottomSheetContentState extends State<_ModalBottomSheetContent> {
     final panel = SelectPanel(
       delegate: widget.delegate,
       onApplyTap: (selected) => _popWith(selected),
-      // Reset is handled internally by the selector widget; the sheet stays
+      // Reset is handled internally by the select widget; the sheet stays
       // open so the user can keep adjusting the selection.
       onResetTap: () {},
     );
@@ -129,7 +129,7 @@ class _ModalBottomSheetContentState extends State<_ModalBottomSheetContent> {
     // Shrink to the panel's intrinsic height when content is short (e.g. a
     // 6-row single-select list) so there is no empty space, while still capping
     // at the bottom sheet's own max height (0.9 of the screen when
-    // [isScrollControlled] is false) when content is large. The selector then
+    // [isScrollControlled] is false) when content is large. The select then
     // scrolls internally and its action bar stays pinned to the bottom.
     //
     // SafeArea with bottom:true is required here because Flutter's
@@ -154,7 +154,7 @@ class _ModalBottomSheetContentState extends State<_ModalBottomSheetContent> {
   }
 }
 
-/// Optional header shown above the selector panel inside the bottom sheet.
+/// Optional header shown above the select panel inside the bottom sheet.
 class _BottomSheetHeader extends StatelessWidget {
   const _BottomSheetHeader({required this.title});
 

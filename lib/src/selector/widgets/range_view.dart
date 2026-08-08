@@ -82,7 +82,7 @@ class SelectRangeView extends StatefulWidget {
 
   /// The visual variant applied to the two [SelectFieldTile]s below the
   /// slider. When `null` (the default), each field tile uses the variant
-  /// resolved from the selector's theme (see
+  /// resolved from the select's theme (see
   /// [FieldTileThemeResolver]).
   final SelectFieldTileVariant? fieldVariant;
 

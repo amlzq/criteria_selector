@@ -8,7 +8,7 @@ import 'list_tile_theme.dart';
 /// Default height for [SelectListTile].
 const kSelectListTileHeight = 44.0;
 
-/// Base list tile used by selector views.
+/// Base list tile used by select views.
 ///
 /// This tile supports a selected state, optional badge, and optional trailing
 /// toggle widgets (radio/checkbox) used by [SelectRadioListTile] and
@@ -196,7 +196,7 @@ class _SelectListTileDefaults extends SelectListTileTheme {
       };
 }
 
-/// A selector list tile with a checkbox trailing widget.
+/// A select list tile with a checkbox trailing widget.
 class SelectCheckboxListTile extends StatelessWidget {
   final String label;
   final String? sublabel;
@@ -243,7 +243,7 @@ class SelectCheckboxListTile extends StatelessWidget {
   }
 }
 
-/// A selector list tile with a radio trailing widget.
+/// A select list tile with a radio trailing widget.
 class SelectRadioListTile extends StatelessWidget {
   final String label;
   final String? sublabel;

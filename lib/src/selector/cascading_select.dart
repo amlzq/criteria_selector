@@ -382,7 +382,7 @@ class CascadingSelectState extends State<CascadingSelect> {
 
   /// Selection Mode for delegate.
   /// It is jointly determined by the category selection mode and the sub-item selection mode.
-  SelectionMode? get selectorSelectionMode {
+  SelectionMode? get selectSelectionMode {
     if (SelectionMode.multiple == categorySelectionMode) {
       return SelectionMode.multiple;
     }
@@ -489,7 +489,7 @@ class CascadingSelectState extends State<CascadingSelect> {
       _currentLevel = level;
       controller?.toggleCascadingEntry(
         entry,
-        selectionMode: selectorSelectionMode ?? SelectionMode.single,
+        selectionMode: selectSelectionMode ?? SelectionMode.single,
         childrenSelectionMode: childrenSelectionMode,
         focusedPath: _tempSelectedEntryPerLevel.take(cascadeIndex + 1).toList(),
         category: tempSelectedCategory,
@@ -500,7 +500,7 @@ class CascadingSelectState extends State<CascadingSelect> {
 
     controller?.toggleCascadingEntry(
       entry,
-      selectionMode: selectorSelectionMode ?? SelectionMode.single,
+      selectionMode: selectSelectionMode ?? SelectionMode.single,
       childrenSelectionMode: childrenSelectionMode,
       focusedPath: _tempSelectedEntryPerLevel.take(cascadeIndex + 1).toList(),
       category: tempSelectedCategory,
@@ -510,7 +510,7 @@ class CascadingSelectState extends State<CascadingSelect> {
   }
 
   void _setStateOrImmediateApply(SelectChildEntry entry) {
-    if (SelectionMode.single == selectorSelectionMode || entry.immediate) {
+    if (SelectionMode.single == selectSelectionMode || entry.immediate) {
       // No need to tap "Apply"; return result immediately
       _onApplyTap();
     } else {
@@ -752,7 +752,7 @@ class CascadingSelectState extends State<CascadingSelect> {
             ],
           ),
         ),
-        if (SelectionMode.multiple == selectorSelectionMode &&
+        if (SelectionMode.multiple == selectSelectionMode &&
             !SelectActionBarVisibility.isHidden(context))
           delegate.actionBarBuilder?.call(
                 context,

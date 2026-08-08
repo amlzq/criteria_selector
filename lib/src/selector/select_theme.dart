@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'select_theme_data.dart';
 
-/// Provides [SelectThemeData] to selector widgets.
+/// Provides [SelectThemeData] to select widgets.
 ///
 /// This works similarly to Material's theme widgets and supports merging via
 /// [SelectTheme.merge].

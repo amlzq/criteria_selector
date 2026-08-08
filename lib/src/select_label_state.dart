@@ -1,6 +1,6 @@
 import 'selector/select_entry.dart';
 
-/// Builds a custom label for a selector / tab from the applied selection.
+/// Builds a custom label for a select / tab from the applied selection.
 ///
 /// Receives only the [selected] entries. This is the canonical label-loader type
 /// and is used by [PopupTabData.labelLoader] / [PopupTab.labelLoader] /

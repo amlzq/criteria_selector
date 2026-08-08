@@ -4,13 +4,13 @@ import 'selector/select_delegate.dart';
 import 'selector/select_entry.dart';
 import 'selector/select_panel.dart';
 
-/// Shows a selector in a modal dialog.
+/// Shows a select in a modal dialog.
 ///
 /// Returns the selected [SelectEntries] when the user applies the selection,
 /// or `null` when the dialog is dismissed (for example by tapping the barrier
 /// when [barrierDismissible] is `true`, or via the system back gesture).
 ///
-/// The concrete selector type (Cascading, List, Grid or Flatten) is determined
+/// The concrete select type (Cascading, List, Grid or Flatten) is determined
 /// entirely by the concrete [SelectDelegate] passed via [delegate]. Any
 /// [SelectDelegate] subclass works, so no separate functions are required.
 ///
@@ -20,7 +20,7 @@ import 'selector/select_panel.dart';
 /// - In multi-selection mode, the action bar's "Apply" button must be tapped
 ///   to confirm; "Reset" only clears the current selection without closing.
 ///
-/// The optional [title] is rendered above the selector panel.
+/// The optional [title] is rendered above the select panel.
 ///
 /// The [elevation], [shape] and [clipBehavior] parameters are forwarded to the
 /// outer [Dialog] decoration. These are independent of
@@ -142,7 +142,7 @@ class _SelectDialogState extends State<_SelectDialog> {
     final panel = SelectPanel(
       delegate: widget.delegate,
       onApplyTap: (selected) => _popWith(selected),
-      // Reset is handled internally by the selector widget; the dialog stays
+      // Reset is handled internally by the select widget; the dialog stays
       // open so the user can keep adjusting the selection.
       onResetTap: () {},
     );
@@ -167,7 +167,7 @@ class _SelectDialogState extends State<_SelectDialog> {
             if (widget.title != null) _SelectDialogHeader(title: widget.title!),
             // `loose` lets the panel take only as much height as it needs when
             // content is small, but never exceed the free space (0.7 screen
-            // height minus the header) when content is large, so the selector
+            // height minus the header) when content is large, so the select
             // scrolls internally and its action bar stays pinned to the bottom.
             Flexible(
               fit: FlexFit.loose,
@@ -180,7 +180,7 @@ class _SelectDialogState extends State<_SelectDialog> {
   }
 }
 
-/// Optional header shown above the selector panel inside [_SelectDialog].
+/// Optional header shown above the select panel inside [_SelectDialog].
 class _SelectDialogHeader extends StatelessWidget {
   const _SelectDialogHeader({required this.title});
 

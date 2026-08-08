@@ -9,7 +9,7 @@ import 'select_entry.dart';
 import 'select_panel_theme.dart';
 import 'widgets/widgets.dart';
 
-/// Builds the action bar shown at the bottom of the selector panel.
+/// Builds the action bar shown at the bottom of the select panel.
 ///
 /// Implementations should trigger [onResetTap] and [onApplyTap] from UI controls
 /// (e.g. buttons).
@@ -19,12 +19,12 @@ typedef SelectActionBarBuilder = Widget Function(
   required VoidCallback onApplyTap,
 });
 
-/// Base configuration for a selector.
+/// Base configuration for a select.
 ///
 /// A [SelectDelegate] is responsible for:
 /// - Defining how entries are fetched and restored (via loader callbacks).
 /// - Defining UI/theme overrides (colors and per-widget themes).
-/// - Building the selector body widget, a loading skeleton and an error widget.
+/// - Building the select body widget, a loading skeleton and an error widget.
 ///
 /// The actual selection state is managed by [SelectController] and widgets
 /// under `src/selector/`.
@@ -60,9 +60,9 @@ abstract class SelectDelegate {
   /// Selection mode applied to category entries.
   final SelectionMode selectionMode;
 
-  /// Fetches the full selectable entries for this selector.
+  /// Fetches the full selectable entries for this select.
   ///
-  /// When provided, the selector panel can display a loading skeleton while
+  /// When provided, the select panel can display a loading skeleton while
   /// awaiting the result.
   final Future<SelectEntries> Function()? entriesLoader;
 
@@ -74,7 +74,7 @@ abstract class SelectDelegate {
 
   /// Returns the previously selected entries to restore.
   ///
-  /// This is typically used for restoring state when reopening the selector.
+  /// This is typically used for restoring state when reopening the select.
   final SelectEntries? Function()? selectedEntriesLoader;
 
   SelectEntries? _selectedData;
@@ -105,7 +105,7 @@ abstract class SelectDelegate {
   /// Text/icon color used on top of [selectedColor].
   final Color? onSelectedColor;
 
-  /// Base background color used by the selector panel.
+  /// Base background color used by the select panel.
   final Color? backgroundColor;
 
   /// Text/icon color used on top of [backgroundColor].
@@ -164,7 +164,7 @@ abstract class SelectDelegate {
   /// When omitted, a simple [Text] widget showing the error is rendered.
   final Widget Function(Object error, StackTrace? stackTrace)? errorBuilder;
 
-  /// Builds the selector body widget.
+  /// Builds the select body widget.
   ///
   /// [entries] are the full selectable entries. [previousSelected] represents
   /// a previously applied selection, if any.
@@ -191,7 +191,7 @@ abstract class SelectDelegate {
   }
 }
 
-/// A cascading selector for tree-structured data.
+/// A cascading select for tree-structured data.
 ///
 /// This layout shows categories on the left and a cascading list to the right.
 class CascadingSelectDelegate extends SelectDelegate {
@@ -265,7 +265,7 @@ class CascadingSelectDelegate extends SelectDelegate {
   }
 }
 
-/// A single-column list selector.
+/// A single-column list select.
 class ListSelectDelegate extends SelectDelegate {
   ListSelectDelegate({
     this.checkboxBuilder,
@@ -323,7 +323,7 @@ class ListSelectDelegate extends SelectDelegate {
   }
 }
 
-/// A grid selector.
+/// A grid select.
 class GridSelectDelegate extends SelectDelegate {
   GridSelectDelegate({
     required this.crossAxisCount,
@@ -403,7 +403,7 @@ class GridSelectDelegate extends SelectDelegate {
   }
 }
 
-/// A "flatten" selector that renders children in a grid while keeping the
+/// A "flatten" select that renders children in a grid while keeping the
 /// hierarchy behavior.
 class FlattenSelectDelegate extends SelectDelegate {
   FlattenSelectDelegate({

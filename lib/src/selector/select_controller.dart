@@ -9,7 +9,7 @@ import 'state/state_tree.dart';
 
 /// Controller for a single [SelectDelegate] instance.
 ///
-/// This controller manages selector state and forwards user actions
+/// This controller manages select state and forwards user actions
 /// (change/apply/reset) to listeners registered via [addChangeListener],
 /// [addApplyListener], and [addResetListener].
 ///
@@ -18,7 +18,7 @@ import 'state/state_tree.dart';
 /// construction time. The controller does not depend on the [SelectDelegate]
 /// configuration class.
 class SelectController extends ChangeNotifier {
-  /// The selection behavior applied at the top level of the selector.
+  /// The selection behavior applied at the top level of the select.
   ///
   /// Determines how many entries can be selected at once. Per-category
   /// [SelectCategoryEntry.selectionMode] may override this for nested levels.
@@ -212,7 +212,7 @@ class SelectController extends ChangeNotifier {
   /// categories' selections untouched.
   ///
   /// This is the per-tab counterpart of [resetState] and is used by tabbed
-  /// selectors (e.g. [GridSelect]) where "Reset" should clear only the
+  /// selects (e.g. [GridSelect]) where "Reset" should clear only the
   /// currently focused category.
   void resetCategoryState(
     SelectCategoryEntry category, {
@@ -261,7 +261,7 @@ class SelectController extends ChangeNotifier {
     if (entry is! SelectChildEntry) return false;
 
     final path = tree.findPath(id, parentId: parentId);
-    final selectorMode = _effectiveSelectionMode();
+    final effectiveSelectionMode = _effectiveSelectionMode();
 
     if (path == null || path.isEmpty) {
       if (tree.entries.isEmpty || tree.entries.first is SelectCategoryEntry) {
@@ -272,12 +272,12 @@ class SelectController extends ChangeNotifier {
       if (!alreadySelected) {
         toggleFlatEntry(
           entry,
-          selectionMode: selectorMode,
+          selectionMode: effectiveSelectionMode,
           isCategoryTree: false,
         );
       }
       if (applyIfImmediate &&
-          (selectorMode == SelectionMode.single || entry.immediate)) {
+          (effectiveSelectionMode == SelectionMode.single || entry.immediate)) {
         applyFromState();
       } else if (emitChange) {
         emitChangeFromState();
@@ -297,14 +297,14 @@ class SelectController extends ChangeNotifier {
       if (!alreadySelected) {
         toggleFlatEntry(
           leaf,
-          selectionMode: selectorMode,
+          selectionMode: effectiveSelectionMode,
           isCategoryTree: true,
           category: root,
         );
       }
 
       if (applyIfImmediate &&
-          (selectorMode == SelectionMode.single || leaf.immediate)) {
+          (effectiveSelectionMode == SelectionMode.single || leaf.immediate)) {
         applyFromState();
       } else if (emitChange) {
         emitChangeFromState();
@@ -320,7 +320,7 @@ class SelectController extends ChangeNotifier {
     if (!alreadySelected) {
       toggleCascadingEntry(
         leaf,
-        selectionMode: selectorMode,
+        selectionMode: effectiveSelectionMode,
         childrenSelectionMode: root.selectionMode,
         focusedPath: focusedPath,
         category: root,
@@ -328,7 +328,7 @@ class SelectController extends ChangeNotifier {
     }
 
     if (applyIfImmediate &&
-        (selectorMode == SelectionMode.single || leaf.immediate)) {
+        (effectiveSelectionMode == SelectionMode.single || leaf.immediate)) {
       applyFromState();
     } else if (emitChange) {
       emitChangeFromState();
@@ -344,13 +344,13 @@ class SelectController extends ChangeNotifier {
     final entry = tree.findEntry(id, parentId: parentId);
     if (entry == null || entry is! SelectChildEntry) return false;
 
-    final selectorMode = _effectiveSelectionMode();
+    final effectiveSelectionMode = _effectiveSelectionMode();
     final path = tree.findPath(id, parentId: parentId);
 
     if (path == null || path.isEmpty) {
       final selected0 = tree.mutableSelectedEntriesAtLevel(0);
       if (!selected0.contains(entry)) return true;
-      if (selectorMode == SelectionMode.single) {
+      if (effectiveSelectionMode == SelectionMode.single) {
         final any = tree.entries.singleWhereOrNull(testAnyElement);
         selected0
           ..clear()
@@ -385,7 +385,7 @@ class SelectController extends ChangeNotifier {
       } else {
         toggleFlatEntry(
           leaf,
-          selectionMode: selectorMode,
+          selectionMode: effectiveSelectionMode,
           isCategoryTree: true,
           category: root,
         );
@@ -416,7 +416,7 @@ class SelectController extends ChangeNotifier {
 
     toggleCascadingEntry(
       leaf,
-      selectionMode: selectorMode,
+      selectionMode: effectiveSelectionMode,
       childrenSelectionMode: root.selectionMode,
       focusedPath: focusedPath,
       category: root,

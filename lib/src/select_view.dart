@@ -6,15 +6,15 @@ import 'selector/select_controller.dart';
 import 'selector/select_delegate.dart';
 import 'selector/select_panel.dart';
 
-/// A high-level, ready-to-use selector.
+/// A high-level, ready-to-use select.
 ///
-/// [SelectView] is the public entry point for embedding a selector
+/// [SelectView] is the public entry point for embedding a select
 /// directly in a page or dialog body. It wraps [SelectPanel] — now an
 /// internal implementation detail that is no longer exported — and takes care
 /// of the controller lifecycle so callers get a complete, styled component
 /// without extra wiring.
 ///
-/// Inline selectors do not show the apply/reset action bar: [SelectView]
+/// Inline selects do not show the apply/reset action bar: [SelectView]
 /// wraps its panel in a [SelectActionBarVisibility] scope that hides it, so
 /// selections apply immediately through [onChanged]. The action bar is still
 /// shown by the modal hosts ([showSelect] / [showModalBottomSelect]), which
@@ -23,7 +23,7 @@ import 'selector/select_panel.dart';
 /// effect inside a [SelectView].
 ///
 /// Styling is carried entirely by the [delegate] (colors, per-widget themes
-/// and the panel decoration via [SelectDelegate.panelTheme]). When a selector
+/// and the panel decoration via [SelectDelegate.panelTheme]). When a select
 /// is the only one in its host, a separate `selectTheme` parameter is
 /// unnecessary.
 ///
@@ -31,7 +31,7 @@ import 'selector/select_panel.dart';
 /// [SelectController]; otherwise the caller-provided controller is used and
 /// remains owned by the caller.
 ///
-/// In addition to selector-specific options, [SelectView] accepts the same
+/// In addition to select-specific options, [SelectView] accepts the same
 /// sizing and decorating parameters as [Container] — [width], [height],
 /// [constraints], [padding], [margin] and [decoration]. These surround the
 /// [SelectPanel] exactly as [Container] surrounds its child: the panel is
@@ -42,7 +42,7 @@ import 'selector/select_panel.dart';
 /// unbounded contexts; a smaller bound from [width]/[height]/[constraints]
 /// always wins.
 class SelectView extends StatefulWidget {
-  /// Creates a selector box.
+  /// Creates a select box.
   ///
   /// The [width] and [height] values include the [padding] (but not the
   /// [margin]), mirroring [Container].
@@ -68,8 +68,8 @@ class SelectView extends StatefulWidget {
                 BoxConstraints.tightFor(width: width, height: height)
             : constraints;
 
-  /// Configuration describing how entries are loaded and how the selector body
-  /// is rendered. Determines the concrete selector type (Cascading, List, Grid
+  /// Configuration describing how entries are loaded and how the select body
+  /// is rendered. Determines the concrete select type (Cascading, List, Grid
   /// or Flatten). Also carries all theme overrides (colors, per-widget themes
   /// and the panel decoration via [SelectDelegate.panelTheme]).
   final SelectDelegate delegate;
@@ -85,11 +85,11 @@ class SelectView extends StatefulWidget {
   /// Fired when the selection changes.
   final SelectCallback? onChanged;
 
-  /// Caps the selector's height to this fraction of the screen height when it
+  /// Caps the select's height to this fraction of the screen height when it
   /// is embedded in an unbounded context (e.g. a [Column] with
   /// `mainAxisSize: min`).
   ///
-  /// The cascading selector lays out its body/skeleton with a `Column(min)` +
+  /// The cascading select lays out its body/skeleton with a `Column(min)` +
   /// `Expanded`, which requires a bounded height. This constraint only limits
   /// growth: a smaller bound from an ancestor (such as a [SizedBox] or
   /// [Expanded]) still wins via `min(parent, factor * screenHeight)`. Content
@@ -109,17 +109,17 @@ class SelectView extends StatefulWidget {
   /// (e.g. borders in a [BoxDecoration]); see [Decoration.padding].
   final EdgeInsetsGeometry? padding;
 
-  /// Empty space to surround the [decoration] and the selector content.
+  /// Empty space to surround the [decoration] and the select content.
   final EdgeInsetsGeometry? margin;
 
-  /// The decoration to paint behind the selector content.
+  /// The decoration to paint behind the select content.
   ///
   /// Commonly a [BoxDecoration]. The [SelectPanel] is not clipped to the
   /// decoration; to clip it to a particular shape, consider wrapping the box
   /// in a [ClipPath].
   final Decoration? decoration;
 
-  /// Additional constraints to apply to the selector content.
+  /// Additional constraints to apply to the select content.
   ///
   /// The constructor [width] and [height] arguments are combined with this
   /// [constraints] argument to set the effective constraints, exactly as in
@@ -214,7 +214,7 @@ class _SelectViewState extends State<SelectView> {
     // [padding] (inflated by any border in the [decoration]), then the
     // [decoration] is painted, then constraints are applied (combining
     // [width]/[height]/[constraints] with the [maxHeightFactor] cap), and
-    // finally the [margin] surrounds everything. The cascading selector lays
+    // finally the [margin] surrounds everything. The cascading select lays
     // out its body/skeleton with a Column(min) + Expanded, which requires a
     // bounded height; the constraints guarantee that.
     Widget current = SelectActionBarVisibility(

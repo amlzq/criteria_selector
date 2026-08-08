@@ -11,13 +11,13 @@ enum BadgeStyle {
   dot,
 }
 
-/// Selection mode for a category or selector.
+/// Selection mode for a category or select.
 enum SelectionMode {
   single,
   multiple,
 }
 
-/// Builds a skeleton widget while selector data is loading.
+/// Builds a skeleton widget while select data is loading.
 typedef SkeletonBuilder = Widget Function(BuildContext context);
 
 /// Returns true if the entry is a multi-selection category.

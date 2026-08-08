@@ -9,7 +9,7 @@ const kSelectOverlayMaxHeightFactor = 0.7;
 /// Minimum inset kept between the overlay panel and the screen edges.
 const kSelectOverlayScreenMargin = 0.0;
 
-/// Vertical placement strategy for the selector overlay relative to its trigger
+/// Vertical placement strategy for the select overlay relative to its trigger
 /// (a [PopupSelectButton] or [PopupSelectBar]).
 enum PopupSelectDirection {
   /// Always present the panel below the trigger.
@@ -102,8 +102,7 @@ class SelectOverlay extends StatelessWidget {
 
     final maxHeightFactor = style?.maxHeightFactor ?? defaults.maxHeightFactor!;
 
-    final effectiveBarrierColor =
-        style?.barrierColor ?? defaults.barrierColor!;
+    final effectiveBarrierColor = style?.barrierColor ?? defaults.barrierColor!;
     final intercept = style?.barrierIntercept ?? true;
 
     final effectiveAnimation = animation ?? const AlwaysStoppedAnimation(1.0);

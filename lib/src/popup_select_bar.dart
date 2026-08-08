@@ -20,7 +20,7 @@ const kPopupSelectBarHeight = 44.0;
 typedef PopupSelectBarWillToggleCallback = FutureOr<bool> Function(
     PopupTabData tabData);
 
-/// Callback parameter indicates which selector is being shown or hidden.
+/// Callback parameter indicates which select is being shown or hidden.
 typedef PopupSelectBarToggleCallback = void Function(PopupTabData tabData);
 
 /// Callback for selection change or apply events from a [PopupSelectBar].
@@ -29,11 +29,11 @@ typedef PopupSelectBarToggleCallback = void Function(PopupTabData tabData);
 typedef PopupSelectBarResultCallback = void Function(
     PopupTabData tabData, SelectEntries selected);
 
-/// A tab bar that shows an overlay selector panel when a tab is tapped.
+/// A tab bar that shows an overlay select panel when a tab is tapped.
 ///
 /// Provide:
 /// - [tabs] to render the bar UI.
-/// - [selectDelegates] to define the selector configuration for each tab.
+/// - [selectDelegates] to define the select configuration for each tab.
 ///
 /// The overlay content is driven by [PopupSelectController] and the selected
 /// results are delivered via [onChanged] and [onApplied].
@@ -165,30 +165,30 @@ class PopupSelectBar extends StatefulWidget implements PreferredSizeWidget {
       'Use onSelectWillHide instead. This will be removed in a future minor version.')
   PopupSelectBarWillToggleCallback? get onSelectorWillHide => onSelectWillHide;
 
-  /// Fired whenever a selector reports a selection change.
+  /// Fired whenever a select reports a selection change.
   final PopupSelectBarResultCallback? onChanged;
 
-  /// Fired when a selector is applied.
+  /// Fired when a select is applied.
   final PopupSelectBarResultCallback? onApplied;
 
   /// Fired when reset is triggered.
   final VoidCallback? onReset;
 
-  /// Controls selector overlay visibility and tab state.
+  /// Controls select overlay visibility and tab state.
   final PopupSelectController? controller;
 
-  /// If not null, the initial index of the selected tab and show selector.
+  /// If not null, the initial index of the selected tab and show select.
   final int? initialIndex;
 
-  /// Visual configuration for the selector overlay panel.
+  /// Visual configuration for the select overlay panel.
   ///
   /// If null, [PopupSelectBarTheme.overlayStyle] is used.
   final SelectOverlayStyle? overlayStyle;
 
-  /// Theme overrides applied to selector widgets inside the overlay.
+  /// Theme overrides applied to select widgets inside the overlay.
   final SelectThemeData? selectTheme;
 
-  /// Vertical placement of the selector panel relative to the bar.
+  /// Vertical placement of the select panel relative to the bar.
   ///
   /// Defaults to [PopupSelectDirection.below], which always shows the
   /// panel under the trigger. Use [PopupSelectDirection.adaptive] to let
@@ -308,8 +308,8 @@ class _PopupSelectBarState extends State<PopupSelectBar>
         : await widget.onSelectWillHide?.call(tabData) ?? true;
     if (!proceed) return;
 
-    final selector = widget.selectDelegates.elementAt(tabData.index);
-    _controller!.previousSelectDelegate = selector;
+    final select = widget.selectDelegates.elementAt(tabData.index);
+    _controller!.previousSelectDelegate = select;
 
     _controller!.toggleSelect(index: tabData.index);
 

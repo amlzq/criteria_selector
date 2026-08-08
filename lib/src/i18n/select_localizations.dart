@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 /// Localized business strings for the `criteria_selector` package.
 ///
 /// Resolves the best-matching language pack for a given [Locale] and exposes
-/// the UI labels (e.g. "Apply" / "Reset" / "Multiple") used by the selector
+/// the UI labels (e.g. "Apply" / "Reset" / "Multiple") used by the select
 /// widgets. Obtain the instance for the current [BuildContext] via
 /// [SelectLocalizations.of].
 class SelectLocalizations {
@@ -12,8 +12,7 @@ class SelectLocalizations {
   SelectLocalizations(this.locale);
 
   static SelectLocalizations? of(BuildContext context) {
-    return Localizations.of<SelectLocalizations>(
-        context, SelectLocalizations);
+    return Localizations.of<SelectLocalizations>(context, SelectLocalizations);
   }
 
   // Dynamically compute the best-matching language pack for the current context.

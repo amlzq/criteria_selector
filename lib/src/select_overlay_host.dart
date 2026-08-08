@@ -7,7 +7,7 @@ import 'selector/select_panel.dart';
 import 'selector/select_theme_data.dart';
 
 /// Shared host that wires a trigger widget (a [PopupSelectBar] or a
-/// [PopupSelectButton]) to its selector overlay.
+/// [PopupSelectButton]) to its select overlay.
 ///
 /// This widget owns the boilerplate that used to be duplicated verbatim in both
 /// triggers:
@@ -55,7 +55,7 @@ class SelectOverlayHost extends StatelessWidget {
   ///
   /// Measuring relative to the overlay (rather than the global root) lets the
   /// overlay render correctly inside a scoped overlay — for example a phone
-  /// preview that wraps the selector in its own [Navigator]/[Overlay], possibly
+  /// preview that wraps the select in its own [Navigator]/[Overlay], possibly
   /// behind a [FittedBox] transform. When [overlay] is `null` (no scoped
   /// overlay, i.e. the default root overlay) the result is identical to the
   /// previous root-global measurement, so behavior is unchanged for normal use.

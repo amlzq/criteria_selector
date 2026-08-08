@@ -67,7 +67,7 @@ class StateTree {
   /// Resets the selection of a single [category] without touching the other
   /// categories in the tree.
   ///
-  /// Used by tabbed selectors (e.g. [GridSelect]) where tapping "Reset" should
+  /// Used by tabbed selects (e.g. [GridSelect]) where tapping "Reset" should
   /// clear only the currently focused category's selection while leaving the
   /// remaining tabs untouched.
   ///

@@ -110,8 +110,7 @@ class SelectUtils {
       final children = entry.children;
       if (children == null || children.isEmpty) return;
 
-      children
-          .removeWhere((child) => child is SelectChildEntry && child.isAny);
+      children.removeWhere((child) => child is SelectChildEntry && child.isAny);
 
       for (final child in children) {
         removeAnyInChildren(child);
@@ -126,7 +125,7 @@ class SelectUtils {
     return result;
   }
 
-  /// Creates a deep copy of selector entries.
+  /// Creates a deep copy of select entries.
   ///
   /// The returned set and all nested nodes are new instances, so in-place
   /// operations (e.g. [clippingTree]) won't mutate the original tree.
@@ -138,8 +137,8 @@ class SelectUtils {
     bool skipAny = false,
   }) {
     return entries
-        .where((entry) =>
-            !skipAny || !(entry is SelectChildEntry && entry.isAny))
+        .where(
+            (entry) => !skipAny || !(entry is SelectChildEntry && entry.isAny))
         .map((entry) => _cloneEntry(entry, skipAny: skipAny))
         .toSet();
   }
@@ -149,8 +148,8 @@ class SelectUtils {
     bool skipAny = false,
   }) {
     final clonedChildren = entry.children
-        ?.where((child) =>
-            !skipAny || !(child is SelectChildEntry && child.isAny))
+        ?.where(
+            (child) => !skipAny || !(child is SelectChildEntry && child.isAny))
         .map((child) => _cloneEntry(child, skipAny: skipAny))
         .toSet();
 
@@ -333,8 +332,7 @@ class SelectUtils {
     SelectEntries? selectedChildren, {
     required bool deepCloneSelectedSubtree,
   }) {
-    final originalChildren =
-        entry.children?.toList() ?? const <SelectEntry>[];
+    final originalChildren = entry.children?.toList() ?? const <SelectEntry>[];
     final selectedIds =
         selectedChildren?.map((e) => e.id).toSet() ?? const <String>{};
 
@@ -421,8 +419,7 @@ class SelectUtils {
       // Filter the next-level selection to entries that actually belong to
       // `item`'s subtree before recursing, so clipping only removes nodes that
       // are not selected under this specific parent.
-      final filteredPerLevel =
-          List<SelectEntries>.from(selectedItemsPerLevel);
+      final filteredPerLevel = List<SelectEntries>.from(selectedItemsPerLevel);
       final nextLevel = level + 1;
       if (nextLevel < filteredPerLevel.length) {
         filteredPerLevel[nextLevel] = filteredPerLevel[nextLevel]

@@ -6,7 +6,7 @@ import '../select_theme_data.dart';
 import 'action_bar_theme.dart';
 import 'skeleton_view.dart';
 
-/// Action bar for selector panels.
+/// Action bar for select panels.
 ///
 /// This widget typically renders "Reset" and "Apply" actions and can be styled
 /// via [SelectActionBarTheme] or per-instance overrides.

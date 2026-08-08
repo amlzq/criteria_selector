@@ -4,7 +4,7 @@ import '../select_theme.dart';
 import '../select_theme_data.dart';
 import 'grid_tile_theme.dart';
 
-/// A grid tile used by selector grid layouts.
+/// A grid tile used by select grid layouts.
 ///
 /// The tile supports selected/disabled states and can be rendered as filled or
 /// outlined depending on [variant].

@@ -5,7 +5,7 @@ import 'select_localizations.dart';
 /// The [LocalizationsDelegate] for [SelectLocalizations].
 ///
 /// Add a const instance to your app's `localizationsDelegates` to enable the
-/// built-in translations for the selector widgets. It ships translations for
+/// built-in translations for the select widgets. It ships translations for
 /// `de`, `en`, `es`, `fr`, `id`, `ja`, `ko`, `pt`, `vi`, and `zh`
 /// (Hans/Hant), localizing the "Apply" / "Reset" / "Multiple" labels
 /// automatically.
@@ -57,8 +57,7 @@ class SelectLocalizationsDelegate
   }
 
   @override
-  bool shouldReload(
-      covariant LocalizationsDelegate<SelectLocalizations> old) {
+  bool shouldReload(covariant LocalizationsDelegate<SelectLocalizations> old) {
     return false;
   }
 }

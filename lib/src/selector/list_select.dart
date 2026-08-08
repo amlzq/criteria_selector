@@ -70,7 +70,7 @@ class ListSelectState extends State<ListSelect> {
     if (mounted) setState(() {});
   }
 
-  SelectionMode? get selectorSelectionMode {
+  SelectionMode? get selectSelectionMode {
     if (SelectionMode.multiple == categorySelectionMode) {
       return SelectionMode.multiple;
     }
@@ -102,7 +102,7 @@ class ListSelectState extends State<ListSelect> {
     if (!isCategoryTree) {
       controller?.toggleFlatEntry(
         item,
-        selectionMode: selectorSelectionMode ?? SelectionMode.single,
+        selectionMode: selectSelectionMode ?? SelectionMode.single,
         isCategoryTree: false,
       );
       _setStateOrImmediateApply(item);
@@ -117,7 +117,7 @@ class ListSelectState extends State<ListSelect> {
     final category = categoryEntry;
     controller?.toggleFlatEntry(
       item,
-      selectionMode: selectorSelectionMode ?? SelectionMode.single,
+      selectionMode: selectSelectionMode ?? SelectionMode.single,
       isCategoryTree: true,
       category: category,
     );
@@ -125,7 +125,7 @@ class ListSelectState extends State<ListSelect> {
   }
 
   void _setStateOrImmediateApply(SelectChildEntry item) {
-    if (SelectionMode.single == selectorSelectionMode || item.immediate) {
+    if (SelectionMode.single == selectSelectionMode || item.immediate) {
       // No need to tap "Apply"; return result immediately
       _onApplyTap();
     } else {
@@ -150,8 +150,8 @@ class ListSelectState extends State<ListSelect> {
   Widget build(BuildContext context) {
     final selectionMode = controller?.selectionMode;
 
-    // final listTileTheme = selector?.listTileTheme;
-    // final gridTileTheme = selector?.gridTileTheme;
+    // final listTileTheme = select?.listTileTheme;
+    // final gridTileTheme = select?.gridTileTheme;
     final chipBarTheme = delegate.chipBarTheme;
 
     return Column(

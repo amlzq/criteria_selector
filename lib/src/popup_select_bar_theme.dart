@@ -49,7 +49,7 @@ class PopupSelectBarTheme extends ThemeExtension<PopupSelectBarTheme> {
   /// Default overlay style applied to [SelectOverlay].
   final SelectOverlayStyle? overlayStyle;
 
-  /// Default theme overrides applied to selector widgets inside the overlay.
+  /// Default theme overrides applied to select widgets inside the overlay.
   final SelectThemeData? selectTheme;
 
   @override
@@ -140,8 +140,7 @@ class PopupSelectBarTheme extends ThemeExtension<PopupSelectBarTheme> {
       indicator: indicator,
       unselectedIndicator: unselectedIndicator,
       overlayStyle: overlayStyle,
-      selectTheme:
-          SelectThemeData.lerp(selectTheme, other.selectTheme, t),
+      selectTheme: SelectThemeData.lerp(selectTheme, other.selectTheme, t),
     );
   }
 }

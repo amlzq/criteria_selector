@@ -38,7 +38,7 @@ class PopupTabData extends SelectLabelState {
 typedef PopupSelectLabelChangeCallback = void Function(
     SelectLabelState labelState, SelectEntries selected);
 
-/// Controller for [PopupSelectBar] and its selector overlay.
+/// Controller for [PopupSelectBar] and its select overlay.
 ///
 /// This controller stores per-tab label data ([PopupTabData]) and manages
 /// the overlay visibility. It forwards selection events to listeners
@@ -52,7 +52,7 @@ class PopupSelectController extends ChangeNotifier {
   final List<PopupSelectLabelChangeCallback> _applyListeners = [];
   final List<VoidCallback> _resetListeners = [];
 
-  /// Registers a listener to be called when a selector reports a selection
+  /// Registers a listener to be called when a select reports a selection
   /// change.
   ///
   /// Returns a [VoidCallback] that unregisters the listener when called.
@@ -66,7 +66,7 @@ class PopupSelectController extends ChangeNotifier {
     _changeListeners.remove(listener);
   }
 
-  /// Registers a listener to be called when a selector is applied.
+  /// Registers a listener to be called when a select is applied.
   ///
   /// Returns a [VoidCallback] that unregisters the listener when called.
   VoidCallback addApplyListener(PopupSelectLabelChangeCallback listener) {
@@ -155,15 +155,15 @@ class PopupSelectController extends ChangeNotifier {
 
   SelectDelegate? _previousSelectDelegate;
 
-  /// The selector previously used for the overlay.
+  /// The select previously used for the overlay.
   // ignore: unnecessary_getters_setters
   SelectDelegate? get previousSelectDelegate => _previousSelectDelegate;
   set previousSelectDelegate(SelectDelegate? value) =>
       _previousSelectDelegate = value;
 
-  /// The [SelectController] for the currently active selector panel, if any.
+  /// The [SelectController] for the currently active select panel, if any.
   ///
-  /// Created when a selector is shown (see [_showSelect]) and disposed when
+  /// Created when a select is shown (see [_showSelect]) and disposed when
   /// the overlay is hidden. Exposed so that [PopupSelectBar] can pass it to
   /// [SelectPanel] via its `controller` parameter.
   SelectController? get selectController => _selectController;
@@ -179,7 +179,7 @@ class PopupSelectController extends ChangeNotifier {
 
   /// Attaches the list of [SelectDelegate] configurations to this controller.
   ///
-  /// If the selector overlay is currently open, it is refreshed so that live
+  /// If the select overlay is currently open, it is refreshed so that live
   /// changes to the delegate (selection mode, tile variant, layout, spacing,
   /// etc.) are reflected immediately in the open panel. The open animation is
   /// not replayed — only the panel content is rebuilt against a fresh
@@ -287,7 +287,7 @@ class PopupSelectController extends ChangeNotifier {
     super.notifyListeners();
   }
 
-  /// Shows or hides the selector overlay.
+  /// Shows or hides the select overlay.
   ///
   /// If [index] differs from [currentIndex], the overlay is shown and
   /// [currentIndex] is updated.
@@ -305,7 +305,7 @@ class PopupSelectController extends ChangeNotifier {
       'Use toggleSelect instead. This will be removed in a future minor version.')
   void toggleSelector({int? index}) => toggleSelect(index: index);
 
-  /// Whether the selector overlay is currently showing.
+  /// Whether the select overlay is currently showing.
   bool get isSelectShowing => _isExpanded;
 
   /// @nodoc
@@ -313,7 +313,7 @@ class PopupSelectController extends ChangeNotifier {
       'Use isSelectShowing instead. This will be removed in a future minor version.')
   bool get isSelectorShowing => isSelectShowing;
 
-  /// Hides the selector overlay if it is showing.
+  /// Hides the select overlay if it is showing.
   void hideSelect({bool immediate = false}) {
     if (_isDisposed) {
       if (immediate) {
@@ -387,7 +387,7 @@ class PopupSelectController extends ChangeNotifier {
     // tab's content under the new index.
     previousSelectDelegate = newDelegate;
 
-    // Create (or refresh) the SelectController for this selector session.
+    // Create (or refresh) the SelectController for this select session.
     _createSelectController();
 
     _ensureOverlayAnimationController();
@@ -412,12 +412,12 @@ class PopupSelectController extends ChangeNotifier {
   /// Any previously created controller is disposed first.
   void _createSelectController() {
     _disposeSelectController();
-    final selector = previousSelectDelegate;
-    if (selector == null) return;
+    final select = previousSelectDelegate;
+    if (select == null) return;
     final ctrl = SelectController(
-      selectionMode: selector.selectionMode,
-      previousSelected: selector.selectedData,
-      resetSelected: selector.resetData,
+      selectionMode: select.selectionMode,
+      previousSelected: select.selectedData,
+      resetSelected: select.resetData,
     );
     ctrl.addChangeListener(handleChange);
     ctrl.addApplyListener(
@@ -450,7 +450,7 @@ class PopupSelectController extends ChangeNotifier {
     if (labelState == null) return;
     hideSelect();
     // Persist the applied selection back onto the delegate so that reopening
-    // the selector (PopupSelectBar / PopupSelectButton / showSelect
+    // the select (PopupSelectBar / PopupSelectButton / showSelect
     // / showModalBottomSelect) reconstructs its SelectController with
     // `previousSelected = selected`. Without this write-back, `selectedData`
     // keeps the initial `selectedEntriesLoader` value and the previous selection
@@ -467,8 +467,8 @@ class PopupSelectController extends ChangeNotifier {
 
   /// Programmatically applies selection ids to the tab at [tabIndex].
   ///
-  /// This method does not open the selector panel. Instead, it resolves
-  /// [selectedEntryIds] against the selector data, fires apply listeners,
+  /// This method does not open the select panel. Instead, it resolves
+  /// [selectedEntryIds] against the select data, fires apply listeners,
   /// updates the tab label, and notifies listeners.
   ///
   /// Matching rules:
@@ -482,12 +482,12 @@ class PopupSelectController extends ChangeNotifier {
   /// Return value:
   /// - Returns `true` when the apply flow completes successfully, including the
   ///   case where no entry ids match and the result is treated as cleared/empty.
-  /// - Returns `false` when the input is invalid or the selector data cannot be
+  /// - Returns `false` when the input is invalid or the select data cannot be
   ///   prepared, such as:
   ///   - [tabIndex] does not resolve to a tab/selector
   ///   - a category id is present in [selectedEntryIds]
   ///   - a custom range id is present in [selectedEntryIds]
-  ///   - selector data cannot be loaded
+  ///   - select data cannot be loaded
   Future<bool> apply({
     required int tabIndex,
     required Set<String> selectedEntryIds,
@@ -498,10 +498,10 @@ class PopupSelectController extends ChangeNotifier {
     if (labelState is! PopupTabData) return false;
     final tabData = labelState;
 
-    final selector = _selectDelegateAt(tabIndex);
-    if (selector == null) return false;
+    final select = _selectDelegateAt(tabIndex);
+    if (select == null) return false;
 
-    final dataFuture = selector.data;
+    final dataFuture = select.data;
     if (dataFuture == null) return false;
 
     late final SelectEntries entries;
@@ -530,15 +530,15 @@ class PopupSelectController extends ChangeNotifier {
     if (_isDisposed) return false;
     if (labelStateMap[tabIndex] is! PopupTabData) return false;
 
-    final selector = _selectDelegateAt(tabIndex);
-    if (selector == null) return false;
+    final select = _selectDelegateAt(tabIndex);
+    if (select == null) return false;
 
-    previousSelectDelegate = selector;
+    previousSelectDelegate = select;
 
-    final dataFuture = selector.data;
+    final dataFuture = select.data;
     if (dataFuture == null) return false;
 
-    selector.resetData;
+    select.resetData;
 
     late final SelectEntries entries;
     try {
@@ -552,7 +552,7 @@ class PopupSelectController extends ChangeNotifier {
     if (ctx.invalidCategoryHit) return false;
     if (ctx.invalidCustomHit) return false;
 
-    selector.selectedData = selected;
+    select.selectedData = selected;
     _showSelect(tabIndex);
     handleChange(selected);
     return true;

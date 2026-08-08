@@ -12,10 +12,10 @@ import 'widgets/range_slider_theme.dart';
 import 'widgets/side_bar_theme.dart';
 import 'widgets/tab_bar_theme.dart';
 
-/// Theme configuration for selector widgets.
+/// Theme configuration for select widgets.
 ///
 /// This object is usually derived from a Material [ThemeData] plus optional
-/// overrides, and is consumed by selector widgets to keep styling consistent.
+/// overrides, and is consumed by select widgets to keep styling consistent.
 @immutable
 class SelectThemeData with Diagnosticable {
   /// Creates a [SelectThemeData] by reading defaults from [theme] and applying
@@ -101,7 +101,7 @@ class SelectThemeData with Diagnosticable {
   /// Text/icon color used on top of [selectedColor].
   final Color onSelectedColor;
 
-  /// Base background color used by the selector panel.
+  /// Base background color used by the select panel.
   final Color backgroundColor;
 
   /// Text/icon color used on top of [backgroundColor].
@@ -139,10 +139,10 @@ class SelectThemeData with Diagnosticable {
   /// Theme overrides for the range slider widget.
   final SelectRangeSliderTheme rangeSliderTheme;
 
-  /// Theme used for radio controls when rendered by selector widgets.
+  /// Theme used for radio controls when rendered by select widgets.
   final RadioThemeData radioTheme;
 
-  /// Theme used for checkbox controls when rendered by selector widgets.
+  /// Theme used for checkbox controls when rendered by select widgets.
   final CheckboxThemeData checkboxTheme;
 
   /// Theme overrides for the selected chips bar.

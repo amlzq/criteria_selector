@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 /// Declares whether the reset/apply action bar should be hidden for the
-/// selector widgets in [child]'s subtree.
+/// select widgets in [child]'s subtree.
 ///
 /// [SelectView] wraps its panel with [hidden] set to `true` so that inline
-/// selectors omit the action bar; modal hosts (dialogs and bottom sheets) do
+/// selects omit the action bar; modal hosts (dialogs and bottom sheets) do
 /// not provide this widget, so the action bar remains visible there.
 ///
 /// This keeps the action bar's "render or not" decision out of the delegate
@@ -17,10 +17,10 @@ class SelectActionBarVisibility extends InheritedWidget {
     required super.child,
   });
 
-  /// Whether the action bar should be hidden for selectors in this subtree.
+  /// Whether the action bar should be hidden for selects in this subtree.
   final bool hidden;
 
-  /// Whether the action bar is hidden for selectors at [context].
+  /// Whether the action bar is hidden for selects at [context].
   ///
   /// Defaults to `false` (visible) when no [SelectActionBarVisibility] is
   /// found above [context], so modal hosts that do not wrap their panel keep

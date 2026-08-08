@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../select_entry.dart';
 
-/// Generic callback invoked when an item in a selector view changes.
+/// Generic callback invoked when an item in a select view changes.
 ///
 /// [index] is the position of the affected item within the list and [entry] is
 /// the corresponding data model. For custom range entries the view has already
