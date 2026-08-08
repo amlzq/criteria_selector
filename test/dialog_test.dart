@@ -5,7 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 /// A [SelectDelegate] whose body is a simple widget, so the dialog wrapper
 /// can be exercised without relying on a concrete selector's data handling.
 class _DialogTestDelegate extends SelectDelegate {
-  _DialogTestDelegate();
+  _DialogTestDelegate()
+      : super(entriesLoader: () async => <SelectEntry<dynamic>>{});
 
   @override
   Widget buildBody(

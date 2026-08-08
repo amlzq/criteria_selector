@@ -94,6 +94,55 @@ if (controller.isSelectShowing) {
 }
 ```
 
+### `SelectDelegate.entriesLoader` and `SelectView.onChanged` are now required
+
+[`SelectDelegate.entriesLoader`] and [`SelectView.onChanged`] are now **required**
+named parameters (previously optional / nullable).
+
+**Description**
+- `SelectDelegate.entriesLoader` is now a non-nullable `Future<SelectEntries>
+  Function()`. Every delegate — including custom subclasses — must supply an
+  `entriesLoader`. The `data` getter now calls `entriesLoader()` directly
+  instead of `entriesLoader?.call()`.
+- `SelectView.onChanged` is now a non-nullable `SelectCallback`. Every
+  `SelectView` must supply an `onChanged` callback.
+
+This is a **breaking change**: call sites that previously omitted either
+parameter no longer compile and must pass an explicit value.
+
+**Before → After**
+
+```dart
+// Before
+ListSelectDelegate(
+  selectionMode: SelectionMode.multiple,
+);
+
+// After
+ListSelectDelegate(
+  selectionMode: SelectionMode.multiple,
+  entriesLoader: () async => fetchEntries(),
+);
+```
+
+```dart
+// Before
+SelectView(
+  delegate: delegate,
+);
+
+// After
+SelectView(
+  delegate: delegate,
+  onChanged: (selected) { /* ... */ },
+);
+```
+
+The same applies to the other concrete delegates (`CascadingSelectDelegate`,
+`GridSelectDelegate`, `FlattenSelectDelegate`) and to custom
+`SelectDelegate` subclasses, whose constructors must forward the now-required
+`entriesLoader` argument to `super`.
+
 ## MIGRATE TO 0.5.0
 
 ### `SelectorListTile` / `SelectorListView` / `SelectorRange*` / `SelectorSideBar` / `SelectorTabBar` / `SelectorActionBar` / `SelectorChipBar` / `SelectorExpansionTile` / `SelectorFieldTile` / `SelectorGridTile` / `SelectorGridView` renamed to `Select*`

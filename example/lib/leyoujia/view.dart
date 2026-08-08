@@ -131,7 +131,6 @@ class _ViewPageState extends State<ViewPage> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(),
                 const Text(
                   '选择区域',
                   style: TextStyle(fontSize: 20),

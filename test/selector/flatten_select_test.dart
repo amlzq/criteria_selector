@@ -15,6 +15,7 @@ Widget _flattenHarness(Set<SelectEntry> entries) {
           childAspectRatio: 1.5,
           entriesLoader: () async => entries,
         ),
+        onChanged: (_) {},
       ),
     ),
   );

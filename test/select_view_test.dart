@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 class _TestDelegate extends SelectDelegate {
   _TestDelegate({
     required this.bodyBuilder,
-    super.entriesLoader,
+    required super.entriesLoader,
   });
 
   final Widget Function(
@@ -42,6 +42,7 @@ void main() {
                 bodyBuilder: (context, entries, _) =>
                     Text('entries:${entries.length}'),
               ),
+              onChanged: (_) {},
             ),
           ),
         ),
@@ -94,6 +95,7 @@ void main() {
                   return const SizedBox();
                 },
               ),
+              onChanged: (_) {},
             ),
           ),
         ),
@@ -117,6 +119,7 @@ void main() {
                 bodyBuilder: (_, __, ___) => const SizedBox(),
               ),
               controller: controller,
+              onChanged: (_) {},
             ),
           ),
         ),
@@ -141,6 +144,7 @@ void main() {
                   // A tall, unconstrained body to verify the cap is applied.
                   bodyBuilder: (_, __, ___) => Container(height: 5000.0),
                 ),
+                onChanged: (_) {},
               ),
             ),
           ),

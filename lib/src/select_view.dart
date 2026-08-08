@@ -57,7 +57,7 @@ class SelectView extends StatefulWidget {
     double? height,
     BoxConstraints? constraints,
     this.margin,
-    this.onChanged,
+    required this.onChanged,
   })  : assert(maxHeightFactor > 0 && maxHeightFactor <= 1),
         assert(margin == null || margin.isNonNegative),
         assert(padding == null || padding.isNonNegative),
@@ -83,7 +83,7 @@ class SelectView extends StatefulWidget {
   final SelectController? controller;
 
   /// Fired when the selection changes.
-  final SelectCallback? onChanged;
+  final SelectCallback onChanged;
 
   /// Caps the select's height to this fraction of the screen height when it
   /// is embedded in an unbounded context (e.g. a [Column] with

@@ -31,7 +31,7 @@ typedef SelectActionBarBuilder = Widget Function(
 abstract class SelectDelegate {
   SelectDelegate({
     this.selectionMode = SelectionMode.single,
-    this.entriesLoader,
+    required this.entriesLoader,
     this.selectedEntriesLoader,
     this.resetEntriesLoader,
     this.actionBarBuilder,
@@ -62,15 +62,15 @@ abstract class SelectDelegate {
 
   /// Fetches the full selectable entries for this select.
   ///
-  /// When provided, the select panel can display a loading skeleton while
-  /// awaiting the result.
-  final Future<SelectEntries> Function()? entriesLoader;
+  /// The select panel can display a loading skeleton while awaiting the
+  /// result.
+  final Future<SelectEntries> Function() entriesLoader;
 
   Future<SelectEntries>? _data;
 
   /// The selectable entries future, lazily initialized from [entriesLoader]
   /// on first access.
-  Future<SelectEntries>? get data => _data ??= entriesLoader?.call();
+  Future<SelectEntries>? get data => _data ??= entriesLoader();
 
   /// Returns the previously selected entries to restore.
   ///
@@ -202,7 +202,7 @@ class CascadingSelectDelegate extends SelectDelegate {
     this.radioBuilder,
     this.isScrollable = false,
     super.selectionMode = SelectionMode.single,
-    super.entriesLoader,
+    required super.entriesLoader,
     super.selectedEntriesLoader,
     super.resetEntriesLoader,
     super.actionBarBuilder,
@@ -271,7 +271,7 @@ class ListSelectDelegate extends SelectDelegate {
     this.checkboxBuilder,
     this.radioBuilder,
     super.selectionMode = SelectionMode.single,
-    super.entriesLoader,
+    required super.entriesLoader,
     super.selectedEntriesLoader,
     super.resetEntriesLoader,
     super.actionBarBuilder,
@@ -333,7 +333,7 @@ class GridSelectDelegate extends SelectDelegate {
     this.checkboxBuilder,
     this.radioBuilder,
     super.selectionMode = SelectionMode.single,
-    super.entriesLoader,
+    required super.entriesLoader,
     super.selectedEntriesLoader,
     super.resetEntriesLoader,
     super.actionBarBuilder,
@@ -412,7 +412,7 @@ class FlattenSelectDelegate extends SelectDelegate {
     this.crossAxisSpacing = 0.0,
     this.childAspectRatio = 1.0,
     super.selectionMode = SelectionMode.single,
-    super.entriesLoader,
+    required super.entriesLoader,
     super.selectedEntriesLoader,
     super.resetEntriesLoader,
     super.actionBarBuilder,

@@ -90,12 +90,14 @@ void main() {
           home: Scaffold(
             body: SelectView(
               delegate: _EmptyDelegate(
+                entriesLoader: () async => <SelectEntry<dynamic>>{},
                 panelTheme: const SelectPanelTheme(
                   elevation: 6,
                   shape: _shapeA,
                   clipBehavior: Clip.antiAlias,
                 ),
               ),
+              onChanged: (_) {},
             ),
           ),
         ),
@@ -119,7 +121,10 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: SelectView(
-              delegate: _EmptyDelegate(),
+              delegate: _EmptyDelegate(
+                entriesLoader: () async => <SelectEntry<dynamic>>{},
+              ),
+              onChanged: (_) {},
             ),
           ),
         ),
@@ -145,11 +150,13 @@ void main() {
           home: Scaffold(
             body: SelectView(
               delegate: _EmptyDelegate(
+                entriesLoader: () async => <SelectEntry<dynamic>>{},
                 panelTheme: const SelectPanelTheme(
                   elevation: 4,
                   shape: _shapeB,
                 ),
               ),
+              onChanged: (_) {},
             ),
           ),
         ),
@@ -165,7 +172,10 @@ void main() {
 }
 
 class _EmptyDelegate extends SelectDelegate {
-  _EmptyDelegate({super.panelTheme});
+  _EmptyDelegate({
+    required super.entriesLoader,
+    super.panelTheme,
+  });
 
   @override
   Widget buildBody(

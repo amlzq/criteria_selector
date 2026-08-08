@@ -6,7 +6,8 @@ import 'package:flutter_test/flutter_test.dart';
 /// wrapper can be exercised without relying on a concrete selector's data
 /// handling.
 class _SheetTestDelegate extends SelectDelegate {
-  _SheetTestDelegate();
+  _SheetTestDelegate()
+      : super(entriesLoader: () async => <SelectEntry<dynamic>>{});
 
   @override
   Widget buildBody(

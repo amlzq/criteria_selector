@@ -64,7 +64,10 @@ void main() {
       };
 
       final selector =
-          CascadingSelectDelegate(selectionMode: SelectionMode.multiple);
+          CascadingSelectDelegate(
+            selectionMode: SelectionMode.multiple,
+            entriesLoader: () async => <SelectEntry<dynamic>>{},
+          );
       final controller = SelectController(
         selectionMode: SelectionMode.multiple,
       );
@@ -134,7 +137,10 @@ void main() {
       };
 
       final selector =
-          CascadingSelectDelegate(selectionMode: SelectionMode.multiple);
+          CascadingSelectDelegate(
+            selectionMode: SelectionMode.multiple,
+            entriesLoader: () async => <SelectEntry<dynamic>>{},
+          );
       final controller = SelectController(
         selectionMode: SelectionMode.multiple,
       );

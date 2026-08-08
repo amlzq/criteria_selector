@@ -1,5 +1,7 @@
 ## Next
 
+* **BREAKING** make `SelectDelegate.entriesLoader` required — it is now a non-nullable `Future<SelectEntries> Function()` and must be provided by every delegate. `SelectView.onChanged` is likewise now required (`SelectCallback`, non-nullable). Update call sites that previously omitted either parameter to pass them explicitly.
+
 * **DEPRECATION** rename the selector lifecycle callbacks on `PopupSelectBar` and `PopupSelectButton` — `onSelectorShowed` / `onSelectorHidden` / `onSelectorWillShow` / `onSelectorWillHide` → `onSelectShowed` / `onSelectHidden` / `onSelectWillShow` / `onSelectWillHide`. The old names are retained as deprecated constructor parameters and getters that delegate to the new names (passing both at the same call site triggers an assertion) and will be removed in a future minor version.
 
 * **DEPRECATION** rename `PopupSelectController.hideSelector` → `hideSelect`, `toggleSelector` → `toggleSelect`, and `isSelectorShowing` → `isSelectShowing` to drop the redundant `Selector` wording. The old names are retained as deprecated methods / getters that delegate to the new names and will be removed in a future minor version.

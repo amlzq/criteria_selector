@@ -9,7 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 class _TestDelegate extends SelectDelegate {
   _TestDelegate({
     required this.bodyBuilder,
-    super.entriesLoader,
+    required super.entriesLoader,
     super.selectedEntriesLoader,
     super.errorBuilder,
   });
