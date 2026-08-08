@@ -106,7 +106,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                     selectedEntriesLoader: _filtersRepo.fetchRoomsSelectedData,
                     selectionMode: SelectionMode.multiple,
                     crossAxisCount: 2,
-                    childAspectRatio: 2.5,
+                    childAspectRatio: 3.0,
                     crossAxisSpacing: 8,
                     mainAxisSpacing: 8,
                     sideBarTheme: const SelectSideBarTheme(width: 90),

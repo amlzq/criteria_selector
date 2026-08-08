@@ -177,7 +177,7 @@ class _ViewPageState extends State<ViewPage> {
                     selectedEntriesLoader: _filtersRepo.fetchRoomsSelectedData,
                     selectionMode: SelectionMode.multiple,
                     crossAxisCount: 2,
-                    childAspectRatio: 3,
+                    childAspectRatio: 3.0,
                     crossAxisSpacing: 8,
                     mainAxisSpacing: 8,
                     sideBarTheme: const SelectSideBarTheme(width: 110),

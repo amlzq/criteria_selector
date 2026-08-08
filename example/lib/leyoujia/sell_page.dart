@@ -31,8 +31,11 @@ class _SellPageState extends State<SellPage> {
 
     _scrollController.addListener(_onScroll);
 
-    WidgetsBinding.instance.addPostFrameCallback((Duration duration) {
-      _controller.select(1, {'203', '403'});
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.delayed(const Duration(milliseconds: 250), () {
+        if (!mounted) return;
+        _controller.select(1, {'203', '403'});
+      });
     });
   }
 
