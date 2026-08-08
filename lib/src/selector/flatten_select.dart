@@ -335,7 +335,7 @@ class FlattenSelectState extends State<FlattenSelect> {
           tileVariant: delegate.gridTileTheme?.variant,
           fieldVariant: delegate.fieldTileTheme?.variant,
           category: category,
-          showTitle: false,
+          showTitle: true,
           entries: entries,
           selectedEntries: selectedEntries,
           onChanged: (_, entry) =>
@@ -347,7 +347,7 @@ class FlattenSelectState extends State<FlattenSelect> {
           category: category,
           entries: entries,
           selectedEntries: selectedEntries,
-          showTitle: false,
+          showTitle: true,
           isWrapable: true,
           backgroundColor: delegate.chipBarTheme?.backgroundColor,
           padding: delegate.chipBarTheme?.padding,
@@ -361,7 +361,7 @@ class FlattenSelectState extends State<FlattenSelect> {
       SelectRangeLayout(:final toText) => SelectRangeView(
           key: ValueKey('category_$index'),
           category: category,
-          showTitle: false,
+          showTitle: true,
           toText: toText,
           entries: entries,
           selectedEntries: selectedEntries,
@@ -372,7 +372,7 @@ class FlattenSelectState extends State<FlattenSelect> {
       SelectCounterLayout() => SelectCounter(
           key: ValueKey('category_$index'),
           category: category,
-          showTitle: false,
+          showTitle: true,
           entries: entries,
           selectedEntries: selectedEntries,
           onChanged: (_, entry) =>
