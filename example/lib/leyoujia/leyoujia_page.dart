@@ -41,7 +41,7 @@ class LeyoujiaPage extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => const ViewPage()),
                 );
               },
-              child: const Text('Box'),
+              child: const Text('View'),
             ),
             TextButton(
               onPressed: () {

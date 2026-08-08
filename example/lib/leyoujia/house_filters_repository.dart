@@ -228,9 +228,7 @@ class HouseFiltersRepository {
         SelectCategoryEntry(
           id: 'total',
           name: '',
-          children: {
-            SelectIntEntry.any(parentId: 'total', name: anyEntryText)
-          },
+          children: {SelectIntEntry.any(parentId: 'total', name: anyEntryText)},
         )
       };
 
@@ -301,9 +299,7 @@ class HouseFiltersRepository {
         SelectCategoryEntry(
           id: 'rent',
           name: '',
-          children: {
-            SelectIntEntry.any(parentId: 'total', name: anyEntryText)
-          },
+          children: {SelectIntEntry.any(parentId: 'total', name: anyEntryText)},
         )
       };
 
@@ -426,8 +422,7 @@ class HouseFiltersRepository {
   SelectEntries? fetchFloorPlanSellSelectedData() =>
       floorPlanSellResult ?? floorPlanSellIniteialSelected;
 
-  SelectEntries? fetchFloorPlanSellResetData() =>
-      floorPlanSellIniteialSelected;
+  SelectEntries? fetchFloorPlanSellResetData() => floorPlanSellIniteialSelected;
 
   Future<SelectEntries> fetchFloorPlanSellData() async {
     // 模拟网络延迟
@@ -484,11 +479,9 @@ class HouseFiltersRepository {
   SelectEntries? fetchFloorPlanRentSelectedData() =>
       floorPlanRentResult ?? floorPlanRentIniteialSelected;
 
-  SelectEntries? fetchFloorPlanRentResetData() =>
-      floorPlanRentIniteialSelected;
+  SelectEntries? fetchFloorPlanRentResetData() => floorPlanRentIniteialSelected;
 
-  Future<SelectEntries> fetchFloorPlanRentData(
-      {bool singleAll = false}) async {
+  Future<SelectEntries> fetchFloorPlanRentData({bool singleAll = false}) async {
     // 模拟网络延迟
     await Future.delayed(const Duration(milliseconds: 250));
     final floorPlan =

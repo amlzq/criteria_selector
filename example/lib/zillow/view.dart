@@ -108,7 +108,6 @@ class _ViewPageState extends State<ViewPage> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(),
                 const Text(
                   'Neighborhood',
                   style: TextStyle(fontSize: 20),
