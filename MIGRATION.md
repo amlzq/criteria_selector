@@ -1,6 +1,6 @@
 # Migration Guide
 
-## Next
+## 0.7.0
 
 ### Selector lifecycle callbacks renamed to `onSelect*` on `PopupSelectBar` / `PopupSelectButton`
 
