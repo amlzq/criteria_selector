@@ -84,7 +84,7 @@ class _RentPageState extends State<RentPage> {
     super.dispose();
   }
 
-  HouseFilter? _dropdownSelectorResultParser(
+  HouseFilter? _popupSelectResultParser(
       PopupTabData tabData, SelectEntries selected) {
     final filter = HouseFilter(cityId: userCityId);
     if (tabData.index == 0) {
@@ -151,10 +151,9 @@ class _RentPageState extends State<RentPage> {
     return filter;
   }
 
-  void _handleSelectorChange(
-      PopupTabData tabData, SelectEntries selected) async {
+  void _handleSelectChange(PopupTabData tabData, SelectEntries selected) async {
     final l10n = AppLocalizations.of(context);
-    _filter = _dropdownSelectorResultParser(tabData, selected);
+    _filter = _popupSelectResultParser(tabData, selected);
     if (_filter == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n?.resultParseFailed ?? '')),
@@ -187,7 +186,7 @@ class _RentPageState extends State<RentPage> {
     }
   }
 
-  void _handleSelectorApply(PopupTabData tabData, SelectEntries selected) {
+  void _handleSelectApply(PopupTabData tabData, SelectEntries selected) {
     final l10n = AppLocalizations.of(context);
     // Persist the applied selection to the repo so it can be restored on reopen.
     if (tabData.index == 0) {
@@ -199,7 +198,7 @@ class _RentPageState extends State<RentPage> {
     } else if (tabData.index == 3) {
       _filtersRepo.sortRentResult = selected;
     }
-    _filter = _dropdownSelectorResultParser(tabData, selected);
+    _filter = _popupSelectResultParser(tabData, selected);
     if (_filter == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n?.resultParseFailed ?? '')),
@@ -329,12 +328,12 @@ class _RentPageState extends State<RentPage> {
               },
               onChanged: (tabData, selected) {
                 largePrint('onChanged: tabData=$tabData, selected=$selected');
-                _handleSelectorChange(tabData, selected);
+                _handleSelectChange(tabData, selected);
                 showSelectResult(context, selected);
               },
               onApplied: (tabData, selected) {
                 largePrint('onApplied: tabData=$tabData, selected=$selected');
-                _handleSelectorApply(tabData, selected);
+                _handleSelectApply(tabData, selected);
                 if (tabData.index == 2) {
                   _floorPlanApplyTextDebounce?.cancel();
                   _floorPlanApplyTextRequestId++;

@@ -15,7 +15,7 @@ import 'selector_builder.dart';
 const String _kPhoneBaseRouteName = 'playground-phone-base';
 
 /// Interactive demo: a parameter panel on one side and a simulated phone on the
-/// other. Changing any parameter rebuilds the phone's selector immediately.
+/// other. Changing any parameter rebuilds the phone's select immediately.
 class PlaygroundPage extends StatefulWidget {
   const PlaygroundPage({super.key});
 
@@ -97,7 +97,7 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
     // If the [Theme] is placed *inside* the navigator's base page, only the
     // base screen gets it while the route overlay (which lives outside the
     // page stack) falls back to the host app's light theme — making the
-    // selector popup ignore the dark/light toggle.
+    // select popup ignore the dark/light toggle.
     final paramThemeWithExtensions = paramTheme.copyWith(
       extensions: <ThemeExtension<dynamic>>[
         PopupSelectBarTheme(
@@ -111,7 +111,7 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
 
     // Scope the dropdown overlay, dialog and bottom sheet to the phone: a
     // dedicated [Navigator] provides a local overlay, and a phone-sized
-    // [MediaQuery] makes the selector position/clamp itself within the phone
+    // [MediaQuery] makes the select position/clamp itself within the phone
     // screen instead of the whole window.
     final phoneScreen = Theme(
       data: paramThemeWithExtensions,
@@ -141,7 +141,7 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
               // Keep a constant key so switching the playground theme does NOT
               // tear down and rebuild the base route: a changing key would
               // dispose the SelectView / PopupSelectBar subtrees, drop
-              // their controllers and re-fetch selector data (showing a skeleton
+              // their controllers and re-fetch select data (showing a skeleton
               // flash) — a visible hitch. Instead the theme is applied *inside*
               // this page via the [Theme] below, whose dependents rebuild in
               // place (elements kept, no data reload). The entry-point switch is

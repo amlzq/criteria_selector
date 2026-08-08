@@ -77,7 +77,7 @@ class _SellPageState extends State<SellPage> {
     super.dispose();
   }
 
-  void _handleSelectorApply(PopupTabData tabData, SelectEntries selected) {
+  void _handleSelectApply(PopupTabData tabData, SelectEntries selected) {
     _filter ??= HouseFilter(cityId: userCityId);
     if (tabData.index == 0) {
       // 区域筛选
@@ -280,7 +280,7 @@ class _SellPageState extends State<SellPage> {
               },
               onApplied: (tabData, selected) {
                 largePrint('onApplied: tabData=$tabData, selected=$selected');
-                _handleSelectorApply(tabData, selected);
+                _handleSelectApply(tabData, selected);
                 final conditions = '${selected.flatten()}';
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(

@@ -106,7 +106,7 @@ abstract class AppLocalizations {
   /// No description provided for @appName.
   ///
   /// In en, this message translates to:
-  /// **'Criteria Selector Example'**
+  /// **'Criteria Select Example'**
   String get appName;
 
   /// No description provided for @realEstate.

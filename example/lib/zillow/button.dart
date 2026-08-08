@@ -85,7 +85,7 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
     return filter;
   }
 
-  void _handleSelectorChange(String domain, SelectEntries selected) async {
+  void _handleSelectChange(String domain, SelectEntries selected) async {
     final l10n = AppLocalizations.of(context);
     _filter = _parseFilter(domain, selected);
     if (_filter == null) {
@@ -96,7 +96,7 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
     }
   }
 
-  void _handleSelectorApply(String domain, SelectEntries selected) {
+  void _handleSelectApply(String domain, SelectEntries selected) {
     final l10n = AppLocalizations.of(context);
     // Persist the applied selection to the repo so it can be restored on reopen.
     if (domain == 'neighborhood') {
@@ -145,12 +145,12 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
             ),
             onChanged: (selected) {
               largePrint('onChanged: $selected');
-              _handleSelectorChange('neighborhood', selected);
+              _handleSelectChange('neighborhood', selected);
               showSelectResult(context, selected);
             },
             onApplied: (selected) {
               largePrint('onApplied: $selected');
-              _handleSelectorApply('neighborhood', selected);
+              _handleSelectApply('neighborhood', selected);
               showSelectResult(context, selected);
             },
             onReset: () {
@@ -179,12 +179,12 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
               ),
               onChanged: (selected) {
                 largePrint('onChanged: $selected');
-                _handleSelectorChange('price', selected);
+                _handleSelectChange('price', selected);
                 showSelectResult(context, selected);
               },
               onApplied: (selected) {
                 largePrint('onApplied: $selected');
-                _handleSelectorApply('price', selected);
+                _handleSelectApply('price', selected);
                 showSelectResult(context, selected);
               },
               onReset: () {
@@ -215,12 +215,12 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
               ),
               onChanged: (selected) {
                 largePrint('onChanged: $selected');
-                _handleSelectorChange('rooms', selected);
+                _handleSelectChange('rooms', selected);
                 showSelectResult(context, selected);
               },
               onApplied: (selected) {
                 largePrint('onApplied: $selected');
-                _handleSelectorApply('rooms', selected);
+                _handleSelectApply('rooms', selected);
                 showSelectResult(context, selected);
               },
               onReset: () {
@@ -252,12 +252,12 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
                 ),
                 onChanged: (selected) {
                   largePrint('onChanged: $selected');
-                  _handleSelectorChange('more', selected);
+                  _handleSelectChange('more', selected);
                   showSelectResult(context, selected);
                 },
                 onApplied: (selected) {
                   largePrint('onApplied: $selected');
-                  _handleSelectorApply('more', selected);
+                  _handleSelectApply('more', selected);
                   showSelectResult(context, selected);
                 },
                 onReset: () {
@@ -279,12 +279,12 @@ class _ButtonDemoPageState extends State<ButtonDemoPage> {
               ),
               onChanged: (selected) {
                 largePrint('onChanged: $selected');
-                _handleSelectorChange('sort', selected);
+                _handleSelectChange('sort', selected);
                 showSelectResult(context, selected);
               },
               onApplied: (selected) {
                 largePrint('onApplied: $selected');
-                _handleSelectorApply('sort', selected);
+                _handleSelectApply('sort', selected);
                 showSelectResult(context, selected);
               },
               onReset: () {

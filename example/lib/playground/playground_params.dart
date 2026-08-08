@@ -1,7 +1,7 @@
 import 'package:criteria_selector/criteria_selector.dart';
 import 'package:flutter/material.dart';
 
-/// Where the selector is rendered inside the simulated phone.
+/// Where the select is rendered inside the simulated phone.
 enum EntryPoint {
   view,
   popupBar,
@@ -10,7 +10,7 @@ enum EntryPoint {
   bottomSheet,
 }
 
-/// Selector delegate family.
+/// Select delegate family.
 enum Delegate {
   cascading,
   grid,

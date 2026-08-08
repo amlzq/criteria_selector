@@ -66,7 +66,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                       'neighborhood cascading: ${result.cascadingPairsOf(first)}');
                 }
               },
-              child: const Text('Show Neighborhood Selector'),
+              child: const Text('Show Neighborhood Select'),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -95,7 +95,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 largePrint(
                     'price monthly ranges: ${result.childRangesOf('monthly_price')}');
               },
-              child: const Text('Show Price Selector'),
+              child: const Text('Show Price Select'),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -125,7 +125,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 if (context.mounted) showSelectResult(context, result);
                 largePrint('result: $result');
               },
-              child: const Text('Show Rooms Selector'),
+              child: const Text('Show Rooms Select'),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -158,7 +158,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 if (context.mounted) showSelectResult(context, result);
                 largePrint('result: $result');
               },
-              child: const Text('Show More Selector'),
+              child: const Text('Show More Select'),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -193,7 +193,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 if (context.mounted) showSelectResult(context, result);
                 largePrint('sort id: ${result.firstSelectedId}');
               },
-              child: const Text('Show Sort Selector'),
+              child: const Text('Show Sort Select'),
             ),
             const SizedBox(height: 16),
             const Text('BottomSheet'),
@@ -228,7 +228,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                       'neighborhood cascading: ${result.cascadingPairsOf(first)}');
                 }
               },
-              child: const Text('Show Neighborhood Selector'),
+              child: const Text('Show Neighborhood Select'),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -260,7 +260,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 largePrint(
                     'price monthly ranges: ${result.childRangesOf('monthly_price')}');
               },
-              child: const Text('Show Price Selector'),
+              child: const Text('Show Price Select'),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -288,7 +288,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 if (context.mounted) showSelectResult(context, result);
                 largePrint('result: $result');
               },
-              child: const Text('Show Rooms Selector'),
+              child: const Text('Show Rooms Select'),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -316,7 +316,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 if (context.mounted) showSelectResult(context, result);
                 largePrint('result: $result');
               },
-              child: const Text('Show More Selector'),
+              child: const Text('Show More Select'),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -338,7 +338,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 if (context.mounted) showSelectResult(context, result);
                 largePrint('sort id: ${result.firstSelectedId}');
               },
-              child: const Text('Show Sort Selector'),
+              child: const Text('Show Sort Select'),
             ),
           ],
         ),

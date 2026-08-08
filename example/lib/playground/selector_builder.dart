@@ -45,7 +45,6 @@ Future<SelectEntries> _flattenEntriesWithoutFixedLayout(
   }).toSet();
 }
 
-
 Widget _checkboxBuilder(BuildContext context, bool selected) =>
     MyCheckbox(value: selected);
 
@@ -323,7 +322,7 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
   void _onApplied(Object? value) => setState(() => _lastApplied = value);
 
   /// Builds the 4 per-delegate-family open buttons (Cascading / Grid / Flatten
-  /// / List). Each opens the current entry point's selector ([showSelect] or
+  /// / List). Each opens the current entry point's select ([showSelect] or
   /// [showModalBottomSelect]) with the matching delegate family, so users can
   /// exercise every delegate from a single Dialog / Bottom Sheet screen.
   ///
@@ -367,9 +366,9 @@ class _EntryPointScreenState extends State<EntryPointScreen> {
     );
   }
 
-  /// Builds a selector delegate for one tab of the dropdown bar, using the
+  /// Builds a select delegate for one tab of the dropdown bar, using the
   /// current playground params but a fixed delegate family so each tab shows a
-  /// distinct selector (cascading / grid / flatten / list).
+  /// distinct select (cascading / grid / flatten / list).
   ///
   /// Each tab applies the per-delegate default Columns / Aspect Ratio (see
   /// [defaultCrossAxisCountByDelegate] / [defaultChildAspectRatioByDelegate])

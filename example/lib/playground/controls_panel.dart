@@ -21,7 +21,7 @@ class ControlsPanel extends StatelessWidget {
   bool get _gridRelevant =>
       params.delegate == Delegate.grid || params.delegate == Delegate.flatten;
 
-  // The Delegate selector only controls the SelectView demo. The other entry
+  // The Delegate select only controls the SelectView demo. The other entry
   // points own their own per-delegate samples (popupBar/popupButton/dialog/
   // bottomSheet each expose the 4 delegate families directly), so the global
   // Delegate control is shown only for EntryPoint.view.

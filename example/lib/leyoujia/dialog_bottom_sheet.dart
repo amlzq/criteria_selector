@@ -67,7 +67,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                       'region cascading: ${result.cascadingPairsOf(regionFirst)}');
                 }
               },
-              child: const Text('Show Region Selector'),
+              child: const Text('Show Region Select'),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -101,7 +101,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 largePrint(
                     'price unit ranges: ${result.childRangesOf('unit')}');
               },
-              child: const Text('Show Price Selector'),
+              child: const Text('Show Price Select'),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -133,7 +133,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 if (context.mounted) showSelectResult(context, result);
                 largePrint('result: $result');
               },
-              child: const Text('Show FloorPlan Selector'),
+              child: const Text('Show FloorPlan Select'),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -163,7 +163,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 if (context.mounted) showSelectResult(context, result);
                 largePrint('result: $result');
               },
-              child: const Text('Show More Selector'),
+              child: const Text('Show More Select'),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -198,7 +198,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 if (context.mounted) showSelectResult(context, result);
                 largePrint('sort id: ${result.firstSelectedId}');
               },
-              child: const Text('Show Sort Selector'),
+              child: const Text('Show Sort Select'),
             ),
             const SizedBox(height: 16),
             const Text('BottomSheet'),
@@ -231,7 +231,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                       'region cascading: ${result.cascadingPairsOf(regionFirst)}');
                 }
               },
-              child: const Text('Show Region Selector'),
+              child: const Text('Show Region Select'),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -265,7 +265,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 largePrint(
                     'price unit ranges: ${result.childRangesOf('unit')}');
               },
-              child: const Text('Show Price Selector'),
+              child: const Text('Show Price Select'),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -295,7 +295,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 if (context.mounted) showSelectResult(context, result);
                 largePrint('result: $result');
               },
-              child: const Text('Show FloorPlan Selector'),
+              child: const Text('Show FloorPlan Select'),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -327,7 +327,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 if (context.mounted) showSelectResult(context, result);
                 largePrint('result: $result');
               },
-              child: const Text('Show More Selector'),
+              child: const Text('Show More Select'),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -350,7 +350,7 @@ class _DialogBottomSheetDemoPageState extends State<DialogBottomSheetDemoPage> {
                 if (context.mounted) showSelectResult(context, result);
                 largePrint('sort id: ${result.firstSelectedId}');
               },
-              child: const Text('Show Sort Selector'),
+              child: const Text('Show Sort Select'),
             ),
           ],
         ),

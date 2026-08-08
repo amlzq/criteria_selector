@@ -58,7 +58,7 @@ class _MapPageState extends State<MapPage> {
     super.dispose();
   }
 
-  HouseFilter? _dropdownSelectorResultParser(
+  HouseFilter? _popupSelectResultParser(
       PopupTabData tabData, SelectEntries selected) {
     final filter = HouseFilter(cityId: userCityId);
     if (tabData.index == 0) {
@@ -135,10 +135,9 @@ class _MapPageState extends State<MapPage> {
     return filter;
   }
 
-  void _handleSelectorChange(
-      PopupTabData tabData, SelectEntries selected) async {
+  void _handleSelectChange(PopupTabData tabData, SelectEntries selected) async {
     final l10n = AppLocalizations.of(context);
-    _filter = _dropdownSelectorResultParser(tabData, selected);
+    _filter = _popupSelectResultParser(tabData, selected);
     if (_filter == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n?.resultParseFailed ?? '')),
@@ -171,7 +170,7 @@ class _MapPageState extends State<MapPage> {
     }
   }
 
-  void _handleSelectorApply(PopupTabData tabData, SelectEntries selected) {
+  void _handleSelectApply(PopupTabData tabData, SelectEntries selected) {
     showSelectResult(context, selected);
 
     // Persist the applied selection to the repo so it can be restored on reopen.
@@ -186,7 +185,7 @@ class _MapPageState extends State<MapPage> {
     }
 
     final l10n = AppLocalizations.of(context);
-    _filter = _dropdownSelectorResultParser(tabData, selected);
+    _filter = _popupSelectResultParser(tabData, selected);
     if (_filter == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n?.resultParseFailed ?? '')),
@@ -275,11 +274,11 @@ class _MapPageState extends State<MapPage> {
             ],
             onChanged: (tabData, selected) {
               largePrint('onChanged: tabData=$tabData, selected=$selected');
-              _handleSelectorChange(tabData, selected);
+              _handleSelectChange(tabData, selected);
             },
             onApplied: (tabData, selected) {
               largePrint('onApplied: tabData=$tabData, selected=$selected');
-              _handleSelectorApply(tabData, selected);
+              _handleSelectApply(tabData, selected);
             },
             onReset: () {
               debugPrint('onReset');
