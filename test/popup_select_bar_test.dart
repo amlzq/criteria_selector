@@ -25,6 +25,7 @@ void main() {
               ],
               onSelectShowed: (_) => showed = true,
               onSelectHidden: (_) => hidden = true,
+              onApplied: (_, __) {},
               controller: controller,
             ),
             body: const SizedBox.expand(),
@@ -183,6 +184,7 @@ void main() {
               ],
               onChanged: (tabData, selected) =>
                   changed = (tabData: tabData, selected: selected),
+              onApplied: (_, __) {},
               onReset: () => resetCalled = true,
               controller: controller,
             ),

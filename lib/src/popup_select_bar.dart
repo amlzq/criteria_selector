@@ -41,7 +41,7 @@ class PopupSelectBar extends StatefulWidget implements PreferredSizeWidget {
   const PopupSelectBar({
     super.key,
     required this.tabs,
-    this.selectDelegates = const [],
+    required this.selectDelegates,
     this.height,
     this.isScrollable = false,
     this.backgroundColor,
@@ -58,7 +58,7 @@ class PopupSelectBar extends StatefulWidget implements PreferredSizeWidget {
     PopupSelectBarWillToggleCallback? onSelectWillShow,
     PopupSelectBarWillToggleCallback? onSelectWillHide,
     this.onChanged,
-    this.onApplied,
+    required this.onApplied,
     this.onReset,
     this.controller,
     this.initialIndex,
@@ -169,7 +169,7 @@ class PopupSelectBar extends StatefulWidget implements PreferredSizeWidget {
   final PopupSelectBarResultCallback? onChanged;
 
   /// Fired when a select is applied.
-  final PopupSelectBarResultCallback? onApplied;
+  final PopupSelectBarResultCallback onApplied;
 
   /// Fired when reset is triggered.
   final VoidCallback? onReset;
@@ -290,7 +290,7 @@ class _PopupSelectBarState extends State<PopupSelectBar>
 
   void _handleWidgetApply(
           SelectLabelState labelState, SelectEntries selected) =>
-      widget.onApplied?.call(labelState as PopupTabData, selected);
+      widget.onApplied(labelState as PopupTabData, selected);
 
   void _handleWidgetReset() => widget.onReset?.call();
 

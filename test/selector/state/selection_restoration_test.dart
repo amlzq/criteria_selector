@@ -50,6 +50,7 @@ void main() {
             appBar: PopupSelectBar(
               tabs: const [PopupTab(label: 'Filter')],
               selectDelegates: [delegate],
+              onApplied: (_, __) {},
               controller: controller,
             ),
             body: const SizedBox.expand(),

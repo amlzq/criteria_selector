@@ -1,5 +1,7 @@
 ## Next
 
+* **BREAKING** make `PopupSelectBar.selectDelegates` required — it is now a non-nullable `List<SelectDelegate>` and must be provided to `PopupSelectBar`. `PopupSelectBar.onApplied` is likewise now required (`PopupSelectBarResultCallback`, non-nullable). Update call sites that previously omitted either parameter to pass them explicitly.
+
 * **BREAKING** make `PopupSelectButton.selectDelegate` required — it is now a non-nullable `SelectDelegate` and must be provided to every `PopupSelectButton` constructor. `PopupSelectButton.onApplied` is likewise now required (`PopupSelectButtonResultCallback`, non-nullable). Update call sites that previously omitted either parameter to pass them explicitly.
 
 * **BREAKING** make `SelectDelegate.entriesLoader` required — it is now a non-nullable `Future<SelectEntries> Function()` and must be provided by every delegate. `SelectView.onChanged` is likewise now required (`SelectCallback`, non-nullable). Update call sites that previously omitted either parameter to pass them explicitly.
