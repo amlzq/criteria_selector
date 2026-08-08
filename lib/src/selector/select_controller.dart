@@ -109,6 +109,7 @@ class SelectController extends ChangeNotifier {
     SelectEntries? previousSelectedOverride,
     SelectEntries? resetSelectedOverride,
   }) {
+    _validateParentIds(entries);
     final changed = tree.bind(
       entries,
       previousSelected: previousSelectedOverride ?? previousSelected,
@@ -117,6 +118,68 @@ class SelectController extends ChangeNotifier {
     );
     if (changed) {
       _notifyListenersIfAlive();
+    }
+  }
+
+  /// Validates that every child entry's [SelectChildEntry.parentId] points to
+  /// its direct parent in a 2D-or-deeper tree.
+  ///
+  /// In a flat 1D structure (no top-level [SelectCategoryEntry]), `parentId`
+  /// may legitimately be empty (e.g. entries built with
+  /// [SelectTextEntry.name]), so validation is skipped entirely.
+  ///
+  /// Once at least one [SelectCategoryEntry] is present, every
+  /// [SelectChildEntry] — including header/footer nodes and their children —
+  /// must have a `parentId` equal to the id of its direct parent, otherwise
+  /// tapping cannot resolve the owning category and the selection is silently
+  /// dropped. This check throws an [ArgumentError] during development instead
+  /// of failing silently in release builds.
+  static void _validateParentIds(List<SelectEntry> entries) {
+    final hasCategory = entries.any((e) => e is SelectCategoryEntry);
+    if (!hasCategory) return;
+
+    void validateParent(SelectEntry parent, SelectEntry child) {
+      if (child is SelectChildEntry && child.parentId != parent.id) {
+        throw ArgumentError(
+          'SelectChildEntry(parentId: "${child.parentId}", id: "${child.id}") '
+          'has a parentId that does not match its parent node (id: "${parent.id}"). '
+          'In a 2D-or-deeper structure, a child entry\'s parentId must equal its '
+          'direct parent\'s id, otherwise it cannot be selected. If this is a '
+          'flat 1D list, make sure there is no SelectCategoryEntry at the top '
+          'level.',
+        );
+      }
+    }
+
+    void walk(SelectEntry parent, Set<SelectEntry> children) {
+      for (final child in children) {
+        validateParent(parent, child);
+        if (child.children != null && child.children!.isNotEmpty) {
+          walk(child, child.children!);
+        }
+      }
+    }
+
+    for (final entry in entries) {
+      if (entry is SelectCategoryEntry) {
+        final header = entry.header;
+        if (header != null) {
+          validateParent(entry, header);
+          if (header.children != null && header.children!.isNotEmpty) {
+            walk(header, header.children!);
+          }
+        }
+        final footer = entry.footer;
+        if (footer != null) {
+          validateParent(entry, footer);
+          if (footer.children != null && footer.children!.isNotEmpty) {
+            walk(footer, footer.children!);
+          }
+        }
+      }
+      if (entry.children != null && entry.children!.isNotEmpty) {
+        walk(entry, entry.children!);
+      }
     }
   }
 

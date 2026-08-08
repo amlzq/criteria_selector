@@ -244,7 +244,18 @@ class FlattenSelectState extends State<FlattenSelect> {
   void _onTerminalItemTap(SelectChildEntry item) {
     final categoryEntry =
         widget.entries.singleWhereOrNull((e) => e.id == item.parentId);
-    if (categoryEntry is! SelectCategoryEntry) return;
+    if (categoryEntry is! SelectCategoryEntry) {
+      assert(() {
+        debugPrint(
+          'FlattenSelect: child entry "${item.id}" has a parentId of '
+          '"${item.parentId}" that does not match any category; the tap was '
+          'ignored. Check that the child\'s parentId points to its owning '
+          'category id (a 2D-or-deeper structure).',
+        );
+        return true;
+      }());
+      return;
+    }
     final category = categoryEntry;
 
     if (item is SelectRangeEntry && item.isCustom) {

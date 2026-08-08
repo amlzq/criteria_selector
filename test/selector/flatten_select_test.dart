@@ -45,8 +45,8 @@ void main() {
             'C1',
             const SelectGridLayout(crossAxisCount: 2),
             children: {
-              SelectTextEntry<dynamic>.name(id: 'c1-1', name: 'One'),
-              SelectTextEntry<dynamic>.name(id: 'c1-2', name: 'Two'),
+              SelectTextEntry<dynamic>(parentId: 'c1', id: 'c1-1', name: 'One'),
+              SelectTextEntry<dynamic>(parentId: 'c1', id: 'c1-2', name: 'Two'),
             },
           ),
         }),
@@ -65,8 +65,8 @@ void main() {
             'C1',
             const SelectListLayout(),
             children: {
-              SelectTextEntry<dynamic>.name(id: 'c1-1', name: 'One'),
-              SelectTextEntry<dynamic>.name(id: 'c1-2', name: 'Two'),
+              SelectTextEntry<dynamic>(parentId: 'c1', id: 'c1-1', name: 'One'),
+              SelectTextEntry<dynamic>(parentId: 'c1', id: 'c1-2', name: 'Two'),
             },
           ),
         }),
@@ -85,8 +85,8 @@ void main() {
             'C1',
             const SelectGridLayout(crossAxisCount: 3),
             children: {
-              SelectTextEntry<dynamic>.name(id: 'c1-1', name: 'One'),
-              SelectTextEntry<dynamic>.name(id: 'c1-2', name: 'Two'),
+              SelectTextEntry<dynamic>(parentId: 'c1', id: 'c1-1', name: 'One'),
+              SelectTextEntry<dynamic>(parentId: 'c1', id: 'c1-2', name: 'Two'),
             },
           ),
         }),
@@ -105,8 +105,8 @@ void main() {
             'C1',
             const SelectChipLayout(),
             children: {
-              SelectTextEntry<dynamic>.name(id: 'c1-1', name: 'One'),
-              SelectTextEntry<dynamic>.name(id: 'c1-2', name: 'Two'),
+              SelectTextEntry<dynamic>(parentId: 'c1', id: 'c1-1', name: 'One'),
+              SelectTextEntry<dynamic>(parentId: 'c1', id: 'c1-2', name: 'Two'),
             },
           ),
         }),
@@ -126,7 +126,7 @@ void main() {
             'C1',
             const SelectRangeLayout(),
             children: {
-              SelectTextEntry<dynamic>.name(id: 'c1-1', name: 'One'),
+              SelectTextEntry<dynamic>(parentId: 'c1', id: 'c1-1', name: 'One'),
             },
           ),
         }),
@@ -145,8 +145,8 @@ void main() {
             'C1',
             const SelectCounterLayout(),
             children: {
-              SelectTextEntry<dynamic>.name(id: 'c1-1', name: 'One'),
-              SelectTextEntry<dynamic>.name(id: 'c1-2', name: 'Two'),
+              SelectTextEntry<dynamic>(parentId: 'c1', id: 'c1-1', name: 'One'),
+              SelectTextEntry<dynamic>(parentId: 'c1', id: 'c1-2', name: 'Two'),
             },
           ),
         }),
@@ -164,7 +164,7 @@ void main() {
             'C1',
             const SelectListLayout(),
             children: {
-              SelectTextEntry<dynamic>.name(id: 'c1-1', name: 'One'),
+              SelectTextEntry<dynamic>(parentId: 'c1', id: 'c1-1', name: 'One'),
             },
           ),
           _category(
@@ -172,7 +172,8 @@ void main() {
             'C2',
             const SelectChipLayout(),
             children: {
-              SelectTextEntry<dynamic>.name(id: 'c2-1', name: 'ChipA'),
+              SelectTextEntry<dynamic>(
+                  parentId: 'c2', id: 'c2-1', name: 'ChipA'),
             },
           ),
         }),

@@ -129,7 +129,18 @@ class GridSelectState extends State<GridSelect> {
     final category = widget.entries
         .whereType<SelectCategoryEntry>()
         .singleWhereOrNull((e) => e.id == entry.parentId);
-    if (category == null) return;
+    if (category == null) {
+      assert(() {
+        debugPrint(
+          'GridSelect: child entry "${entry.id}" has a parentId of '
+          '"${entry.parentId}" that does not match any category; the tap was '
+          'ignored. Check that the child\'s parentId points to its owning '
+          'category id (a 2D-or-deeper structure).',
+        );
+        return true;
+      }());
+      return;
+    }
 
     if (entry is SelectRangeEntry && entry.isCustom) {
       final hasRange = entry.min != null || entry.max != null;

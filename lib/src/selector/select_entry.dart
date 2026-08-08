@@ -149,6 +149,12 @@ typedef SelectIntEntry<E> = SelectRangeEntry<int, E>;
 ///
 /// This is commonly used for numeric ranges such as price or area.
 class SelectRangeEntry<N, E> extends SelectChildEntry<E> {
+  /// Creates a range entry.
+  ///
+  /// [parentId] must be correct and non-empty: it has to equal the id of the
+  /// entry's owning parent (a category or a header/footer node). Passing an
+  /// empty string breaks the parent-child relationship and makes the entry
+  /// unselectable in a 2D-or-deeper structure.
   SelectRangeEntry({
     this.min,
     this.max,
@@ -192,6 +198,11 @@ class SelectRangeEntry<N, E> extends SelectChildEntry<E> {
 
   /// Custom range entry
   /// This entry is usually rendered as an input field or a slider/progress bar in the UI.
+  ///
+  /// [parentId] must be correct and non-empty: it has to equal the id of the
+  /// entry's owning parent (a category or a header/footer node). An empty
+  /// string breaks the parent-child relationship and leaves the entry
+  /// unselectable in a 2D-or-deeper structure.
   SelectRangeEntry.custom({
     this.min,
     this.max,
@@ -208,6 +219,11 @@ class SelectRangeEntry<N, E> extends SelectChildEntry<E> {
         );
 
   /// "Any" entry
+  ///
+  /// [parentId] must be correct and non-empty: it has to equal the id of the
+  /// entry's owning parent (a category or a header/footer node). An empty
+  /// string breaks the parent-child relationship and leaves the entry
+  /// unselectable in a 2D-or-deeper structure.
   SelectRangeEntry.any({
     this.min,
     this.max,
@@ -273,6 +289,12 @@ extension SelectRangeEntryExt on SelectRangeEntry {
 
 /// A plain text entry.
 class SelectTextEntry<E> extends SelectChildEntry<E> {
+  /// Creates a text entry.
+  ///
+  /// [parentId] must be correct and non-empty: it has to equal the id of the
+  /// entry's owning parent (a category or a header/footer node). An empty
+  /// string breaks the parent-child relationship and leaves the entry
+  /// unselectable in a 2D-or-deeper structure.
   SelectTextEntry({
     required super.parentId,
     required super.id,
@@ -282,9 +304,28 @@ class SelectTextEntry<E> extends SelectChildEntry<E> {
     super.immediate,
   });
 
+  /// Creates a text entry from only an [id], leaving [SelectChildEntry.parentId]
+  /// empty and the name blank.
+  ///
+  /// This is a placeholder-style constructor intended for building an entry
+  /// where the parent relationship is not (yet) known or required — for
+  /// example a flat 1D structure. Because `parentId` is hard-coded to an empty
+  /// string, it must not be used under a [SelectCategoryEntry]: in a 2D-or-
+  /// deeper structure the `parentId` must point to the owning category id,
+  /// otherwise the entry cannot be selected. Prefer the full constructor and
+  /// set `parentId` explicitly when nesting under a category.
   SelectTextEntry.id({required super.id}) : super(parentId: '', name: '');
 
   /// Creates a leaf entry without a parent id.
+  ///
+  /// This convenience constructor hard-codes [SelectChildEntry.parentId] to an
+  /// empty string, so it is only suitable for a flat 1D structure where the
+  /// top level contains no [SelectCategoryEntry] (e.g. sort order).
+  ///
+  /// In a 2D-or-deeper structure (such as [GridSelect], [ListSelect],
+  /// [FlattenSelect], or [CascadingSelect]) the child entry's `parentId` must
+  /// point to its owning category id, otherwise it cannot be selected. Use the
+  /// full constructor and set `parentId` explicitly instead.
   SelectTextEntry.name({
     required super.id,
     required super.name,
@@ -293,6 +334,11 @@ class SelectTextEntry<E> extends SelectChildEntry<E> {
   }) : super(parentId: '');
 
   /// "Any" entry
+  ///
+  /// [parentId] must be correct and non-empty: it has to equal the id of the
+  /// entry's owning parent (a category or a header/footer node). An empty
+  /// string breaks the parent-child relationship and leaves the entry
+  /// unselectable in a 2D-or-deeper structure.
   SelectTextEntry.any({
     required super.parentId,
     required super.name,
