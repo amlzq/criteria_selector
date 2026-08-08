@@ -755,6 +755,144 @@ void main() {
       expect(tree.selectedEntriesAtLevel(2).contains(child), isTrue);
       expect(tree.selectedEntriesAtLevel(3).contains(grandchild), isTrue);
     });
+
+    // Regression test: selecting a deep (non-Any) leaf must remove the "Any"
+    // entries from **all ancestor levels**, not only from the leaf's own parent.
+    //
+    // Reproduces the bug where selecting a level-2 entry (e.g. "东门")
+    // left the level-1 "Any" (e.g. "区域" 下的 "不限") still checked.
+    test(
+        'selecting deep leaf removes Any from all ancestor levels (regression)',
+        () {
+      const rules = SelectionRules();
+      final tree = StateTree();
+
+      // Build a 3-level cascading structure that mirrors the real-world
+      // "区域 → 罗湖 → 东门" hierarchy:
+      //
+      //  level 0: category "region"
+      //  level 1: category children  →  any_region ("不限"),  "luohu"
+      //  level 2: luohu children     →  any_luohu  ("不限"),  "dongmen"
+      final anyRegion = SelectTextEntry<dynamic>.any(
+        parentId: 'region',
+        name: '不限',
+      );
+      final anyLuohu = SelectTextEntry<dynamic>.any(
+        parentId: 'luohu',
+        name: '不限',
+      );
+      final dongmen = _text('luohu', 'dongmen', '东门');
+      final luohu =
+          _text('region', 'luohu', '罗湖', children: {anyLuohu, dongmen});
+      final region = _category('region', '区域', children: {anyRegion, luohu});
+      tree.bind([region], initializeAnyIfEmpty: false);
+
+      // Simulate the initial state: "Any" is selected at both level 1 and level 2
+      tree.ensureLevels(3);
+      tree.mutableSelectedEntriesAtLevel(0).add(region);
+      tree.mutableSelectedEntriesAtLevel(1).add(anyRegion);
+      tree.mutableSelectedEntriesAtLevel(1).add(luohu);
+      tree.mutableSelectedEntriesAtLevel(2).add(anyLuohu);
+
+      // User taps "东门" (level 2, non-Any, parent is "luohu")
+      rules.toggleCascadingLeaf(
+        tree,
+        dongmen,
+        selectionMode: SelectionMode.multiple,
+        childrenSelectionMode: SelectionMode.multiple,
+        focusedPath: [region, luohu],
+        category: region,
+      );
+
+      // "东门" should now be selected
+      expect(tree.selectedEntriesAtLevel(2).contains(dongmen), isTrue);
+
+      // ★ KEY ASSERTION: level-2 "Any" (anyLuohu) under luohu must be removed
+      expect(
+        tree.selectedEntriesAtLevel(2).any(
+              (e) => e is SelectChildEntry && e.parentId == 'luohu' && e.isAny,
+            ),
+        isFalse,
+      );
+
+      // ★ BUG FIX: level-1 "Any" (anyRegion) under region must ALSO be removed
+      //   Before the fix this assertion FAILED – anyRegion was still selected.
+      expect(
+        tree.selectedEntriesAtLevel(1).any(
+              (e) => e is SelectChildEntry && e.parentId == 'region' && e.isAny,
+            ),
+        isFalse,
+      );
+
+      // Ancestors (region, luohu) should still be in the tree
+      expect(tree.selectedEntriesAtLevel(0).contains(region), isTrue);
+      expect(tree.selectedEntriesAtLevel(1).contains(luohu), isTrue);
+    });
+
+    // Regression test: selecting a child-level "Any" must also remove the
+    // "Any" entries from all ancestor levels.
+    //
+    // Scenario: "区域" category has "不限" selected at level 1. User navigates
+    // into "罗湖" and taps its "不限". The level-1 "不限" (under "区域") must be
+    // cleared because the user is now explicitly narrowing the scope.
+    test(
+        'selecting child-level Any removes Any from all ancestor levels (regression)',
+        () {
+      const rules = SelectionRules();
+      final tree = StateTree();
+
+      // Same hierarchy as above:
+      //  level 0: category "region"
+      //  level 1: any_region ("不限"), luohu ("罗湖")
+      //  level 2: any_luohu ("不限"), dongmen ("东门")
+      final anyRegion = SelectTextEntry<dynamic>.any(
+        parentId: 'region',
+        name: '不限',
+      );
+      final anyLuohu = SelectTextEntry<dynamic>.any(
+        parentId: 'luohu',
+        name: '不限',
+      );
+      final dongmen = _text('luohu', 'dongmen', '东门');
+      final luohu =
+          _text('region', 'luohu', '罗湖', children: {anyLuohu, dongmen});
+      final region = _category('region', '区域', children: {anyRegion, luohu});
+
+      tree.bind([region], initializeAnyIfEmpty: false);
+
+      // Initial state: level-1 "Any" is selected, but luohu's "不限" is NOT
+      // selected yet (the user hasn't entered the luohu sub-tree).
+      tree.ensureLevels(3);
+      tree.mutableSelectedEntriesAtLevel(0).add(region);
+      tree.mutableSelectedEntriesAtLevel(1).add(anyRegion);
+      tree.mutableSelectedEntriesAtLevel(1).add(luohu);
+
+      // User navigates into "罗湖" and taps "不限" (the child-level Any).
+      // This should select anyLuohu AND clear anyRegion.
+      rules.toggleCascadingLeaf(
+        tree,
+        anyLuohu,
+        selectionMode: SelectionMode.multiple,
+        childrenSelectionMode: SelectionMode.multiple,
+        focusedPath: [region, luohu],
+        category: region,
+      );
+
+      // anyLuohu should now be selected at level 2
+      expect(tree.selectedEntriesAtLevel(2).contains(anyLuohu), isTrue);
+
+      // ★ KEY ASSERTION: level-1 "Any" (anyRegion) must be removed
+      expect(
+        tree.selectedEntriesAtLevel(1).any(
+              (e) => e is SelectChildEntry && e.parentId == 'region' && e.isAny,
+            ),
+        isFalse,
+      );
+
+      // Ancestors should remain
+      expect(tree.selectedEntriesAtLevel(0).contains(region), isTrue);
+      expect(tree.selectedEntriesAtLevel(1).contains(luohu), isTrue);
+    });
   });
 
   group('SelectionRules – toggleHeaderOrFooter', () {

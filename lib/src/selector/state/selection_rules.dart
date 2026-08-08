@@ -155,11 +155,33 @@ class SelectionRules {
           selectedEntries.add(entry);
         }
       }
+
+      // When selecting a child-level "Any", also remove "Any" entries from
+      // all ancestor levels above the current one (i.e. exclude the current
+      // level's parent because the entry itself IS that "Any").
+      if (selectedEntries.contains(entry)) {
+        for (var i = level - 2; i >= 0; i--) {
+          final ancestor = focusedPath[i];
+          tree.mutableSelectedEntriesAtLevel(i + 1).removeWhere((e) =>
+              e is SelectChildEntry && e.parentId == ancestor.id && e.isAny);
+        }
+      }
     } else {
-      tree.mutableSelectedEntriesAtLevel(1).removeWhere((e) =>
-          e is SelectChildEntry && e.parentId == entry.parentId && e.isAny);
+      // Remove "Any" entries from the current level (same parent).
       selectedEntries.removeWhere((e) =>
           e is SelectChildEntry && e.parentId == entry.parentId && e.isAny);
+
+      // Remove "Any" entries from all ancestor levels.
+      // focusedPath[i] is the node at level i.
+      // The "Any" entry under focusedPath[i] lives at level i+1 with
+      // parentId == focusedPath[i].id.
+      // We iterate from the deepest ancestor (level-1) up to level 0,
+      // clearing each one's "Any" placeholder.
+      for (var i = level - 1; i >= 0; i--) {
+        final ancestor = focusedPath[i];
+        tree.mutableSelectedEntriesAtLevel(i + 1).removeWhere((e) =>
+            e is SelectChildEntry && e.parentId == ancestor.id && e.isAny);
+      }
 
       if (SelectionMode.single == childrenSelectionMode) {
         if (!selectedEntries.contains(entry)) {
