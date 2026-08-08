@@ -18,6 +18,7 @@ void main() {
                   SelectTextEntry<dynamic>.name(id: 'a', name: 'A'),
                 },
               ),
+              onApplied: (_) {},
               onSelectShowed: () => showed = true,
               onSelectHidden: () => hidden = true,
             ),
@@ -99,6 +100,7 @@ void main() {
                   SelectTextEntry<dynamic>.name(id: 'b', name: 'B'),
                 },
               ),
+              onApplied: (_) {},
             ),
           ),
         ),
@@ -125,12 +127,14 @@ void main() {
                   selectDelegate: ListSelectDelegate(
                     entriesLoader: () async => <SelectEntry<dynamic>>{},
                   ),
+                  onApplied: (_) {},
                 ),
                 PopupSelectButton.outlined(
                   label: 'Outlined',
                   selectDelegate: ListSelectDelegate(
                     entriesLoader: () async => <SelectEntry<dynamic>>{},
                   ),
+                  onApplied: (_) {},
                 ),
               ],
             ),

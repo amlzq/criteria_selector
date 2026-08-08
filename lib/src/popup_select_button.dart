@@ -49,7 +49,7 @@ class PopupSelectButton extends StatefulWidget {
   /// Creates a filled button (the default variant).
   const PopupSelectButton({
     super.key,
-    this.selectDelegate,
+    required this.selectDelegate,
     this.variant = PopupSelectButtonVariant.filled,
     this.label,
     this.child,
@@ -60,7 +60,7 @@ class PopupSelectButton extends StatefulWidget {
     PopupSelectButtonWillToggleCallback? onSelectWillShow,
     PopupSelectButtonWillToggleCallback? onSelectWillHide,
     this.onChanged,
-    this.onApplied,
+    required this.onApplied,
     this.onReset,
     this.labelLoader,
     this.direction = PopupSelectDirection.below,
@@ -93,7 +93,7 @@ class PopupSelectButton extends StatefulWidget {
   /// [PopupSelectButtonVariant.elevated].
   const PopupSelectButton.elevated({
     super.key,
-    this.selectDelegate,
+    required this.selectDelegate,
     this.label,
     this.child,
     this.icon,
@@ -103,7 +103,7 @@ class PopupSelectButton extends StatefulWidget {
     PopupSelectButtonWillToggleCallback? onSelectWillShow,
     PopupSelectButtonWillToggleCallback? onSelectWillHide,
     this.onChanged,
-    this.onApplied,
+    required this.onApplied,
     this.onReset,
     this.labelLoader,
     this.direction = PopupSelectDirection.below,
@@ -137,7 +137,7 @@ class PopupSelectButton extends StatefulWidget {
   /// [PopupSelectButtonVariant.outlined].
   const PopupSelectButton.outlined({
     super.key,
-    this.selectDelegate,
+    required this.selectDelegate,
     this.label,
     this.child,
     this.icon,
@@ -147,7 +147,7 @@ class PopupSelectButton extends StatefulWidget {
     PopupSelectButtonWillToggleCallback? onSelectWillShow,
     PopupSelectButtonWillToggleCallback? onSelectWillHide,
     this.onChanged,
-    this.onApplied,
+    required this.onApplied,
     this.onReset,
     this.labelLoader,
     this.direction = PopupSelectDirection.below,
@@ -178,7 +178,7 @@ class PopupSelectButton extends StatefulWidget {
             'Either provide onSelectWillHide or onSelectorWillHide, not both.');
 
   /// Select configuration for the single trigger.
-  final SelectDelegate? selectDelegate;
+  final SelectDelegate selectDelegate;
 
   /// Visual style of the trigger button.
   final PopupSelectButtonVariant variant;
@@ -238,7 +238,7 @@ class PopupSelectButton extends StatefulWidget {
   final PopupSelectButtonResultCallback? onChanged;
 
   /// Fired when a select is applied.
-  final PopupSelectButtonResultCallback? onApplied;
+  final PopupSelectButtonResultCallback onApplied;
 
   /// Fired when reset is triggered.
   final VoidCallback? onReset;
@@ -282,7 +282,7 @@ class _PopupSelectButtonState extends State<PopupSelectButton>
     _removeChangeListener = _controller.addChangeListener(_handleWidgetChange);
     _removeApplyListener = _controller.addApplyListener(_handleWidgetApply);
     _removeResetListener = _controller.addResetListener(_handleWidgetReset);
-    _controller.attachSelectDelegates([widget.selectDelegate!]);
+    _controller.attachSelectDelegates([widget.selectDelegate]);
     _controller.attachTickerProvider(this);
     _labelState.originalLabel = widget.label;
     _labelState.labelLoader = widget.labelLoader;
@@ -292,7 +292,7 @@ class _PopupSelectButtonState extends State<PopupSelectButton>
   @override
   void didUpdateWidget(covariant PopupSelectButton oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _controller.attachSelectDelegates([widget.selectDelegate!]);
+    _controller.attachSelectDelegates([widget.selectDelegate]);
     _controller.attachTickerProvider(this);
     if (oldWidget.label != widget.label) {
       _labelState.originalLabel = widget.label;
@@ -324,7 +324,7 @@ class _PopupSelectButtonState extends State<PopupSelectButton>
 
   void _handleWidgetApply(
           SelectLabelState labelState, SelectEntries selected) =>
-      widget.onApplied?.call(selected);
+      widget.onApplied(selected);
 
   void _handleWidgetReset() => widget.onReset?.call();
 
@@ -334,7 +334,7 @@ class _PopupSelectButtonState extends State<PopupSelectButton>
         ? await widget.onSelectWillShow?.call() ?? true
         : await widget.onSelectWillHide?.call() ?? true;
     if (!proceed) return;
-    _controller.previousSelectDelegate = widget.selectDelegate!;
+    _controller.previousSelectDelegate = widget.selectDelegate;
     _controller.toggleSelect(index: 0);
     if (_controller.isSelectShowing) {
       widget.onSelectShowed?.call();
