@@ -1,3 +1,26 @@
+> **⚠️ Deprecated — migrate to [`fl_select`](https://pub.dev/packages/fl_select)**
+>
+> `criteria_selector` has been **renamed** to [`fl_select`](https://pub.dev/packages/fl_select). The
+> package and its API are now maintained under the new name; this package will
+> no longer receive updates.
+>
+> Migration is a **pure rename** — every class, entry point, and delegate is
+> unchanged, so you only need to update your dependency and the import:
+>
+> ```diff
+> -  criteria_selector: ^0.7.0
+> +  fl_select: ^0.7.0
+> ```
+>
+> ```diff
+> -import 'package:criteria_selector/criteria_selector.dart';
+> +import 'package:fl_select/fl_select.dart';
+> ```
+>
+> Everything else below (entry points, delegates, theming, i18n) works the same
+> in `fl_select`. See the [fl_select docs](https://pub.dev/packages/fl_select) for
+> details.
+
 A highly customizable Flutter selector library. Supports SelectView, PopupSelectBar, PopupSelectButton, dialog, and bottom-sheet selectors.
 
 [Playground](https://criteria-selector.zeaon.dev/)
@@ -16,6 +39,8 @@ Two layers work together: **entry points** decide *where* the selector appears, 
 - Built-in i18n in 10 languages via `SelectLocalizationsDelegate`.
 
 ### Getting started
+
+> This package is deprecated. Install [`fl_select`](https://pub.dev/packages/fl_select) instead — see the notice at the top.
 
 #### Install
 

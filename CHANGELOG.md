@@ -1,3 +1,7 @@
+## 0.7.0+1
+
+* **DEPRECATION** `criteria_selector` has been renamed to [`fl_select`](https://pub.dev/packages/fl_select). This package will no longer receive updates. Migration is a pure rename — replace the dependency (`fl_select: ^0.7.0`) and the import (`package:fl_select/fl_select.dart`); the API is unchanged. See the [README](https://github.com/amlzq/criteria_selector/blob/main/README.md) for details.
+
 ## 0.7.0
 
 * **BREAKING** make `PopupSelectBar.selectDelegates` required — it is now a non-nullable `List<SelectDelegate>` and must be provided to `PopupSelectBar`. `PopupSelectBar.onApplied` is likewise now required (`PopupSelectBarResultCallback`, non-nullable). Update call sites that previously omitted either parameter to pass them explicitly.
